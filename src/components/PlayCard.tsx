@@ -38,11 +38,6 @@ const PlayCard: React.FC<PlayCardProps> = ({ play, renderWaveText }) => {
       
       {/* Combined suggestion and action in a single card */}
       <div className="mb-6 rounded-lg bg-muted p-5 text-center border border-white/10 shadow-lg">
-        <p className="text-2xl font-extrabold text-white mb-4 flex items-center justify-center gap-2">
-          <span className={isFade ? "text-onetime-red font-black" : "text-onetime-green font-black"}>{actionText}</span> 
-          <span>{play.bet}</span>
-        </p>
-        
         <ActionButton 
           variant={isFade ? "fade" : "tail"}
           className="h-14 text-base font-bold"
