@@ -34,7 +34,7 @@ const ColdestBettors = () => {
       </div>
       
       <ActionButton variant="fade" className="mt-4 h-10 text-sm">
-        Fade All
+        View Fade Leaders
       </ActionButton>
     </div>
   );

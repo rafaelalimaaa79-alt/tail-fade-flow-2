@@ -42,10 +42,10 @@ const LeaderboardCarousel = () => {
     updateActiveIndex();
     emblaApi.on("select", updateActiveIndex);
     
-    // Auto-rotate between hot and cold leaderboards every 3 seconds
+    // Auto-rotate between hot and cold leaderboards every 5 seconds (increased from 3)
     const interval = setInterval(() => {
       emblaApi.scrollNext();
-    }, 3000);
+    }, 5000);
     
     return () => {
       emblaApi.off("select", updateActiveIndex);
@@ -78,7 +78,7 @@ const LeaderboardCarousel = () => {
               </div>
               
               <ActionButton variant="tail" className="mt-4 h-10 text-sm">
-                Tail All
+                View Tail Leaders
               </ActionButton>
             </div>
           </div>
@@ -104,7 +104,7 @@ const LeaderboardCarousel = () => {
               </div>
               
               <ActionButton variant="fade" className="mt-4 h-10 text-sm">
-                Fade All
+                View Fade Leaders
               </ActionButton>
             </div>
           </div>

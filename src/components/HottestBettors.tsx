@@ -34,7 +34,7 @@ const HottestBettors = () => {
       </div>
       
       <ActionButton variant="tail" className="mt-4 h-10 text-sm">
-        Tail All
+        View Tail Leaders
       </ActionButton>
     </div>
   );
