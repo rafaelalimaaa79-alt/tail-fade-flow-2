@@ -36,7 +36,7 @@ const BettorCard = ({
         )}
         <div className="flex justify-between">
           <div>
-            <h3 className="font-bold">{name}</h3>
+            <h3 className="font-bold">@{name}</h3>
             <div className="mt-1 flex items-center text-sm">
               <span
                 className={`mr-2 inline-block h-2 w-2 rounded-full ${

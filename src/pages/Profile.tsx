@@ -43,7 +43,7 @@ const ProfilePage = () => {
             <UserIcon className="h-8 w-8 text-onetime-purple" />
           </div>
           <div>
-            <h2 className="text-xl font-bold">{userProfile.username}</h2>
+            <h2 className="text-xl font-bold">@{userProfile.username}</h2>
             <p className="text-sm text-gray-500">Joined {userProfile.joinDate}</p>
           </div>
         </div>

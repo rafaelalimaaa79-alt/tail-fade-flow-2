@@ -1,4 +1,3 @@
-
 import React, { useState } from "react";
 import { useParams, useNavigate } from "react-router-dom";
 import { ChevronLeft } from "lucide-react";
@@ -142,7 +141,7 @@ const BettorDetail = () => {
           >
             <ChevronLeft className="h-6 w-6" />
           </button>
-          <h1 className="text-xl font-bold">{bettor.name}</h1>
+          <h1 className="text-xl font-bold">@{bettor.name}</h1>
           {bettor.hot && (
             <div className="ml-2 rounded-full bg-onetime-orange px-2 py-0.5">
               <span className="text-xs font-bold text-white">HOT</span>

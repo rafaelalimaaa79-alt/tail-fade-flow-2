@@ -23,7 +23,7 @@ const PlayCard: React.FC<PlayCardProps> = ({ play, renderWaveText }) => {
       
       {/* Bettor info with italic usernames and highlighted stats */}
       <div className="mb-6 text-lg text-white/80 text-center">
-        <span className="font-normal italic text-white/70 font-serif">{play.bettorName}</span>
+        <span className="font-normal italic text-white/70 font-serif">@{play.bettorName}</span>
         <div className="mt-3 text-xl font-medium">
           <div className="wave-text-container">
             <div className="block mb-2">

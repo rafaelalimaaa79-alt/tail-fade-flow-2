@@ -20,7 +20,7 @@ const BettorStreakItem = ({ id, name, profit, streak }: BettorStreakItemProps) =
     <Link to={`/bettor/${id}`}>
       <div className="mb-3 flex items-center justify-between rounded-lg py-2 px-1 hover:bg-muted transition-colors">
         <div>
-          <div className="font-medium text-white">{name}</div>
+          <div className="font-medium text-white">@{name}</div>
           <div className={`text-sm ${profit > 0 ? 'text-onetime-green' : 'text-onetime-red'}`}>
             {profit > 0 ? '+' : '-'}{formattedProfit}
           </div>
