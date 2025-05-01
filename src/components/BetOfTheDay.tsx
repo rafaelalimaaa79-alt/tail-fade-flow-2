@@ -88,7 +88,7 @@ const BetOfTheDay = () => {
     }
   };
   
-  // Auto rotate through plays every 10 seconds (updated from 8)
+  // Auto rotate through plays every 10 seconds
   useEffect(() => {
     const interval = setInterval(() => {
       nextPlay();
@@ -112,7 +112,7 @@ const BetOfTheDay = () => {
       <div className="mb-6 text-lg text-white/80 text-center">
         <span className="font-normal italic text-white/70 font-serif">{currentPlay.bettorName}</span>
         <div className="mt-3 text-xl font-medium">
-          <span className={`animate-highlight-text ${isFade ? "text-onetime-red" : "text-onetime-green"}`}>
+          <span className={`neon-text-${isFade ? "red" : "green"} neon-glowing-text`}>
             {currentPlay.stats}
           </span>
         </div>
