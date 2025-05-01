@@ -99,7 +99,7 @@ const BottomNav = () => {
                 {item.customIcon ? (
                   <div className="relative flex items-center justify-center">
                     <ArrowUp 
-                      className="h-3.5 w-3.5 absolute -top-1 -right-1" 
+                      className="h-5 w-5 absolute -top-1.5 -right-1.5" 
                       style={{ 
                         color: '#14f195', 
                         filter: isActive ? 'drop-shadow(0 0 2px #14f195)' : 'none',
@@ -107,7 +107,7 @@ const BottomNav = () => {
                       }} 
                     />
                     <ArrowDown 
-                      className="h-3.5 w-3.5 absolute -bottom-1 -left-1" 
+                      className="h-5 w-5 absolute -bottom-1.5 -left-1.5" 
                       style={{ 
                         color: '#ea384c', 
                         filter: isActive ? 'drop-shadow(0 0 2px #ea384c)' : 'none',
@@ -141,4 +141,3 @@ const BottomNav = () => {
 };
 
 export default BottomNav;
-
