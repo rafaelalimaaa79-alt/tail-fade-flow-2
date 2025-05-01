@@ -1,6 +1,6 @@
 
 import React from "react";
-import { ArrowRight } from "lucide-react";
+import { ArrowRight, AlertTriangle } from "lucide-react";
 import ActionButton from "./ActionButton";
 import { Link } from "react-router-dom";
 
@@ -21,30 +21,39 @@ const BetOfTheDay = () => {
   
   return (
     <div className="rounded-xl bg-card p-6 shadow-lg border border-white/10 neon-glow">
-      <h2 className="mb-4 text-lg font-bold text-white/90">Bet of the Day</h2>
+      {/* High-impact title with emoji */}
+      <div className="flex items-center gap-2 mb-5">
+        <AlertTriangle className="h-5 w-5 text-onetime-orange animate-pulse-subtle" />
+        <h2 className="text-xl font-extrabold text-white">🚨 Bet of the Day</h2>
+      </div>
       
+      {/* Bettor streak info with bold highlighting */}
       <div className="mb-6 text-lg text-white/80">
-        <span className="font-semibold text-white">{betOfTheDay.bettorName}</span> has {streakText}.
+        <span className="font-extrabold text-white">{betOfTheDay.bettorName}</span> has {streakText}.
         <div className="mt-3 font-medium">
-          His bet tonight: <span className="font-bold text-white">{betOfTheDay.bet}</span>
+          His bet tonight: <span className="font-extrabold text-white">{betOfTheDay.bet}</span>
         </div>
       </div>
       
-      <div className="mb-6 rounded-lg bg-muted p-4 text-center border border-white/10">
-        <p className="text-sm text-white/60">Our suggestion</p>
-        <p className="text-xl font-bold text-white">
-          {actionText} {betOfTheDay.bet}
+      {/* High-impact suggestion card */}
+      <div className="mb-6 rounded-lg bg-onetime-red/90 p-5 text-center border border-white/10 shadow-[0_0_15px_rgba(239,68,68,0.4)]">
+        <p className="text-sm text-white/80">Our suggestion</p>
+        <p className="text-2xl font-extrabold text-white flex items-center justify-center gap-2">
+          💥 {actionText} {betOfTheDay.bet}
         </p>
       </div>
       
+      {/* Primary action button */}
       <ActionButton 
         variant={betOfTheDay.suggestionType === "fade" ? "fade" : "tail"}
+        className="h-14 text-base font-bold"
       >
-        {actionText} This Bet
+        🔥 {actionText} This Bet
       </ActionButton>
       
+      {/* Secondary action link */}
       <Link to="/trends" className="mt-5 flex items-center justify-center text-sm font-medium text-primary">
-        View All Top Trends
+        👀 View All Top Trends
         <ArrowRight className="ml-1 h-4 w-4" />
       </Link>
     </div>
