@@ -1,6 +1,5 @@
 
 import React from "react";
-import { Snowflake } from "lucide-react";
 import BettorStreakItem from "./BettorStreakItem";
 import ActionButton from "./ActionButton";
 
@@ -17,8 +16,7 @@ const ColdestBettors = () => {
   return (
     <div className="rounded-xl bg-card p-5 shadow-lg border border-white/10">
       <div className="mb-4 flex items-center justify-center">
-        <Snowflake className="mr-2 h-5 w-5 text-primary" />
-        <h3 className="text-base font-bold text-white/90">Ice Cold</h3>
+        <h3 className="text-lg font-bold text-white/90">Ice Cold</h3>
       </div>
       
       <div className="max-h-[300px] overflow-y-auto space-y-1">
