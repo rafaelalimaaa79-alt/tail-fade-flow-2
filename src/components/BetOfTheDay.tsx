@@ -88,11 +88,11 @@ const BetOfTheDay = () => {
     }
   };
   
-  // Auto rotate through plays every 8 seconds
+  // Auto rotate through plays every 10 seconds (updated from 8)
   useEffect(() => {
     const interval = setInterval(() => {
       nextPlay();
-    }, 8000);
+    }, 10000);
     
     return () => clearInterval(interval);
   }, []);
@@ -111,30 +111,28 @@ const BetOfTheDay = () => {
       {/* Bettor info with bold highlighting - without bet after name */}
       <div className="mb-6 text-lg text-white/80 text-center">
         <span className="font-extrabold text-white">{currentPlay.bettorName}</span>
-        <div className="mt-2 text-sm">
+        <div className="mt-2 text-base font-medium">
           <span className="text-white/80">{currentPlay.stats}</span>
         </div>
-        <div className="mt-1 text-sm">
+        <div className="mt-1 text-base">
           <span className="font-medium">{currentPlay.percentage}% {isFade ? "fading" : "tailing"}</span>
         </div>
       </div>
       
-      {/* High-impact suggestion card - now with contrasting styles instead of all red */}
+      {/* Combined suggestion and action in a single card */}
       <div className="mb-6 rounded-lg bg-muted p-5 text-center border border-white/10 shadow-lg">
-        <p className="text-2xl font-extrabold text-white flex items-center justify-center gap-2">
-          <span className="text-onetime-red">💥</span> 
+        <p className="text-2xl font-extrabold text-white mb-4 flex items-center justify-center gap-2">
           <span className={isFade ? "text-onetime-red font-black" : "text-onetime-green font-black"}>{actionText}</span> 
           <span>{currentPlay.bet}</span>
         </p>
+        
+        <ActionButton 
+          variant={isFade ? "fade" : "tail"}
+          className="h-14 text-base font-bold"
+        >
+          {isFade ? "🔥 Fade This Bet" : "🔥 Tail This Bet"}
+        </ActionButton>
       </div>
-      
-      {/* Primary action button */}
-      <ActionButton 
-        variant={isFade ? "fade" : "tail"}
-        className="h-14 text-base font-bold"
-      >
-        {isFade ? "🔥 Fade This Bet" : "🔥 Tail This Bet"}
-      </ActionButton>
       
       {/* Secondary action link */}
       <Link to="/trends" className="mt-5 flex items-center justify-center text-sm font-medium text-primary">
