@@ -112,7 +112,7 @@ const BetOfTheDay = () => {
       <div className="mb-6 text-lg text-white/80 text-center">
         <span className="font-normal italic text-white/70 font-serif">{currentPlay.bettorName}</span>
         <div className="mt-3 text-xl font-medium">
-          <span className={`neon-text-${isFade ? "red" : "green"} neon-glowing-text`}>
+          <span className={`animate-highlight-text ${isFade ? "text-onetime-red" : "text-onetime-green"}`}>
             {currentPlay.stats}
           </span>
         </div>
