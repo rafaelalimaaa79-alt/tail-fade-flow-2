@@ -18,7 +18,7 @@ const PlayCard: React.FC<PlayCardProps> = ({ play, renderWaveText }) => {
     <div className="rounded-xl bg-card p-6 shadow-lg border border-white/10 neon-glow">
       {/* Full-width large title */}
       <div className="mb-5 border-b border-white/10 pb-2">
-        <h2 className="text-2xl font-extrabold text-white text-center">Plays of the Day</h2>
+        <h2 className="text-3xl font-extrabold text-white text-center">Plays of the Day</h2>
       </div>
       
       {/* Bettor info with italic usernames and highlighted stats */}
