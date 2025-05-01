@@ -133,7 +133,7 @@
   
   /* Base word styling */
   .wave-text-container .word {
-    @apply inline-block transition-all duration-150 origin-center;
+    @apply inline-block transition-all duration-200 ease-in-out origin-center;
   }
 
   @keyframes highlight-text {
@@ -147,4 +147,3 @@
     }
   }
 }
-

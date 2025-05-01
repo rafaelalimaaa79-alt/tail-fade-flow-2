@@ -65,15 +65,16 @@ const BetOfTheDay = () => {
       // We use a continuous sine wave that moves across the text
       const distance = Math.abs(wordPosition - animationPosition);
       
-      // Create a wave effect with a gaussian-like curve that affects multiple words
+      // Create a broader wave effect that affects multiple words
       // Smaller values = broader wave effect
-      const waveWidth = 0.15;
+      const waveWidth = 0.35; // Increased from 0.15 to create a broader effect
       
       // Calculate influence factor (0 to 1) based on distance from wave center
+      // This creates a gradual falloff for the wave effect
       let influence = Math.max(0, 1 - (distance / waveWidth));
       
-      // Apply a curve to make it more wave-like
-      influence = Math.pow(influence, 2);
+      // Apply a smoother curve for a more natural wave
+      influence = Math.pow(influence, 1.5); // Reduced from 2 to make it less dramatic
       
       // Only apply effect to current line
       if (lineIndex !== activeLine) {
@@ -81,11 +82,11 @@ const BetOfTheDay = () => {
       }
       
       // Scale and glow effects based on influence
-      const scale = 1 + (influence * 0.4); // Max 40% larger
+      const scale = 1 + (influence * 0.3); // Max 30% larger (reduced from 0.4)
       const glow = Math.round(influence * 12);
       const opacity = 0.7 + (influence * 0.3); // Varies from 0.7 to 1
       
-      const isHighlighted = influence > 0.5;
+      const isHighlighted = influence > 0.1; // Reduced threshold to affect more words
       
       // Calculate color based on suggestion type
       const baseColor = isFade ? 'var(--onetime-red)' : 'var(--onetime-green)';
@@ -99,10 +100,10 @@ const BetOfTheDay = () => {
             display: 'inline-block',
             marginRight: '4px',
             transform: `scale(${scale})`,
-            transition: 'all 0.15s ease-out',
-            color: influence > 0 ? baseColor : 'inherit',
+            transition: 'all 0.2s ease-out', // Smoothed out the transition
+            color: isHighlighted ? baseColor : 'inherit',
             opacity: opacity,
-            fontWeight: influence > 0.3 ? 'bold' : 'normal',
+            fontWeight: isHighlighted ? 'bold' : 'normal',
             textShadow: influence > 0 ? `0 0 ${glow}px ${glowColor}` : 'none',
             position: 'relative',
             zIndex: Math.round(influence * 10)
@@ -132,7 +133,7 @@ const BetOfTheDay = () => {
   useEffect(() => {
     let animationFrame;
     let startTime = null;
-    const totalDuration = 4000; // Total animation time in ms
+    const totalDuration = 3000; // Reduced from 4000ms for slightly faster movement
     const lineChangePoint = 0.5; // When to switch lines (0.5 = halfway)
     
     const animate = (timestamp) => {
