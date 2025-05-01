@@ -116,7 +116,9 @@ const BetOfTheDay = () => {
             <span className={`animate-highlight-text ${isFade ? "text-onetime-red" : "text-onetime-green"}`}>
               {currentPlay.stats}
             </span>
-            <span className="font-medium">{currentPlay.percentage}% {isFade ? "fading" : "tailing"}</span>
+            <div className="mt-2 font-medium">
+              {currentPlay.percentage}% {isFade ? "fading" : "tailing"}
+            </div>
             <div className={`laser-pointer ${isFade ? "laser-red" : "laser-green"}`}></div>
           </div>
         </div>
