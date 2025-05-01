@@ -40,7 +40,7 @@ const PlayCard: React.FC<PlayCardProps> = ({ play, renderWaveText }) => {
       <div className="mb-6 rounded-lg bg-muted p-5 text-center border border-white/10 shadow-lg">
         <ActionButton 
           variant={isFade ? "fade" : "tail"}
-          className="h-14 text-base font-bold"
+          className="h-14 text-xl font-bold"
         >
           {`${actionText}\n${play.bet}`}
         </ActionButton>
