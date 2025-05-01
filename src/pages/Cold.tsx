@@ -3,11 +3,14 @@ import React from "react";
 import { Bell } from "lucide-react";
 import BottomNav from "@/components/BottomNav";
 import ColdestBettors from "@/components/ColdestBettors";
+import { useIsMobile } from "@/hooks/use-mobile";
 
 const ColdPage = () => {
+  const isMobile = useIsMobile();
+  
   return (
     <div className="flex min-h-screen flex-col bg-background">
-      <div className="onetime-container">
+      <div className={`onetime-container ${isMobile ? "pb-24" : ""}`}>
         <header className="mb-8 flex items-center justify-between">
           <div className="flex items-center gap-3">
             <img 

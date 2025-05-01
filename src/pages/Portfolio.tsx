@@ -1,9 +1,9 @@
-
 import React, { useState } from "react";
 import BottomNav from "@/components/BottomNav";
 import TimeFilter from "@/components/TimeFilter";
 import BettorCard from "@/components/BettorCard";
 import { Bell } from "lucide-react";
+import { useIsMobile } from "@/hooks/use-mobile";
 
 // Mock data
 const mockPortfolio = {
@@ -43,10 +43,11 @@ const mockPortfolio = {
 const Portfolio = () => {
   const [activeFilter, setActiveFilter] = useState("1w");
   const [activeTab, setActiveTab] = useState<"tailing" | "fading">("tailing");
+  const isMobile = useIsMobile();
 
   return (
-    <>
-      <div className="onetime-container">
+    <div className="flex min-h-screen flex-col bg-background">
+      <div className={`onetime-container ${isMobile ? "pb-24" : ""}`}>
         <header className="mb-8 flex items-center justify-between">
           <div className="flex items-center gap-3">
             <img 
@@ -125,7 +126,7 @@ const Portfolio = () => {
         </div>
       </div>
       <BottomNav />
-    </>
+    </div>
   );
 };
 
