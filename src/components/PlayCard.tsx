@@ -47,7 +47,7 @@ const PlayCard: React.FC<PlayCardProps> = ({ play, renderWaveText }) => {
           variant={isFade ? "fade" : "tail"}
           className="h-14 text-base font-bold"
         >
-          {isFade ? "🔥 Fade This Bet" : "🔥 Tail This Bet"}
+          {isFade ? "Fade This Bet" : "Tail This Bet"}
         </ActionButton>
       </div>
       
