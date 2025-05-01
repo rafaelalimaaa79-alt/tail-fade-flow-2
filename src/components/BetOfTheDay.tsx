@@ -48,26 +48,27 @@ const BetOfTheDay = () => {
   const currentPlay = playsOfTheDay[currentIndex];
   const touchStartX = useRef(0);
   const touchEndX = useRef(0);
-  const statsRef = useRef(null);
-  const percentageRef = useRef(null);
   const [animatingLine, setAnimatingLine] = useState(0); // 0 = first line, 1 = second line
-  const [activeCharIndices, setActiveCharIndices] = useState([-1, -1]); // [statsLineActiveChar, percentageLineActiveChar]
+  const [activeWordIndices, setActiveWordIndices] = useState([-1, -1]); // [statsLineActiveWord, percentageLineActiveWord]
   
   const isFade = currentPlay.suggestionType === "fade";
   const actionText = isFade ? "Fade" : "Tail";
   
-  // Split text into characters for animation
-  const splitText = (text, lineIndex) => {
-    return text.split('').map((char, index) => (
+  // Split text into words for animation
+  const splitTextIntoWords = (text, lineIndex) => {
+    const words = text.split(' ');
+    return words.map((word, index) => (
       <span 
         key={index} 
-        className={`char ${activeCharIndices[lineIndex] === index ? 'active' : ''}`}
+        className={`word ${activeWordIndices[lineIndex] === index ? 'active' : ''}`}
         style={{
-          transform: activeCharIndices[lineIndex] === index ? 'scale(1.25)' : 'scale(1)',
-          transition: 'transform 0.2s ease'
+          display: 'inline-block',
+          marginRight: '4px',
+          transform: activeWordIndices[lineIndex] === index ? 'scale(1.4)' : 'scale(1)',
+          transition: 'transform 0.3s ease, text-shadow 0.3s ease'
         }}
       >
-        {char === ' ' ? '\u00A0' : char}
+        {word}
       </span>
     ));
   };
@@ -76,62 +77,63 @@ const BetOfTheDay = () => {
   const nextPlay = () => {
     setCurrentIndex((prev) => (prev + 1) % playsOfTheDay.length);
     setAnimatingLine(0); // Reset to first line
-    setActiveCharIndices([-1, -1]); // Reset animation
+    setActiveWordIndices([-1, -1]); // Reset animation
   };
   
   // Handle previous play
   const prevPlay = () => {
     setCurrentIndex((prev) => (prev === 0 ? playsOfTheDay.length - 1 : prev - 1));
     setAnimatingLine(0); // Reset to first line
-    setActiveCharIndices([-1, -1]); // Reset animation
+    setActiveWordIndices([-1, -1]); // Reset animation
   };
   
-  // Sequential line wave animation
+  // Sequential line word animation
   useEffect(() => {
     const statsText = currentPlay.stats;
     const percentageText = `${currentPlay.percentage}% ${isFade ? "fading" : "tailing"}`;
     const textsArray = [statsText, percentageText];
     const currentText = textsArray[animatingLine];
+    const wordsCount = currentText.split(' ').length;
     
-    let charIndex = -1;
+    let wordIndex = -1;
     let animationFrame;
     let timer;
     
-    const animateLine = () => {
-      charIndex = (charIndex + 1);
+    const animateWord = () => {
+      wordIndex = (wordIndex + 1);
       
-      // Update active character for current line
-      setActiveCharIndices(prev => {
+      // Update active word for current line
+      setActiveWordIndices(prev => {
         const newIndices = [...prev];
-        newIndices[animatingLine] = charIndex;
+        newIndices[animatingLine] = wordIndex;
         return newIndices;
       });
       
       // Schedule next animation frame
-      if (charIndex < currentText.length - 1) {
+      if (wordIndex < wordsCount - 1) {
         // Continue animating current line
         timer = setTimeout(() => {
-          animationFrame = requestAnimationFrame(animateLine);
-        }, 120); // Slowed down animation speed
+          animationFrame = requestAnimationFrame(animateWord);
+        }, 300); // Slower animation for words
       } else {
         // Finish current line and move to next or reset
         timer = setTimeout(() => {
           if (animatingLine === 0) {
             // Move to second line
             setAnimatingLine(1);
-            setActiveCharIndices([-1, -1]); // Reset active characters
+            setActiveWordIndices([-1, -1]); // Reset active words
           } else {
             // Reset back to first line
             setAnimatingLine(0);
-            setActiveCharIndices([-1, -1]); // Reset active characters
+            setActiveWordIndices([-1, -1]); // Reset active words
           }
-        }, 500); // Pause between lines
+        }, 700); // Slightly longer pause between lines
       }
     };
     
     // Start the animation
     timer = setTimeout(() => {
-      animationFrame = requestAnimationFrame(animateLine);
+      animationFrame = requestAnimationFrame(animateWord);
     }, 500); // Initial delay
     
     return () => {
@@ -191,17 +193,11 @@ const BetOfTheDay = () => {
         <span className="font-normal italic text-white/70 font-serif">{currentPlay.bettorName}</span>
         <div className="mt-3 text-xl font-medium">
           <div className="wave-text-container">
-            <div 
-              ref={statsRef}
-              className={`wave-text ${isFade ? "red" : "green"} block mb-2`}
-            >
-              {splitText(currentPlay.stats, 0)}
+            <div className={`wave-text ${isFade ? "red" : "green"} block mb-2`}>
+              {splitTextIntoWords(currentPlay.stats, 0)}
             </div>
-            <div 
-              ref={percentageRef}
-              className={`wave-text ${isFade ? "red" : "green"} block`}
-            >
-              {splitText(`${currentPlay.percentage}% ${isFade ? "fading" : "tailing"}`, 1)}
+            <div className={`wave-text ${isFade ? "red" : "green"} block`}>
+              {splitTextIntoWords(`${currentPlay.percentage}% ${isFade ? "fading" : "tailing"}`, 1)}
             </div>
           </div>
         </div>
@@ -244,3 +240,4 @@ const BetOfTheDay = () => {
 };
 
 export default BetOfTheDay;
+
