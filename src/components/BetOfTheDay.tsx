@@ -48,56 +48,64 @@ const BetOfTheDay = () => {
   const currentPlay = playsOfTheDay[currentIndex];
   const touchStartX = useRef(0);
   const touchEndX = useRef(0);
-  const [animatingLine, setAnimatingLine] = useState(0); // 0 = first line, 1 = second line
-  const [animationProgress, setAnimationProgress] = useState(0); // 0 to 100% progress
+  const [animationPosition, setAnimationPosition] = useState(0); // 0 to 1 position
+  const [activeLine, setActiveLine] = useState(0); // 0 = first line, 1 = second line
   
   const isFade = currentPlay.suggestionType === "fade";
   const actionText = isFade ? "Fade" : "Tail";
   
   // Split text into words for animation
-  const splitTextIntoWords = (text, lineIndex) => {
+  const renderWaveText = (text, lineIndex) => {
     const words = text.split(' ');
     return words.map((word, index) => {
-      // Calculate how "active" this word is based on animation progress
-      // Each word gets a "window" of activity during the animation
-      const wordCount = words.length;
-      const wordPosition = index / wordCount; // 0 to 1 position in the text
-      const windowSize = 0.2; // Size of the active window (adjust for speed)
+      // Calculate position of this word in the text (as percentage of total width)
+      const wordPosition = index / (words.length - 1);
       
-      // Calculate word's distance from the current animation position
-      let distanceFromActive = Math.abs(animationProgress - wordPosition);
-      if (animatingLine !== lineIndex) {
-        distanceFromActive = 1; // Not active if not on current line
+      // Calculate distance from the wave position
+      // We use a continuous sine wave that moves across the text
+      const distance = Math.abs(wordPosition - animationPosition);
+      
+      // Create a wave effect with a gaussian-like curve that affects multiple words
+      // Smaller values = broader wave effect
+      const waveWidth = 0.15;
+      
+      // Calculate influence factor (0 to 1) based on distance from wave center
+      let influence = Math.max(0, 1 - (distance / waveWidth));
+      
+      // Apply a curve to make it more wave-like
+      influence = Math.pow(influence, 2);
+      
+      // Only apply effect to current line
+      if (lineIndex !== activeLine) {
+        influence = 0;
       }
       
-      // Calculate scale based on proximity to animation point
-      const scale = distanceFromActive < windowSize 
-        ? 1 + ((windowSize - distanceFromActive) / windowSize) * 0.5 // Max scale 1.5x
-        : 1;
+      // Scale and glow effects based on influence
+      const scale = 1 + (influence * 0.4); // Max 40% larger
+      const glow = Math.round(influence * 12);
+      const opacity = 0.7 + (influence * 0.3); // Varies from 0.7 to 1
       
-      // Calculate opacity for the glow effect
-      const glowOpacity = distanceFromActive < windowSize
-        ? ((windowSize - distanceFromActive) / windowSize)
-        : 0;
+      const isHighlighted = influence > 0.5;
       
-      const isActive = glowOpacity > 0.2; // Threshold for "active" styling
+      // Calculate color based on suggestion type
+      const baseColor = isFade ? 'var(--onetime-red)' : 'var(--onetime-green)';
+      const glowColor = isFade ? 'rgba(239, 68, 68, 0.9)' : 'rgba(16, 185, 129, 0.9)';
       
       return (
         <span 
           key={index} 
-          className={`word ${isActive ? 'active' : ''}`}
+          className="word"
           style={{
             display: 'inline-block',
             marginRight: '4px',
             transform: `scale(${scale})`,
-            transition: 'transform 0.2s ease',
-            color: isActive 
-              ? (isFade ? 'var(--onetime-red)' : 'var(--onetime-green)') 
-              : 'inherit',
-            textShadow: isActive
-              ? `0 0 ${Math.round(glowOpacity * 8)}px ${isFade ? 'rgba(239, 68, 68, 0.9)' : 'rgba(16, 185, 129, 0.9)'}`
-              : 'none',
-            fontWeight: isActive ? 'bold' : 'normal'
+            transition: 'all 0.15s ease-out',
+            color: influence > 0 ? baseColor : 'inherit',
+            opacity: opacity,
+            fontWeight: influence > 0.3 ? 'bold' : 'normal',
+            textShadow: influence > 0 ? `0 0 ${glow}px ${glowColor}` : 'none',
+            position: 'relative',
+            zIndex: Math.round(influence * 10)
           }}
         >
           {word}
@@ -109,27 +117,23 @@ const BetOfTheDay = () => {
   // Handle next play
   const nextPlay = () => {
     setCurrentIndex((prev) => (prev + 1) % playsOfTheDay.length);
-    setAnimatingLine(0); // Reset to first line
-    setAnimationProgress(0); // Reset animation
+    setAnimationPosition(0);
+    setActiveLine(0);
   };
   
   // Handle previous play
   const prevPlay = () => {
     setCurrentIndex((prev) => (prev === 0 ? playsOfTheDay.length - 1 : prev - 1));
-    setAnimatingLine(0); // Reset to first line
-    setAnimationProgress(0); // Reset animation
+    setAnimationPosition(0);
+    setActiveLine(0);
   };
   
-  // Wave animation effect
+  // Smooth wave animation effect
   useEffect(() => {
-    const statsText = currentPlay.stats;
-    const percentageText = `${currentPlay.percentage}% ${isFade ? "fading" : "tailing"}`;
-    const textsArray = [statsText, percentageText];
-    
     let animationFrame;
     let startTime = null;
-    const totalDuration = 3000; // Total animation time for both lines
-    const lineDuration = totalDuration / 2; // Duration per line
+    const totalDuration = 4000; // Total animation time in ms
+    const lineChangePoint = 0.5; // When to switch lines (0.5 = halfway)
     
     const animate = (timestamp) => {
       if (!startTime) startTime = timestamp;
@@ -138,28 +142,29 @@ const BetOfTheDay = () => {
       // Calculate total progress (0 to 1)
       const totalProgress = Math.min(elapsed / totalDuration, 1);
       
-      // Determine which line is active and the progress within that line
-      if (totalProgress < 0.5) {
-        // First line animation (0 to 0.5 of total)
-        setAnimatingLine(0);
-        setAnimationProgress(totalProgress * 2); // Scale 0-0.5 to 0-1
+      // Calculate wave position (0 to 1, then 0 to 1 again)
+      // We want the wave to move from left to right across each line
+      if (totalProgress < lineChangePoint) {
+        // First line animation
+        setActiveLine(0);
+        setAnimationPosition(totalProgress / lineChangePoint);
       } else {
-        // Second line animation (0.5 to 1.0 of total)
-        setAnimatingLine(1);
-        setAnimationProgress((totalProgress - 0.5) * 2); // Scale 0.5-1 to 0-1
+        // Second line animation
+        setActiveLine(1);
+        setAnimationPosition((totalProgress - lineChangePoint) / (1 - lineChangePoint));
       }
       
       // Continue animation if not complete
       if (totalProgress < 1) {
         animationFrame = requestAnimationFrame(animate);
       } else {
-        // Reset animation after completion
+        // Reset and restart animation after completion
         setTimeout(() => {
-          setAnimatingLine(0);
-          setAnimationProgress(0);
+          setAnimationPosition(0);
+          setActiveLine(0);
           startTime = null;
-          animationFrame = requestAnimationFrame(animate); // Restart the animation
-        }, 500); // Pause between animation cycles
+          animationFrame = requestAnimationFrame(animate);
+        }, 300); // Small pause between animation cycles
       }
     };
     
@@ -222,11 +227,11 @@ const BetOfTheDay = () => {
         <span className="font-normal italic text-white/70 font-serif">{currentPlay.bettorName}</span>
         <div className="mt-3 text-xl font-medium">
           <div className="wave-text-container">
-            <div className={`wave-text ${isFade ? "red" : "green"} block mb-2`}>
-              {splitTextIntoWords(currentPlay.stats, 0)}
+            <div className="block mb-2">
+              {renderWaveText(currentPlay.stats, 0)}
             </div>
-            <div className={`wave-text ${isFade ? "red" : "green"} block`}>
-              {splitTextIntoWords(`${currentPlay.percentage}% ${isFade ? "fading" : "tailing"}`, 1)}
+            <div className="block">
+              {renderWaveText(`${currentPlay.percentage}% ${isFade ? "fading" : "tailing"}`, 1)}
             </div>
           </div>
         </div>

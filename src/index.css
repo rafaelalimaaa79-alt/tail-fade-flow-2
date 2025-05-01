@@ -1,3 +1,4 @@
+
 @tailwind base;
 @tailwind components;
 @tailwind utilities;
@@ -131,10 +132,10 @@
   }
   
   /* Base word styling */
-  .wave-text .word {
-    @apply inline-block transition-all duration-200 origin-center;
+  .wave-text-container .word {
+    @apply inline-block transition-all duration-150 origin-center;
   }
-  
+
   @keyframes highlight-text {
     0% {
       background-position: -100%;
@@ -145,9 +146,5 @@
       opacity: 1;
     }
   }
-  
-  .animate-highlight-text {
-    background-size: 200% auto;
-    animation: highlight-text 2s linear;
-  }
 }
+
