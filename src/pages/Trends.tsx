@@ -74,9 +74,6 @@ const Trends = () => {
 
         <div className="mb-6">
           <h1 className="text-2xl font-bold">Today's Top Trends</h1>
-          <p className="text-white/60 mt-1">
-            Insights based on bettor performance analysis
-          </p>
         </div>
         
         <TimeFilter
