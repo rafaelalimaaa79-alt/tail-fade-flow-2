@@ -3,6 +3,7 @@ import React, { useState } from "react";
 import BottomNav from "@/components/BottomNav";
 import TimeFilter from "@/components/TimeFilter";
 import BettorCard from "@/components/BettorCard";
+import { Bell } from "lucide-react";
 
 // Mock data
 const mockPortfolio = {
@@ -46,6 +47,19 @@ const Portfolio = () => {
   return (
     <>
       <div className="onetime-container">
+        <header className="mb-8 flex items-center justify-between">
+          <div className="flex items-center gap-3">
+            <img 
+              src="/lovable-uploads/57cb1fb4-7471-451e-bf49-d4d5fa12bdcb.png" 
+              alt="ONE TIME logo" 
+              className="h-10"
+            />
+          </div>
+          <button className="rounded-full p-2 text-white/80 hover:text-white">
+            <Bell className="h-6 w-6" />
+          </button>
+        </header>
+
         <div className="mb-6">
           <h1 className="text-2xl font-bold">My Portfolio</h1>
         </div>
