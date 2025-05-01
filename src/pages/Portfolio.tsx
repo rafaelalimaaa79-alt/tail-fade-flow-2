@@ -52,7 +52,7 @@ const Portfolio = () => {
             <img 
               src="/lovable-uploads/57cb1fb4-7471-451e-bf49-d4d5fa12bdcb.png" 
               alt="ONE TIME logo" 
-              className="h-10"
+              className="h-14"
             />
           </div>
           <button className="rounded-full p-2 text-white/80 hover:text-white">
