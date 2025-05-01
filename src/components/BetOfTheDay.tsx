@@ -11,10 +11,17 @@ const BetOfTheDay = () => {
   const currentPlay = playsOfTheDay[currentIndex];
   const touchStartX = useRef(0);
   const touchEndX = useRef(0);
-  const { animationPosition, activeLine } = useWaveAnimation();
+  
+  // Use the improved hook with custom options
+  const { animationPosition, activeLine } = useWaveAnimation({
+    totalDuration: 3500,  // Slightly slower for better visual effect
+    lineChangePoint: 0.5,
+    pauseDuration: 300
+  });
+  
   const isFade = currentPlay.suggestionType === "fade";
   
-  // Render the wave text
+  // Render the wave text with improved component
   const renderWaveText = (text: string, lineIndex: number) => {
     return (
       <WaveText
@@ -23,6 +30,9 @@ const BetOfTheDay = () => {
         activeLine={activeLine}
         animationPosition={animationPosition}
         isFade={isFade}
+        waveWidth={0.4}  // Wider wave effect
+        maxScale={0.25}  // Slightly reduced scale for smoother animation
+        maxGlow={10}     // Adjusted glow intensity
       />
     );
   };
