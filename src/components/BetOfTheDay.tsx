@@ -111,12 +111,13 @@ const BetOfTheDay = () => {
       {/* Bettor info with italic usernames and highlighted stats */}
       <div className="mb-6 text-lg text-white/80 text-center">
         <span className="font-normal italic text-white/70 font-serif">{currentPlay.bettorName}</span>
-        <div className="mt-3 text-xl font-medium">
+        <div className="mt-3 text-xl font-medium laser-text-container">
           <span className={`animate-highlight-text ${isFade ? "text-onetime-red" : "text-onetime-green"}`}>
             {currentPlay.stats}
           </span>
+          <div className={`laser-pointer ${isFade ? "laser-red" : "laser-green"}`}></div>
         </div>
-        <div className="mt-2 text-lg">
+        <div className="mt-2 text-lg laser-text-container">
           <span className="font-medium">{currentPlay.percentage}% {isFade ? "fading" : "tailing"}</span>
         </div>
       </div>

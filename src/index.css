@@ -120,6 +120,44 @@
     @apply text-transparent bg-clip-text bg-gradient-to-br from-primary via-primary to-white/90;
   }
   
+  /* Laser pointer animation */
+  .laser-text-container {
+    @apply relative overflow-hidden;
+  }
+  
+  .laser-pointer {
+    @apply absolute w-1.5 h-1.5 rounded-full z-10 opacity-80;
+    animation: laser-move 10s linear infinite;
+    top: 50%;
+    transform: translateY(-50%);
+    box-shadow: 0 0 5px 2px currentColor;
+  }
+  
+  .laser-green {
+    @apply bg-onetime-green text-onetime-green;
+  }
+  
+  .laser-red {
+    @apply bg-onetime-red text-onetime-red;
+  }
+  
+  @keyframes laser-move {
+    0% {
+      left: 0;
+      opacity: 0;
+    }
+    5% {
+      opacity: 1;
+    }
+    95% {
+      opacity: 1;
+    }
+    100% {
+      left: 100%;
+      opacity: 0;
+    }
+  }
+  
   @keyframes highlight-text {
     0% {
       background-position: -100%;
@@ -136,3 +174,4 @@
     animation: highlight-text 2s linear;
   }
 }
+
