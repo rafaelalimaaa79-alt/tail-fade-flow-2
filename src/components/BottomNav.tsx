@@ -108,7 +108,7 @@ const BottomNav = () => {
                 {item.customIcon ? (
                   <div className="relative flex items-center justify-center">
                     <ArrowUp 
-                      className="h-6 w-6 absolute -top-1.5 -right-1.5" 
+                      className="h-5 w-5 absolute -top-1.5 -right-1.5" 
                       style={{ 
                         color: isActive ? '#14f195' : '#ffffff',
                         filter: isActive 
@@ -118,7 +118,7 @@ const BottomNav = () => {
                       }} 
                     />
                     <ArrowDown 
-                      className="h-6 w-6 absolute -bottom-1.5 -left-1.5" 
+                      className="h-5 w-5 absolute -bottom-1.5 -left-1.5" 
                       style={{ 
                         color: isActive ? '#ea384c' : '#ffffff',
                         filter: isActive 
