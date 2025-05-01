@@ -108,13 +108,15 @@ const BetOfTheDay = () => {
         <h2 className="text-2xl font-extrabold text-white text-center">Plays of the Day</h2>
       </div>
       
-      {/* Bettor info with bold highlighting - without bet after name */}
+      {/* Bettor info with italic usernames and highlighted stats */}
       <div className="mb-6 text-lg text-white/80 text-center">
-        <span className="font-extrabold text-white">{currentPlay.bettorName}</span>
-        <div className="mt-2 text-base font-medium">
-          <span className="text-white/80">{currentPlay.stats}</span>
+        <span className="font-normal italic text-white/70 font-serif">{currentPlay.bettorName}</span>
+        <div className="mt-3 text-xl font-medium">
+          <span className={`animate-highlight-text ${isFade ? "text-onetime-red" : "text-onetime-green"}`}>
+            {currentPlay.stats}
+          </span>
         </div>
-        <div className="mt-1 text-base">
+        <div className="mt-2 text-lg">
           <span className="font-medium">{currentPlay.percentage}% {isFade ? "fading" : "tailing"}</span>
         </div>
       </div>
