@@ -8,6 +8,7 @@ type ActionButtonProps = {
   variant?: "tail" | "fade" | "default";
   className?: string;
   onClick?: () => void;
+  style?: React.CSSProperties;
 };
 
 const ActionButton = ({
@@ -15,6 +16,7 @@ const ActionButton = ({
   variant = "default",
   className,
   onClick,
+  style,
 }: ActionButtonProps) => {
   return (
     <Button
@@ -26,6 +28,7 @@ const ActionButton = ({
         variant === "default" && "bg-primary/90 hover:bg-primary shadow-[0_0_15px_rgba(108,92,231,0.4)]",
         className
       )}
+      style={style}
     >
       {children}
     </Button>
