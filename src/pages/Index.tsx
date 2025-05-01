@@ -21,8 +21,6 @@ const Dashboard = () => {
 
         <BetOfTheDay />
         
-        <div className="mt-8 text-lg font-bold text-white/90">Leaderboard</div>
-        
         <div className="mt-4">
           <LeaderboardCarousel />
         </div>
