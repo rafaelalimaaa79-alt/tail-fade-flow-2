@@ -11,42 +11,54 @@ const trendData = [
   {
     id: "1",
     name: "WinMaster",
+    betDescription: "Lakers -5.5",
     isTailRecommendation: true,
+    reason: "8-2 in last 10 bets with consistent NBA picks",
     recentBets: [1, 1, 1, 0, 1, 1, 0, 1, 1, 1], // 1 = win, 0 = loss
     unitPerformance: 8.5,
   },
   {
     id: "2",
     name: "BetKing",
+    betDescription: "Chiefs ML",
     isTailRecommendation: true,
+    reason: "7-3 record on NFL favorites",
     recentBets: [1, 1, 0, 1, 1, 1, 1, 0, 1, 0],
     unitPerformance: 6.7,
   },
   {
     id: "3",
     name: "ProPicker",
+    betDescription: "Celtics vs Heat Over 220",
     isTailRecommendation: false,
+    reason: "2-8 record on over/under bets",
     recentBets: [0, 0, 1, 0, 0, 0, 1, 0, 0, 0],
     unitPerformance: -7.2,
   },
   {
     id: "4",
     name: "BettingGuru",
+    betDescription: "Cowboys -3",
     isTailRecommendation: true,
+    reason: "Solid 7-3 record with NFL spreads",
     recentBets: [1, 0, 1, 1, 1, 0, 1, 1, 0, 1],
     unitPerformance: 5.9,
   },
   {
     id: "5",
     name: "SportsTipper",
+    betDescription: "Yankees ML",
     isTailRecommendation: false,
+    reason: "Only 2-8 in MLB moneyline picks",
     recentBets: [0, 0, 0, 1, 0, 0, 0, 1, 0, 0],
     unitPerformance: -8.3,
   },
   {
     id: "6",
     name: "OddsShark",
+    betDescription: "Steelers +3.5",
     isTailRecommendation: true,
+    reason: "7-3 on NFL underdogs",
     recentBets: [1, 1, 1, 0, 1, 0, 1, 1, 1, 0],
     unitPerformance: 7.1,
   }
@@ -57,7 +69,7 @@ const Trends = () => {
   const isMobile = useIsMobile();
   
   return (
-    <div className="flex min-h-screen flex-col bg-background">
+    <div className="flex min-h-screen flex-col bg-background font-rajdhani">
       <div className={`onetime-container ${isMobile ? "pb-24" : ""}`}>
         <header className="mb-6 flex items-center justify-between">
           <div className="flex items-center gap-3">
@@ -72,7 +84,7 @@ const Trends = () => {
           </button>
         </header>
 
-        <div className="mb-6">
+        <div className="mb-6 text-center">
           <h1 className="text-2xl font-bold">Today's Top Trends</h1>
         </div>
         
@@ -87,6 +99,8 @@ const Trends = () => {
               key={trend.id}
               id={trend.id}
               name={trend.name}
+              betDescription={trend.betDescription}
+              reason={trend.reason}
               isTailRecommendation={trend.isTailRecommendation}
               recentBets={trend.recentBets}
               unitPerformance={trend.unitPerformance}
