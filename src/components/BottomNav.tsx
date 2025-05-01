@@ -1,7 +1,7 @@
 
 import React, { useEffect, useState } from "react";
 import { Link, useLocation } from "react-router-dom";
-import { Flame, Snowflake, BarChart2, ArrowUp, ArrowDown } from "lucide-react";
+import { Flame, Snowflake, BarChart2, ArrowUp, ArrowDown, LayoutDashboard, Users } from "lucide-react";
 import { cn } from "@/lib/utils";
 import { useIsMobile } from "@/hooks/use-mobile";
 
@@ -34,22 +34,22 @@ const BottomNav = () => {
 
   const navItems = [
     {
-      icon: Flame,
-      text: "Hot",
+      icon: LayoutDashboard,
+      text: "Dashboard",
       href: "/",
       activeColor: "#ff7e33", // Neon orange
-    },
-    {
-      icon: Snowflake,
-      text: "Cold",
-      href: "/cold",
-      activeColor: "#36daf7", // Neon blue
     },
     {
       customIcon: true,
       text: "Trends",
       href: "/trends",
       activeColor: "#14f195", // Neon green
+    },
+    {
+      icon: Users,
+      text: "Leaderboards",
+      href: "/cold",
+      activeColor: "#36daf7", // Neon blue
     },
     {
       icon: BarChart2,
@@ -70,6 +70,11 @@ const BottomNav = () => {
         !isVisible ? "translate-y-full" : "translate-y-0"
       )}
     >
+      {/* Curved top shape */}
+      <div className="absolute -top-6 left-0 right-0 h-6 overflow-hidden">
+        <div className="w-full h-12 rounded-full bg-black/70 backdrop-blur-lg transform translate-y-6"></div>
+      </div>
+      
       <div className="flex items-center justify-around mx-auto max-w-md">
         {navItems.map((item) => {
           const isActive = path === item.href;
@@ -84,13 +89,13 @@ const BottomNav = () => {
                   "absolute -top-2 w-8 h-1 rounded-full transition-all duration-200",
                   isActive ? "scale-100" : "scale-0"
                 )}
-                style={{ backgroundColor: item.activeColor }} // Always use the color, no longer making it transparent
+                style={{ backgroundColor: item.activeColor }}
               />
               <div 
                 className="flex items-center justify-center w-10 h-10 rounded-full transition-all"
                 style={{ 
                   backgroundColor: isActive ? `${item.activeColor}20` : `${item.activeColor}10`,
-                  color: item.activeColor, // Always use the color, not conditional on isActive
+                  color: item.activeColor,
                   textShadow: isActive ? `0 0 10px ${item.activeColor}` : 'none',
                   opacity: isActive ? 1 : 0.7
                 }}
