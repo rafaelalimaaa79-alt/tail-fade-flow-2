@@ -3,8 +3,7 @@ import React from "react";
 import { Bell } from "lucide-react";
 import BottomNav from "@/components/BottomNav";
 import BetOfTheDay from "@/components/BetOfTheDay";
-import HottestBettors from "@/components/HottestBettors";
-import ColdestBettors from "@/components/ColdestBettors";
+import LeaderboardCarousel from "@/components/LeaderboardCarousel";
 
 const Dashboard = () => {
   return (
@@ -24,9 +23,8 @@ const Dashboard = () => {
         
         <div className="mt-8 text-lg font-bold text-white/90">Leaderboard</div>
         
-        <div className="mt-4 grid grid-cols-2 gap-4">
-          <HottestBettors />
-          <ColdestBettors />
+        <div className="mt-4">
+          <LeaderboardCarousel />
         </div>
       </div>
       <BottomNav />
