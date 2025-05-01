@@ -21,6 +21,8 @@ export default {
 		extend: {
 			fontFamily: {
 				rajdhani: ['Rajdhani', 'sans-serif'],
+				// Make Rajdhani the default font for all text
+				sans: ['Rajdhani', 'sans-serif'],
 			},
 			colors: {
 				border: 'hsl(var(--border))',
