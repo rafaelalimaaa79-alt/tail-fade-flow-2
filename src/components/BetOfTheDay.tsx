@@ -105,11 +105,11 @@ const BetOfTheDay = () => {
     >
       {/* Full-width large title */}
       <div className="mb-5 border-b border-white/10 pb-2">
-        <h2 className="text-2xl font-extrabold text-white">Plays of the Day</h2>
+        <h2 className="text-2xl font-extrabold text-white text-center">Plays of the Day</h2>
       </div>
       
       {/* Bettor info with bold highlighting - without bet after name */}
-      <div className="mb-6 text-lg text-white/80">
+      <div className="mb-6 text-lg text-white/80 text-center">
         <span className="font-extrabold text-white">{currentPlay.bettorName}</span>
         <div className="mt-2 text-sm">
           <span className="text-white/80">{currentPlay.stats}</span>
