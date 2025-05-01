@@ -1,7 +1,7 @@
 
 import React, { useEffect, useState } from "react";
 import { Link, useLocation } from "react-router-dom";
-import { Flame, Snowflake, BarChart2, TrendingUp } from "lucide-react";
+import { Flame, Snowflake, BarChart2, ArrowUp, ArrowDown } from "lucide-react";
 import { cn } from "@/lib/utils";
 import { useIsMobile } from "@/hooks/use-mobile";
 
@@ -41,7 +41,7 @@ const BottomNav = () => {
       activeColor: "#36daf7", // Neon blue
     },
     {
-      icon: TrendingUp,
+      customIcon: true,
       text: "Trends",
       href: "/trends",
       activeColor: "#14f195", // Neon green
@@ -96,9 +96,30 @@ const BottomNav = () => {
                   textShadow: isActive ? `0 0 10px ${item.activeColor}` : 'none'
                 }}
               >
-                <item.icon className="h-4 w-4" style={{ 
-                  filter: isActive ? 'drop-shadow(0 0 2px currentColor)' : 'none'
-                }} />
+                {item.customIcon ? (
+                  <div className="relative flex items-center justify-center">
+                    <ArrowUp 
+                      className="h-3.5 w-3.5 absolute -top-1 -right-1" 
+                      style={{ 
+                        color: '#14f195', 
+                        filter: isActive ? 'drop-shadow(0 0 2px #14f195)' : 'none',
+                        opacity: isActive ? 1 : 0.7
+                      }} 
+                    />
+                    <ArrowDown 
+                      className="h-3.5 w-3.5 absolute -bottom-1 -left-1" 
+                      style={{ 
+                        color: '#ea384c', 
+                        filter: isActive ? 'drop-shadow(0 0 2px #ea384c)' : 'none',
+                        opacity: isActive ? 1 : 0.7
+                      }} 
+                    />
+                  </div>
+                ) : (
+                  <item.icon className="h-4 w-4" style={{ 
+                    filter: isActive ? 'drop-shadow(0 0 2px currentColor)' : 'none'
+                  }} />
+                )}
               </div>
               <span 
                 className={cn(
@@ -120,3 +141,4 @@ const BottomNav = () => {
 };
 
 export default BottomNav;
+
