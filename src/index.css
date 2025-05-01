@@ -120,59 +120,40 @@
     @apply text-transparent bg-clip-text bg-gradient-to-br from-primary via-primary to-white/90;
   }
   
-  /* Laser pointer animation */
-  .laser-text-container {
-    @apply relative overflow-hidden;
+  /* Wave text animation replacement for laser pointer */
+  .wave-text {
+    @apply relative inline-block;
     line-height: 1.6;
   }
   
-  .laser-pointer {
-    @apply absolute w-3 h-3 rounded-full z-10 opacity-80;
-    animation: laser-path 6s linear infinite; /* Slowed down from 4s to 6s */
-    box-shadow: 0 0 8px 3px currentColor;
+  .wave-text-container {
+    @apply relative overflow-hidden;
   }
   
-  .laser-green {
-    @apply bg-onetime-green text-onetime-green;
+  .wave-text .char {
+    @apply inline-block transition-all duration-150 origin-center;
   }
   
-  .laser-red {
-    @apply bg-onetime-red text-onetime-red;
+  .wave-text.green .char {
+    text-shadow: 0 0 0px rgba(16, 185, 129, 0);
+    transition: transform 0.3s ease, text-shadow 0.3s ease;
   }
   
-  @keyframes laser-path {
-    0% {
-      left: 0;
-      top: 20%;
-      opacity: 0;
-    }
-    5% {
-      opacity: 1;
-    }
-    /* First line - go to end of text only */
-    40% {
-      left: 85%; /* Reduced from 100% to stop at approximate text end */
-      top: 20%;
-    }
-    /* Move to second line */
-    45% {
-      left: 0;
-      top: 70%;
-    }
-    /* Second line - go to end of text only */
-    85% {
-      left: 85%; /* Reduced from 100% to stop at approximate text end */
-      top: 70%;
-      opacity: 1;
-    }
-    90% {
-      opacity: 0;
-    }
-    100% {
-      left: 0;
-      top: 20%;
-      opacity: 0;
-    }
+  .wave-text.green .char.active {
+    @apply text-onetime-green;
+    transform: scale(1.15);
+    text-shadow: 0 0 8px rgba(16, 185, 129, 0.8);
+  }
+  
+  .wave-text.red .char {
+    text-shadow: 0 0 0px rgba(239, 68, 68, 0);
+    transition: transform 0.3s ease, text-shadow 0.3s ease;
+  }
+  
+  .wave-text.red .char.active {
+    @apply text-onetime-red;
+    transform: scale(1.15);
+    text-shadow: 0 0 8px rgba(239, 68, 68, 0.8);
   }
   
   @keyframes highlight-text {
@@ -191,3 +172,4 @@
     animation: highlight-text 2s linear;
   }
 }
+

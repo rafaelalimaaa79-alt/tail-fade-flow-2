@@ -48,19 +48,68 @@ const BetOfTheDay = () => {
   const currentPlay = playsOfTheDay[currentIndex];
   const touchStartX = useRef(0);
   const touchEndX = useRef(0);
+  const [activeCharIndex, setActiveCharIndex] = useState(-1);
+  const statsRef = useRef(null);
+  const percentageRef = useRef(null);
   
   const isFade = currentPlay.suggestionType === "fade";
   const actionText = isFade ? "Fade" : "Tail";
   
+  // Split text into characters for animation
+  const splitText = (text) => {
+    return text.split('').map((char, index) => (
+      <span 
+        key={index} 
+        className={`char ${activeCharIndex === index ? 'active' : ''}`}
+      >
+        {char === ' ' ? '\u00A0' : char}
+      </span>
+    ));
+  };
+  
   // Handle next play
   const nextPlay = () => {
     setCurrentIndex((prev) => (prev + 1) % playsOfTheDay.length);
+    setActiveCharIndex(-1); // Reset animation when changing plays
   };
   
   // Handle previous play
   const prevPlay = () => {
     setCurrentIndex((prev) => (prev === 0 ? playsOfTheDay.length - 1 : prev - 1));
+    setActiveCharIndex(-1); // Reset animation when changing plays
   };
+  
+  // Text wave animation
+  useEffect(() => {
+    // Combine stats and percentage for animation
+    const statsText = currentPlay.stats;
+    const percentageText = `${currentPlay.percentage}% ${isFade ? "fading" : "tailing"}`;
+    const totalChars = statsText.length + percentageText.length + 1; // +1 for the space we'll add between
+    
+    let animationFrame;
+    let charIndex = -5; // Start before the text to create a smooth entry
+    
+    const animateText = () => {
+      charIndex = (charIndex + 1) % (totalChars + 10); // +10 for a pause between loops
+      
+      // Only set the active index when it's in range
+      if (charIndex >= 0 && charIndex < totalChars) {
+        setActiveCharIndex(charIndex);
+      } else {
+        setActiveCharIndex(-1); // Hide when out of range for pause
+      }
+      
+      animationFrame = requestAnimationFrame(() => {
+        setTimeout(animateText, 100); // Controls the speed of the animation
+      });
+    };
+    
+    animateText();
+    
+    return () => {
+      cancelAnimationFrame(animationFrame);
+    };
+  }, [currentPlay, isFade]);
   
   // Touch event handlers for swipe
   const handleTouchStart = (e) => {
@@ -112,14 +161,19 @@ const BetOfTheDay = () => {
       <div className="mb-6 text-lg text-white/80 text-center">
         <span className="font-normal italic text-white/70 font-serif">{currentPlay.bettorName}</span>
         <div className="mt-3 text-xl font-medium">
-          <div className="laser-text-container">
-            <span className={`animate-highlight-text ${isFade ? "text-onetime-red" : "text-onetime-green"}`}>
-              {currentPlay.stats}
-            </span>
-            <div className="mt-2 font-medium">
-              {currentPlay.percentage}% {isFade ? "fading" : "tailing"}
+          <div className="wave-text-container">
+            <div 
+              ref={statsRef}
+              className={`wave-text ${isFade ? "red" : "green"} block mb-2`}
+            >
+              {splitText(currentPlay.stats)}
             </div>
-            <div className={`laser-pointer ${isFade ? "laser-red" : "laser-green"}`}></div>
+            <div 
+              ref={percentageRef}
+              className={`wave-text ${isFade ? "red" : "green"} block`}
+            >
+              {splitText(`${currentPlay.percentage}% ${isFade ? "fading" : "tailing"}`)}
+            </div>
           </div>
         </div>
       </div>
