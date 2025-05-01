@@ -35,11 +35,13 @@ const BetOfTheDay = () => {
         </div>
       </div>
       
-      {/* High-impact suggestion card */}
-      <div className="mb-6 rounded-lg bg-onetime-red/90 p-5 text-center border border-white/10 shadow-[0_0_15px_rgba(239,68,68,0.4)]">
+      {/* High-impact suggestion card - now with contrasting styles instead of all red */}
+      <div className="mb-6 rounded-lg bg-muted p-5 text-center border border-white/10 shadow-lg">
         <p className="text-sm text-white/80">Our suggestion</p>
         <p className="text-2xl font-extrabold text-white flex items-center justify-center gap-2">
-          💥 {actionText} {betOfTheDay.bet}
+          <span className="text-onetime-red">💥</span> 
+          <span className="text-onetime-red font-black">{actionText}</span> 
+          <span>{betOfTheDay.bet}</span>
         </p>
       </div>
       
