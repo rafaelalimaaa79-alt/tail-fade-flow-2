@@ -1,56 +1,97 @@
 
-import React from "react";
-import { ArrowRight, AlertTriangle } from "lucide-react";
+import React, { useState, useEffect } from "react";
+import { ArrowRight } from "lucide-react";
 import ActionButton from "./ActionButton";
 import { Link } from "react-router-dom";
 
-// Mock data - this would come from an API in a real app
-const betOfTheDay = {
-  bettorName: "John",
-  streak: -8, // Negative for losing streak
-  bet: "Yankees ML",
-  suggestionType: "fade", // 'tail' or 'fade'
-};
+// Mock data with multiple bets
+const playsOfTheDay = [
+  {
+    bettorName: "NoCoverKev",
+    bet: "Celtics -6.5",
+    suggestionType: "fade",
+    stats: "2–12 in his last 14 bets",
+    percentage: 89
+  },
+  {
+    bettorName: "MoneyMaker22",
+    bet: "Rangers ML",
+    suggestionType: "tail",
+    stats: "+11.4u this week",
+    percentage: 84
+  },
+  {
+    bettorName: "ColdHands88",
+    bet: "Yankees ML",
+    suggestionType: "fade",
+    stats: "Lost 6 straight MLB bets",
+    percentage: 78
+  },
+  {
+    bettorName: "SharpSniper17",
+    bet: "Nuggets -4.5",
+    suggestionType: "tail",
+    stats: "On a 9–1 heater",
+    percentage: 75
+  },
+  {
+    bettorName: "SlumpCityJack",
+    bet: "Dodgers -1.5",
+    suggestionType: "fade",
+    stats: "0–7 on last run line picks",
+    percentage: 72
+  }
+];
 
 const BetOfTheDay = () => {
-  const isLosingStreak = betOfTheDay.streak < 0;
-  const streakText = isLosingStreak 
-    ? `lost ${Math.abs(betOfTheDay.streak)} straight` 
-    : `won ${betOfTheDay.streak} straight`;
-  const actionText = betOfTheDay.suggestionType === "fade" ? "Fade" : "Tail";
+  const [currentIndex, setCurrentIndex] = useState(0);
+  const currentPlay = playsOfTheDay[currentIndex];
+  
+  const isFade = currentPlay.suggestionType === "fade";
+  const actionText = isFade ? "Fade" : "Tail";
+  
+  // Auto rotate through plays every 5 seconds
+  useEffect(() => {
+    const interval = setInterval(() => {
+      setCurrentIndex((prev) => (prev + 1) % playsOfTheDay.length);
+    }, 5000);
+    
+    return () => clearInterval(interval);
+  }, []);
   
   return (
     <div className="rounded-xl bg-card p-6 shadow-lg border border-white/10 neon-glow">
-      {/* High-impact title with emoji */}
-      <div className="flex items-center gap-2 mb-5">
-        <AlertTriangle className="h-5 w-5 text-onetime-orange animate-pulse-subtle" />
-        <h2 className="text-xl font-extrabold text-white">🚨 Bet of the Day</h2>
+      {/* Full-width large title */}
+      <div className="mb-5 border-b border-white/10 pb-2">
+        <h2 className="text-2xl font-extrabold text-white">Plays of the Day</h2>
       </div>
       
-      {/* Bettor streak info with bold highlighting */}
+      {/* Bettor info with bold highlighting */}
       <div className="mb-6 text-lg text-white/80">
-        <span className="font-extrabold text-white">{betOfTheDay.bettorName}</span> has {streakText}.
-        <div className="mt-3 font-medium">
-          His bet tonight: <span className="font-extrabold text-white">{betOfTheDay.bet}</span>
+        <span className="font-extrabold text-white">{currentPlay.bettorName}</span> – {currentPlay.bet}
+        <div className="mt-2 text-sm">
+          <span className="text-white/80">{currentPlay.stats}</span>
+        </div>
+        <div className="mt-1 text-sm">
+          <span className="font-medium">{currentPlay.percentage}% {isFade ? "fading" : "tailing"}</span>
         </div>
       </div>
       
       {/* High-impact suggestion card - now with contrasting styles instead of all red */}
       <div className="mb-6 rounded-lg bg-muted p-5 text-center border border-white/10 shadow-lg">
-        <p className="text-sm text-white/80">Our suggestion</p>
         <p className="text-2xl font-extrabold text-white flex items-center justify-center gap-2">
           <span className="text-onetime-red">💥</span> 
-          <span className="text-onetime-red font-black">{actionText}</span> 
-          <span>{betOfTheDay.bet}</span>
+          <span className={isFade ? "text-onetime-red font-black" : "text-onetime-green font-black"}>{actionText}</span> 
+          <span>{currentPlay.bet}</span>
         </p>
       </div>
       
       {/* Primary action button */}
       <ActionButton 
-        variant={betOfTheDay.suggestionType === "fade" ? "fade" : "tail"}
+        variant={isFade ? "fade" : "tail"}
         className="h-14 text-base font-bold"
       >
-        🔥 {actionText} This Bet
+        {isFade ? "🔥 Fade This Bet" : "🔥 Tail This Bet"}
       </ActionButton>
       
       {/* Secondary action link */}
