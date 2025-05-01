@@ -8,6 +8,7 @@ type TrendItemProps = {
   id: string;
   name: string;
   betDescription: string;
+  betType: string;
   reason: string;
   isTailRecommendation: boolean;
   recentBets: number[]; // 1 = win, 0 = loss
@@ -18,6 +19,7 @@ const TrendItem = ({
   id,
   name,
   betDescription,
+  betType,
   reason,
   isTailRecommendation,
   recentBets,
@@ -34,7 +36,7 @@ const TrendItem = ({
       <Card className="mb-4 overflow-hidden border border-white/10 hover:border-white/20 transition-all">
         <CardContent className="p-5">
           <div className="text-center mb-3">
-            <h2 className="text-xl font-bold">{betDescription}</h2>
+            <h2 className="text-2xl font-bold mb-2">{betDescription}</h2>
             <p className={cn(
               "text-base font-medium",
               isTailRecommendation ? "text-onetime-green" : "text-onetime-red"
@@ -49,13 +51,13 @@ const TrendItem = ({
           
           <div className="flex items-center justify-between mt-4">
             <div>
-              <p className="text-xs text-white/50 mb-2">Last 10 bets</p>
-              <div className="flex space-x-1">
+              <p className="text-xs text-white/50 mb-1">Last 10 {betType} bets</p>
+              <div className="flex space-x-0.5">
                 {recentBets.map((bet, index) => (
                   <div 
                     key={index} 
                     className={cn(
-                      "h-7 w-7 rounded-sm flex items-center justify-center font-bold text-white",
+                      "h-5 w-5 rounded-sm flex items-center justify-center font-bold text-xs text-white",
                       bet ? "bg-onetime-green" : "bg-onetime-red"
                     )}
                   >

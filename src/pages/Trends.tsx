@@ -1,9 +1,8 @@
 
-import React, { useState } from "react";
+import React from "react";
 import { Bell } from "lucide-react";
 import BottomNav from "@/components/BottomNav";
 import TrendItem from "@/components/TrendItem";
-import TimeFilter from "@/components/TimeFilter";
 import { useIsMobile } from "@/hooks/use-mobile";
 
 // Mock data for the trends page
@@ -12,6 +11,7 @@ const trendData = [
     id: "1",
     name: "WinMaster",
     betDescription: "Lakers -5.5",
+    betType: "NBA",
     isTailRecommendation: true,
     reason: "8-2 in last 10 bets with consistent NBA picks",
     recentBets: [1, 1, 1, 0, 1, 1, 0, 1, 1, 1], // 1 = win, 0 = loss
@@ -21,6 +21,7 @@ const trendData = [
     id: "2",
     name: "BetKing",
     betDescription: "Chiefs ML",
+    betType: "NFL",
     isTailRecommendation: true,
     reason: "7-3 record on NFL favorites",
     recentBets: [1, 1, 0, 1, 1, 1, 1, 0, 1, 0],
@@ -30,6 +31,7 @@ const trendData = [
     id: "3",
     name: "ProPicker",
     betDescription: "Celtics vs Heat Over 220",
+    betType: "NBA",
     isTailRecommendation: false,
     reason: "2-8 record on over/under bets",
     recentBets: [0, 0, 1, 0, 0, 0, 1, 0, 0, 0],
@@ -39,6 +41,7 @@ const trendData = [
     id: "4",
     name: "BettingGuru",
     betDescription: "Cowboys -3",
+    betType: "NFL",
     isTailRecommendation: true,
     reason: "Solid 7-3 record with NFL spreads",
     recentBets: [1, 0, 1, 1, 1, 0, 1, 1, 0, 1],
@@ -48,6 +51,7 @@ const trendData = [
     id: "5",
     name: "SportsTipper",
     betDescription: "Yankees ML",
+    betType: "MLB",
     isTailRecommendation: false,
     reason: "Only 2-8 in MLB moneyline picks",
     recentBets: [0, 0, 0, 1, 0, 0, 0, 1, 0, 0],
@@ -57,6 +61,7 @@ const trendData = [
     id: "6",
     name: "OddsShark",
     betDescription: "Steelers +3.5",
+    betType: "NFL",
     isTailRecommendation: true,
     reason: "7-3 on NFL underdogs",
     recentBets: [1, 1, 1, 0, 1, 0, 1, 1, 1, 0],
@@ -65,7 +70,6 @@ const trendData = [
 ];
 
 const Trends = () => {
-  const [activeFilter, setActiveFilter] = useState("1w");
   const isMobile = useIsMobile();
   
   return (
@@ -84,14 +88,9 @@ const Trends = () => {
           </button>
         </header>
 
-        <div className="mb-6 text-center">
+        <div className="mb-8 text-center">
           <h1 className="text-2xl font-bold">Today's Top Trends</h1>
         </div>
-        
-        <TimeFilter
-          activeFilter={activeFilter}
-          setActiveFilter={setActiveFilter}
-        />
 
         <div className="my-6 space-y-4">
           {trendData.map((trend) => (
@@ -100,6 +99,7 @@ const Trends = () => {
               id={trend.id}
               name={trend.name}
               betDescription={trend.betDescription}
+              betType={trend.betType}
               reason={trend.reason}
               isTailRecommendation={trend.isTailRecommendation}
               recentBets={trend.recentBets}
