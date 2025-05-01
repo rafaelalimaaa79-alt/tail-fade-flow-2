@@ -3,7 +3,7 @@ import React, { useState, useEffect } from "react";
 import { Link } from "react-router-dom";
 import { Card, CardContent } from "@/components/ui/card";
 import { cn } from "@/lib/utils";
-import { Button } from "@/components/ui/button";
+import ActionButton from "./ActionButton";
 import WaveText from "./WaveText";
 
 type TrendItemProps = {
@@ -38,12 +38,6 @@ const TrendItem = ({
     return () => clearInterval(interval);
   }, []);
   
-  const formattedUnits = new Intl.NumberFormat('en-US', {
-    style: 'decimal',
-    minimumFractionDigits: 1,
-    maximumFractionDigits: 1,
-  }).format(Math.abs(unitPerformance));
-  
   const actionText = isTailRecommendation ? "Tail" : "Fade";
   const actionColor = isTailRecommendation ? "text-onetime-green" : "text-onetime-red";
   const actionBgColor = isTailRecommendation ? "bg-onetime-green/20" : "bg-onetime-red/20";
@@ -75,37 +69,23 @@ const TrendItem = ({
                   )}
                   style={{ transition: "all 1s ease-in-out" }}
                 >
-                  {actionText}
                 </span> {reason}
               </div>
             </div>
-            
-            <div className={cn(
-              "px-4 py-1 rounded-full font-bold",
-              actionBgColor,
-              actionBorderColor,
-              "border-2",
-              isPulsing ? glowColor : ""
-            )}
-            style={{ transition: "all 1s ease-in-out" }}
-            >
-              {unitPerformance > 0 ? "+" : ""}{formattedUnits} units
-            </div>
           </div>
           
-          {/* Tail/Fade button with neon pulse */}
-          <div className="mb-3 mt-1 flex justify-center">
-            <Button 
+          {/* Tail/Fade button using ActionButton component like in Today's Edge */}
+          <div className="mb-3 mt-1">
+            <ActionButton 
+              variant={isTailRecommendation ? "tail" : "fade"}
               className={cn(
-                "w-32 text-white font-bold border-2", 
-                actionBgColor,
-                actionBorderColor,
+                "h-12 text-lg font-bold",
                 isPulsing ? glowColor : ""
               )}
               style={{ transition: "all 1s ease-in-out" }}
             >
-              {actionText} THIS
-            </Button>
+              {`${actionText} ${betDescription}`}
+            </ActionButton>
           </div>
           
           {/* Bottom section with recent bets directly in the card */}
