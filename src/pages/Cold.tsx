@@ -2,11 +2,9 @@
 import React from "react";
 import { Bell } from "lucide-react";
 import BottomNav from "@/components/BottomNav";
-import BetOfTheDay from "@/components/BetOfTheDay";
-import HottestBettors from "@/components/HottestBettors";
 import ColdestBettors from "@/components/ColdestBettors";
 
-const Dashboard = () => {
+const ColdPage = () => {
   return (
     <div className="flex min-h-screen flex-col">
       <div className="onetime-container pb-20">
@@ -20,13 +18,15 @@ const Dashboard = () => {
           </button>
         </header>
 
-        <BetOfTheDay />
-        
-        <div className="mt-6 text-lg font-bold">Leaderboard</div>
-        
-        <div className="mt-3 grid grid-cols-2 gap-3">
-          <HottestBettors />
-          <ColdestBettors />
+        <div className="mt-4">
+          <h2 className="text-xl font-bold">Ice Cold Bettors</h2>
+          <p className="mt-1 text-sm text-gray-500">
+            Bettors on their worst losing streaks. Consider fading them.
+          </p>
+          
+          <div className="mt-4">
+            <ColdestBettors />
+          </div>
         </div>
       </div>
       <BottomNav />
@@ -34,4 +34,4 @@ const Dashboard = () => {
   );
 };
 
-export default Dashboard;
+export default ColdPage;

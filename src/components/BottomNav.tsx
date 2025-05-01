@@ -1,7 +1,7 @@
 
 import React from "react";
 import { Link, useLocation } from "react-router-dom";
-import { User, LayoutDashboard, Briefcase, Menu } from "lucide-react";
+import { Flame, Snowflake, BarChart2, HelpCircle } from "lucide-react";
 import { cn } from "@/lib/utils";
 
 const BottomNav = () => {
@@ -10,24 +10,24 @@ const BottomNav = () => {
 
   const navItems = [
     {
-      icon: LayoutDashboard,
-      text: "Dashboard",
+      icon: Flame,
+      text: "Hot",
       href: "/",
     },
     {
-      icon: Briefcase,
+      icon: Snowflake,
+      text: "Cold",
+      href: "/cold",
+    },
+    {
+      icon: BarChart2,
       text: "Portfolio",
       href: "/portfolio",
     },
     {
-      icon: User,
-      text: "Profile",
-      href: "/profile",
-    },
-    {
-      icon: Menu,
-      text: "More",
-      href: "/more",
+      icon: HelpCircle,
+      text: "Help",
+      href: "/help",
     },
   ];
 
