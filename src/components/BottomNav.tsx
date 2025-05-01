@@ -42,10 +42,16 @@ const BottomNav = () => {
           <item.icon
             className={cn(
               "mb-1 h-6 w-6",
-              path === item.href ? "text-onetime-purple" : "text-gray-500"
+              path === item.href 
+                ? path === "/" 
+                  ? "text-onetime-orange" 
+                  : path === "/cold" 
+                    ? "text-primary" 
+                    : "text-primary"
+                : "text-white/50"
             )}
           />
-          <span>{item.text}</span>
+          <span className={path === item.href ? "text-white" : ""}>{item.text}</span>
         </Link>
       ))}
     </div>

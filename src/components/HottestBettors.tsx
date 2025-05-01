@@ -15,13 +15,13 @@ const hottestBettors = [
 
 const HottestBettors = () => {
   return (
-    <div className="rounded-xl bg-white p-4 shadow-md">
-      <div className="mb-3 flex items-center">
+    <div className="rounded-xl bg-card p-5 shadow-lg border border-white/10">
+      <div className="mb-4 flex items-center">
         <Flame className="mr-2 h-5 w-5 text-onetime-orange" />
-        <h3 className="text-base font-bold">On a Heater</h3>
+        <h3 className="text-base font-bold text-white/90">On a Heater</h3>
       </div>
       
-      <div className="max-h-[300px] overflow-y-auto">
+      <div className="max-h-[300px] overflow-y-auto space-y-1">
         {hottestBettors.map((bettor) => (
           <BettorStreakItem
             key={bettor.id}
@@ -33,7 +33,7 @@ const HottestBettors = () => {
         ))}
       </div>
       
-      <ActionButton variant="tail" className="mt-3 h-10 text-sm">
+      <ActionButton variant="tail" className="mt-4 h-10 text-sm">
         Tail All
       </ActionButton>
     </div>

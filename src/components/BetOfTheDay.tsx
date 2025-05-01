@@ -20,19 +20,19 @@ const BetOfTheDay = () => {
   const actionText = betOfTheDay.suggestionType === "fade" ? "Fade" : "Tail";
   
   return (
-    <div className="rounded-xl bg-white p-5 shadow-md">
-      <h2 className="mb-3 text-lg font-bold">Bet of the Day</h2>
+    <div className="rounded-xl bg-card p-6 shadow-lg border border-white/10 neon-glow">
+      <h2 className="mb-4 text-lg font-bold text-white/90">Bet of the Day</h2>
       
-      <div className="mb-5 text-lg">
-        <span className="font-semibold">{betOfTheDay.bettorName}</span> has {streakText}.
-        <div className="mt-2 font-medium">
-          His bet tonight: <span className="font-bold">{betOfTheDay.bet}</span>
+      <div className="mb-6 text-lg text-white/80">
+        <span className="font-semibold text-white">{betOfTheDay.bettorName}</span> has {streakText}.
+        <div className="mt-3 font-medium">
+          His bet tonight: <span className="font-bold text-white">{betOfTheDay.bet}</span>
         </div>
       </div>
       
-      <div className="mb-5 rounded-lg bg-gray-50 p-3 text-center">
-        <p className="text-sm text-gray-500">Our suggestion</p>
-        <p className="text-xl font-bold">
+      <div className="mb-6 rounded-lg bg-muted p-4 text-center border border-white/10">
+        <p className="text-sm text-white/60">Our suggestion</p>
+        <p className="text-xl font-bold text-white">
           {actionText} {betOfTheDay.bet}
         </p>
       </div>
@@ -43,7 +43,7 @@ const BetOfTheDay = () => {
         {actionText} This Bet
       </ActionButton>
       
-      <Link to="/trends" className="mt-4 flex items-center justify-center text-sm font-medium text-onetime-purple">
+      <Link to="/trends" className="mt-5 flex items-center justify-center text-sm font-medium text-primary">
         View All Top Trends
         <ArrowRight className="ml-1 h-4 w-4" />
       </Link>

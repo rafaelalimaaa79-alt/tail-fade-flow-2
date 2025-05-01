@@ -8,23 +8,23 @@ import ColdestBettors from "@/components/ColdestBettors";
 
 const Dashboard = () => {
   return (
-    <div className="flex min-h-screen flex-col">
-      <div className="onetime-container pb-20">
-        <header className="mb-6 flex items-center justify-between">
-          <div className="flex items-center gap-2">
-            <div className="h-8 w-8 rounded-full bg-onetime-purple"></div>
-            <h1 className="text-2xl font-bold">One Time</h1>
+    <div className="flex min-h-screen flex-col bg-background">
+      <div className="onetime-container">
+        <header className="mb-8 flex items-center justify-between">
+          <div className="flex items-center gap-3">
+            <div className="h-8 w-8 rounded-full bg-primary neon-glow"></div>
+            <h1 className="text-2xl font-bold neon-text">One Time</h1>
           </div>
-          <button className="rounded-full p-2 hover:bg-gray-100">
+          <button className="rounded-full p-2 text-white/80 hover:text-white">
             <Bell className="h-6 w-6" />
           </button>
         </header>
 
         <BetOfTheDay />
         
-        <div className="mt-6 text-lg font-bold">Leaderboard</div>
+        <div className="mt-8 text-lg font-bold text-white/90">Leaderboard</div>
         
-        <div className="mt-3 grid grid-cols-2 gap-3">
+        <div className="mt-4 grid grid-cols-2 gap-4">
           <HottestBettors />
           <ColdestBettors />
         </div>
