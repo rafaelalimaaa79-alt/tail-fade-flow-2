@@ -3,6 +3,7 @@ import React from "react";
 import { Link } from "react-router-dom";
 import { Card, CardContent } from "@/components/ui/card";
 import { cn } from "@/lib/utils";
+import WaveText from "./WaveText";
 
 type TrendItemProps = {
   id: string;
@@ -31,25 +32,36 @@ const TrendItem = ({
     maximumFractionDigits: 1,
   }).format(Math.abs(unitPerformance));
   
+  const actionText = isTailRecommendation ? "Tail" : "Fade";
+  
   return (
-    <Link to={`/bettor/${id}`}>
-      <Card className="mb-4 overflow-hidden border border-white/10 hover:border-white/20 transition-all">
-        <CardContent className="p-5">
-          <div className="text-center mb-3">
-            <h2 className="text-2xl font-bold mb-2">{betDescription}</h2>
-            <p className={cn(
-              "text-base font-medium",
-              isTailRecommendation ? "text-onetime-green" : "text-onetime-red"
-            )}>
-              {isTailRecommendation ? "TAIL" : "FADE"} @{name}
-            </p>
+    <Link to={`/bettor/${id}`} className="block mb-8">
+      <Card className="rounded-xl bg-card p-6 shadow-lg border border-white/10 neon-glow">
+        {/* Full-width large title */}
+        <div className="mb-5 border-b border-white/10 pb-2">
+          <h2 className="font-rajdhani text-3xl font-extrabold text-white text-center tracking-wider uppercase">{betDescription}</h2>
+        </div>
+        
+        {/* Bettor info with italic usernames and highlighted stats */}
+        <div className="mb-6 text-lg text-white/80 text-center">
+          <span className="font-normal italic text-white/70 font-serif">@{name}</span>
+          <div className="mt-3 text-xl font-medium">
+            <div className="block mb-2">
+              <span 
+                className={cn(
+                  "font-bold",
+                  isTailRecommendation ? "text-onetime-green" : "text-onetime-red"
+                )}
+              >
+                {actionText}
+              </span> {reason}
+            </div>
           </div>
-          
-          <div className="text-sm text-white/70 text-center mb-4">
-            {reason}
-          </div>
-          
-          <div className="flex items-center justify-between mt-4">
+        </div>
+        
+        {/* Combined suggestion and action in a single card */}
+        <div className="mb-4 rounded-lg bg-muted p-5 text-center border border-white/10 shadow-lg">
+          <div className="flex items-center justify-between">
             <div>
               <p className="text-xs text-white/50 mb-1">Last 10 {betType} bets</p>
               <div className="flex space-x-0.5">
@@ -73,7 +85,7 @@ const TrendItem = ({
               {unitPerformance > 0 ? "+" : ""}{formattedUnits} units
             </div>
           </div>
-        </CardContent>
+        </div>
       </Card>
     </Link>
   );

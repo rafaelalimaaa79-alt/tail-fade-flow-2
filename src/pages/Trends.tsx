@@ -92,7 +92,7 @@ const Trends = () => {
           <h1 className="text-2xl font-bold">Today's Top Trends</h1>
         </div>
 
-        <div className="my-6 space-y-4">
+        <div className="mx-auto max-w-md">
           {trendData.map((trend) => (
             <TrendItem
               key={trend.id}
