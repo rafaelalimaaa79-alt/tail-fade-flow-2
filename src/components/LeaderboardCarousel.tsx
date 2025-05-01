@@ -1,5 +1,5 @@
 
-import React, { useEffect, useState } from "react";
+import React, { useEffect, useState, useCallback } from "react";
 import { Flame, Snowflake } from "lucide-react";
 import BettorStreakItem from "./BettorStreakItem";
 import ActionButton from "./ActionButton";
@@ -8,6 +8,7 @@ import {
   CarouselContent,
   CarouselItem,
 } from "@/components/ui/carousel";
+import useEmblaCarousel from "embla-carousel-react";
 
 // Mock data - this would come from an API in a real app
 const hottestBettors = [
@@ -27,81 +28,89 @@ const coldestBettors = [
 ];
 
 const LeaderboardCarousel = () => {
+  const [emblaRef, emblaApi] = useEmblaCarousel({ loop: true, align: "start" });
   const [activeIndex, setActiveIndex] = useState(0);
-
+  
+  const updateActiveIndex = useCallback(() => {
+    if (!emblaApi) return;
+    setActiveIndex(emblaApi.selectedScrollSnap());
+  }, [emblaApi]);
+  
   useEffect(() => {
+    if (!emblaApi) return;
+    
+    updateActiveIndex();
+    emblaApi.on("select", updateActiveIndex);
+    
     // Auto-rotate between hot and cold leaderboards every 3 seconds
     const interval = setInterval(() => {
-      setActiveIndex((prevIndex) => (prevIndex === 0 ? 1 : 0));
+      emblaApi.scrollNext();
     }, 3000);
-
-    return () => clearInterval(interval);
-  }, []);
+    
+    return () => {
+      emblaApi.off("select", updateActiveIndex);
+      clearInterval(interval);
+    };
+  }, [emblaApi, updateActiveIndex]);
 
   return (
-    <Carousel 
-      className="w-full" 
-      opts={{ 
-        loop: true,
-        align: "start",
-      }}
-      value={activeIndex}
-      onValueChange={(value) => setActiveIndex(value)}
-    >
-      <CarouselContent>
-        {/* Hot Bettors */}
-        <CarouselItem className="w-full">
-          <div className="rounded-xl bg-card p-5 shadow-lg border border-white/10">
-            <div className="mb-4 flex items-center">
-              <Flame className="mr-2 h-5 w-5 text-onetime-orange" />
-              <h3 className="text-base font-bold text-white/90">These guys can't miss</h3>
+    <div className="w-full">
+      <div className="overflow-hidden" ref={emblaRef}>
+        <div className="flex">
+          {/* Hot Bettors */}
+          <div className="min-w-0 flex-[0_0_100%] pl-0">
+            <div className="rounded-xl bg-card p-5 shadow-lg border border-white/10">
+              <div className="mb-4 flex items-center">
+                <Flame className="mr-2 h-5 w-5 text-onetime-orange" />
+                <h3 className="text-base font-bold text-white/90">These guys can't miss</h3>
+              </div>
+              
+              <div className="max-h-[300px] overflow-y-auto space-y-1">
+                {hottestBettors.map((bettor) => (
+                  <BettorStreakItem
+                    key={bettor.id}
+                    id={bettor.id}
+                    name={bettor.name}
+                    profit={bettor.profit}
+                    streak={bettor.streak}
+                  />
+                ))}
+              </div>
+              
+              <ActionButton variant="tail" className="mt-4 h-10 text-sm">
+                Tail All
+              </ActionButton>
             </div>
-            
-            <div className="max-h-[300px] overflow-y-auto space-y-1">
-              {hottestBettors.map((bettor) => (
-                <BettorStreakItem
-                  key={bettor.id}
-                  id={bettor.id}
-                  name={bettor.name}
-                  profit={bettor.profit}
-                  streak={bettor.streak}
-                />
-              ))}
-            </div>
-            
-            <ActionButton variant="tail" className="mt-4 h-10 text-sm">
-              Tail All
-            </ActionButton>
           </div>
-        </CarouselItem>
 
-        {/* Cold Bettors */}
-        <CarouselItem className="w-full">
-          <div className="rounded-xl bg-card p-5 shadow-lg border border-white/10">
-            <div className="mb-4 flex items-center">
-              <Snowflake className="mr-2 h-5 w-5 text-primary" />
-              <h3 className="text-base font-bold text-white/90">Can't buy a win right now</h3>
+          {/* Cold Bettors */}
+          <div className="min-w-0 flex-[0_0_100%] pl-4">
+            <div className="rounded-xl bg-card p-5 shadow-lg border border-white/10">
+              <div className="mb-4 flex items-center">
+                <Snowflake className="mr-2 h-5 w-5 text-primary" />
+                <h3 className="text-base font-bold text-white/90">Can't buy a win right now</h3>
+              </div>
+              
+              <div className="max-h-[300px] overflow-y-auto space-y-1">
+                {coldestBettors.map((bettor) => (
+                  <BettorStreakItem
+                    key={bettor.id}
+                    id={bettor.id}
+                    name={bettor.name}
+                    profit={bettor.profit}
+                    streak={bettor.streak}
+                  />
+                ))}
+              </div>
+              
+              <ActionButton variant="fade" className="mt-4 h-10 text-sm">
+                Fade All
+              </ActionButton>
             </div>
-            
-            <div className="max-h-[300px] overflow-y-auto space-y-1">
-              {coldestBettors.map((bettor) => (
-                <BettorStreakItem
-                  key={bettor.id}
-                  id={bettor.id}
-                  name={bettor.name}
-                  profit={bettor.profit}
-                  streak={bettor.streak}
-                />
-              ))}
-            </div>
-            
-            <ActionButton variant="fade" className="mt-4 h-10 text-sm">
-              Fade All
-            </ActionButton>
           </div>
-        </CarouselItem>
-      </CarouselContent>
-    </Carousel>
+        </div>
+      </div>
+    </div>
   );
 };
 
