@@ -33,6 +33,12 @@
     --ring: 250 84% 63%;
 
     --radius: 0.75rem;
+    
+    /* Custom colors as CSS variables for direct access in inline styles */
+    --onetime-purple: #6C5CE7;
+    --onetime-orange: #F97316;
+    --onetime-green: #10B981;
+    --onetime-red: #EF4444;
   }
 
   .dark {
@@ -119,40 +125,14 @@
     @apply text-transparent bg-clip-text bg-gradient-to-br from-primary via-primary to-white/90;
   }
   
-  /* Wave text animation replacement for laser pointer */
-  .wave-text {
-    @apply relative inline-block;
-    line-height: 1.6;
-  }
-  
+  /* Wave text container styling */
   .wave-text-container {
     @apply relative overflow-hidden;
   }
   
-  .wave-text .char {
-    @apply inline-block transition-all duration-300 origin-center;
-  }
-  
-  .wave-text.green .char {
-    text-shadow: 0 0 0px rgba(16, 185, 129, 0);
-    transition: transform 0.3s ease, text-shadow 0.3s ease;
-  }
-  
-  .wave-text.green .char.active {
-    @apply text-onetime-green;
-    transform: scale(1.4) !important;
-    text-shadow: 0 0 10px rgba(16, 185, 129, 0.9);
-  }
-  
-  .wave-text.red .char {
-    text-shadow: 0 0 0px rgba(239, 68, 68, 0);
-    transition: transform 0.3s ease, text-shadow 0.3s ease;
-  }
-  
-  .wave-text.red .char.active {
-    @apply text-onetime-red;
-    transform: scale(1.4) !important;
-    text-shadow: 0 0 10px rgba(239, 68, 68, 0.9);
+  /* Base word styling */
+  .wave-text .word {
+    @apply inline-block transition-all duration-200 origin-center;
   }
   
   @keyframes highlight-text {

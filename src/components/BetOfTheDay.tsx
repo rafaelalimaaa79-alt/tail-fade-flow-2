@@ -49,7 +49,7 @@ const BetOfTheDay = () => {
   const touchStartX = useRef(0);
   const touchEndX = useRef(0);
   const [animatingLine, setAnimatingLine] = useState(0); // 0 = first line, 1 = second line
-  const [activeWordIndices, setActiveWordIndices] = useState([-1, -1]); // [statsLineActiveWord, percentageLineActiveWord]
+  const [animationProgress, setAnimationProgress] = useState(0); // 0 to 100% progress
   
   const isFade = currentPlay.suggestionType === "fade";
   const actionText = isFade ? "Fade" : "Tail";
@@ -57,90 +57,119 @@ const BetOfTheDay = () => {
   // Split text into words for animation
   const splitTextIntoWords = (text, lineIndex) => {
     const words = text.split(' ');
-    return words.map((word, index) => (
-      <span 
-        key={index} 
-        className={`word ${activeWordIndices[lineIndex] === index ? 'active' : ''}`}
-        style={{
-          display: 'inline-block',
-          marginRight: '4px',
-          transform: activeWordIndices[lineIndex] === index ? 'scale(1.4)' : 'scale(1)',
-          transition: 'transform 0.3s ease, text-shadow 0.3s ease'
-        }}
-      >
-        {word}
-      </span>
-    ));
+    return words.map((word, index) => {
+      // Calculate how "active" this word is based on animation progress
+      // Each word gets a "window" of activity during the animation
+      const wordCount = words.length;
+      const wordPosition = index / wordCount; // 0 to 1 position in the text
+      const windowSize = 0.2; // Size of the active window (adjust for speed)
+      
+      // Calculate word's distance from the current animation position
+      let distanceFromActive = Math.abs(animationProgress - wordPosition);
+      if (animatingLine !== lineIndex) {
+        distanceFromActive = 1; // Not active if not on current line
+      }
+      
+      // Calculate scale based on proximity to animation point
+      const scale = distanceFromActive < windowSize 
+        ? 1 + ((windowSize - distanceFromActive) / windowSize) * 0.5 // Max scale 1.5x
+        : 1;
+      
+      // Calculate opacity for the glow effect
+      const glowOpacity = distanceFromActive < windowSize
+        ? ((windowSize - distanceFromActive) / windowSize)
+        : 0;
+      
+      const isActive = glowOpacity > 0.2; // Threshold for "active" styling
+      
+      return (
+        <span 
+          key={index} 
+          className={`word ${isActive ? 'active' : ''}`}
+          style={{
+            display: 'inline-block',
+            marginRight: '4px',
+            transform: `scale(${scale})`,
+            transition: 'transform 0.2s ease',
+            color: isActive 
+              ? (isFade ? 'var(--onetime-red)' : 'var(--onetime-green)') 
+              : 'inherit',
+            textShadow: isActive
+              ? `0 0 ${Math.round(glowOpacity * 8)}px ${isFade ? 'rgba(239, 68, 68, 0.9)' : 'rgba(16, 185, 129, 0.9)'}`
+              : 'none',
+            fontWeight: isActive ? 'bold' : 'normal'
+          }}
+        >
+          {word}
+        </span>
+      );
+    });
   };
   
   // Handle next play
   const nextPlay = () => {
     setCurrentIndex((prev) => (prev + 1) % playsOfTheDay.length);
     setAnimatingLine(0); // Reset to first line
-    setActiveWordIndices([-1, -1]); // Reset animation
+    setAnimationProgress(0); // Reset animation
   };
   
   // Handle previous play
   const prevPlay = () => {
     setCurrentIndex((prev) => (prev === 0 ? playsOfTheDay.length - 1 : prev - 1));
     setAnimatingLine(0); // Reset to first line
-    setActiveWordIndices([-1, -1]); // Reset animation
+    setAnimationProgress(0); // Reset animation
   };
   
-  // Sequential line word animation
+  // Wave animation effect
   useEffect(() => {
     const statsText = currentPlay.stats;
     const percentageText = `${currentPlay.percentage}% ${isFade ? "fading" : "tailing"}`;
     const textsArray = [statsText, percentageText];
-    const currentText = textsArray[animatingLine];
-    const wordsCount = currentText.split(' ').length;
     
-    let wordIndex = -1;
     let animationFrame;
-    let timer;
+    let startTime = null;
+    const totalDuration = 3000; // Total animation time for both lines
+    const lineDuration = totalDuration / 2; // Duration per line
     
-    const animateWord = () => {
-      wordIndex = (wordIndex + 1);
+    const animate = (timestamp) => {
+      if (!startTime) startTime = timestamp;
+      const elapsed = timestamp - startTime;
       
-      // Update active word for current line
-      setActiveWordIndices(prev => {
-        const newIndices = [...prev];
-        newIndices[animatingLine] = wordIndex;
-        return newIndices;
-      });
+      // Calculate total progress (0 to 1)
+      const totalProgress = Math.min(elapsed / totalDuration, 1);
       
-      // Schedule next animation frame
-      if (wordIndex < wordsCount - 1) {
-        // Continue animating current line
-        timer = setTimeout(() => {
-          animationFrame = requestAnimationFrame(animateWord);
-        }, 300); // Slower animation for words
+      // Determine which line is active and the progress within that line
+      if (totalProgress < 0.5) {
+        // First line animation (0 to 0.5 of total)
+        setAnimatingLine(0);
+        setAnimationProgress(totalProgress * 2); // Scale 0-0.5 to 0-1
       } else {
-        // Finish current line and move to next or reset
-        timer = setTimeout(() => {
-          if (animatingLine === 0) {
-            // Move to second line
-            setAnimatingLine(1);
-            setActiveWordIndices([-1, -1]); // Reset active words
-          } else {
-            // Reset back to first line
-            setAnimatingLine(0);
-            setActiveWordIndices([-1, -1]); // Reset active words
-          }
-        }, 700); // Slightly longer pause between lines
+        // Second line animation (0.5 to 1.0 of total)
+        setAnimatingLine(1);
+        setAnimationProgress((totalProgress - 0.5) * 2); // Scale 0.5-1 to 0-1
+      }
+      
+      // Continue animation if not complete
+      if (totalProgress < 1) {
+        animationFrame = requestAnimationFrame(animate);
+      } else {
+        // Reset animation after completion
+        setTimeout(() => {
+          setAnimatingLine(0);
+          setAnimationProgress(0);
+          startTime = null;
+          animationFrame = requestAnimationFrame(animate); // Restart the animation
+        }, 500); // Pause between animation cycles
       }
     };
     
     // Start the animation
-    timer = setTimeout(() => {
-      animationFrame = requestAnimationFrame(animateWord);
-    }, 500); // Initial delay
+    animationFrame = requestAnimationFrame(animate);
     
     return () => {
       cancelAnimationFrame(animationFrame);
-      clearTimeout(timer);
     };
-  }, [currentPlay, isFade, animatingLine]);
+  }, [currentPlay, isFade]);
   
   // Touch event handlers for swipe
   const handleTouchStart = (e) => {
@@ -240,4 +269,3 @@ const BetOfTheDay = () => {
 };
 
 export default BetOfTheDay;
-
