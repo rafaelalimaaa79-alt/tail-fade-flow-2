@@ -15,11 +15,16 @@ const BottomNav = () => {
   useEffect(() => {
     const handleScroll = () => {
       const currentScrollY = window.scrollY;
-      if (currentScrollY > lastScrollY && currentScrollY > 40) {
+      const isAtBottom = window.innerHeight + currentScrollY >= document.body.scrollHeight - 10;
+      
+      if (isAtBottom) {
+        setIsVisible(true);
+      } else if (currentScrollY > lastScrollY && currentScrollY > 40) {
         setIsVisible(false);
       } else {
         setIsVisible(true);
       }
+      
       setLastScrollY(currentScrollY);
     };
     
