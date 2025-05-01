@@ -7,6 +7,7 @@ import { BrowserRouter, Routes, Route } from "react-router-dom";
 
 import Index from "./pages/Index";
 import Cold from "./pages/Cold";
+import Trends from "./pages/Trends";
 import Portfolio from "./pages/Portfolio";
 import Profile from "./pages/Profile";
 import BettorDetail from "./pages/BettorDetail";
@@ -23,7 +24,7 @@ const App = () => (
         <Routes>
           <Route path="/" element={<Index />} />
           <Route path="/cold" element={<Cold />} />
-          <Route path="/trends" element={<Cold />} /> {/* Using Cold component for now as placeholder */}
+          <Route path="/trends" element={<Trends />} />
           <Route path="/portfolio" element={<Portfolio />} />
           <Route path="/profile" element={<Profile />} />
           <Route path="/bettor/:id" element={<BettorDetail />} />
