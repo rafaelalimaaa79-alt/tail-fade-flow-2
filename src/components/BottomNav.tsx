@@ -82,7 +82,7 @@ const BottomNav = () => {
             <Link
               key={item.href}
               to={item.href}
-              className="relative flex flex-col items-center"
+              className="relative flex flex-col items-center group"
             >
               <span 
                 className={cn(
@@ -92,12 +92,17 @@ const BottomNav = () => {
                 style={{ backgroundColor: item.activeColor }}
               />
               <div 
-                className="flex items-center justify-center w-10 h-10 rounded-full transition-all"
+                className={cn(
+                  "flex items-center justify-center w-10 h-10 rounded-full transition-all duration-200",
+                  isActive ? "" : "hover:shadow-[0_0_8px_rgba(255,255,255,0.6)]"
+                )}
                 style={{ 
-                  backgroundColor: isActive ? `${item.activeColor}20` : `${item.activeColor}10`,
-                  color: item.activeColor,
-                  textShadow: isActive ? `0 0 10px ${item.activeColor}` : 'none',
-                  opacity: isActive ? 1 : 0.7
+                  backgroundColor: isActive ? `${item.activeColor}20` : "rgba(255, 255, 255, 0.05)",
+                  color: isActive ? item.activeColor : "#ffffff",
+                  textShadow: isActive 
+                    ? `0 0 10px ${item.activeColor}` 
+                    : '0 0 8px rgba(255, 255, 255, 0.8)',
+                  opacity: isActive ? 1 : 0.8
                 }}
               >
                 {item.customIcon ? (
@@ -105,30 +110,42 @@ const BottomNav = () => {
                     <ArrowUp 
                       className="h-6 w-6 absolute -top-1.5 -right-1.5" 
                       style={{ 
-                        color: '#14f195', 
-                        filter: isActive ? 'drop-shadow(0 0 2px #14f195)' : 'none',
-                        opacity: isActive ? 1 : 0.7
+                        color: isActive ? '#14f195' : '#ffffff',
+                        filter: isActive 
+                          ? 'drop-shadow(0 0 2px #14f195)' 
+                          : 'drop-shadow(0 0 2px rgba(255, 255, 255, 0.8))',
+                        opacity: isActive ? 1 : 0.8
                       }} 
                     />
                     <ArrowDown 
                       className="h-6 w-6 absolute -bottom-1.5 -left-1.5" 
                       style={{ 
-                        color: '#ea384c', 
-                        filter: isActive ? 'drop-shadow(0 0 2px #ea384c)' : 'none',
-                        opacity: isActive ? 1 : 0.7
+                        color: isActive ? '#ea384c' : '#ffffff',
+                        filter: isActive 
+                          ? 'drop-shadow(0 0 2px #ea384c)' 
+                          : 'drop-shadow(0 0 2px rgba(255, 255, 255, 0.8))',
+                        opacity: isActive ? 1 : 0.8
                       }} 
                     />
                   </div>
                 ) : (
-                  <item.icon className="h-4 w-4" style={{ 
-                    filter: isActive ? 'drop-shadow(0 0 2px currentColor)' : 'none'
-                  }} />
+                  <item.icon 
+                    className="h-4 w-4" 
+                    style={{ 
+                      filter: isActive 
+                        ? 'drop-shadow(0 0 2px currentColor)' 
+                        : 'drop-shadow(0 0 3px rgba(255, 255, 255, 0.8))'
+                    }} 
+                  />
                 )}
               </div>
               <span 
-                className="mt-0.5 text-[10px] font-medium transition-all"
+                className="mt-0.5 text-[10px] font-medium transition-all duration-200 group-hover:opacity-100"
                 style={{ 
-                  color: item.activeColor,
+                  color: isActive ? item.activeColor : "#ffffff",
+                  textShadow: isActive 
+                    ? `0 0 5px ${item.activeColor}` 
+                    : '0 0 5px rgba(255, 255, 255, 0.6)',
                   opacity: isActive ? 1 : 0.7
                 }}
               >
