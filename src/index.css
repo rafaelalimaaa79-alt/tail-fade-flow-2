@@ -126,11 +126,11 @@
   }
   
   .laser-pointer {
-    @apply absolute w-1.5 h-1.5 rounded-full z-10 opacity-80;
-    animation: laser-move 10s linear infinite;
+    @apply absolute w-3 h-3 rounded-full z-10 opacity-80;
+    animation: laser-move 5s linear infinite;
     top: 50%;
     transform: translateY(-50%);
-    box-shadow: 0 0 5px 2px currentColor;
+    box-shadow: 0 0 8px 3px currentColor;
   }
   
   .laser-green {
