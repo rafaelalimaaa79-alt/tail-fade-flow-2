@@ -1,5 +1,5 @@
 
-import React, { useState, useEffect } from "react";
+import React, { useState, useEffect, useRef } from "react";
 import { ArrowRight } from "lucide-react";
 import ActionButton from "./ActionButton";
 import { Link } from "react-router-dom";
@@ -46,29 +46,71 @@ const playsOfTheDay = [
 const BetOfTheDay = () => {
   const [currentIndex, setCurrentIndex] = useState(0);
   const currentPlay = playsOfTheDay[currentIndex];
+  const touchStartX = useRef(0);
+  const touchEndX = useRef(0);
   
   const isFade = currentPlay.suggestionType === "fade";
   const actionText = isFade ? "Fade" : "Tail";
   
-  // Auto rotate through plays every 5 seconds
+  // Handle next play
+  const nextPlay = () => {
+    setCurrentIndex((prev) => (prev + 1) % playsOfTheDay.length);
+  };
+  
+  // Handle previous play
+  const prevPlay = () => {
+    setCurrentIndex((prev) => (prev === 0 ? playsOfTheDay.length - 1 : prev - 1));
+  };
+  
+  // Touch event handlers for swipe
+  const handleTouchStart = (e) => {
+    touchStartX.current = e.touches[0].clientX;
+  };
+  
+  const handleTouchEnd = (e) => {
+    touchEndX.current = e.changedTouches[0].clientX;
+    handleSwipe();
+  };
+  
+  const handleSwipe = () => {
+    // Threshold for swipe detection (minimum 50px horizontal movement)
+    const threshold = 50;
+    const diff = touchStartX.current - touchEndX.current;
+    
+    if (Math.abs(diff) < threshold) return;
+    
+    if (diff > 0) {
+      // Swipe left, go to next
+      nextPlay();
+    } else {
+      // Swipe right, go to previous
+      prevPlay();
+    }
+  };
+  
+  // Auto rotate through plays every 8 seconds
   useEffect(() => {
     const interval = setInterval(() => {
-      setCurrentIndex((prev) => (prev + 1) % playsOfTheDay.length);
-    }, 5000);
+      nextPlay();
+    }, 8000);
     
     return () => clearInterval(interval);
   }, []);
   
   return (
-    <div className="rounded-xl bg-card p-6 shadow-lg border border-white/10 neon-glow">
+    <div 
+      className="rounded-xl bg-card p-6 shadow-lg border border-white/10 neon-glow"
+      onTouchStart={handleTouchStart}
+      onTouchEnd={handleTouchEnd}
+    >
       {/* Full-width large title */}
       <div className="mb-5 border-b border-white/10 pb-2">
         <h2 className="text-2xl font-extrabold text-white">Plays of the Day</h2>
       </div>
       
-      {/* Bettor info with bold highlighting */}
+      {/* Bettor info with bold highlighting - without bet after name */}
       <div className="mb-6 text-lg text-white/80">
-        <span className="font-extrabold text-white">{currentPlay.bettorName}</span> – {currentPlay.bet}
+        <span className="font-extrabold text-white">{currentPlay.bettorName}</span>
         <div className="mt-2 text-sm">
           <span className="text-white/80">{currentPlay.stats}</span>
         </div>
@@ -99,6 +141,18 @@ const BetOfTheDay = () => {
         👀 View All Top Trends
         <ArrowRight className="ml-1 h-4 w-4" />
       </Link>
+
+      {/* Subtle pagination indicator */}
+      <div className="mt-4 flex justify-center gap-1">
+        {playsOfTheDay.map((_, index) => (
+          <div 
+            key={index}
+            className={`h-1.5 rounded-full transition-all ${
+              index === currentIndex ? "w-4 bg-primary" : "w-1.5 bg-white/20"
+            }`}
+          />
+        ))}
+      </div>
     </div>
   );
 };
