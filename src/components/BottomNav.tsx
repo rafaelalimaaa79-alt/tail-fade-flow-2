@@ -37,7 +37,7 @@ const BottomNav = () => {
       icon: LayoutDashboard,
       text: "Dashboard",
       href: "/",
-      activeColor: "#ff7e33", // Neon orange
+      activeColor: "#9b87f5", // Changed to purple
     },
     {
       customIcon: true,
@@ -55,7 +55,7 @@ const BottomNav = () => {
       icon: BarChart2,
       text: "Portfolio",
       href: "/portfolio",
-      activeColor: "#9b87f5", // Neon purple
+      activeColor: "#ff7e33", // Neon orange
     },
   ];
 
