@@ -123,13 +123,12 @@
   /* Laser pointer animation */
   .laser-text-container {
     @apply relative overflow-hidden;
+    line-height: 1.6;
   }
   
   .laser-pointer {
     @apply absolute w-3 h-3 rounded-full z-10 opacity-80;
-    animation: laser-move 5s linear infinite;
-    top: 50%;
-    transform: translateY(-50%);
+    animation: laser-path 4s linear infinite;
     box-shadow: 0 0 8px 3px currentColor;
   }
   
@@ -141,19 +140,31 @@
     @apply bg-onetime-red text-onetime-red;
   }
   
-  @keyframes laser-move {
+  @keyframes laser-path {
     0% {
       left: 0;
+      top: 20%;
       opacity: 0;
     }
     5% {
       opacity: 1;
     }
+    45% {
+      left: 100%;
+      top: 20%;
+    }
+    50% {
+      left: 0;
+      top: 70%;
+    }
     95% {
+      left: 100%;
+      top: 70%;
       opacity: 1;
     }
     100% {
-      left: 100%;
+      left: 0;
+      top: 20%;
       opacity: 0;
     }
   }
@@ -174,4 +185,3 @@
     animation: highlight-text 2s linear;
   }
 }
-
