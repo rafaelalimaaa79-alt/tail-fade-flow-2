@@ -48,23 +48,30 @@ const TrendItem = ({
   const actionBgColor = isTailRecommendation ? "bg-onetime-green/20" : "bg-onetime-red/20";
   const actionBorderColor = isTailRecommendation ? "border-onetime-green/30" : "border-onetime-red/30";
   const score = isTailRecommendation ? tailScore : fadeScore;
+  const userAction = isTailRecommendation ? "tailing" : "fading";
   
   return (
     <Link to={`/bettor/${id}`} className="block mb-3">
       <Card className="rounded-lg bg-card shadow-md border border-white/10 overflow-hidden">
         <div className="flex flex-col p-3">
-          {/* Top section with username */}
-          <div className="mb-2 border-b border-white/10 pb-1">
-            <h2 className="font-rajdhani text-xl font-bold text-white text-center">@{name}</h2>
+          {/* Top section with username and score percentage */}
+          <div className="mb-2 border-b border-white/10 pb-1 flex justify-between items-center">
+            <h2 className="font-rajdhani text-xl font-bold text-white">@{name}</h2>
+            <span className={cn(
+              "font-bold text-base px-2 py-0.5 rounded",
+              isTailRecommendation ? "bg-onetime-green/20 text-onetime-green" : "bg-onetime-red/20 text-onetime-red"
+            )}>
+              {score}%
+            </span>
           </div>
           
-          {/* Middle section with reason - reduced size, no glow */}
+          {/* Middle section with reason */}
           <div className="mb-3">
             <div className="text-center">
               <div className="mt-1">
                 <span 
                   className={cn(
-                    "font-bold text-lg text-white", // Decreased font size from xl to lg
+                    "font-bold text-lg text-white",
                     isPulsing ? "animate-pulse-subtle" : ""
                   )}
                   style={{ 
@@ -79,28 +86,10 @@ const TrendItem = ({
           </div>
           
           {/* New section with data points */}
-          <div className="flex justify-between items-center mb-3">
-            {/* Score indicator */}
-            <div className="flex flex-col items-center">
-              <span className="text-xs text-white/50">Score</span>
-              <span className="font-bold text-white">{score}%</span>
-            </div>
-            
-            {/* Performance indicator */}
-            <div className="flex flex-col items-center">
-              <span className="text-xs text-white/50">Units</span>
-              <span className={cn(
-                "font-bold",
-                unitPerformance >= 0 ? "text-onetime-green" : "text-onetime-red"
-              )}>
-                {unitPerformance > 0 ? "+" : ""}{unitPerformance.toFixed(1)}
-              </span>
-            </div>
-            
-            {/* User count */}
-            <div className="flex flex-col items-center">
-              <span className="text-xs text-white/50">Users</span>
-              <span className="font-bold text-white">{userCount}</span>
+          <div className="flex justify-center items-center mb-3">
+            {/* User count - more specific now */}
+            <div className="flex items-center">
+              <span className="font-bold text-white">{userCount} users {userAction}</span>
             </div>
           </div>
           
