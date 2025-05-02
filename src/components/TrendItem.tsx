@@ -1,5 +1,5 @@
 
-import React, { useState, useEffect } from "react";
+import React, { useState, useEffect, useRef } from "react";
 import { Link } from "react-router-dom";
 import { Card, CardContent } from "@/components/ui/card";
 import { cn } from "@/lib/utils";
@@ -32,7 +32,32 @@ const TrendItem = ({
   fadeScore = 80, // Default value
   userCount = 210, // Default value
 }: TrendItemProps) => {
-  // No longer need isPulsing state as we're using a CSS animation
+  const [isVisible, setIsVisible] = useState(false);
+  const itemRef = useRef<HTMLDivElement>(null);
+  
+  useEffect(() => {
+    const observer = new IntersectionObserver(
+      ([entry]) => {
+        // Update state when intersection status changes
+        setIsVisible(entry.isIntersecting);
+      },
+      {
+        root: null, // Use viewport as root
+        rootMargin: "0px",
+        threshold: 0.5, // At least 50% of the item must be visible
+      }
+    );
+    
+    if (itemRef.current) {
+      observer.observe(itemRef.current);
+    }
+    
+    return () => {
+      if (itemRef.current) {
+        observer.unobserve(itemRef.current);
+      }
+    };
+  }, []);
   
   const actionText = isTailRecommendation ? "Tail" : "Fade";
   const actionColor = isTailRecommendation ? "text-onetime-green" : "text-onetime-red";
@@ -44,7 +69,7 @@ const TrendItem = ({
   
   return (
     <Link to={`/bettor/${id}`} className="block mb-3">
-      <Card className="rounded-lg bg-card shadow-md border border-white/10 overflow-hidden">
+      <Card ref={itemRef} className="rounded-lg bg-card shadow-md border border-white/10 overflow-hidden">
         <div className="flex flex-col p-3">
           {/* Top section with username and score percentage - centered username */}
           <div className="mb-2 border-b border-white/10 pb-2">
@@ -54,8 +79,9 @@ const TrendItem = ({
             <div className="flex justify-center mt-1">
               <span 
                 className={cn(
-                  "font-bold text-base px-3 py-0.5 rounded animate-pulse-heartbeat",
-                  isTailRecommendation ? "bg-onetime-green/20 text-onetime-green" : "bg-onetime-red/20 text-onetime-red"
+                  "font-bold text-base px-3 py-0.5 rounded",
+                  isTailRecommendation ? "bg-onetime-green/20 text-onetime-green" : "bg-onetime-red/20 text-onetime-red",
+                  isVisible && "animate-pulse-heartbeat"
                 )}
                 style={{
                   boxShadow: glowColor,
@@ -93,7 +119,10 @@ const TrendItem = ({
           <div className="mb-3">
             <ActionButton 
               variant={isTailRecommendation ? "tail" : "fade"}
-              className="h-9 text-base font-bold animate-pulse-heartbeat"
+              className={cn(
+                "h-9 text-base font-bold",
+                isVisible && "animate-pulse-heartbeat"
+              )}
               style={{
                 boxShadow: glowColor,
               }}
