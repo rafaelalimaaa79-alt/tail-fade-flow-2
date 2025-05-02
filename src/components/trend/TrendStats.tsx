@@ -20,12 +20,14 @@ const TrendStats = ({
   userCount,
   userAction
 }: TrendStatsProps) => {
+  const georgiaFontStyle = { fontFamily: "Georgia, serif" };
+  
   return (
     <div className="mb-4">
       <div>
         <div className="flex items-center gap-1.5 mt-2">
           <Users className="h-4 w-4 text-white/70" />
-          <span className="text-base text-white/90" style={{ fontFamily: "Georgia, serif" }}>
+          <span className="text-base text-white/90" style={georgiaFontStyle}>
             {userCount} users {userAction}
           </span>
         </div>
