@@ -144,7 +144,7 @@ const TrendItem = ({
                   isMostVisible && "animate-pulse-heartbeat"
                 )}
                 style={{
-                  boxShadow: glowColor,
+                  boxShadow: isMostVisible ? glowColor : "none",
                 }}
               >
                 Confidence Score: {score}%
@@ -153,7 +153,7 @@ const TrendItem = ({
           </div>
           
           {/* Reason section */}
-          <div className="mb-3 px-2">
+          <div className="mb-4 px-2">
             <div className="text-center">
               <span 
                 className="font-bold text-lg text-white"
@@ -166,57 +166,67 @@ const TrendItem = ({
             </div>
           </div>
           
-          {/* Stats section - reorganized for better structure */}
-          <div className="mb-3 bg-white/5 rounded-lg p-3">
-            <div className="flex justify-between items-center mb-2">
-              <div className="flex items-center">
-                <span className={cn(
-                  "font-bold text-base",
-                  wins > losses ? "text-onetime-green" : "text-onetime-red"
-                )}>
-                  {recordText}
-                </span>
+          {/* Stats section - completely reorganized for better structure */}
+          <div className="mb-4 bg-white/5 rounded-lg p-3">
+            {/* Performance record */}
+            <div className="flex flex-col space-y-2">
+              <div>
+                <p className="text-xs text-white/50 mb-1">Performance</p>
+                <div className="font-medium">
+                  <span className={cn(
+                    "font-bold",
+                    wins > losses ? "text-onetime-green" : "text-onetime-red"
+                  )}>
+                    {recordText}
+                  </span>
+                </div>
               </div>
-              <div className="flex items-center gap-1 text-white/70 text-sm">
-                <Users className="h-3.5 w-3.5" />
-                <span>{userCount} {userAction}</span>
+              
+              {/* User adoption with icon */}
+              <div>
+                <p className="text-xs text-white/50 mb-1">Community</p>
+                <div className="flex items-center gap-1.5">
+                  <Users className="h-3.5 w-3.5 text-white/70" />
+                  <span className="text-sm text-white/90">{userCount} users {userAction}</span>
+                </div>
               </div>
             </div>
           </div>
           
+          {/* Clear divider before action button */}
+          <Separator className="mb-4 bg-white/10" />
+          
           {/* Action button */}
-          <div className="mb-3">
+          <div className="mb-4">
             <ActionButton 
               variant={isTailRecommendation ? "tail" : "fade"}
               className={cn(
-                "h-9 text-base font-bold",
+                "h-9 text-base font-bold w-full",
                 isMostVisible && "animate-pulse-heartbeat"
               )}
               style={{
-                boxShadow: glowColor,
+                boxShadow: isMostVisible ? glowColor : "none",
               }}
             >
               {`${actionText} ${betDescription}`}
             </ActionButton>
           </div>
           
-          {/* Recent bets section with label */}
-          <div className="flex items-center justify-center">
-            <div>
-              <p className="text-xs text-white/50 mb-1 text-center">Last 10 {betType} bets</p>
-              <div className="flex space-x-1 justify-center">
-                {recentBets.map((bet, index) => (
-                  <div 
-                    key={index} 
-                    className={cn(
-                      "h-5 w-5 rounded-sm flex items-center justify-center font-bold text-[12px] text-white",
-                      bet ? "bg-onetime-green" : "bg-onetime-red"
-                    )}
-                  >
-                    {bet ? 'W' : 'L'}
-                  </div>
-                ))}
-              </div>
+          {/* Recent bets section with better spacing */}
+          <div>
+            <p className="text-xs text-white/50 mb-2 text-center">Last {recentBets.length} {betType} bets</p>
+            <div className="flex justify-center space-x-1.5">
+              {recentBets.map((bet, index) => (
+                <div 
+                  key={index} 
+                  className={cn(
+                    "h-6 w-6 rounded-sm flex items-center justify-center font-bold text-xs text-white",
+                    bet ? "bg-onetime-green" : "bg-onetime-red"
+                  )}
+                >
+                  {bet ? 'W' : 'L'}
+                </div>
+              ))}
             </div>
           </div>
         </div>
