@@ -84,6 +84,13 @@ const trendData = [
 const Trends = () => {
   const isMobile = useIsMobile();
   
+  // Sort the trend data by confidence score (either tailScore or fadeScore)
+  const sortedTrendData = [...trendData].sort((a, b) => {
+    const scoreA = a.isTailRecommendation ? a.tailScore : a.fadeScore;
+    const scoreB = b.isTailRecommendation ? b.tailScore : b.fadeScore;
+    return scoreB - scoreA; // Sort in descending order
+  });
+  
   return (
     <div className="flex min-h-screen flex-col bg-background font-rajdhani">
       <div className={`onetime-container ${isMobile ? "pb-24" : ""}`}>
@@ -106,7 +113,7 @@ const Trends = () => {
         </div>
 
         <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-3 mx-auto">
-          {trendData.map((trend) => (
+          {sortedTrendData.map((trend) => (
             <TrendItem
               key={trend.id}
               id={trend.id}
