@@ -16,6 +16,8 @@ const trendData = [
     reason: "8-2 in last 10 bets with consistent NBA picks",
     recentBets: [1, 1, 1, 0, 1, 1, 0, 1, 1, 1], // 1 = win, 0 = loss
     unitPerformance: 8.5,
+    tailScore: 85,
+    userCount: 342,
   },
   {
     id: "2",
@@ -26,6 +28,8 @@ const trendData = [
     reason: "7-3 record on NFL favorites",
     recentBets: [1, 1, 0, 1, 1, 1, 1, 0, 1, 0],
     unitPerformance: 6.7,
+    tailScore: 78,
+    userCount: 215,
   },
   {
     id: "3",
@@ -36,6 +40,8 @@ const trendData = [
     reason: "2-8 record on over/under bets",
     recentBets: [0, 0, 1, 0, 0, 0, 1, 0, 0, 0],
     unitPerformance: -7.2,
+    fadeScore: 88,
+    userCount: 176,
   },
   {
     id: "4",
@@ -46,6 +52,8 @@ const trendData = [
     reason: "Solid 7-3 record with NFL spreads",
     recentBets: [1, 0, 1, 1, 1, 0, 1, 1, 0, 1],
     unitPerformance: 5.9,
+    tailScore: 72,
+    userCount: 295,
   },
   {
     id: "5",
@@ -56,6 +64,8 @@ const trendData = [
     reason: "Only 2-8 in MLB moneyline picks",
     recentBets: [0, 0, 0, 1, 0, 0, 0, 1, 0, 0],
     unitPerformance: -8.3,
+    fadeScore: 84,
+    userCount: 138,
   },
   {
     id: "6",
@@ -66,6 +76,8 @@ const trendData = [
     reason: "7-3 on NFL underdogs",
     recentBets: [1, 1, 1, 0, 1, 0, 1, 1, 1, 0],
     unitPerformance: 7.1,
+    tailScore: 76,
+    userCount: 254,
   }
 ];
 
@@ -104,6 +116,9 @@ const Trends = () => {
               isTailRecommendation={trend.isTailRecommendation}
               recentBets={trend.recentBets}
               unitPerformance={trend.unitPerformance}
+              tailScore={trend.tailScore}
+              fadeScore={trend.fadeScore}
+              userCount={trend.userCount}
             />
           ))}
         </div>
