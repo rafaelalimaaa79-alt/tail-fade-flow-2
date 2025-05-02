@@ -54,17 +54,22 @@ const TrendItem = ({
             <h2 className="font-rajdhani text-xl font-bold text-white text-center">@{name}</h2>
           </div>
           
-          {/* Middle section with reason - enlarged */}
-          <div className="mb-3">
+          {/* Middle section with reason - enlarged with neon text effect */}
+          <div className="mb-4">
             <div className="text-center">
               <div className="mt-1">
                 <span 
                   className={cn(
-                    "font-bold text-base",
-                    actionColor,
-                    isPulsing ? glowColor : ""
+                    "font-bold text-xl text-white", // Increased font size and made white
+                    isPulsing ? "animate-pulse-subtle" : ""
                   )}
-                  style={{ transition: "all 1s ease-in-out" }}
+                  style={{ 
+                    transition: "all 1s ease-in-out",
+                    textShadow: isTailRecommendation 
+                      ? "0 0 10px rgba(16,185,129,0.8), 0 0 20px rgba(16,185,129,0.5)" 
+                      : "0 0 10px rgba(239,68,68,0.8), 0 0 20px rgba(239,68,68,0.5)",
+                    letterSpacing: "0.5px"
+                  }}
                 >
                   {reason}
                 </span>
