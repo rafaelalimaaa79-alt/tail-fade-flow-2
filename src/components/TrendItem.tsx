@@ -49,6 +49,7 @@ const TrendItem = ({
   const actionBorderColor = isTailRecommendation ? "border-onetime-green/30" : "border-onetime-red/30";
   const score = isTailRecommendation ? tailScore : fadeScore;
   const userAction = isTailRecommendation ? "tailing" : "fading";
+  const glowColor = isTailRecommendation ? "0 0 10px rgba(16, 185, 129, 0.7)" : "0 0 10px rgba(239, 68, 68, 0.7)";
   
   return (
     <Link to={`/bettor/${id}`} className="block mb-3">
@@ -72,7 +73,6 @@ const TrendItem = ({
           {/* Reason section - centered and well formatted */}
           <div className="mb-3 px-2">
             <div className="text-center">
-              <p className="text-xs text-white/60 mb-1">REASONING</p>
               <div className="mt-1">
                 <span 
                   className={cn(
@@ -97,11 +97,18 @@ const TrendItem = ({
             </div>
           </div>
           
-          {/* Action button - only showing bet description */}
+          {/* Action button - only showing bet description with pulsing glow effect */}
           <div className="mb-3">
             <ActionButton 
               variant={isTailRecommendation ? "tail" : "fade"}
-              className="h-9 text-base font-bold"
+              className={cn(
+                "h-9 text-base font-bold",
+                isPulsing ? "animate-pulse-subtle" : ""
+              )}
+              style={{
+                boxShadow: isPulsing ? glowColor : "none",
+                transition: "box-shadow 1s ease-in-out"
+              }}
             >
               {`${actionText} ${betDescription}`}
             </ActionButton>
