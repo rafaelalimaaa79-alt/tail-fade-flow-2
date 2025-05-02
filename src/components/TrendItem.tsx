@@ -34,11 +34,11 @@ const TrendItem = ({
 }: TrendItemProps) => {
   const [isPulsing, setIsPulsing] = useState(false);
   
-  // Handle the pulsing animation
+  // Handle the pulsing animation with faster heartbeat-like timing
   useEffect(() => {
     const interval = setInterval(() => {
       setIsPulsing(prev => !prev);
-    }, 2000); // Pulse every 2 seconds
+    }, 1000); // Pulse every 1 second for a faster heartbeat effect
     
     return () => clearInterval(interval);
   }, []);
@@ -61,10 +61,17 @@ const TrendItem = ({
               <h2 className="font-rajdhani text-xl font-bold text-white text-center">@{name}</h2>
             </div>
             <div className="flex justify-center mt-1">
-              <span className={cn(
-                "font-bold text-base px-3 py-0.5 rounded",
-                isTailRecommendation ? "bg-onetime-green/20 text-onetime-green" : "bg-onetime-red/20 text-onetime-red"
-              )}>
+              <span 
+                className={cn(
+                  "font-bold text-base px-3 py-0.5 rounded",
+                  isTailRecommendation ? "bg-onetime-green/20 text-onetime-green" : "bg-onetime-red/20 text-onetime-red",
+                  isPulsing ? "animate-pulse-subtle" : ""
+                )}
+                style={{
+                  boxShadow: isPulsing ? glowColor : "none",
+                  transition: "box-shadow 0.5s ease-in-out"
+                }}
+              >
                 Confidence Score: {score}%
               </span>
             </div>
@@ -80,7 +87,7 @@ const TrendItem = ({
                     isPulsing ? "animate-pulse-subtle" : ""
                   )}
                   style={{ 
-                    transition: "all 1s ease-in-out",
+                    transition: "all 0.5s ease-in-out",
                     letterSpacing: "0.5px"
                   }}
                 >
@@ -107,7 +114,7 @@ const TrendItem = ({
               )}
               style={{
                 boxShadow: isPulsing ? glowColor : "none",
-                transition: "box-shadow 1s ease-in-out"
+                transition: "box-shadow 0.5s ease-in-out"
               }}
             >
               {`${actionText} ${betDescription}`}

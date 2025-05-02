@@ -103,13 +103,13 @@ export default {
 				},
         'pulse-subtle': {
           '0%, 100%': { opacity: '1' },
-          '50%': { opacity: '0.85' },
+          '50%': { opacity: '0.75' },
         }
 			},
 			animation: {
 				'accordion-down': 'accordion-down 0.2s ease-out',
 				'accordion-up': 'accordion-up 0.2s ease-out',
-        'pulse-subtle': 'pulse-subtle 2s cubic-bezier(0.4, 0, 0.6, 1) infinite',
+        'pulse-subtle': 'pulse-subtle 1s cubic-bezier(0.4, 0, 0.6, 1) infinite',
 			}
 		}
 	},
