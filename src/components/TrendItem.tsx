@@ -95,7 +95,7 @@ const TrendItem = ({
                   <div 
                     key={index} 
                     className={cn(
-                      "h-3 w-3 rounded-sm flex items-center justify-center font-bold text-[10px] text-white",
+                      "h-4 w-4 rounded-sm flex items-center justify-center font-bold text-[12px] text-white",
                       bet ? "bg-onetime-green" : "bg-onetime-red"
                     )}
                   >
