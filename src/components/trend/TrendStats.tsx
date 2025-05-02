@@ -20,17 +20,15 @@ const TrendStats = ({
   userCount,
   userAction
 }: TrendStatsProps) => {
+  // Create a single record text instead of showing redundant information
   const recordText = `${wins}–${losses} in last ${recentBetsLength} ${betType} bets`;
   
   return (
     <div className="mb-4">
-      <div className="flex flex-col space-y-2">
+      <div className="flex flex-col space-y-3">
         <div>
           <div className="font-medium">
-            <span className={cn(
-              "font-bold",
-              wins > losses ? "text-onetime-green" : "text-onetime-red"
-            )}>
+            <span className="font-bold text-white text-lg" style={{ fontFamily: "Georgia, serif" }}>
               {recordText}
             </span>
           </div>
@@ -38,8 +36,10 @@ const TrendStats = ({
         
         <div>
           <div className="flex items-center gap-1.5">
-            <Users className="h-3.5 w-3.5 text-white/70" />
-            <span className="text-sm text-white/90">{userCount} users {userAction}</span>
+            <Users className="h-4 w-4 text-white/70" />
+            <span className="text-base text-white/90" style={{ fontFamily: "Georgia, serif" }}>
+              {userCount} users {userAction}
+            </span>
           </div>
         </div>
       </div>
