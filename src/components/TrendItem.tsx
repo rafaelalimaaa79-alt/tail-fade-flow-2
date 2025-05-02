@@ -4,7 +4,6 @@ import { Link } from "react-router-dom";
 import { Card, CardContent } from "@/components/ui/card";
 import { cn } from "@/lib/utils";
 import ActionButton from "./ActionButton";
-import WaveText from "./WaveText";
 
 type TrendItemProps = {
   id: string;
@@ -47,20 +46,19 @@ const TrendItem = ({
     : "shadow-[0_0_8px_rgba(239,68,68,0.7)]";
   
   return (
-    <Link to={`/bettor/${id}`} className="block mb-6">
-      <Card className="rounded-xl bg-card shadow-md border border-white/10 overflow-hidden">
-        {/* More horizontal layout with columns */}
-        <div className="flex flex-col p-4">
-          {/* Top section with bet description */}
-          <div className="mb-3 border-b border-white/10 pb-2">
-            <h2 className="font-rajdhani text-2xl font-bold text-white text-center">{betDescription}</h2>
+    <Link to={`/bettor/${id}`} className="block mb-3">
+      <Card className="rounded-lg bg-card shadow-md border border-white/10 overflow-hidden">
+        <div className="flex flex-col p-3">
+          {/* Top section with bet description - more compact */}
+          <div className="mb-2 border-b border-white/10 pb-1">
+            <h2 className="font-rajdhani text-xl font-bold text-white text-center">{betDescription}</h2>
           </div>
           
-          {/* Middle section with bettor info and reason */}
-          <div className="flex flex-col sm:flex-row justify-between items-center mb-4">
-            <div className="mb-2 sm:mb-0 text-center sm:text-left">
-              <span className="italic text-white/70 font-serif">@{name}</span>
-              <div className="mt-1 text-lg">
+          {/* Middle section with bettor info and reason - more compact */}
+          <div className="mb-2">
+            <div className="text-center">
+              <span className="italic text-white/70 text-sm font-serif">@{name}</span>
+              <div className="mt-1 text-sm">
                 <span 
                   className={cn(
                     "font-bold",
@@ -74,12 +72,12 @@ const TrendItem = ({
             </div>
           </div>
           
-          {/* Tail/Fade button using ActionButton component like in Today's Edge */}
-          <div className="mb-3 mt-1">
+          {/* Action button - more compact */}
+          <div className="mb-2">
             <ActionButton 
               variant={isTailRecommendation ? "tail" : "fade"}
               className={cn(
-                "h-12 text-lg font-bold",
+                "h-9 text-sm font-bold",
                 isPulsing ? glowColor : ""
               )}
               style={{ transition: "all 1s ease-in-out" }}
@@ -88,16 +86,16 @@ const TrendItem = ({
             </ActionButton>
           </div>
           
-          {/* Bottom section with recent bets directly in the card */}
-          <div className="flex items-center justify-center mt-2">
+          {/* Recent bets - more compact */}
+          <div className="flex items-center justify-center">
             <div>
-              <p className="text-xs text-white/50 mb-1 text-center">Last 10 {betType} bets</p>
+              <p className="text-xs text-white/50 mb-0.5 text-center">Last 10 {betType} bets</p>
               <div className="flex space-x-0.5 justify-center">
                 {recentBets.map((bet, index) => (
                   <div 
                     key={index} 
                     className={cn(
-                      "h-4 w-4 rounded-sm flex items-center justify-center font-bold text-xs text-white",
+                      "h-3 w-3 rounded-sm flex items-center justify-center font-bold text-[10px] text-white",
                       bet ? "bg-onetime-green" : "bg-onetime-red"
                     )}
                   >

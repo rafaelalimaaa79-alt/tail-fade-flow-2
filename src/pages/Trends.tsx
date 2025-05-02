@@ -75,12 +75,12 @@ const Trends = () => {
   return (
     <div className="flex min-h-screen flex-col bg-background font-rajdhani">
       <div className={`onetime-container ${isMobile ? "pb-24" : ""}`}>
-        <header className="mb-6 flex items-center justify-between">
+        <header className="mb-4 flex items-center justify-between">
           <div className="flex items-center gap-3">
             <img 
               src="/lovable-uploads/57cb1fb4-7471-451e-bf49-d4d5fa12bdcb.png" 
               alt="ONE TIME logo" 
-              className="h-20"
+              className="h-16"
             />
           </div>
           <button className="rounded-full p-2 text-white/80 hover:text-white">
@@ -88,11 +88,11 @@ const Trends = () => {
           </button>
         </header>
 
-        <div className="mb-8 text-center">
-          <h1 className="text-2xl font-bold">Today's Top Trends</h1>
+        <div className="mb-4 text-center">
+          <h1 className="text-xl font-bold">Today's Top Trends</h1>
         </div>
 
-        <div className="mx-auto max-w-md">
+        <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-3 mx-auto">
           {trendData.map((trend) => (
             <TrendItem
               key={trend.id}
