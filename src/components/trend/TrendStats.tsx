@@ -24,11 +24,7 @@ const TrendStats = ({
   
   return (
     <div className="mb-4 flex flex-col justify-center items-center">
-      <div className="flex flex-col items-center justify-center gap-2">
-        <span className="text-base text-white/90" style={georgiaFontStyle}>
-          {wins}-{losses} record
-        </span>
-        
+      <div className="flex flex-col items-center justify-center">
         <div className="flex items-center gap-1.5">
           <Users className="h-4 w-4 text-white/70" />
           <span className="text-base text-white/90" style={georgiaFontStyle}>
