@@ -23,14 +23,18 @@ const TrendStats = ({
   const georgiaFontStyle = { fontFamily: "Georgia, serif" };
   
   return (
-    <div className="mb-4">
-      <div className="flex justify-center">
-        <div className="flex items-center gap-1.5 mt-2">
-          <Users className="h-4 w-4 text-white/70" />
-          <span className="text-base text-white/90" style={georgiaFontStyle}>
-            {userCount} users {userAction}
-          </span>
-        </div>
+    <div className="mb-4 flex flex-col justify-center items-center">
+      <div className="mb-2 text-center">
+        <span className="text-base text-white/90" style={georgiaFontStyle}>
+          {wins}-{losses} record
+        </span>
+      </div>
+      
+      <div className="flex items-center gap-1.5">
+        <Users className="h-4 w-4 text-white/70" />
+        <span className="text-base text-white/90" style={georgiaFontStyle}>
+          {userCount} users {userAction}
+        </span>
       </div>
     </div>
   );
