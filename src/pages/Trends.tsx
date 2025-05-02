@@ -100,8 +100,9 @@ const Trends = () => {
           </button>
         </header>
 
-        <div className="mb-4 text-center">
-          <h1 className="text-xl font-bold">Today's Top Trends</h1>
+        <div className="mb-6 text-center">
+          <h1 className="text-2xl font-bold text-white">Today's Top Trends</h1>
+          <p className="text-white/60 text-sm mt-1">Tail or fade the best picks</p>
         </div>
 
         <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-3 mx-auto">

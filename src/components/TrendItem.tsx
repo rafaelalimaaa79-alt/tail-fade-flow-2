@@ -54,20 +54,25 @@ const TrendItem = ({
     <Link to={`/bettor/${id}`} className="block mb-3">
       <Card className="rounded-lg bg-card shadow-md border border-white/10 overflow-hidden">
         <div className="flex flex-col p-3">
-          {/* Top section with username and score percentage */}
-          <div className="mb-2 border-b border-white/10 pb-1 flex justify-between items-center">
-            <h2 className="font-rajdhani text-xl font-bold text-white">@{name}</h2>
-            <span className={cn(
-              "font-bold text-base px-2 py-0.5 rounded",
-              isTailRecommendation ? "bg-onetime-green/20 text-onetime-green" : "bg-onetime-red/20 text-onetime-red"
-            )}>
-              {score}%
-            </span>
+          {/* Top section with username and score percentage - centered username */}
+          <div className="mb-2 border-b border-white/10 pb-2">
+            <div className="flex justify-center items-center">
+              <h2 className="font-rajdhani text-xl font-bold text-white text-center">@{name}</h2>
+            </div>
+            <div className="flex justify-center mt-1">
+              <span className={cn(
+                "font-bold text-base px-3 py-0.5 rounded",
+                isTailRecommendation ? "bg-onetime-green/20 text-onetime-green" : "bg-onetime-red/20 text-onetime-red"
+              )}>
+                Score: {score}%
+              </span>
+            </div>
           </div>
           
-          {/* Middle section with reason */}
-          <div className="mb-3">
+          {/* Reason section - centered and well formatted */}
+          <div className="mb-3 px-2">
             <div className="text-center">
+              <p className="text-xs text-white/60 mb-1">REASONING</p>
               <div className="mt-1">
                 <span 
                   className={cn(
@@ -85,16 +90,15 @@ const TrendItem = ({
             </div>
           </div>
           
-          {/* New section with data points */}
+          {/* User count section */}
           <div className="flex justify-center items-center mb-3">
-            {/* User count - more specific now */}
             <div className="flex items-center">
               <span className="font-bold text-white">{userCount} users {userAction}</span>
             </div>
           </div>
           
           {/* Action button - only showing bet description */}
-          <div className="mb-2">
+          <div className="mb-3">
             <ActionButton 
               variant={isTailRecommendation ? "tail" : "fade"}
               className="h-9 text-base font-bold"
@@ -103,11 +107,11 @@ const TrendItem = ({
             </ActionButton>
           </div>
           
-          {/* Recent bets - more compact */}
+          {/* Recent bets section with label */}
           <div className="flex items-center justify-center">
             <div>
-              <p className="text-xs text-white/50 mb-0.5 text-center">Last 10 {betType} bets</p>
-              <div className="flex space-x-0.5 justify-center">
+              <p className="text-xs text-white/50 mb-1 text-center">Last 10 {betType} bets</p>
+              <div className="flex space-x-1 justify-center">
                 {recentBets.map((bet, index) => (
                   <div 
                     key={index} 
