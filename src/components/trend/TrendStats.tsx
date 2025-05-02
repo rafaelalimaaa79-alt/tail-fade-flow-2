@@ -24,7 +24,7 @@ const TrendStats = ({
   
   return (
     <div className="mb-4">
-      <div>
+      <div className="flex justify-center">
         <div className="flex items-center gap-1.5 mt-2">
           <Users className="h-4 w-4 text-white/70" />
           <span className="text-base text-white/90" style={georgiaFontStyle}>
