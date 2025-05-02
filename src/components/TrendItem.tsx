@@ -64,7 +64,7 @@ const TrendItem = ({
                 "font-bold text-base px-3 py-0.5 rounded",
                 isTailRecommendation ? "bg-onetime-green/20 text-onetime-green" : "bg-onetime-red/20 text-onetime-red"
               )}>
-                Score: {score}%
+                Confidence Score: {score}%
               </span>
             </div>
           </div>
