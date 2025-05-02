@@ -77,7 +77,7 @@ const TrendItem = ({
             <ActionButton 
               variant={isTailRecommendation ? "tail" : "fade"}
               className={cn(
-                "h-9 text-sm font-bold",
+                "h-9 text-base font-bold", // Increased font size from text-sm to text-base
                 isPulsing ? glowColor : ""
               )}
               style={{ transition: "all 1s ease-in-out" }}
