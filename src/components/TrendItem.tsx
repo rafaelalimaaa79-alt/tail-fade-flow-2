@@ -4,6 +4,8 @@ import { Link } from "react-router-dom";
 import { Card, CardContent } from "@/components/ui/card";
 import { cn } from "@/lib/utils";
 import ActionButton from "./ActionButton";
+import { Separator } from "@/components/ui/separator";
+import { Users } from "lucide-react";
 
 type TrendItemProps = {
   id: string;
@@ -115,6 +117,11 @@ const TrendItem = ({
   const userAction = isTailRecommendation ? "tailing" : "fading";
   const glowColor = isTailRecommendation ? "0 0 10px rgba(16, 185, 129, 0.7)" : "0 0 10px rgba(239, 68, 68, 0.7)";
   
+  // Calculate win-loss record
+  const wins = recentBets.filter(bet => bet === 1).length;
+  const losses = recentBets.filter(bet => bet === 0).length;
+  const recordText = `${wins}–${losses} in last ${recentBets.length} ${betType} bets`;
+  
   return (
     <Link to={`/bettor/${id}`} className="block mb-3">
       <Card 
@@ -124,7 +131,7 @@ const TrendItem = ({
         )}
       >
         <div className="flex flex-col p-3">
-          {/* Top section with username and score percentage - centered username */}
+          {/* Top section with username and score percentage */}
           <div className="mb-2 border-b border-white/10 pb-2">
             <div className="flex justify-center items-center">
               <h2 className="font-rajdhani text-xl font-bold text-white text-center">@{name}</h2>
@@ -145,30 +152,39 @@ const TrendItem = ({
             </div>
           </div>
           
-          {/* Reason section - centered and well formatted */}
+          {/* Reason section */}
           <div className="mb-3 px-2">
             <div className="text-center">
-              <div className="mt-1">
-                <span 
-                  className="font-bold text-lg text-white"
-                  style={{ 
-                    letterSpacing: "0.5px"
-                  }}
-                >
-                  {reason}
+              <span 
+                className="font-bold text-lg text-white"
+                style={{ 
+                  letterSpacing: "0.5px"
+                }}
+              >
+                {reason}
+              </span>
+            </div>
+          </div>
+          
+          {/* Stats section - reorganized for better structure */}
+          <div className="mb-3 bg-white/5 rounded-lg p-3">
+            <div className="flex justify-between items-center mb-2">
+              <div className="flex items-center">
+                <span className={cn(
+                  "font-bold text-base",
+                  wins > losses ? "text-onetime-green" : "text-onetime-red"
+                )}>
+                  {recordText}
                 </span>
+              </div>
+              <div className="flex items-center gap-1 text-white/70 text-sm">
+                <Users className="h-3.5 w-3.5" />
+                <span>{userCount} {userAction}</span>
               </div>
             </div>
           </div>
           
-          {/* User count section */}
-          <div className="flex justify-center items-center mb-3">
-            <div className="flex items-center">
-              <span className="font-bold text-white">{userCount} users {userAction}</span>
-            </div>
-          </div>
-          
-          {/* Action button - only showing bet description with heartbeat glow effect */}
+          {/* Action button */}
           <div className="mb-3">
             <ActionButton 
               variant={isTailRecommendation ? "tail" : "fade"}
