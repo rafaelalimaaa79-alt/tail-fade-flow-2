@@ -49,35 +49,35 @@ const TrendItem = ({
     <Link to={`/bettor/${id}`} className="block mb-3">
       <Card className="rounded-lg bg-card shadow-md border border-white/10 overflow-hidden">
         <div className="flex flex-col p-3">
-          {/* Top section with bet description - more compact */}
+          {/* Top section with username and bet description - restructured */}
           <div className="mb-2 border-b border-white/10 pb-1">
-            <h2 className="font-rajdhani text-xl font-bold text-white text-center">{betDescription}</h2>
+            <h2 className="font-rajdhani text-xl font-bold text-white text-center">@{name}</h2>
           </div>
           
-          {/* Middle section with bettor info and reason - more compact */}
-          <div className="mb-2">
+          {/* Middle section with reason - enlarged */}
+          <div className="mb-3">
             <div className="text-center">
-              <span className="italic text-white/70 text-sm font-serif">@{name}</span>
-              <div className="mt-1 text-sm">
+              <div className="mt-1">
                 <span 
                   className={cn(
-                    "font-bold",
+                    "font-bold text-base",
                     actionColor,
                     isPulsing ? glowColor : ""
                   )}
                   style={{ transition: "all 1s ease-in-out" }}
                 >
-                </span> {reason}
+                  {reason}
+                </span>
               </div>
             </div>
           </div>
           
-          {/* Action button - more compact */}
+          {/* Action button - only showing bet description */}
           <div className="mb-2">
             <ActionButton 
               variant={isTailRecommendation ? "tail" : "fade"}
               className={cn(
-                "h-9 text-base font-bold", // Increased font size from text-sm to text-base
+                "h-9 text-base font-bold",
                 isPulsing ? glowColor : ""
               )}
               style={{ transition: "all 1s ease-in-out" }}
@@ -95,7 +95,7 @@ const TrendItem = ({
                   <div 
                     key={index} 
                     className={cn(
-                      "h-4 w-4 rounded-sm flex items-center justify-center font-bold text-[12px] text-white",
+                      "h-5 w-5 rounded-sm flex items-center justify-center font-bold text-[12px] text-white",
                       bet ? "bg-onetime-green" : "bg-onetime-red"
                     )}
                   >
