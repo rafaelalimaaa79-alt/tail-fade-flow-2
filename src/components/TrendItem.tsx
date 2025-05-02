@@ -44,7 +44,7 @@ const TrendItem = ({
       {
         root: null, // Use viewport as root
         rootMargin: "0px",
-        threshold: 0.5, // At least 50% of the item must be visible
+        threshold: 0.8, // Increased threshold - item must be 80% visible to trigger
       }
     );
     
