@@ -32,16 +32,7 @@ const TrendItem = ({
   fadeScore = 80, // Default value
   userCount = 210, // Default value
 }: TrendItemProps) => {
-  const [isPulsing, setIsPulsing] = useState(false);
-  
-  // Handle the pulsing animation with faster heartbeat-like timing
-  useEffect(() => {
-    const interval = setInterval(() => {
-      setIsPulsing(prev => !prev);
-    }, 1000); // Pulse every 1 second for a faster heartbeat effect
-    
-    return () => clearInterval(interval);
-  }, []);
+  // No longer need isPulsing state as we're using a CSS animation
   
   const actionText = isTailRecommendation ? "Tail" : "Fade";
   const actionColor = isTailRecommendation ? "text-onetime-green" : "text-onetime-red";
@@ -63,13 +54,11 @@ const TrendItem = ({
             <div className="flex justify-center mt-1">
               <span 
                 className={cn(
-                  "font-bold text-base px-3 py-0.5 rounded",
-                  isTailRecommendation ? "bg-onetime-green/20 text-onetime-green" : "bg-onetime-red/20 text-onetime-red",
-                  isPulsing ? "animate-pulse-subtle" : ""
+                  "font-bold text-base px-3 py-0.5 rounded animate-pulse-heartbeat",
+                  isTailRecommendation ? "bg-onetime-green/20 text-onetime-green" : "bg-onetime-red/20 text-onetime-red"
                 )}
                 style={{
-                  boxShadow: isPulsing ? glowColor : "none",
-                  transition: "box-shadow 0.5s ease-in-out"
+                  boxShadow: glowColor,
                 }}
               >
                 Confidence Score: {score}%
@@ -82,12 +71,8 @@ const TrendItem = ({
             <div className="text-center">
               <div className="mt-1">
                 <span 
-                  className={cn(
-                    "font-bold text-lg text-white",
-                    isPulsing ? "animate-pulse-subtle" : ""
-                  )}
+                  className="font-bold text-lg text-white"
                   style={{ 
-                    transition: "all 0.5s ease-in-out",
                     letterSpacing: "0.5px"
                   }}
                 >
@@ -104,17 +89,13 @@ const TrendItem = ({
             </div>
           </div>
           
-          {/* Action button - only showing bet description with pulsing glow effect */}
+          {/* Action button - only showing bet description with heartbeat glow effect */}
           <div className="mb-3">
             <ActionButton 
               variant={isTailRecommendation ? "tail" : "fade"}
-              className={cn(
-                "h-9 text-base font-bold",
-                isPulsing ? "animate-pulse-subtle" : ""
-              )}
+              className="h-9 text-base font-bold animate-pulse-heartbeat"
               style={{
-                boxShadow: isPulsing ? glowColor : "none",
-                transition: "box-shadow 0.5s ease-in-out"
+                boxShadow: glowColor,
               }}
             >
               {`${actionText} ${betDescription}`}

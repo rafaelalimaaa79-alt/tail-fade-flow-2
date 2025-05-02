@@ -1,4 +1,3 @@
-
 import type { Config } from "tailwindcss";
 
 export default {
@@ -101,15 +100,18 @@ export default {
 						height: '0'
 					}
 				},
-        'pulse-subtle': {
-          '0%, 100%': { opacity: '1' },
-          '50%': { opacity: '0.75' },
+        'pulse-heartbeat': {
+          '0%, 100%': { opacity: '0.9', transform: 'scale(1)' },
+          '15%': { opacity: '1', transform: 'scale(1.05)' },
+          '30%': { opacity: '0.9', transform: 'scale(1)' },
+          '45%': { opacity: '1', transform: 'scale(1.05)' },
+          '60%': { opacity: '0.9', transform: 'scale(1)' },
         }
 			},
 			animation: {
 				'accordion-down': 'accordion-down 0.2s ease-out',
 				'accordion-up': 'accordion-up 0.2s ease-out',
-        'pulse-subtle': 'pulse-subtle 1s cubic-bezier(0.4, 0, 0.6, 1) infinite',
+        'pulse-heartbeat': 'pulse-heartbeat 1.5s ease-in-out infinite',
 			}
 		}
 	},
