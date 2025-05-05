@@ -135,44 +135,134 @@
     @apply inline-block transition-all duration-200 ease-in-out origin-center;
   }
 
-  @keyframes highlight-text {
-    0% {
-      background-position: -100%;
-      opacity: 0.8;
-    }
-    100% {
-      background-position: 200%;
-      opacity: 1;
-    }
+  /* Notification animations */
+  .shadow-glow {
+    box-shadow: 0 0 25px rgba(255, 255, 255, 0.6);
   }
 
-  .animate-fade-in {
-    animation: fade-in 0.5s forwards;
+  .animate-subtle-shake {
+    animation: subtle-shake 0.5s cubic-bezier(0.36, 0.07, 0.19, 0.97) both;
   }
 
-  .animate-bounce {
-    animation: bounce 1s infinite;
+  .animate-bounce-pop {
+    animation: bounce-pop 1.2s ease-in-out;
   }
 
-  @keyframes bounce {
-    0%, 100% {
-      transform: translateY(0);
-    }
-    50% {
-      transform: translateY(-10px);
-    }
+  .animate-quick-flash {
+    animation: quick-flash 0.7s ease-out forwards;
   }
 
-  .animate-pulse {
-    animation: pulse 2s cubic-bezier(0.4, 0, 0.6, 1) infinite;
+  .animate-float-1 {
+    animation: float-around 5s ease-in-out infinite;
   }
 
-  @keyframes pulse {
-    0%, 100% {
-      opacity: 1;
-    }
-    50% {
-      opacity: 0.5;
-    }
+  .animate-float-2 {
+    animation: float-around 7s ease-in-out infinite reverse;
+  }
+
+  .animate-float-3 {
+    animation: float-around 6s ease-in-out infinite;
+    animation-delay: 0.5s;
+  }
+
+  .animate-text-reveal {
+    animation: text-reveal 0.8s ease-out forwards;
+  }
+}
+
+/* Animation keyframes */
+@keyframes subtle-shake {
+  0%, 100% {
+    transform: translateX(0);
+  }
+  10%, 30%, 50%, 70%, 90% {
+    transform: translateX(-2px);
+  }
+  20%, 40%, 60%, 80% {
+    transform: translateX(2px);
+  }
+}
+
+@keyframes bounce-pop {
+  0%, 20% {
+    transform: scale(0.9);
+  }
+  40% {
+    transform: scale(1.1);
+  }
+  60% {
+    transform: scale(0.95);
+  }
+  80% {
+    transform: scale(1.05);
+  }
+  100% {
+    transform: scale(1);
+  }
+}
+
+@keyframes quick-flash {
+  0% {
+    opacity: 0.8;
+  }
+  30% {
+    opacity: 0.3;
+  }
+  100% {
+    opacity: 0;
+  }
+}
+
+@keyframes float-around {
+  0%, 100% {
+    transform: translate(0, 0);
+  }
+  25% {
+    transform: translate(8px, -8px);
+  }
+  50% {
+    transform: translate(0, -15px);
+  }
+  75% {
+    transform: translate(-8px, -8px);
+  }
+}
+
+@keyframes text-reveal {
+  0% {
+    clip-path: inset(0 100% 0 0);
+  }
+  100% {
+    clip-path: inset(0 0 0 0);
+  }
+}
+
+/* Keep all existing keyframes */
+@keyframes highlight-text {
+  0% {
+    background-position: -100%;
+    opacity: 0.8;
+  }
+  100% {
+    background-position: 200%;
+    opacity: 1;
+  }
+}
+
+@keyframes bounce {
+  0%, 100% {
+    transform: translateY(0);
+  }
+  50% {
+    transform: translateY(-10px);
+  }
+}
+
+@keyframes pulse {
+  0%, 100% {
+    opacity: 1;
+  }
+  50% {
+    opacity: 0.5;
   }
 }

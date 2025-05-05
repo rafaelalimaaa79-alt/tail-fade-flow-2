@@ -1,13 +1,18 @@
 
 import { create } from "zustand";
 
-// Arrays of notification messages for tailing and fading
+// Arrays of notification messages for tailing and fading with more punchy options
 const TAIL_MESSAGES = [
   "If this hits, you're a genius. If not, blame them.",
   "Following greatness… or chaos. We'll find out soon.",
   "You better hope they're hot and not hallucinating.",
   "Welcome to the bandwagon. No seatbelts.",
-  "Tailed it. Now it's out of your hands."
+  "Tailed it. Now it's out of your hands.",
+  "Let's ride this wave together! 🏄",
+  "When they win, you win. Simple as that.",
+  "All aboard the money train! Next stop: Profit City.",
+  "Sharp play recognized. Let's get this money!",
+  "You're on the right side of history... we hope."
 ];
 
 const FADE_MESSAGES = [
@@ -15,7 +20,12 @@ const FADE_MESSAGES = [
   "Cold streak insurance… locked in.",
   "You're betting against the mess. Respect.",
   "One man's trash is another man's treasure.",
-  "You faded. Now we pray."
+  "You faded. Now we pray.",
+  "Going against the grain. Bold move.",
+  "Fading the public? Smart money move.",
+  "Their L is your W. That's the plan.",
+  "Betting they're wrong again. Savage.",
+  "Sometimes the best bet is AGAINST the 'expert'."
 ];
 
 /**
@@ -46,6 +56,11 @@ export const useNotificationStore = create<NotificationStore>((set) => ({
     const message = variant === "tail" 
       ? getRandomMessage(TAIL_MESSAGES)
       : getRandomMessage(FADE_MESSAGES);
+    
+    // Trigger haptic feedback if available
+    if (navigator.vibrate) {
+      navigator.vibrate([100]);
+    }
     
     set({
       isOpen: true,

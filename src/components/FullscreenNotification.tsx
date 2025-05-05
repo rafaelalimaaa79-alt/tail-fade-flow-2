@@ -22,20 +22,33 @@ const FullscreenNotification = ({
 }: FullscreenNotificationProps) => {
   const [isVisible, setIsVisible] = useState(false);
   const [showSparkles, setShowSparkles] = useState(false);
+  const [showConfetti, setShowConfetti] = useState(false);
+  const [textAppeared, setTextAppeared] = useState({
+    headline: false,
+    subheadline: false,
+    message: false,
+  });
 
   useEffect(() => {
     if (isOpen) {
+      // Quick animation sequence for elements appearing
       setIsVisible(true);
       
-      // Show sparkle effects after a short delay
-      setTimeout(() => setShowSparkles(true), 300);
+      // Start animation sequence
+      setTimeout(() => setShowConfetti(true), 100);
+      setTimeout(() => setTextAppeared(prev => ({ ...prev, headline: true })), 300);
+      setTimeout(() => setTextAppeared(prev => ({ ...prev, subheadline: true })), 800);
+      setTimeout(() => setShowSparkles(true), 1000);
+      setTimeout(() => setTextAppeared(prev => ({ ...prev, message: true })), 1300);
       
-      // Auto-close after 3 seconds
+      // Auto-close after 5 seconds
       const timer = setTimeout(() => {
         setShowSparkles(false);
+        setShowConfetti(false);
+        setTextAppeared({ headline: false, subheadline: false, message: false });
         setIsVisible(false);
-        setTimeout(onClose, 500); // Close after fade animation
-      }, 3000);
+        setTimeout(onClose, 500);
+      }, 5000);
       
       return () => {
         clearTimeout(timer);
@@ -43,9 +56,20 @@ const FullscreenNotification = ({
     }
   }, [isOpen, onClose]);
 
+  const handleBackdropClick = () => {
+    setShowSparkles(false);
+    setShowConfetti(false);
+    setTextAppeared({ headline: false, subheadline: false, message: false });
+    setIsVisible(false);
+    setTimeout(onClose, 300);
+  };
+
   if (!isOpen) return null;
 
   const IconComponent = variant === "tail" ? ZapIcon : PartyPopper;
+  const bgGradient = variant === "tail" 
+    ? "bg-gradient-to-br from-onetime-green/95 to-onetime-green/80" 
+    : "bg-gradient-to-br from-onetime-red/95 to-onetime-red/80";
 
   return (
     <div
@@ -53,75 +77,107 @@ const FullscreenNotification = ({
         isVisible ? "opacity-100" : "opacity-0"
       }`}
     >
-      {/* Background overlay with blur effect */}
+      {/* Background overlay with blur effect and animated burst */}
       <div 
-        className="absolute inset-0 bg-black/80 backdrop-blur-sm" 
-        onClick={onClose}
+        className={`absolute inset-0 backdrop-blur-md transition-all duration-700 ${
+          isVisible ? "bg-black/80" : "bg-black/0"
+        } ${showConfetti ? "animate-subtle-shake" : ""}`}
+        onClick={handleBackdropClick}
       ></div>
       
-      {/* Notification card */}
+      {/* Notification card with enhanced animations */}
       <div
         className={`relative max-w-md w-full rounded-xl p-8 shadow-2xl text-center transform transition-all duration-500 ${
-          isVisible ? "scale-100 translate-y-0" : "scale-95 translate-y-4"
-        } ${
-          variant === "tail"
-            ? "bg-gradient-to-br from-onetime-green/95 to-onetime-green/80 text-white"
-            : "bg-gradient-to-br from-onetime-red/95 to-onetime-red/80 text-white"
+          isVisible ? "scale-100 translate-y-0" : "scale-95 translate-y-8"
+        } ${bgGradient} text-white overflow-hidden ${
+          showConfetti ? "shadow-glow" : ""
         }`}
+        style={{
+          boxShadow: showConfetti ? 
+            `0 0 30px ${variant === "tail" ? "rgba(16, 185, 129, 0.7)" : "rgba(239, 68, 68, 0.7)"}` : 
+            "none"
+        }}
       >
         {/* Close button */}
         <button
-          onClick={onClose}
+          onClick={handleBackdropClick}
           className="absolute top-3 right-3 text-white/80 hover:text-white transition-colors duration-300"
         >
           <X className="h-6 w-6" />
         </button>
         
-        {/* Fun icon animation */}
-        <div className={`text-center mb-4 transition-all duration-500 ${isVisible ? "opacity-100 scale-100" : "opacity-0 scale-50"}`}>
-          <IconComponent className="h-12 w-12 mx-auto text-white animate-bounce" />
+        {/* Background flash effect */}
+        {showConfetti && (
+          <div className="absolute inset-0 bg-white/20 animate-quick-flash pointer-events-none"></div>
+        )}
+        
+        {/* Animated icon */}
+        <div className={`text-center mb-6 transition-all duration-700 transform ${
+          isVisible ? "opacity-100 scale-100" : "opacity-0 scale-50"
+        } ${showConfetti ? "animate-bounce-pop" : ""}`}>
+          <IconComponent className="h-14 w-14 mx-auto text-white" />
         </div>
         
-        {/* Headline with staggered animation */}
-        <h2 className="text-2xl font-extrabold mb-2 animate-fade-in">
-          You {variant === "tail" ? "tailed" : "faded"} @{bettorName}
-        </h2>
+        {/* Headline with slide-in animation */}
+        <div className={`overflow-hidden mb-2 h-12`}>
+          <h2 
+            className={`text-3xl font-extrabold transition-all duration-700 transform ${
+              textAppeared.headline ? "translate-y-0 opacity-100" : "translate-y-full opacity-0"
+            }`}
+          >
+            You {variant === "tail" ? "tailed" : "faded"} @{bettorName}
+          </h2>
+        </div>
         
-        {/* Subheadline */}
-        <h3 className="text-xl font-medium mb-4 animate-fade-in" style={{ animationDelay: "100ms" }}>
-          {betDescription}
-        </h3>
+        {/* Subheadline with zoom animation */}
+        <div className="overflow-hidden mb-6 h-10">
+          <h3 
+            className={`text-xl font-medium transition-all duration-700 transform ${
+              textAppeared.subheadline ? "scale-100 opacity-100" : "scale-50 opacity-0"
+            }`}
+          >
+            {betDescription}
+          </h3>
+        </div>
         
-        <Separator className="bg-white/30 my-4" />
+        <Separator className="bg-white/30 my-6" />
         
-        {/* Message with sparkles */}
-        <div className="relative mt-4">
+        {/* Message with fade-in and sparkle effects */}
+        <div className="relative mt-6 h-10 flex items-center justify-center">
           {showSparkles && (
-            <div className="absolute -top-2 -left-2">
-              <Sparkles className="h-5 w-5 text-yellow-300 animate-pulse" />
-            </div>
+            <>
+              <div className="absolute -top-2 -left-4">
+                <Sparkles className="h-5 w-5 text-yellow-300 animate-pulse" />
+              </div>
+              <div className="absolute -bottom-0 -right-2">
+                <Sparkles className="h-5 w-5 text-yellow-300 animate-pulse" />
+              </div>
+            </>
           )}
-          <p className="text-lg font-normal text-white mt-4 animate-fade-in" style={{ animationDelay: "200ms" }}>
+          
+          <p 
+            className={`text-lg font-normal text-white transition-all duration-700 ${
+              textAppeared.message ? "opacity-100" : "opacity-0"
+            } ${textAppeared.message ? "animate-text-reveal" : ""}`}
+          >
             {message}
           </p>
-          {showSparkles && (
-            <div className="absolute -bottom-2 -right-2">
-              <Sparkles className="h-5 w-5 text-yellow-300 animate-pulse" />
-            </div>
-          )}
         </div>
 
-        {/* Decorative sparkles around the card */}
-        {showSparkles && (
+        {/* Dynamic confetti/sparkle elements */}
+        {showConfetti && (
           <>
-            <div className="absolute top-[10%] left-[-15px] animate-bounce" style={{ animationDuration: "2s" }}>
+            <div className="absolute top-[5%] left-[10%] animate-float-1">
               <Sparkles className="h-4 w-4 text-yellow-300" />
             </div>
-            <div className="absolute top-[30%] right-[-15px] animate-bounce" style={{ animationDuration: "1.5s", animationDelay: "0.5s" }}>
+            <div className="absolute top-[20%] right-[15%] animate-float-2">
               <Sparkles className="h-4 w-4 text-yellow-300" />
             </div>
-            <div className="absolute bottom-[20%] left-[-15px] animate-bounce" style={{ animationDuration: "1.8s", animationDelay: "0.3s" }}>
-              <Sparkles className="h-4 w-4 text-yellow-300" />
+            <div className="absolute bottom-[15%] left-[20%] animate-float-3">
+              <Sparkles className="h-5 w-5 text-yellow-300" />
+            </div>
+            <div className="absolute bottom-[10%] right-[10%] animate-float-2">
+              <Sparkles className="h-3 w-3 text-yellow-300" />
             </div>
           </>
         )}
