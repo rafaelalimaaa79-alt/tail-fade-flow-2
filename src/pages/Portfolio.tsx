@@ -1,3 +1,4 @@
+
 import React, { useState } from "react";
 import BottomNav from "@/components/BottomNav";
 import TimeFilter from "@/components/TimeFilter";
@@ -70,27 +71,31 @@ const Portfolio = () => {
           setActiveFilter={setActiveFilter}
         />
 
-        {/* Portfolio tabs */}
+        {/* Portfolio tabs with enhanced styling */}
         <div className="mb-6 mt-4 grid grid-cols-2 gap-2 rounded-lg bg-gray-100 p-1">
           <button
-            className={`rounded-md py-2 text-sm font-medium transition-colors ${
+            className={`rounded-md py-2 text-base font-bold transition-colors ${
               activeTab === "tailing"
                 ? "bg-white shadow-sm"
                 : "text-gray-600 hover:bg-gray-200"
             }`}
             onClick={() => setActiveTab("tailing")}
           >
-            Tailing ({mockPortfolio.tailing.length})
+            <span className={`text-onetime-green text-lg`}>
+              Tailing <span className="font-extrabold">({mockPortfolio.tailing.length})</span>
+            </span>
           </button>
           <button
-            className={`rounded-md py-2 text-sm font-medium transition-colors ${
+            className={`rounded-md py-2 text-base font-bold transition-colors ${
               activeTab === "fading"
                 ? "bg-white shadow-sm"
                 : "text-gray-600 hover:bg-gray-200"
             }`}
             onClick={() => setActiveTab("fading")}
           >
-            Fading ({mockPortfolio.fading.length})
+            <span className={`text-onetime-red text-lg`}>
+              Fading <span className="font-extrabold">({mockPortfolio.fading.length})</span>
+            </span>
           </button>
         </div>
 
