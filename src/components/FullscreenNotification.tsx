@@ -1,12 +1,15 @@
 
 import React, { useState, useEffect } from "react";
 import { X } from "lucide-react";
+import { Separator } from "@/components/ui/separator";
 
 type FullscreenNotificationProps = {
   message: string;
   isOpen: boolean;
   variant: "tail" | "fade";
   onClose: () => void;
+  bettorName: string;
+  betDescription: string;
 };
 
 const FullscreenNotification = ({
@@ -14,6 +17,8 @@ const FullscreenNotification = ({
   isOpen,
   variant,
   onClose,
+  bettorName,
+  betDescription,
 }: FullscreenNotificationProps) => {
   const [isVisible, setIsVisible] = useState(false);
 
@@ -39,7 +44,7 @@ const FullscreenNotification = ({
     >
       <div className="absolute inset-0 bg-black/80" onClick={onClose}></div>
       <div
-        className={`relative max-w-md w-full rounded-xl p-6 shadow-2xl text-center transform transition-all ${
+        className={`relative max-w-md w-full rounded-xl p-8 shadow-2xl text-center transform transition-all ${
           isVisible ? "scale-100" : "scale-95"
         } ${
           variant === "tail"
@@ -53,7 +58,23 @@ const FullscreenNotification = ({
         >
           <X className="h-6 w-6" />
         </button>
-        <div className="text-xl font-bold my-6">{message}</div>
+        
+        {/* Headline */}
+        <h2 className="text-2xl font-extrabold mb-2">
+          You {variant === "tail" ? "tailed" : "faded"} @{bettorName}
+        </h2>
+        
+        {/* Subheadline */}
+        <h3 className="text-xl font-medium mb-4">
+          {betDescription}
+        </h3>
+        
+        <Separator className="bg-white/30 my-4" />
+        
+        {/* Message */}
+        <p className="text-lg font-normal text-white/90 mt-4">
+          {message}
+        </p>
       </div>
     </div>
   );

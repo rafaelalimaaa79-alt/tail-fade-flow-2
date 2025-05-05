@@ -43,15 +43,13 @@ export const useNotificationStore = create<NotificationStore>((set) => ({
   bettorName: "",
   betDescription: "",
   openNotification: ({ variant, bettorName, betDescription }) => {
-    const baseMessage = variant === "tail" 
+    const message = variant === "tail" 
       ? getRandomMessage(TAIL_MESSAGES)
       : getRandomMessage(FADE_MESSAGES);
     
-    const formattedMessage = `You're ${variant === "tail" ? "tailing" : "fading"} @${bettorName}'s play: ${betDescription}. ${baseMessage}`;
-    
     set({
       isOpen: true,
-      message: formattedMessage,
+      message,
       variant,
       bettorName,
       betDescription
