@@ -45,7 +45,7 @@ const TrendItem = ({
   const userAction = isTailRecommendation ? "tailing" : "fading";
   
   return (
-    <Link to={`/bettor/${id}`} className="block mb-3">
+    <div className="block mb-3">
       <TrendVisibilityWrapper>
         {(isVisible, isMostVisible) => (
           <Card className="rounded-lg bg-card shadow-md border border-white/10 overflow-hidden">
@@ -73,6 +73,7 @@ const TrendItem = ({
               <TrendAction 
                 isTailRecommendation={isTailRecommendation}
                 betDescription={betDescription}
+                bettorName={name}
                 isMostVisible={isMostVisible}
               />
               
@@ -84,7 +85,7 @@ const TrendItem = ({
           </Card>
         )}
       </TrendVisibilityWrapper>
-    </Link>
+    </div>
   );
 };
 

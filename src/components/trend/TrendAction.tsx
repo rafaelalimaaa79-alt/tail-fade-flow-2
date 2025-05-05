@@ -7,20 +7,22 @@ import { showTailNotification, showFadeNotification } from "@/utils/betting-noti
 type TrendActionProps = {
   isTailRecommendation: boolean;
   betDescription: string;
+  bettorName: string;
   isMostVisible?: boolean;
 };
 
 const TrendAction = ({
   isTailRecommendation,
   betDescription,
+  bettorName,
   isMostVisible = false,
 }: TrendActionProps) => {
   const handleTailClick = () => {
-    showTailNotification();
+    showTailNotification(bettorName, betDescription);
   };
 
   const handleFadeClick = () => {
-    showFadeNotification();
+    showFadeNotification(bettorName, betDescription);
   };
 
   return (

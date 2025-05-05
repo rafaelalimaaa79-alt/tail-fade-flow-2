@@ -1,8 +1,11 @@
+
 import React from "react";
 import { Bell } from "lucide-react";
 import BottomNav from "@/components/BottomNav";
 import TrendItem from "@/components/TrendItem";
 import { useIsMobile } from "@/hooks/use-mobile";
+import FullscreenNotification from "@/components/FullscreenNotification";
+import { useNotificationStore } from "@/utils/betting-notifications";
 
 // Mock data for the trends page
 const trendData = [
@@ -82,6 +85,7 @@ const trendData = [
 
 const Trends = () => {
   const isMobile = useIsMobile();
+  const { isOpen, message, variant, closeNotification } = useNotificationStore();
   
   // Sort the trend data by confidence score (either tailScore or fadeScore)
   const sortedTrendData = [...trendData].sort((a, b) => {
@@ -129,6 +133,14 @@ const Trends = () => {
           ))}
         </div>
       </div>
+      
+      <FullscreenNotification 
+        isOpen={isOpen}
+        message={message}
+        variant={variant || "tail"}
+        onClose={closeNotification}
+      />
+      
       <BottomNav />
     </div>
   );
