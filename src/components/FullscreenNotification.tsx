@@ -87,37 +87,38 @@ const FullscreenNotification = ({
           <div className="absolute inset-0 bg-white/20 animate-quick-flash pointer-events-none"></div>
         )}
         
-        {/* App logo instead of animated icon */}
-        <div className={`text-center mb-6 transition-all duration-700 transform ${
-          isVisible ? "opacity-100 scale-100" : "opacity-0 scale-50"
-        } ${isVisible ? "animate-bounce-pop" : ""}`}>
+        {/* App logo positioned at top left */}
+        <div className="absolute top-4 left-4">
           <img 
             src="/lovable-uploads/57cb1fb4-7471-451e-bf49-d4d5fa12bdcb.png" 
             alt="ONE TIME logo" 
-            className="h-14 w-14 mx-auto"
+            className="h-16 w-16 transition-all duration-700 transform"
           />
         </div>
         
-        {/* Main notification text */}
-        <div className={`overflow-hidden mb-2`}>
-          <h2 
-            className={`text-4xl font-bold transition-all duration-700 transform ${
-              textAppeared ? "translate-y-0 opacity-100" : "translate-y-full opacity-0"
-            }`}
-          >
-            You {variant === "tail" ? "tailed" : "faded"} @{bettorName}'s
-          </h2>
-        </div>
-        
-        {/* Bet description */}
-        <div className="overflow-hidden mt-4">
-          <h3 
-            className={`text-3xl font-semibold transition-all duration-700 transform ${
-              textAppeared ? "scale-100 opacity-100" : "scale-50 opacity-0"
-            }`}
-          >
-            {betDescription}
-          </h3>
+        {/* Centered content div that contains all text */}
+        <div className="flex flex-col items-center justify-center h-full py-6">
+          {/* Main notification text */}
+          <div className={`overflow-hidden mb-2`}>
+            <h2 
+              className={`text-4xl font-bold transition-all duration-700 transform ${
+                textAppeared ? "translate-y-0 opacity-100" : "translate-y-full opacity-0"
+              }`}
+            >
+              You {variant === "tail" ? "tailed" : "faded"} @{bettorName}'s
+            </h2>
+          </div>
+          
+          {/* Bet description */}
+          <div className="overflow-hidden mt-4">
+            <h3 
+              className={`text-3xl font-semibold transition-all duration-700 transform ${
+                textAppeared ? "scale-100 opacity-100" : "scale-50 opacity-0"
+              }`}
+            >
+              {betDescription}
+            </h3>
+          </div>
         </div>
       </div>
     </div>
