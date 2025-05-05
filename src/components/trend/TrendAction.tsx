@@ -1,38 +1,69 @@
 
 import React from "react";
 import { cn } from "@/lib/utils";
-import ActionButton from "../ActionButton";
+import ActionButton from "@/components/ActionButton";
+import { showTailNotification, showFadeNotification } from "@/utils/betting-notifications";
 
 type TrendActionProps = {
   isTailRecommendation: boolean;
   betDescription: string;
-  isMostVisible: boolean;
+  isMostVisible?: boolean;
 };
 
 const TrendAction = ({
   isTailRecommendation,
   betDescription,
-  isMostVisible
+  isMostVisible = false,
 }: TrendActionProps) => {
-  const actionText = isTailRecommendation ? "Tail" : "Fade";
-  const glowColor = isTailRecommendation 
-    ? "0 0 10px rgba(16, 185, 129, 0.7)" 
-    : "0 0 10px rgba(239, 68, 68, 0.7)";
-  
+  const handleTailClick = (e: React.MouseEvent) => {
+    e.preventDefault(); // Prevent navigation from parent Link
+    e.stopPropagation(); // Prevent event bubbling
+    showTailNotification();
+  };
+
+  const handleFadeClick = (e: React.MouseEvent) => {
+    e.preventDefault(); // Prevent navigation from parent Link
+    e.stopPropagation(); // Prevent event bubbling
+    showFadeNotification();
+  };
+
   return (
-    <div className="mb-4">
-      <ActionButton 
-        variant={isTailRecommendation ? "tail" : "fade"}
-        className={cn(
-          "h-9 text-base font-bold w-full",
-          isMostVisible && "animate-pulse-heartbeat"
-        )}
-        style={{
-          boxShadow: isMostVisible ? glowColor : "none",
-        }}
-      >
-        {`${actionText} ${betDescription}`}
-      </ActionButton>
+    <div className="flex w-full flex-col space-y-2">
+      <div className="mb-1 flex items-center justify-between">
+        <div className="flex items-center justify-center">
+          <div
+            className={cn(
+              "text-lg font-medium",
+              isTailRecommendation
+                ? "text-onetime-green"
+                : "text-onetime-red"
+            )}
+          >
+            {betDescription}
+          </div>
+        </div>
+      </div>
+
+      <div className="grid grid-cols-2 gap-2">
+        <ActionButton
+          variant="tail"
+          onClick={handleTailClick}
+          className={cn(
+            isMostVisible && isTailRecommendation && "animate-pulse-heartbeat"
+          )}
+        >
+          Tail
+        </ActionButton>
+        <ActionButton
+          variant="fade"
+          onClick={handleFadeClick}
+          className={cn(
+            isMostVisible && !isTailRecommendation && "animate-pulse-heartbeat"
+          )}
+        >
+          Fade
+        </ActionButton>
+      </div>
     </div>
   );
 };
