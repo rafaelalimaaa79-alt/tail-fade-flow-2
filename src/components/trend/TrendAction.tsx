@@ -47,7 +47,7 @@ const TrendAction = ({
       <div className="grid grid-cols-2 gap-2">
         <ActionButton
           variant="tail"
-          onClick={handleTailClick}
+          onClick={(e) => handleTailClick(e)}
           className={cn(
             isMostVisible && isTailRecommendation && "animate-pulse-heartbeat"
           )}
@@ -56,7 +56,7 @@ const TrendAction = ({
         </ActionButton>
         <ActionButton
           variant="fade"
-          onClick={handleFadeClick}
+          onClick={(e) => handleFadeClick(e)}
           className={cn(
             isMostVisible && !isTailRecommendation && "animate-pulse-heartbeat"
           )}
