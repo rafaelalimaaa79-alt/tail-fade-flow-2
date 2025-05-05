@@ -1,6 +1,6 @@
 
 import React, { useState, useEffect } from "react";
-import { ZapIcon, PartyPopper } from "lucide-react";
+import { ZapIcon } from "lucide-react";
 
 type FullscreenNotificationProps = {
   message: string;
@@ -50,7 +50,7 @@ const FullscreenNotification = ({
 
   if (!isOpen) return null;
 
-  const IconComponent = variant === "tail" ? ZapIcon : PartyPopper;
+  const IconComponent = variant === "tail" ? ZapIcon : ZapIcon;
   const bgGradient = variant === "tail" 
     ? "bg-gradient-to-br from-onetime-green/95 to-onetime-green/80" 
     : "bg-gradient-to-br from-onetime-red/95 to-onetime-red/80";
@@ -87,11 +87,15 @@ const FullscreenNotification = ({
           <div className="absolute inset-0 bg-white/20 animate-quick-flash pointer-events-none"></div>
         )}
         
-        {/* Animated icon */}
+        {/* App logo instead of animated icon */}
         <div className={`text-center mb-6 transition-all duration-700 transform ${
           isVisible ? "opacity-100 scale-100" : "opacity-0 scale-50"
         } ${isVisible ? "animate-bounce-pop" : ""}`}>
-          <IconComponent className="h-14 w-14 mx-auto text-white" />
+          <img 
+            src="/lovable-uploads/57cb1fb4-7471-451e-bf49-d4d5fa12bdcb.png" 
+            alt="ONE TIME logo" 
+            className="h-14 w-14 mx-auto"
+          />
         </div>
         
         {/* Main notification text */}
