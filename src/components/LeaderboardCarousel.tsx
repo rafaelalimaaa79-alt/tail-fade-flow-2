@@ -34,7 +34,7 @@ const LeaderboardCarousel = ({ currentIndex, onIndexChange }: LeaderboardCarouse
     direction: "ltr",
     dragFree: false,
     slidesToScroll: 1,
-    speed: 15 // Slower animation speed (higher number = slower)
+    duration: 50 // Slower animation (higher number = slower)
   });
   
   const navigate = useNavigate();

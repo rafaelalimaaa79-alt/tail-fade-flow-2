@@ -1,4 +1,3 @@
-
 import React, { useRef, useEffect } from "react";
 import WaveText from "./WaveText";
 import PlayCard from "./PlayCard";
@@ -21,7 +20,7 @@ const BetOfTheDay = ({ currentIndex, onIndexChange }: BetOfTheDayProps) => {
     direction: "ltr", // ensures left-to-right DOM order
     dragFree: false,
     slidesToScroll: 1,
-    speed: 15 // Slower animation speed (higher number = slower)
+    duration: 50 // Slower animation (higher number = slower)
   });
   
   const touchStartX = useRef(0);
