@@ -7,7 +7,7 @@ import { useChallengesByType, joinChallenge, Challenge } from "@/hooks/useChalle
 import { formatDistanceToNow } from 'date-fns';
 
 const TournamentList: React.FC = () => {
-  const { data: tournaments, isLoading, error } = useChallengesByType("tournament");
+  const { data: tournaments = [], isLoading, error } = useChallengesByType("tournament");
 
   const handleJoin = async (challengeId: string) => {
     await joinChallenge(challengeId);
@@ -21,7 +21,7 @@ const TournamentList: React.FC = () => {
     return <div className="text-center text-red-500 py-8">Failed to load tournaments</div>;
   }
 
-  if (!tournaments || tournaments.length === 0) {
+  if (tournaments.length === 0) {
     return (
       <div className="text-center py-8">
         <p className="mb-4">No active tournaments at the moment.</p>
@@ -32,7 +32,7 @@ const TournamentList: React.FC = () => {
 
   return (
     <div className="space-y-4">
-      {tournaments?.map((tournament: Challenge) => (
+      {tournaments.map((tournament) => (
         <Card 
           key={tournament.id} 
           className="p-4 overflow-hidden relative border border-white/10 bg-card hover:shadow-lg transition-all"

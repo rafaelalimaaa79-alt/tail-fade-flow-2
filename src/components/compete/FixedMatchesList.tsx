@@ -3,10 +3,10 @@ import React from "react";
 import { DollarSign, Calendar } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Card } from "@/components/ui/card";
-import { useChallengesByType, joinChallenge } from "@/hooks/useChallenges";
+import { useChallengesByType, joinChallenge, Challenge } from "@/hooks/useChallenges";
 
 const FixedMatchesList: React.FC = () => {
-  const { data: fixedChallenges, isLoading, error } = useChallengesByType("fixed");
+  const { data: fixedChallenges = [], isLoading, error } = useChallengesByType("fixed");
   
   const handleJoin = async (challengeId: string) => {
     await joinChallenge(challengeId);
@@ -21,11 +21,10 @@ const FixedMatchesList: React.FC = () => {
   }
 
   // Filter challenges by format
-  const oneVsOneMatches = fixedChallenges?.filter(challenge => challenge.format === "1v1") || [];
-  const duoMatches = fixedChallenges?.filter(challenge => challenge.format === "2v2") || [];
+  const oneVsOneMatches = fixedChallenges.filter(challenge => challenge.format === "1v1");
+  const duoMatches = fixedChallenges.filter(challenge => challenge.format === "2v2");
 
-  if ((!oneVsOneMatches || oneVsOneMatches.length === 0) && 
-      (!duoMatches || duoMatches.length === 0)) {
+  if (oneVsOneMatches.length === 0 && duoMatches.length === 0) {
     return (
       <div className="text-center py-8">
         <p className="mb-4">No fixed matches available at the moment.</p>

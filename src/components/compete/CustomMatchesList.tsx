@@ -3,7 +3,7 @@ import React, { useState } from "react";
 import { DollarSign, Calendar, Users } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Card } from "@/components/ui/card";
-import { useChallengesByType, joinChallenge, createCustomChallenge } from "@/hooks/useChallenges";
+import { useChallengesByType, joinChallenge, createCustomChallenge, Challenge } from "@/hooks/useChallenges";
 import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogTrigger } from "@/components/ui/dialog";
 import { Label } from "@/components/ui/label";
 import { RadioGroup, RadioGroupItem } from "@/components/ui/radio-group";
@@ -117,7 +117,7 @@ const CreateCustomMatchDialog: React.FC<{ onMatchCreated: () => void }> = ({ onM
 };
 
 const CustomMatchesList: React.FC = () => {
-  const { data: customChallenges, isLoading, error, refetch } = useChallengesByType("custom");
+  const { data: customChallenges = [], isLoading, error, refetch } = useChallengesByType("custom");
   
   const handleJoin = async (challengeId: string) => {
     const success = await joinChallenge(challengeId);
@@ -154,7 +154,7 @@ const CustomMatchesList: React.FC = () => {
 
       <h2 className="text-lg font-semibold mb-2 text-center">Open Custom Matches</h2>
       
-      {(!customChallenges || customChallenges.length === 0) ? (
+      {customChallenges.length === 0 ? (
         <div className="text-center py-4">
           <p className="text-sm text-muted-foreground">No custom matches available. Create one!</p>
         </div>
