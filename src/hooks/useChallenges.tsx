@@ -46,9 +46,12 @@ const fetchChallengesByType = async (type: string): Promise<Challenge[]> => {
     throw new Error(`Failed to fetch ${type} challenges`);
   }
 
-  // Process the data to include participant count
+  // Process the data to include participant count and ensure proper typing
   return data.map(challenge => ({
     ...challenge,
+    type: challenge.type as "tournament" | "fixed" | "custom",
+    format: challenge.format as "1v1" | "2v2" | "multi",
+    status: challenge.status as "open" | "in_progress" | "completed",
     participants_count: challenge.challenge_participants[0]?.count || 0
   }));
 };
@@ -58,10 +61,12 @@ export const useChallengesByType = (type: "tournament" | "fixed" | "custom") => 
   return useQuery({
     queryKey: ['challenges', type],
     queryFn: () => fetchChallengesByType(type),
-    onError: (error) => {
-      toast.error(`Failed to load ${type} challenges`);
-      console.error(error);
-    },
+    meta: {
+      onError: (error: Error) => {
+        toast.error(`Failed to load ${type} challenges`);
+        console.error(error);
+      }
+    }
   });
 };
 
