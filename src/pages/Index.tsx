@@ -13,7 +13,7 @@ const Dashboard = () => {
   const navigate = useNavigate();
   const [carouselIndex, setCarouselIndex] = useState(0);
   
-  // Auto rotation for carousels
+  // Auto rotation for carousels with adjusted interval 
   useEffect(() => {
     const interval = setInterval(() => {
       setCarouselIndex(prevIndex => (prevIndex + 1) % playsOfTheDay.length);

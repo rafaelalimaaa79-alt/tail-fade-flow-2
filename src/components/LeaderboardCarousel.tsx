@@ -1,3 +1,4 @@
+
 import React, { useEffect } from "react";
 import { useNavigate } from "react-router-dom";
 import BettorStreakItem from "./BettorStreakItem";
@@ -10,13 +11,12 @@ interface LeaderboardCarouselProps {
   onIndexChange: (index: number) => void;
 }
 
-// Mock data - this would come from an API in a real app
+// Limit to 4 bettors for each category
 const hottestBettors = [
   { id: "1", name: "Mike", profit: 1840, streak: [1, 1, 1, 1, 0] }, // 1=win, 0=loss
   { id: "2", name: "Sarah", profit: 1570, streak: [1, 1, 1, 0, 1] },
   { id: "3", name: "Chris", profit: 1320, streak: [1, 1, 0, 1, 1] },
   { id: "4", name: "Taylor", profit: 1180, streak: [0, 1, 1, 1, 1] },
-  { id: "5", name: "Jordan", profit: 980, streak: [1, 0, 1, 1, 1] },
 ];
 
 const coldestBettors = [
@@ -24,7 +24,6 @@ const coldestBettors = [
   { id: "7", name: "Lisa", profit: -1490, streak: [0, 0, 0, 1, 0] },
   { id: "8", name: "Ryan", profit: -1250, streak: [1, 0, 0, 0, 0] },
   { id: "9", name: "Emily", profit: -1100, streak: [0, 1, 0, 0, 0] },
-  { id: "10", name: "Alex", profit: -970, streak: [0, 0, 1, 0, 0] },
 ];
 
 const LeaderboardCarousel = ({ currentIndex, onIndexChange }: LeaderboardCarouselProps) => {
@@ -67,7 +66,7 @@ const LeaderboardCarousel = ({ currentIndex, onIndexChange }: LeaderboardCarouse
                 <h3 className="text-lg font-bold text-white/90">These guys can't miss</h3>
               </div>
               
-              <div className="max-h-[300px] overflow-y-auto space-y-1">
+              <div className="space-y-1">
                 {hottestBettors.map((bettor) => (
                   <BettorStreakItem
                     key={bettor.id}
@@ -96,7 +95,7 @@ const LeaderboardCarousel = ({ currentIndex, onIndexChange }: LeaderboardCarouse
                 <h3 className="text-lg font-bold text-white/90">Can't buy a win right now</h3>
               </div>
               
-              <div className="max-h-[300px] overflow-y-auto space-y-1">
+              <div className="space-y-1">
                 {coldestBettors.map((bettor) => (
                   <BettorStreakItem
                     key={bettor.id}
