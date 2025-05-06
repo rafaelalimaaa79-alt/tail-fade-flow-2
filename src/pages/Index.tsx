@@ -18,7 +18,7 @@ const Dashboard = () => {
   const topRotationPausedRef = useRef(false);
   const bottomRotationPausedRef = useRef(false);
   
-  // Setup top carousel auto-rotation (7 seconds - increased from 6)
+  // Setup top carousel auto-rotation (7 seconds)
   const setupTopAutoRotation = () => {
     // Clear any existing interval first
     if (topRotationRef.current) {
@@ -31,10 +31,10 @@ const Dashboard = () => {
         setTopCarouselIndex(prevIndex => (prevIndex + 1) % playsOfTheDay.length);
         console.log("Auto-rotating top carousel to next index");
       }
-    }, 7000); // Top carousel rotates every 7 seconds (increased from 6)
+    }, 7000); // Top carousel rotates every 7 seconds
   };
   
-  // Setup bottom carousel auto-rotation (5 seconds - increased from 3)
+  // Setup bottom carousel auto-rotation (4 seconds)
   const setupBottomAutoRotation = () => {
     // Clear any existing interval first
     if (bottomRotationRef.current) {
@@ -47,7 +47,7 @@ const Dashboard = () => {
         setBottomCarouselIndex(prevIndex => (prevIndex + 1) % 2); // Bottom carousel has 2 items
         console.log("Auto-rotating bottom carousel to next index");
       }
-    }, 5000); // Bottom carousel rotates every 5 seconds (increased from 3)
+    }, 4000); // Bottom carousel rotates every 4 seconds
   };
   
   // Set up the auto-rotation on component mount
@@ -97,7 +97,7 @@ const Dashboard = () => {
   
   return (
     <div className="flex min-h-screen flex-col bg-background">
-      <div className={`max-w-md mx-auto w-full px-5 ${isMobile ? "pb-24" : ""}`}>
+      <div className={`max-w-md mx-auto w-full px-6 ${isMobile ? "pb-24" : ""}`}>
         <header className="mb-2 flex items-center justify-between">
           <div className="flex items-center gap-3">
             <img 
@@ -114,14 +114,14 @@ const Dashboard = () => {
           </button>
         </header>
 
-        <div className="w-full">
+        <div className="w-full mb-4">
           <BetOfTheDay 
             currentIndex={topCarouselIndex}
             onIndexChange={handleTopCarouselChange}
           />
         </div>
         
-        <div className="mt-4 w-full">
+        <div className="w-full">
           <LeaderboardCarousel 
             currentIndex={bottomCarouselIndex}
             onIndexChange={handleBottomCarouselChange}
