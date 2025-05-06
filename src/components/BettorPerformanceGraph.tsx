@@ -46,12 +46,20 @@ const BettorPerformanceGraph: React.FC<BettorPerformanceGraphProps> = ({
 
   // Calculate min and max for Y axis padding
   const allUnits = data.map(p => p.units);
-  const minY = Math.min(...allUnits);
-  const maxY = Math.max(...allUnits);
-  const padding = Math.max(1, (maxY - minY) * 0.1); // At least 1 unit padding
+  const minY = Math.floor(Math.min(...allUnits) / 3) * 3; // Round down to nearest multiple of 3
+  const maxY = Math.ceil(Math.max(...allUnits) / 3) * 3;  // Round up to nearest multiple of 3
+  
+  // Generate ticks for Y axis in multiples of 3
+  const generateYAxisTicks = () => {
+    const ticks = [];
+    for (let i = minY; i <= maxY; i += 3) {
+      ticks.push(i);
+    }
+    return ticks;
+  };
   
   return (
-    <div className={cn("h-64 w-full", className)}>
+    <div className={cn("w-full", className)}>
       <ResponsiveContainer width="100%" height="100%">
         <LineChart
           data={chartData}
@@ -83,7 +91,8 @@ const BettorPerformanceGraph: React.FC<BettorPerformanceGraphProps> = ({
             minTickGap={10}
           />
           <YAxis 
-            domain={[minY - padding, maxY + padding]}
+            ticks={generateYAxisTicks()}
+            domain={[minY, maxY]}
             axisLine={false}
             tickLine={false}
             tick={{ fontSize: 10, fill: '#94A3B8' }}
@@ -93,8 +102,8 @@ const BettorPerformanceGraph: React.FC<BettorPerformanceGraphProps> = ({
               if (active && payload && payload.length) {
                 const data = payload[0].payload;
                 return (
-                  <div className="rounded-lg bg-white p-2 shadow-lg border border-gray-200">
-                    <p className="font-medium">{data.formattedDate}</p>
+                  <div className="rounded-lg bg-onetime-dark p-2 shadow-lg border border-gray-700">
+                    <p className="font-medium text-gray-200">{data.formattedDate}</p>
                     <p className={`text-lg font-bold ${isPositive ? 'text-onetime-green' : 'text-onetime-red'}`}>
                       {data.units > 0 ? '+' : ''}{data.units} Units
                     </p>

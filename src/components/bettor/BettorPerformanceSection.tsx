@@ -16,16 +16,17 @@ const BettorPerformanceSection: React.FC<BettorPerformanceSectionProps> = ({
   const isPositivePerformance = profile.stats.unitsGained >= 0;
 
   return (
-    <div className="my-6">
+    <div className="my-4">
       <h3 className="mb-2 text-sm font-semibold">Performance</h3>
       <BettorPerformanceGraph 
         data={graphData.data} 
         timeframe={timeframe}
-        isPositive={isPositivePerformance} 
+        isPositive={isPositivePerformance}
+        className="h-48" 
       />
       
-      <div className="mb-4 flex justify-between text-sm">
-        <span className="text-gray-500">Total Bets: {profile.stats.totalBets}</span>
+      <div className="mb-2 flex justify-between text-sm">
+        <span className="text-gray-400">Total Bets: {profile.stats.totalBets}</span>
       </div>
     </div>
   );

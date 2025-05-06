@@ -31,12 +31,12 @@ const BettorDetail = () => {
   
   if (loading && !summary) {
     return (
-      <div className="onetime-container flex min-h-screen items-center justify-center">
+      <div className="onetime-container flex min-h-screen items-center justify-center bg-onetime-dark">
         <div className="text-center">
           <div className="mb-4 flex justify-center">
             <div className="h-8 w-8 animate-spin rounded-full border-2 border-onetime-purple border-t-transparent"></div>
           </div>
-          <p className="text-gray-600">Loading bettor profile...</p>
+          <p className="text-gray-300">Loading bettor profile...</p>
         </div>
       </div>
     );
@@ -44,10 +44,10 @@ const BettorDetail = () => {
   
   if (error || !summary) {
     return (
-      <div className="onetime-container flex min-h-screen flex-col items-center justify-center">
+      <div className="onetime-container flex min-h-screen flex-col items-center justify-center bg-onetime-dark">
         <div className="text-center">
           <h1 className="mb-2 text-2xl font-bold text-red-500">Error</h1>
-          <p className="mb-4 text-gray-600">{error || "Failed to load bettor profile"}</p>
+          <p className="mb-4 text-gray-300">{error || "Failed to load bettor profile"}</p>
           <button 
             onClick={() => window.history.back()}
             className="rounded-md bg-onetime-purple px-4 py-2 text-white"
@@ -60,8 +60,8 @@ const BettorDetail = () => {
   }
   
   return (
-    <>
-      <div className="onetime-container pb-20">
+    <div className="bg-onetime-dark min-h-screen pb-20">
+      <div className="onetime-container">
         <BettorHeader profile={summary.profile} />
         
         <BettorTimeFilter
@@ -70,7 +70,7 @@ const BettorDetail = () => {
           className="my-4"
         />
         
-        <div className="my-6 rounded-xl bg-white p-4 shadow-md">
+        <div className="my-6 rounded-xl bg-onetime-darkBlue p-4 shadow-md">
           <BettorStats profile={summary.profile} />
 
           <BettorPerformanceSection 
@@ -100,7 +100,7 @@ const BettorDetail = () => {
       />
       
       <BottomNav />
-    </>
+    </div>
   );
 };
 
