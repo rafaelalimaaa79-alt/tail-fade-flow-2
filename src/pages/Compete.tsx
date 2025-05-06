@@ -12,6 +12,8 @@ import { toast } from "sonner";
 import { Card } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import { useNavigate } from "react-router-dom";
+import { Alert, AlertTitle, AlertDescription } from "@/components/ui/alert";
+import { Info } from "lucide-react";
 
 const AuthCard: React.FC = () => {
   const navigate = useNavigate();
@@ -42,6 +44,7 @@ const Compete = () => {
   const [activeTab, setActiveTab] = useState("tournaments");
   const [user, setUser] = useState<any>(null);
   const [loading, setLoading] = useState(true);
+  const [bypassAuth, setBypassAuth] = useState(false);
   const isMobile = useIsMobile();
 
   useEffect(() => {
@@ -64,6 +67,11 @@ const Compete = () => {
     };
   }, []);
 
+  const handleBypassAuth = () => {
+    setBypassAuth(true);
+    toast.success("Testing mode enabled. You can now access all features.");
+  };
+
   if (loading) {
     return (
       <div className="flex min-h-screen flex-col items-center justify-center bg-background">
@@ -77,8 +85,26 @@ const Compete = () => {
       <div className={`onetime-container ${isMobile ? "pb-24" : ""}`}>
         <PageHeader />
 
-        {!user ? (
-          <AuthCard />
+        {!user && !bypassAuth ? (
+          <>
+            <AuthCard />
+            <div className="mt-4 mx-auto max-w-md">
+              <Alert className="bg-blue-500/10 border-blue-500/20">
+                <Info className="h-4 w-4 text-blue-500" />
+                <AlertTitle>Developer Mode</AlertTitle>
+                <AlertDescription>
+                  Want to test the 1v1 flow without signing in?
+                  <Button 
+                    variant="link" 
+                    className="p-0 h-auto text-blue-500 ml-2"
+                    onClick={handleBypassAuth}
+                  >
+                    Bypass Authentication
+                  </Button>
+                </AlertDescription>
+              </Alert>
+            </div>
+          </>
         ) : (
           <Tabs 
             value={activeTab} 
