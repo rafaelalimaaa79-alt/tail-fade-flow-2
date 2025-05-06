@@ -44,7 +44,7 @@ const BetOfTheDay = ({ currentIndex, onIndexChange }: BetOfTheDayProps) => {
   };
 
   return (
-    <div className="w-full mx-auto px-4">
+    <div className="w-full mx-auto px-2">
       <div className="w-full">
         {playsOfTheDay.map((play, idx) => (
           <div 

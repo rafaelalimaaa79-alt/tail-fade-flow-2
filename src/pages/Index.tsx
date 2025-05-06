@@ -97,7 +97,7 @@ const Dashboard = () => {
   
   return (
     <div className="flex min-h-screen flex-col bg-background">
-      <div className={`max-w-md mx-auto w-full px-6 ${isMobile ? "pb-24" : ""}`}>
+      <div className={`max-w-md mx-auto w-full px-2 ${isMobile ? "pb-24" : ""}`}>
         <header className="mb-2 flex items-center justify-between">
           <div className="flex items-center gap-3">
             <img 

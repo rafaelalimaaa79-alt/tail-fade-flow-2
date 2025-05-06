@@ -33,7 +33,7 @@ const LeaderboardCarousel = ({ currentIndex }: LeaderboardCarouselProps) => {
   };
 
   return (
-    <div className="w-full px-4"> 
+    <div className="w-full px-2"> 
       {/* Hot Bettors */}
       <div className={`w-full ${currentIndex % 2 === 0 ? 'block' : 'hidden'}`}>
         <div className="rounded-xl bg-card p-5 shadow-lg border border-white/10">
