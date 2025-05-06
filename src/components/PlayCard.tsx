@@ -8,9 +8,10 @@ import { BetterPlay } from "@/types/betTypes";
 interface PlayCardProps {
   play: BetterPlay;
   renderWaveText: (text: string, lineIndex: number) => React.ReactNode;
+  onActionClick?: () => void;
 }
 
-const PlayCard: React.FC<PlayCardProps> = ({ play, renderWaveText }) => {
+const PlayCard: React.FC<PlayCardProps> = ({ play, renderWaveText, onActionClick }) => {
   const isFade = play.suggestionType === "fade";
   const actionText = isFade ? "Fade" : "Tail";
   
@@ -41,6 +42,7 @@ const PlayCard: React.FC<PlayCardProps> = ({ play, renderWaveText }) => {
         <ActionButton 
           variant={isFade ? "fade" : "tail"}
           className="h-14 text-xl font-bold"
+          onClick={onActionClick}
         >
           {`${actionText}\n${play.bet}`}
         </ActionButton>
