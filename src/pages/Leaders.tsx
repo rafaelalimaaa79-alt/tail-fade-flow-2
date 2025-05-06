@@ -89,9 +89,8 @@ const Leaders = () => {
                   <TableRow>
                     <TableHead>Rank</TableHead>
                     <TableHead>Bettor</TableHead>
-                    <TableHead>Profit</TableHead>
+                    <TableHead>Units up</TableHead>
                     <TableHead>Win %</TableHead>
-                    <TableHead>Streak</TableHead>
                   </TableRow>
                 </TableHeader>
                 <TableBody>
@@ -109,12 +108,9 @@ const Leaders = () => {
                       </TableCell>
                       <TableCell>@{bettor.name}</TableCell>
                       <TableCell className="text-onetime-green">
-                        +${bettor.profit.toLocaleString()}
+                        +{bettor.profit.toLocaleString()}
                       </TableCell>
                       <TableCell>{bettor.winRate}%</TableCell>
-                      <TableCell className="text-onetime-green">
-                        W{bettor.streak}
-                      </TableCell>
                     </TableRow>
                   ))}
                 </TableBody>
@@ -140,9 +136,8 @@ const Leaders = () => {
                   <TableRow>
                     <TableHead>Rank</TableHead>
                     <TableHead>Bettor</TableHead>
-                    <TableHead>Profit</TableHead>
+                    <TableHead>Units down</TableHead>
                     <TableHead>Win %</TableHead>
-                    <TableHead>Streak</TableHead>
                   </TableRow>
                 </TableHeader>
                 <TableBody>
@@ -160,12 +155,9 @@ const Leaders = () => {
                       </TableCell>
                       <TableCell>@{bettor.name}</TableCell>
                       <TableCell className="text-onetime-red">
-                        ${bettor.profit.toLocaleString()}
+                        {bettor.profit.toLocaleString()}
                       </TableCell>
                       <TableCell>{bettor.winRate}%</TableCell>
-                      <TableCell className="text-onetime-red">
-                        L{Math.abs(bettor.streak)}
-                      </TableCell>
                     </TableRow>
                   ))}
                 </TableBody>
