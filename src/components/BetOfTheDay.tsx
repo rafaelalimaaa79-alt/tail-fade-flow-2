@@ -21,12 +21,14 @@ const BetOfTheDay = ({ currentIndex, onIndexChange }: BetOfTheDayProps) => {
     direction: "ltr", // ensures left-to-right DOM order
     dragFree: false,
     slidesToScroll: 1,
-    duration: 50 // Slower animation (higher number = slower)
+    duration: 800, // Slower animation for book-flip feel (higher number = slower)
+    watchDrag: false, // Disable drag movement watching during animation
   });
   
   const touchStartX = useRef(0);
   const touchEndX = useRef(0);
   const navigate = useNavigate();
+  const isAnimating = useRef(false);
   
   // Use the improved hook with custom options
   const { animationPosition, activeLine } = useWaveAnimation({
@@ -37,11 +39,18 @@ const BetOfTheDay = ({ currentIndex, onIndexChange }: BetOfTheDayProps) => {
   
   // Setup embla carousel to sync with the current index
   useEffect(() => {
-    if (!emblaApi) return;
+    if (!emblaApi || isAnimating.current) return;
     
     if (emblaApi.selectedScrollSnap() !== currentIndex % playsOfTheDay.length) {
-      // Always scroll to the right (which appears as sliding from right to left)
+      isAnimating.current = true;
+      
+      // Create a page-turning effect by animating the transition
       emblaApi.scrollTo(currentIndex % playsOfTheDay.length, true);
+      
+      // Reset animation flag after the animation completes
+      setTimeout(() => {
+        isAnimating.current = false;
+      }, 900); // Slightly longer than animation duration
     }
     
     console.log('BetOfTheDay currentIndex:', currentIndex, 'Current Play:', playsOfTheDay[currentIndex % playsOfTheDay.length]);
@@ -67,12 +76,14 @@ const BetOfTheDay = ({ currentIndex, onIndexChange }: BetOfTheDayProps) => {
 
   // Handle next play
   const nextPlay = () => {
+    if (isAnimating.current) return;
     const nextIndex = (currentIndex + 1) % playsOfTheDay.length;
     onIndexChange(nextIndex);
   };
   
   // Handle previous play
   const prevPlay = () => {
+    if (isAnimating.current) return;
     const prevIndex = currentIndex === 0 ? playsOfTheDay.length - 1 : currentIndex - 1;
     onIndexChange(prevIndex);
   };
@@ -83,6 +94,7 @@ const BetOfTheDay = ({ currentIndex, onIndexChange }: BetOfTheDayProps) => {
   };
   
   const handleTouchEnd = (e: React.TouchEvent) => {
+    if (isAnimating.current) return;
     touchEndX.current = e.changedTouches[0].clientX;
     handleSwipe();
   };
@@ -113,6 +125,8 @@ const BetOfTheDay = ({ currentIndex, onIndexChange }: BetOfTheDayProps) => {
     
     // Add event listener to update the index when the carousel is scrolled
     const onSelect = () => {
+      if (isAnimating.current) return;
+      
       const currentSlide = emblaApi.selectedScrollSnap();
       if (currentIndex % playsOfTheDay.length !== currentSlide) {
         onIndexChange(currentSlide);
@@ -139,6 +153,9 @@ const BetOfTheDay = ({ currentIndex, onIndexChange }: BetOfTheDayProps) => {
             <div 
               key={idx} 
               className="min-w-0 flex-[0_0_100%] pl-0 transition-transform duration-700"
+              style={{ 
+                perspective: '1000px'
+              }}
             >
               <PlayCard 
                 play={play}

@@ -18,7 +18,7 @@ const Dashboard = () => {
     const interval = setInterval(() => {
       setCarouselIndex(prevIndex => (prevIndex + 1) % playsOfTheDay.length);
       console.log("Auto-rotating carousel to next index");
-    }, 7000); // Rotate every 7 seconds (slowed down from 4 seconds)
+    }, 10000); // Rotate every 10 seconds (slowed down from 7 seconds for better book-flipping experience)
     
     return () => clearInterval(interval);
   }, []);

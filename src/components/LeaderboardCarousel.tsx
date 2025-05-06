@@ -1,5 +1,5 @@
 
-import React, { useEffect } from "react";
+import React, { useEffect, useRef } from "react";
 import { useNavigate } from "react-router-dom";
 import BettorStreakItem from "./BettorStreakItem";
 import ActionButton from "./ActionButton";
@@ -27,17 +27,19 @@ const coldestBettors = [
 ];
 
 const LeaderboardCarousel = ({ currentIndex, onIndexChange }: LeaderboardCarouselProps) => {
-  // Match settings with BetOfTheDay carousel
+  // Match settings with BetOfTheDay carousel for consistent book-flipping animation
   const [emblaRef, emblaApi] = useEmblaCarousel({ 
     loop: true, 
     align: "start", 
     direction: "ltr",
     dragFree: false,
     slidesToScroll: 1,
-    duration: 50 // Slower animation (higher number = slower)
+    duration: 800, // Slower animation for book-flip feel (higher number = slower)
+    watchDrag: false, // Disable drag movement watching during animation
   });
   
   const navigate = useNavigate();
+  const isAnimating = useRef(false);
   
   // Function to handle navigation to leaders page
   const navigateToLeaders = (type: 'tail' | 'fade') => {
@@ -46,15 +48,22 @@ const LeaderboardCarousel = ({ currentIndex, onIndexChange }: LeaderboardCarouse
   
   // Set up embla carousel
   useEffect(() => {
-    if (!emblaApi) return;
+    if (!emblaApi || isAnimating.current) return;
     
     // Calculate whether to show hot or cold bettors based on currentIndex
     // We alternate between hot (0) and cold (1) based on even/odd in playsOfTheDay
     const selectedIndex = currentIndex % 2;
     
     if (emblaApi.selectedScrollSnap() !== selectedIndex) {
-      // Always scroll to the right (which appears as sliding from right to left)
+      isAnimating.current = true;
+      
+      // Create a page-turning effect by animating the transition
       emblaApi.scrollTo(selectedIndex, true);
+      
+      // Reset animation flag after the animation completes
+      setTimeout(() => {
+        isAnimating.current = false;
+      }, 900); // Slightly longer than animation duration
     }
     
     // Add debugging
