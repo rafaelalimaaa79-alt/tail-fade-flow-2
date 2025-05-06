@@ -23,7 +23,7 @@ const Dashboard = () => {
             />
           </div>
           <button 
-            className="rounded-full p-2 text-white/80 hover:text-white flex items-center justify-center"
+            className="rounded-full p-2 text-white/80 hover:text-white flex items-center justify-center self-center"
             onClick={() => navigate('/portfolio')}
           >
             <BarChart2 className="h-6 w-6" />
