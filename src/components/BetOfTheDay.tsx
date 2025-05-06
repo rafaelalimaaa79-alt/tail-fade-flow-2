@@ -15,15 +15,15 @@ interface BetOfTheDayProps {
 }
 
 const BetOfTheDay = ({ currentIndex, onIndexChange }: BetOfTheDayProps) => {
-  // Configure Embla carousel for smooth, natural-looking transitions
+  // Configure Embla carousel with improved centering and transition settings
   const emblaOptions: EmblaOptionsType = {
     loop: true,
-    align: "center", // Ensure slides are centered
+    align: "center", // Ensure slides are perfectly centered
     dragFree: false,
     containScroll: "trimSnaps",
     skipSnaps: false,
     startIndex: currentIndex % playsOfTheDay.length,
-    duration: 1200, // Increased duration for slower animation
+    duration: 1200, // Smooth animation duration
     slidesToScroll: 1, // Move one slide at a time
     inViewThreshold: 1, // Full slide must be in view
   };
@@ -63,6 +63,11 @@ const BetOfTheDay = ({ currentIndex, onIndexChange }: BetOfTheDayProps) => {
     
     console.log('BetOfTheDay currentIndex:', currentIndex, 'Current Play:', playsOfTheDay[currentIndex % playsOfTheDay.length]);
   }, [currentIndex, emblaApi]);
+  
+  // Function to navigate to leaders page
+  const navigateToLeaders = (type: 'tail' | 'fade') => {
+    navigate(`/leaders?type=${type}`);
+  };
   
   const isFade = playsOfTheDay[currentIndex % playsOfTheDay.length].suggestionType === "fade";
   
@@ -113,13 +118,16 @@ const BetOfTheDay = ({ currentIndex, onIndexChange }: BetOfTheDayProps) => {
     }
   };
   
-  // Navigate to leaders page based on type
-  const navigateToLeaders = (type: 'tail' | 'fade') => {
-    navigate(`/leaders?type=${type}`);
-  };
-  
   useEffect(() => {
     if (!emblaApi) return;
+    
+    // Ensure the carousel is perfectly centered after any manipulation
+    const centerCarousel = () => {
+      emblaApi.reInit();
+    };
+    
+    // Add event listener to center the carousel
+    emblaApi.on('settle', centerCarousel);
     
     // Add event listener to update the index when the carousel is scrolled
     const onSelect = () => {
@@ -129,7 +137,7 @@ const BetOfTheDay = ({ currentIndex, onIndexChange }: BetOfTheDayProps) => {
           // Here we ensure we're only moving forward (left swipe)
           if (selectedSnap > currentIndex % playsOfTheDay.length || 
              (selectedSnap === 0 && currentIndex % playsOfTheDay.length === playsOfTheDay.length - 1)) {
-            onIndexChange(currentIndex + 1);
+            onIndexChange(selectedSnap);
           }
         }
       }
@@ -139,6 +147,7 @@ const BetOfTheDay = ({ currentIndex, onIndexChange }: BetOfTheDayProps) => {
     
     return () => {
       emblaApi.off('select', onSelect);
+      emblaApi.off('settle', centerCarousel);
     };
   }, [emblaApi, currentIndex, onIndexChange]);
   
@@ -146,14 +155,17 @@ const BetOfTheDay = ({ currentIndex, onIndexChange }: BetOfTheDayProps) => {
     <div 
       onTouchStart={handleTouchStart}
       onTouchEnd={handleTouchEnd}
-      className="transition-all duration-1200" // Slow down the overall transition
+      className="transition-all duration-1200" 
     >
       <div className="overflow-hidden" ref={emblaRef}>
-        <div className="flex transition-transform duration-1200"> {/* Slow down the transform animation */}
+        <div className="flex w-full transition-transform duration-1200"> 
           {playsOfTheDay.map((play, idx) => (
             <div 
               key={idx} 
-              className="min-w-0 flex-[0_0_100%] px-2 transition-transform duration-1200" // Slow down individual slide transitions
+              className="min-w-0 flex-[0_0_100%] px-2 transition-transform duration-1200" 
+              style={{
+                transform: `translateX(${idx === currentIndex % playsOfTheDay.length ? '0' : '100%'})`,
+              }}
             >
               <PlayCard 
                 play={play}

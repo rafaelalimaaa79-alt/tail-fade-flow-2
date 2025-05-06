@@ -11,50 +11,88 @@ import { playsOfTheDay } from "@/types/betTypes";
 const Dashboard = () => {
   const isMobile = useIsMobile();
   const navigate = useNavigate();
-  const [carouselIndex, setCarouselIndex] = useState(0);
-  const autoRotationRef = useRef<NodeJS.Timeout | null>(null);
-  const rotationPausedRef = useRef(false);
+  const [topCarouselIndex, setTopCarouselIndex] = useState(0);
+  const [bottomCarouselIndex, setBottomCarouselIndex] = useState(0);
+  const topRotationRef = useRef<NodeJS.Timeout | null>(null);
+  const bottomRotationRef = useRef<NodeJS.Timeout | null>(null);
+  const topRotationPausedRef = useRef(false);
+  const bottomRotationPausedRef = useRef(false);
   
-  // Setup auto-rotation with improved timing
-  const setupAutoRotation = () => {
+  // Setup top carousel auto-rotation (6 seconds)
+  const setupTopAutoRotation = () => {
     // Clear any existing interval first
-    if (autoRotationRef.current) {
-      clearInterval(autoRotationRef.current);
+    if (topRotationRef.current) {
+      clearInterval(topRotationRef.current);
     }
     
     // Set up a new interval
-    autoRotationRef.current = setInterval(() => {
-      if (!rotationPausedRef.current) {
-        setCarouselIndex(prevIndex => (prevIndex + 1) % playsOfTheDay.length);
-        console.log("Auto-rotating carousel to next index");
+    topRotationRef.current = setInterval(() => {
+      if (!topRotationPausedRef.current) {
+        setTopCarouselIndex(prevIndex => (prevIndex + 1) % playsOfTheDay.length);
+        console.log("Auto-rotating top carousel to next index");
       }
-    }, 8000); // Increased to 8 seconds to give more time to view the slower animations
+    }, 6000); // Top carousel rotates every 6 seconds
+  };
+  
+  // Setup bottom carousel auto-rotation (3 seconds)
+  const setupBottomAutoRotation = () => {
+    // Clear any existing interval first
+    if (bottomRotationRef.current) {
+      clearInterval(bottomRotationRef.current);
+    }
+    
+    // Set up a new interval
+    bottomRotationRef.current = setInterval(() => {
+      if (!bottomRotationPausedRef.current) {
+        setBottomCarouselIndex(prevIndex => (prevIndex + 1) % 2); // Bottom carousel has 2 items
+        console.log("Auto-rotating bottom carousel to next index");
+      }
+    }, 3000); // Bottom carousel rotates every 3 seconds
   };
   
   // Set up the auto-rotation on component mount
   useEffect(() => {
-    setupAutoRotation();
+    setupTopAutoRotation();
+    setupBottomAutoRotation();
     
     return () => {
-      if (autoRotationRef.current) {
-        clearInterval(autoRotationRef.current);
+      if (topRotationRef.current) {
+        clearInterval(topRotationRef.current);
+      }
+      if (bottomRotationRef.current) {
+        clearInterval(bottomRotationRef.current);
       }
     };
   }, []);
   
-  // This function will be shared between both carousels
-  const handleCarouselChange = (index: number) => {
+  // This function will handle the top carousel changes
+  const handleTopCarouselChange = (index: number) => {
     // Pause auto-rotation temporarily when user interacts
-    rotationPausedRef.current = true;
+    topRotationPausedRef.current = true;
     
-    setCarouselIndex(index);
-    console.log("Manual carousel change to index:", index);
+    setTopCarouselIndex(index);
+    console.log("Manual top carousel change to index:", index);
     
     // Resume auto-rotation after a delay
     setTimeout(() => {
-      rotationPausedRef.current = false;
-      setupAutoRotation();
-    }, 5000); // Increased to 5 seconds before resuming auto-rotation
+      topRotationPausedRef.current = false;
+      setupTopAutoRotation();
+    }, 5000); // Resume auto-rotation after 5 seconds
+  };
+  
+  // This function will handle the bottom carousel changes
+  const handleBottomCarouselChange = (index: number) => {
+    // Pause auto-rotation temporarily when user interacts
+    bottomRotationPausedRef.current = true;
+    
+    setBottomCarouselIndex(index);
+    console.log("Manual bottom carousel change to index:", index);
+    
+    // Resume auto-rotation after a delay
+    setTimeout(() => {
+      bottomRotationPausedRef.current = false;
+      setupBottomAutoRotation();
+    }, 5000); // Resume auto-rotation after 5 seconds
   };
   
   return (
@@ -77,14 +115,14 @@ const Dashboard = () => {
         </header>
 
         <BetOfTheDay 
-          currentIndex={carouselIndex}
-          onIndexChange={handleCarouselChange}
+          currentIndex={topCarouselIndex}
+          onIndexChange={handleTopCarouselChange}
         />
         
         <div className="mt-4">
           <LeaderboardCarousel 
-            currentIndex={carouselIndex}
-            onIndexChange={handleCarouselChange}
+            currentIndex={bottomCarouselIndex}
+            onIndexChange={handleBottomCarouselChange}
           />
         </div>
       </div>

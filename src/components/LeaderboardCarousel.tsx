@@ -4,7 +4,6 @@ import { useNavigate } from "react-router-dom";
 import BettorStreakItem from "./BettorStreakItem";
 import ActionButton from "./ActionButton";
 import useEmblaCarousel from "embla-carousel-react";
-import { playsOfTheDay } from "@/types/betTypes";
 import { EmblaOptionsType } from "embla-carousel";
 
 interface LeaderboardCarouselProps {
@@ -28,17 +27,17 @@ const coldestBettors = [
 ];
 
 const LeaderboardCarousel = ({ currentIndex, onIndexChange }: LeaderboardCarouselProps) => {
-  // Configure Embla carousel for smooth, natural-looking transitions
+  // Configure Embla carousel with improved centering and faster transitions
   const emblaOptions: EmblaOptionsType = {
     loop: true,
-    align: "center", // Ensure slides are centered
+    align: "center", // Perfect center alignment
     dragFree: false,
     skipSnaps: false,
     containScroll: "trimSnaps",
     startIndex: currentIndex % 2,
-    duration: 1200, // Increased duration for slower animation
-    slidesToScroll: 1, // Move one slide at a time
-    inViewThreshold: 1, // Full slide must be in view
+    duration: 800, // Faster transitions for the bottom carousel
+    slidesToScroll: 1,
+    inViewThreshold: 1,
   };
   
   const [emblaRef, emblaApi] = useEmblaCarousel(emblaOptions);
@@ -56,30 +55,33 @@ const LeaderboardCarousel = ({ currentIndex, onIndexChange }: LeaderboardCarouse
   useEffect(() => {
     if (!emblaApi) return;
     
-    // Calculate whether to show hot or cold bettors based on currentIndex
-    // We alternate between hot (0) and cold (1) based on even/odd in playsOfTheDay
-    const selectedIndex = currentIndex % 2;
-    
     // Only animate if index has changed
     if (lastIndexRef.current !== currentIndex) {
       isAnimating.current = true;
       
       // Create a visible, smooth animation effect
-      emblaApi.scrollTo(selectedIndex, true);
+      emblaApi.scrollTo(currentIndex % 2, true);
       
       // Reset animation flag after the animation completes
       setTimeout(() => {
         isAnimating.current = false;
         lastIndexRef.current = currentIndex;
-      }, 1300); // Slightly longer than animation duration
+      }, 900); // Slightly longer than animation duration
     }
+    
+    // Ensure the carousel is perfectly centered
+    const centerCarousel = () => {
+      emblaApi.reInit();
+    };
+    
+    // Add event listener to center the carousel
+    emblaApi.on('settle', centerCarousel);
     
     // Handle manual user swipe events
     const onSelect = () => {
       if (!isAnimating.current) {
         const selectedSnap = emblaApi.selectedScrollSnap();
-        const newIndex = currentIndex % 2 === selectedSnap ? currentIndex : (currentIndex % playsOfTheDay.length) + (selectedSnap - currentIndex % 2);
-        onIndexChange(newIndex);
+        onIndexChange(selectedSnap);
       }
     };
 
@@ -87,16 +89,20 @@ const LeaderboardCarousel = ({ currentIndex, onIndexChange }: LeaderboardCarouse
     
     return () => {
       emblaApi.off('select', onSelect);
+      emblaApi.off('settle', centerCarousel);
     };
     
   }, [currentIndex, emblaApi, onIndexChange]);
 
   return (
-    <div className="w-full transition-all duration-1200"> {/* Slow down the overall transition */}
+    <div className="w-full transition-all duration-800"> 
       <div className="overflow-hidden" ref={emblaRef}>
-        <div className="flex transition-transform duration-1200"> {/* Slow down the transform animation */}
+        <div className="flex w-full transition-transform duration-800"> 
           {/* Hot Bettors */}
-          <div className="min-w-0 flex-[0_0_100%] px-2 transition-transform duration-1200"> {/* Slow down individual slide transitions */}
+          <div className="min-w-0 flex-[0_0_100%] px-2 transition-transform duration-800" 
+               style={{
+                 transform: `translateX(${currentIndex % 2 === 0 ? '0' : '100%'})`,
+               }}>
             <div className="rounded-xl bg-card p-5 shadow-lg border border-white/10">
               <div className="mb-4 flex items-center justify-center">
                 <h3 className="text-lg font-bold text-white/90">These guys can't miss</h3>
@@ -125,7 +131,10 @@ const LeaderboardCarousel = ({ currentIndex, onIndexChange }: LeaderboardCarouse
           </div>
 
           {/* Cold Bettors */}
-          <div className="min-w-0 flex-[0_0_100%] px-2 transition-transform duration-1200"> {/* Slow down individual slide transitions */}
+          <div className="min-w-0 flex-[0_0_100%] px-2 transition-transform duration-800"
+               style={{
+                 transform: `translateX(${currentIndex % 2 === 1 ? '0' : '100%'})`,
+               }}>
             <div className="rounded-xl bg-card p-5 shadow-lg border border-white/10">
               <div className="mb-4 flex items-center justify-center">
                 <h3 className="text-lg font-bold text-white/90">Can't buy a win right now</h3>
