@@ -6,7 +6,7 @@ import { useIsMobile } from "@/hooks/use-mobile";
 import PageHeader from "@/components/compete/PageHeader";
 import TournamentList from "@/components/compete/TournamentList";
 import FixedMatchesList from "@/components/compete/FixedMatchesList";
-import CustomMatchesList from "@/components/compete/CustomMatchesList";
+import CustomMatchesList from "@/components/compete/custom-matches/CustomMatchesList";
 import { supabase } from "@/integrations/supabase/client";
 import { toast } from "sonner";
 import { Card } from "@/components/ui/card";
