@@ -11,6 +11,7 @@ import Trends from "./pages/Trends";
 import Portfolio from "./pages/Portfolio";
 import Profile from "./pages/Profile";
 import BettorDetail from "./pages/BettorDetail";
+import Leaders from "./pages/Leaders";
 import NotFound from "./pages/NotFound";
 
 const queryClient = new QueryClient();
@@ -28,6 +29,7 @@ const App = () => (
           <Route path="/portfolio" element={<Portfolio />} />
           <Route path="/profile" element={<Profile />} />
           <Route path="/bettor/:id" element={<BettorDetail />} />
+          <Route path="/leaders" element={<Leaders />} />
           {/* ADD ALL CUSTOM ROUTES ABOVE THE CATCH-ALL "*" ROUTE */}
           <Route path="*" element={<NotFound />} />
         </Routes>

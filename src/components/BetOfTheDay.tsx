@@ -1,15 +1,18 @@
+
 import React, { useState, useRef, useEffect } from "react";
 import WaveText from "./WaveText";
 import PlayCard from "./PlayCard";
 import PaginationIndicator from "./PaginationIndicator";
 import { playsOfTheDay } from "@/types/betTypes";
 import useWaveAnimation from "@/hooks/useWaveAnimation";
+import { useNavigate } from "react-router-dom";
 
 const BetOfTheDay = () => {
   const [currentIndex, setCurrentIndex] = useState(0);
   const currentPlay = playsOfTheDay[currentIndex];
   const touchStartX = useRef(0);
   const touchEndX = useRef(0);
+  const navigate = useNavigate();
   
   // Use the improved hook with custom options
   const { animationPosition, activeLine } = useWaveAnimation({
@@ -72,6 +75,11 @@ const BetOfTheDay = () => {
     }
   };
   
+  // Navigate to leaders page based on type
+  const navigateToLeaders = (type: 'tail' | 'fade') => {
+    navigate(`/leaders?type=${type}`);
+  };
+  
   // Auto rotate through plays every 10 seconds
   useEffect(() => {
     const interval = setInterval(() => {
@@ -86,7 +94,11 @@ const BetOfTheDay = () => {
       onTouchStart={handleTouchStart}
       onTouchEnd={handleTouchEnd}
     >
-      <PlayCard play={currentPlay} renderWaveText={renderWaveText} />
+      <PlayCard 
+        play={currentPlay} 
+        renderWaveText={renderWaveText}
+        onActionClick={() => navigateToLeaders(isFade ? 'fade' : 'tail')}
+      />
       <PaginationIndicator 
         currentIndex={currentIndex} 
         totalItems={playsOfTheDay.length} 
