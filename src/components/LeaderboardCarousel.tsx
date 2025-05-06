@@ -1,13 +1,14 @@
 
-import React, { useEffect, useState, useCallback } from "react";
+import React, { useEffect, useCallback } from "react";
+import { useNavigate } from "react-router-dom";
 import BettorStreakItem from "./BettorStreakItem";
 import ActionButton from "./ActionButton";
-import {
-  Carousel,
-  CarouselContent,
-  CarouselItem,
-} from "@/components/ui/carousel";
 import useEmblaCarousel from "embla-carousel-react";
+
+interface LeaderboardCarouselProps {
+  currentIndex: number;
+  onIndexChange: (index: number) => void;
+}
 
 // Mock data - this would come from an API in a real app
 const hottestBettors = [
@@ -26,31 +27,34 @@ const coldestBettors = [
   { id: "10", name: "Alex", profit: -970, streak: [0, 0, 1, 0, 0] },
 ];
 
-const LeaderboardCarousel = () => {
+const LeaderboardCarousel = ({ currentIndex, onIndexChange }: LeaderboardCarouselProps) => {
   const [emblaRef, emblaApi] = useEmblaCarousel({ loop: true, align: "start" });
-  const [activeIndex, setActiveIndex] = useState(0);
+  const navigate = useNavigate();
   
-  const updateActiveIndex = useCallback(() => {
-    if (!emblaApi) return;
-    setActiveIndex(emblaApi.selectedScrollSnap());
-  }, [emblaApi]);
+  // Function to handle navigation to leaders page
+  const navigateToLeaders = (type: 'tail' | 'fade') => {
+    navigate(`/leaders?type=${type}`);
+  };
   
+  // Set up embla carousel
   useEffect(() => {
     if (!emblaApi) return;
     
-    updateActiveIndex();
-    emblaApi.on("select", updateActiveIndex);
-    
-    // Auto-rotate between hot and cold leaderboards every 5 seconds (increased from 3)
-    const interval = setInterval(() => {
-      emblaApi.scrollNext();
-    }, 5000);
+    emblaApi.on("select", () => {
+      onIndexChange(emblaApi.selectedScrollSnap());
+    });
     
     return () => {
-      emblaApi.off("select", updateActiveIndex);
-      clearInterval(interval);
+      emblaApi.off("select", () => {});
     };
-  }, [emblaApi, updateActiveIndex]);
+  }, [emblaApi, onIndexChange]);
+
+  // Update embla carousel position when currentIndex changes
+  useEffect(() => {
+    if (emblaApi && emblaApi.selectedScrollSnap() !== currentIndex % 2) {
+      emblaApi.scrollTo(currentIndex % 2);
+    }
+  }, [currentIndex, emblaApi]);
 
   return (
     <div className="w-full">
@@ -75,7 +79,11 @@ const LeaderboardCarousel = () => {
                 ))}
               </div>
               
-              <ActionButton variant="tail" className="mt-4 h-10 text-sm">
+              <ActionButton 
+                variant="tail" 
+                className="mt-4 h-10 text-sm"
+                onClick={() => navigateToLeaders('tail')}
+              >
                 View Tail Leaders
               </ActionButton>
             </div>
@@ -100,7 +108,11 @@ const LeaderboardCarousel = () => {
                 ))}
               </div>
               
-              <ActionButton variant="fade" className="mt-4 h-10 text-sm">
+              <ActionButton 
+                variant="fade" 
+                className="mt-4 h-10 text-sm"
+                onClick={() => navigateToLeaders('fade')}
+              >
                 View Fade Leaders
               </ActionButton>
             </div>

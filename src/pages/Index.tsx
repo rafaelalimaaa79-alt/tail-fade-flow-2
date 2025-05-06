@@ -1,5 +1,5 @@
 
-import React from "react";
+import React, { useState } from "react";
 import { useNavigate } from "react-router-dom";
 import BottomNav from "@/components/BottomNav";
 import BetOfTheDay from "@/components/BetOfTheDay";
@@ -10,6 +10,12 @@ import { BarChart2 } from "lucide-react";
 const Dashboard = () => {
   const isMobile = useIsMobile();
   const navigate = useNavigate();
+  const [carouselIndex, setCarouselIndex] = useState(0);
+  
+  // This function will be shared between both carousels
+  const handleCarouselChange = (index: number) => {
+    setCarouselIndex(index);
+  };
   
   return (
     <div className="flex min-h-screen flex-col bg-background">
@@ -30,10 +36,16 @@ const Dashboard = () => {
           </button>
         </header>
 
-        <BetOfTheDay />
+        <BetOfTheDay 
+          currentIndex={carouselIndex}
+          onIndexChange={handleCarouselChange}
+        />
         
         <div className="mt-4">
-          <LeaderboardCarousel />
+          <LeaderboardCarousel 
+            currentIndex={carouselIndex}
+            onIndexChange={handleCarouselChange}
+          />
         </div>
       </div>
       <BottomNav />

@@ -1,5 +1,5 @@
 
-import React, { useState, useRef, useEffect } from "react";
+import React, { useRef, useEffect } from "react";
 import WaveText from "./WaveText";
 import PlayCard from "./PlayCard";
 import PaginationIndicator from "./PaginationIndicator";
@@ -7,9 +7,13 @@ import { playsOfTheDay } from "@/types/betTypes";
 import useWaveAnimation from "@/hooks/useWaveAnimation";
 import { useNavigate } from "react-router-dom";
 
-const BetOfTheDay = () => {
-  const [currentIndex, setCurrentIndex] = useState(0);
-  const currentPlay = playsOfTheDay[currentIndex];
+interface BetOfTheDayProps {
+  currentIndex: number;
+  onIndexChange: (index: number) => void;
+}
+
+const BetOfTheDay = ({ currentIndex, onIndexChange }: BetOfTheDayProps) => {
+  const currentPlay = playsOfTheDay[currentIndex % playsOfTheDay.length];
   const touchStartX = useRef(0);
   const touchEndX = useRef(0);
   const navigate = useNavigate();
@@ -41,12 +45,14 @@ const BetOfTheDay = () => {
 
   // Handle next play
   const nextPlay = () => {
-    setCurrentIndex((prev) => (prev + 1) % playsOfTheDay.length);
+    const nextIndex = (currentIndex + 1) % playsOfTheDay.length;
+    onIndexChange(nextIndex);
   };
   
   // Handle previous play
   const prevPlay = () => {
-    setCurrentIndex((prev) => (prev === 0 ? playsOfTheDay.length - 1 : prev - 1));
+    const prevIndex = currentIndex === 0 ? playsOfTheDay.length - 1 : currentIndex - 1;
+    onIndexChange(prevIndex);
   };
   
   // Touch event handlers for swipe
@@ -80,15 +86,6 @@ const BetOfTheDay = () => {
     navigate(`/leaders?type=${type}`);
   };
   
-  // Auto rotate through plays every 10 seconds
-  useEffect(() => {
-    const interval = setInterval(() => {
-      nextPlay();
-    }, 10000);
-    
-    return () => clearInterval(interval);
-  }, []);
-  
   return (
     <div 
       onTouchStart={handleTouchStart}
@@ -100,7 +97,7 @@ const BetOfTheDay = () => {
         onActionClick={() => navigateToLeaders(isFade ? 'fade' : 'tail')}
       />
       <PaginationIndicator 
-        currentIndex={currentIndex} 
+        currentIndex={currentIndex % playsOfTheDay.length} 
         totalItems={playsOfTheDay.length} 
       />
     </div>
