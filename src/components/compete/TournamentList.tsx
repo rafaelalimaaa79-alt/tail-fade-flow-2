@@ -3,7 +3,7 @@ import React from "react";
 import { DollarSign, Timer, Users, Calendar } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Card } from "@/components/ui/card";
-import { useChallengesByType, joinChallenge } from "@/hooks/useChallenges";
+import { useChallengesByType, joinChallenge, Challenge } from "@/hooks/useChallenges";
 import { formatDistanceToNow } from 'date-fns';
 
 const TournamentList: React.FC = () => {
@@ -32,7 +32,7 @@ const TournamentList: React.FC = () => {
 
   return (
     <div className="space-y-4">
-      {tournaments.map((tournament) => (
+      {tournaments?.map((tournament: Challenge) => (
         <Card 
           key={tournament.id} 
           className="p-4 overflow-hidden relative border border-white/10 bg-card hover:shadow-lg transition-all"

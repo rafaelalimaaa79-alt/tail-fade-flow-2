@@ -1,4 +1,3 @@
-
 import { useQuery } from "@tanstack/react-query";
 import { supabase } from "@/integrations/supabase/client";
 import { toast } from "sonner";
@@ -58,14 +57,12 @@ const fetchChallengesByType = async (type: string): Promise<Challenge[]> => {
 
 // Custom hook to get challenges by type
 export const useChallengesByType = (type: "tournament" | "fixed" | "custom") => {
-  return useQuery({
+  return useQuery<Challenge[], Error>({
     queryKey: ['challenges', type],
     queryFn: () => fetchChallengesByType(type),
-    meta: {
-      onError: (error: Error) => {
-        toast.error(`Failed to load ${type} challenges`);
-        console.error(error);
-      }
+    onError: (error) => {
+      toast.error(`Failed to load ${type} challenges`);
+      console.error(error);
     }
   });
 };
