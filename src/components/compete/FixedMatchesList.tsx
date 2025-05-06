@@ -4,6 +4,8 @@ import { DollarSign, Calendar } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Card } from "@/components/ui/card";
 import { useChallengesByType, joinChallenge, Challenge } from "@/hooks/useChallenges";
+import LoadingState from "./shared/LoadingState";
+import ErrorState from "./shared/ErrorState";
 
 const FixedMatchesList: React.FC = () => {
   const { data: fixedChallenges = [], isLoading, error } = useChallengesByType("fixed");
@@ -13,11 +15,11 @@ const FixedMatchesList: React.FC = () => {
   };
 
   if (isLoading) {
-    return <div className="text-center py-8">Loading fixed matches...</div>;
+    return <LoadingState message="Loading fixed matches..." />;
   }
 
   if (error) {
-    return <div className="text-center text-red-500 py-8">Failed to load fixed matches</div>;
+    return <ErrorState message="Failed to load fixed matches" />;
   }
 
   // Filter challenges by format

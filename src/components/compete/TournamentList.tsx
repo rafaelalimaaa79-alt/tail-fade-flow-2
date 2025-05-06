@@ -5,6 +5,8 @@ import { Button } from "@/components/ui/button";
 import { Card } from "@/components/ui/card";
 import { useChallengesByType, joinChallenge, Challenge } from "@/hooks/useChallenges";
 import { formatDistanceToNow } from 'date-fns';
+import LoadingState from "./shared/LoadingState";
+import ErrorState from "./shared/ErrorState";
 
 const TournamentList: React.FC = () => {
   const { data: tournaments = [], isLoading, error } = useChallengesByType("tournament");
@@ -14,11 +16,11 @@ const TournamentList: React.FC = () => {
   };
 
   if (isLoading) {
-    return <div className="text-center py-8">Loading tournaments...</div>;
+    return <LoadingState message="Loading tournaments..." />;
   }
 
   if (error) {
-    return <div className="text-center text-red-500 py-8">Failed to load tournaments</div>;
+    return <ErrorState message="Failed to load tournaments" />;
   }
 
   if (tournaments.length === 0) {
