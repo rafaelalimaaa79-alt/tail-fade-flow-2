@@ -23,11 +23,10 @@ const Dashboard = () => {
             />
           </div>
           <button 
-            className="rounded-full p-2 text-white/80 hover:text-white flex items-center gap-1"
+            className="rounded-full p-2 text-white/80 hover:text-white flex items-center justify-center"
             onClick={() => navigate('/portfolio')}
           >
-            <span className="text-sm font-medium mr-1">Portfolio</span>
-            <BarChart2 className="h-5 w-5" />
+            <BarChart2 className="h-6 w-6" />
           </button>
         </header>
 
