@@ -1,3 +1,4 @@
+
 import React, { useRef, useEffect } from "react";
 import WaveText from "./WaveText";
 import PlayCard from "./PlayCard";
@@ -107,6 +108,21 @@ const BetOfTheDay = ({ currentIndex, onIndexChange }: BetOfTheDayProps) => {
     navigate(`/leaders?type=${type}`);
   };
   
+  useEffect(() => {
+    if (!emblaApi) return;
+    
+    // Add event listener to update the index when the carousel is scrolled
+    const onSelect = () => {
+      const currentSlide = emblaApi.selectedScrollSnap();
+      if (currentIndex % playsOfTheDay.length !== currentSlide) {
+        onIndexChange(currentSlide);
+      }
+    };
+    
+    emblaApi.on('select', onSelect);
+    return () => emblaApi.off('select', onSelect);
+  }, [emblaApi, currentIndex, onIndexChange]);
+  
   return (
     <div 
       onTouchStart={handleTouchStart}
@@ -120,13 +136,11 @@ const BetOfTheDay = ({ currentIndex, onIndexChange }: BetOfTheDayProps) => {
               key={idx} 
               className="min-w-0 flex-[0_0_100%] pl-0 transition-transform duration-700"
             >
-              {idx === currentIndex % playsOfTheDay.length && (
-                <PlayCard 
-                  play={play}
-                  renderWaveText={renderWaveText}
-                  onActionClick={() => navigateToLeaders(play.suggestionType === 'fade' ? 'fade' : 'tail')}
-                />
-              )}
+              <PlayCard 
+                play={play}
+                renderWaveText={renderWaveText}
+                onActionClick={() => navigateToLeaders(play.suggestionType === 'fade' ? 'fade' : 'tail')}
+              />
             </div>
           ))}
         </div>
