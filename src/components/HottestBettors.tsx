@@ -2,6 +2,7 @@
 import React from "react";
 import BettorStreakItem from "./BettorStreakItem";
 import ActionButton from "./ActionButton";
+import { useNavigate } from "react-router-dom";
 
 // Mock data - this would come from an API in a real app
 const hottestBettors = [
@@ -13,6 +14,8 @@ const hottestBettors = [
 ];
 
 const HottestBettors = () => {
+  const navigate = useNavigate();
+  
   return (
     <div className="rounded-xl bg-card p-5 shadow-lg border border-white/10">
       <div className="mb-4 flex items-center justify-center">
@@ -31,8 +34,12 @@ const HottestBettors = () => {
         ))}
       </div>
       
-      <ActionButton variant="tail" className="mt-4 h-10 text-sm">
-        View Tail Leaders
+      <ActionButton 
+        variant="tail" 
+        className="mt-4 h-10 text-sm"
+        onClick={() => navigate("/leaders?type=hot")}
+      >
+        View Hottest Bettors
       </ActionButton>
     </div>
   );

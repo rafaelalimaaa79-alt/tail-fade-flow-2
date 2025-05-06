@@ -37,9 +37,9 @@ const ColdestBettors = () => {
       <ActionButton 
         variant="fade" 
         className="mt-4 h-10 text-sm"
-        onClick={() => navigate("/leaders?type=fade")}
+        onClick={() => navigate("/leaders?type=cold")}
       >
-        View Fade Leaders
+        View Coldest Bettors
       </ActionButton>
     </div>
   );

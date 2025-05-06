@@ -1,6 +1,6 @@
 
 import React, { useState, useEffect } from "react";
-import { Bell, ArrowDown, Award, Trophy } from "lucide-react";
+import { Bell, ArrowDown, Award, Trophy, Flame, Snowflake } from "lucide-react";
 import BottomNav from "@/components/BottomNav";
 import { useIsMobile } from "@/hooks/use-mobile";
 import { useSearchParams } from "react-router-dom";
@@ -9,27 +9,27 @@ import ActionButton from "@/components/ActionButton";
 import { Table, TableHeader, TableRow, TableHead, TableBody, TableCell } from "@/components/ui/table";
 import { useNavigate } from "react-router-dom";
 
-// Mock data for top tail and fade bettors
-const tailLeaders = Array.from({ length: 100 }, (_, i) => ({
-  id: `tail-${i + 1}`,
-  name: `TailPro${i + 1}`,
+// Mock data for hottest and coldest bettors
+const hottestBettors = Array.from({ length: 100 }, (_, i) => ({
+  id: `hot-${i + 1}`,
+  name: `HotBettor${i + 1}`,
   profit: Math.round((5000 - i * 45) * 100) / 100,
   winRate: Math.round(75 - i * 0.3),
   streak: Math.min(15, 10 - Math.floor(i / 10)),
 }));
 
-const fadeLeaders = Array.from({ length: 100 }, (_, i) => ({
-  id: `fade-${i + 1}`,
-  name: `FadeMaster${i + 1}`,
-  profit: Math.round((4500 - i * 40) * 100) / 100,
-  winRate: Math.round(72 - i * 0.25),
-  streak: Math.min(12, 8 - Math.floor(i / 12)),
+const coldestBettors = Array.from({ length: 100 }, (_, i) => ({
+  id: `cold-${i + 1}`,
+  name: `ColdBettor${i + 1}`,
+  profit: Math.round((-4500 + i * 40) * 100) / 100,
+  winRate: Math.round(30 + i * 0.25),
+  streak: -Math.min(12, 8 - Math.floor(i / 12)),
 }));
 
 const Leaders = () => {
   const [searchParams, setSearchParams] = useSearchParams();
-  const initialType = searchParams.get("type") === "fade" ? "fade" : "tail";
-  const [activeTab, setActiveTab] = useState<"tail" | "fade">(initialType);
+  const initialType = searchParams.get("type") === "cold" ? "cold" : "hot";
+  const [activeTab, setActiveTab] = useState<"hot" | "cold">(initialType);
   const [showAll, setShowAll] = useState(false);
   const isMobile = useIsMobile();
   const navigate = useNavigate();
@@ -40,11 +40,11 @@ const Leaders = () => {
   }, [activeTab, setSearchParams]);
 
   const handleTabChange = (value: string) => {
-    setActiveTab(value as "tail" | "fade");
+    setActiveTab(value as "hot" | "cold");
     setShowAll(false);
   };
 
-  const currentLeaders = activeTab === "tail" ? tailLeaders : fadeLeaders;
+  const currentLeaders = activeTab === "hot" ? hottestBettors : coldestBettors;
   const displayLeaders = showAll ? currentLeaders : currentLeaders.slice(0, 10);
 
   return (
@@ -70,19 +70,19 @@ const Leaders = () => {
 
         <Tabs defaultValue={activeTab} onValueChange={handleTabChange} className="w-full">
           <TabsList className="grid w-full grid-cols-2 mb-6">
-            <TabsTrigger value="tail" className="relative">
+            <TabsTrigger value="hot" className="relative">
               <span className="text-onetime-green text-lg font-bold">
-                Tail Leaders <Trophy className="inline-block ml-1 h-5 w-5" />
+                Hottest Bettors <Flame className="inline-block ml-1 h-5 w-5" />
               </span>
             </TabsTrigger>
-            <TabsTrigger value="fade" className="relative">
+            <TabsTrigger value="cold" className="relative">
               <span className="text-onetime-red text-lg font-bold">
-                Fade Leaders <ArrowDown className="inline-block ml-1 h-5 w-5" />
+                Coldest Bettors <Snowflake className="inline-block ml-1 h-5 w-5" />
               </span>
             </TabsTrigger>
           </TabsList>
           
-          <TabsContent value="tail" className="space-y-4">
+          <TabsContent value="hot" className="space-y-4">
             <div className="rounded-xl bg-card border border-white/10 p-4">
               <Table>
                 <TableHeader>
@@ -123,17 +123,17 @@ const Leaders = () => {
               {!showAll && (
                 <div className="mt-4">
                   <ActionButton 
-                    variant="default" 
+                    variant="tail" 
                     onClick={() => setShowAll(true)}
                   >
-                    View All 100 Tail Leaders
+                    View All 100 Hottest Bettors
                   </ActionButton>
                 </div>
               )}
             </div>
           </TabsContent>
           
-          <TabsContent value="fade" className="space-y-4">
+          <TabsContent value="cold" className="space-y-4">
             <div className="rounded-xl bg-card border border-white/10 p-4">
               <Table>
                 <TableHeader>
@@ -159,12 +159,12 @@ const Leaders = () => {
                         {index + 1}
                       </TableCell>
                       <TableCell>@{bettor.name}</TableCell>
-                      <TableCell className="text-onetime-green">
-                        +${bettor.profit.toLocaleString()}
+                      <TableCell className="text-onetime-red">
+                        ${bettor.profit.toLocaleString()}
                       </TableCell>
                       <TableCell>{bettor.winRate}%</TableCell>
-                      <TableCell className="text-onetime-green">
-                        W{bettor.streak}
+                      <TableCell className="text-onetime-red">
+                        L{Math.abs(bettor.streak)}
                       </TableCell>
                     </TableRow>
                   ))}
@@ -177,7 +177,7 @@ const Leaders = () => {
                     variant="fade" 
                     onClick={() => setShowAll(true)}
                   >
-                    View All 100 Fade Leaders
+                    View All 100 Coldest Bettors
                   </ActionButton>
                 </div>
               )}
