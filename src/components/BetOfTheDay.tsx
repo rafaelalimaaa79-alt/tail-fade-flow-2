@@ -1,3 +1,4 @@
+
 import React, { useRef, useEffect } from "react";
 import WaveText from "./WaveText";
 import PlayCard from "./PlayCard";
@@ -13,15 +14,15 @@ interface BetOfTheDayProps {
 }
 
 const BetOfTheDay = ({ currentIndex, onIndexChange }: BetOfTheDayProps) => {
-  // Updated carousel settings for side-sliding animation
+  // Updated carousel settings for proper horizontal slide animation
   const [emblaRef, emblaApi] = useEmblaCarousel({ 
-    loop: true, 
-    align: "center",
-    slidesToScroll: 1,
-    direction: "ltr",
-    dragFree: true,
+    loop: true,
+    align: "start",
+    dragFree: false,
     containScroll: "trimSnaps",
-    duration: 400, // Faster animation for slide effect
+    skipSnaps: false,
+    direction: "ltr",
+    duration: 800, // Smoother animation duration for page-turning effect
   });
   
   const touchStartX = useRef(0);
@@ -43,13 +44,13 @@ const BetOfTheDay = ({ currentIndex, onIndexChange }: BetOfTheDayProps) => {
     if (emblaApi.selectedScrollSnap() !== currentIndex % playsOfTheDay.length) {
       isAnimating.current = true;
       
-      // Create a slide effect animation
+      // Create a proper slide animation effect
       emblaApi.scrollTo(currentIndex % playsOfTheDay.length, true);
       
       // Reset animation flag after the animation completes
       setTimeout(() => {
         isAnimating.current = false;
-      }, 450); // Slightly longer than animation duration
+      }, 850); // Slightly longer than animation duration
     }
     
     console.log('BetOfTheDay currentIndex:', currentIndex, 'Current Play:', playsOfTheDay[currentIndex % playsOfTheDay.length]);
@@ -87,7 +88,7 @@ const BetOfTheDay = ({ currentIndex, onIndexChange }: BetOfTheDayProps) => {
     onIndexChange(prevIndex);
   };
   
-  // Touch event handlers for swipe - we'll keep these even though Embla has its own
+  // Touch event handlers for swipe
   const handleTouchStart = (e: React.TouchEvent) => {
     touchStartX.current = e.touches[0].clientX;
   };
@@ -144,14 +145,14 @@ const BetOfTheDay = ({ currentIndex, onIndexChange }: BetOfTheDayProps) => {
     <div 
       onTouchStart={handleTouchStart}
       onTouchEnd={handleTouchEnd}
-      className="transition-all duration-300"
+      className="transition-all duration-800"
     >
       <div className="overflow-hidden" ref={emblaRef}>
         <div className="flex">
           {playsOfTheDay.map((play, idx) => (
             <div 
               key={idx} 
-              className="min-w-0 flex-[0_0_100%] px-2 transition-transform duration-400"
+              className="min-w-0 flex-[0_0_100%] px-2 transition-transform duration-800"
             >
               <PlayCard 
                 play={play}
