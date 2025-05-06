@@ -1,3 +1,4 @@
+
 import React, { useState, useEffect } from "react";
 import { Bell, Award, Flame, Snowflake } from "lucide-react";
 import BottomNav from "@/components/BottomNav";
@@ -109,7 +110,7 @@ const Leaders = () => {
                         </TableCell>
                         <TableCell className="py-2">@{bettor.name}</TableCell>
                         <TableCell className="text-onetime-green py-2">
-                          +{bettor.profit.toLocaleString()}
+                          +{Math.round(bettor.profit / 100)}u
                         </TableCell>
                         <TableCell className="py-2">{bettor.winRate}%</TableCell>
                       </TableRow>
@@ -159,7 +160,7 @@ const Leaders = () => {
                         </TableCell>
                         <TableCell className="py-2">@{bettor.name}</TableCell>
                         <TableCell className="text-onetime-red py-2">
-                          {bettor.profit.toLocaleString()}
+                          {Math.round(bettor.profit / 100)}u
                         </TableCell>
                         <TableCell className="py-2">{bettor.winRate}%</TableCell>
                       </TableRow>
