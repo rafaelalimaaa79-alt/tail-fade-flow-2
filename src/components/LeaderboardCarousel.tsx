@@ -1,9 +1,9 @@
-
 import React, { useEffect } from "react";
 import { useNavigate } from "react-router-dom";
 import BettorStreakItem from "./BettorStreakItem";
 import ActionButton from "./ActionButton";
 import useEmblaCarousel from "embla-carousel-react";
+import { playsOfTheDay } from "@/types/betTypes";
 
 interface LeaderboardCarouselProps {
   currentIndex: number;
@@ -40,20 +40,20 @@ const LeaderboardCarousel = ({ currentIndex, onIndexChange }: LeaderboardCarouse
   useEffect(() => {
     if (!emblaApi) return;
     
-    emblaApi.on("select", () => {
-      onIndexChange(emblaApi.selectedScrollSnap());
-    });
+    // Calculate whether to show hot or cold bettors based on currentIndex
+    // We alternate between hot (0) and cold (1) based on even/odd in playsOfTheDay
+    const selectedIndex = currentIndex % 2;
+    
+    if (emblaApi.selectedScrollSnap() !== selectedIndex) {
+      emblaApi.scrollTo(selectedIndex);
+    }
+    
+    // Add debugging
+    console.log('LeaderboardCarousel currentIndex:', currentIndex, 'Selected Snap:', selectedIndex);
     
     return () => {
-      emblaApi.off("select", () => {});
+      // Cleanup
     };
-  }, [emblaApi, onIndexChange]);
-
-  // Update embla carousel position when currentIndex changes
-  useEffect(() => {
-    if (emblaApi && emblaApi.selectedScrollSnap() !== currentIndex % 2) {
-      emblaApi.scrollTo(currentIndex % 2);
-    }
   }, [currentIndex, emblaApi]);
 
   return (

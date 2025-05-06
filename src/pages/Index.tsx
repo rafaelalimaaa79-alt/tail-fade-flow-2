@@ -17,6 +17,7 @@ const Dashboard = () => {
   useEffect(() => {
     const interval = setInterval(() => {
       setCarouselIndex(prevIndex => (prevIndex + 1) % playsOfTheDay.length);
+      console.log("Auto-rotating carousel to next index");
     }, 4000); // Rotate every 4 seconds
     
     return () => clearInterval(interval);
@@ -25,6 +26,7 @@ const Dashboard = () => {
   // This function will be shared between both carousels
   const handleCarouselChange = (index: number) => {
     setCarouselIndex(index);
+    console.log("Manual carousel change to index:", index);
   };
   
   return (

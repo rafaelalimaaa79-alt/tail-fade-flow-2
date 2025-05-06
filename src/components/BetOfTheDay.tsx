@@ -13,6 +13,7 @@ interface BetOfTheDayProps {
 }
 
 const BetOfTheDay = ({ currentIndex, onIndexChange }: BetOfTheDayProps) => {
+  // Ensure we're using the correct index from the total number of plays
   const currentPlay = playsOfTheDay[currentIndex % playsOfTheDay.length];
   const touchStartX = useRef(0);
   const touchEndX = useRef(0);
@@ -85,6 +86,9 @@ const BetOfTheDay = ({ currentIndex, onIndexChange }: BetOfTheDayProps) => {
   const navigateToLeaders = (type: 'tail' | 'fade') => {
     navigate(`/leaders?type=${type}`);
   };
+  
+  // Add console.log to debug the currentIndex and which play is being shown
+  console.log('BetOfTheDay currentIndex:', currentIndex, 'Current Play:', currentPlay);
   
   return (
     <div 
