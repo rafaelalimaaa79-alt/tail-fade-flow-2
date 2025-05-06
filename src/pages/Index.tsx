@@ -5,7 +5,7 @@ import BottomNav from "@/components/BottomNav";
 import BetOfTheDay from "@/components/BetOfTheDay";
 import LeaderboardCarousel from "@/components/LeaderboardCarousel";
 import { useIsMobile } from "@/hooks/use-mobile";
-import { WalletCards } from "lucide-react";
+import { BarChart2 } from "lucide-react";
 
 const Dashboard = () => {
   const isMobile = useIsMobile();
@@ -27,7 +27,7 @@ const Dashboard = () => {
             onClick={() => navigate('/portfolio')}
           >
             <span className="text-sm font-medium mr-1">Portfolio</span>
-            <WalletCards className="h-5 w-5" />
+            <BarChart2 className="h-5 w-5" />
           </button>
         </header>
 
