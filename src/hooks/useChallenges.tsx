@@ -107,59 +107,65 @@ export const joinChallenge = async (challengeId: string) => {
     // Get session
     const { data: session } = await supabase.auth.getSession();
     
-    // Generate a random test user ID if not logged in
-    const userId = session.session?.user?.id || `test-user-${Math.random().toString(36).substring(2, 10)}`;
+    // For testing: if not logged in, generate a valid UUID instead of a random string
+    let userId;
+    
+    if (session.session?.user?.id) {
+      userId = session.session.user.id;
+    } else {
+      // Generate a proper UUID using crypto API if available, fallback to a fixed test UUID
+      if (typeof crypto !== 'undefined' && crypto.randomUUID) {
+        userId = crypto.randomUUID();
+      } else {
+        // Fallback to a fixed test UUID that's guaranteed to be valid format
+        userId = "00000000-0000-4000-a000-000000000000"; // Test UUID in valid format
+      }
+    }
     
     console.log("Joining challenge with user ID:", userId);
     
     // Check if this user already joined this challenge
-    let existingParticipant = null;
-    let checkError = null;
-    
     try {
-      const response = await supabase
+      const { data: participants, error: checkError } = await supabase
         .from('challenge_participants')
         .select('id')
         .eq('challenge_id', challengeId)
         .eq('user_id', userId);
-        
-      existingParticipant = response.data && response.data.length > 0 ? response.data[0] : null;
-      checkError = response.error;
+      
+      if (checkError) {
+        console.error("Error checking challenge participation:", checkError);
+        toast.error("Failed to verify participation status");
+        return false;
+      }
+      
+      if (participants && participants.length > 0) {
+        toast.error("You've already joined this challenge");
+        return false;
+      }
+      
+      console.log("Inserting new participant for challenge:", challengeId);
+      
+      // Join the challenge with the user ID (real or test)
+      const { error } = await supabase
+        .from('challenge_participants')
+        .insert({
+          challenge_id: challengeId,
+          user_id: userId,
+        });
+    
+      if (error) {
+        console.error("Error joining challenge:", error);
+        toast.error("Failed to join challenge");
+        return false;
+      }
+    
+      toast.success("Successfully joined challenge!");
+      return true;
     } catch (err) {
       console.error("Exception checking participation:", err);
       toast.error("An unexpected error occurred");
       return false;
     }
-    
-    if (checkError) {
-      console.error("Error checking challenge participation:", checkError);
-      toast.error("Failed to verify participation status");
-      return false;
-    }
-    
-    if (existingParticipant) {
-      toast.error("You've already joined this challenge");
-      return false;
-    }
-    
-    console.log("Inserting new participant for challenge:", challengeId);
-    
-    // Join the challenge with the user ID (real or test)
-    const { error } = await supabase
-      .from('challenge_participants')
-      .insert({
-        challenge_id: challengeId,
-        user_id: userId,
-      });
-  
-    if (error) {
-      console.error("Error joining challenge:", error);
-      toast.error("Failed to join challenge");
-      return false;
-    }
-  
-    toast.success("Successfully joined challenge!");
-    return true;
   } catch (error) {
     console.error("Unexpected error in joinChallenge:", error);
     toast.error("An unexpected error occurred");
