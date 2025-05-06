@@ -23,7 +23,7 @@ const BetOfTheDay = ({ currentIndex, onIndexChange }: BetOfTheDayProps) => {
     containScroll: "trimSnaps",
     skipSnaps: false,
     startIndex: currentIndex % playsOfTheDay.length,
-    duration: 2000, // Slower animation duration (increased from 1200)
+    duration: 2000, // Slower animation duration
     slidesToScroll: 1,
     inViewThreshold: 1,
   };
@@ -156,14 +156,14 @@ const BetOfTheDay = ({ currentIndex, onIndexChange }: BetOfTheDayProps) => {
     <div 
       onTouchStart={handleTouchStart}
       onTouchEnd={handleTouchEnd}
-      className="transition-all duration-2000" 
+      className="transition-all duration-2000 w-full mx-auto" 
     >
-      <div className="overflow-hidden" ref={emblaRef}>
+      <div className="overflow-hidden w-full" ref={emblaRef}>
         <div className="flex w-full transition-transform duration-2000"> 
           {playsOfTheDay.map((play, idx) => (
             <div 
               key={idx} 
-              className="min-w-0 flex-[0_0_100%] px-0 transition-transform duration-2000" 
+              className="min-w-full flex-none px-0 transition-transform duration-2000" 
               style={{
                 transform: `translateX(${idx === currentIndex % playsOfTheDay.length ? '0' : '100%'})`,
               }}

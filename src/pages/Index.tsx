@@ -77,7 +77,7 @@ const Dashboard = () => {
     setTimeout(() => {
       topRotationPausedRef.current = false;
       setupTopAutoRotation();
-    }, 8000); // Resume auto-rotation after 8 seconds (increased from 5)
+    }, 8000); // Resume auto-rotation after 8 seconds
   };
   
   // This function will handle the bottom carousel changes
@@ -92,12 +92,12 @@ const Dashboard = () => {
     setTimeout(() => {
       bottomRotationPausedRef.current = false;
       setupBottomAutoRotation();
-    }, 8000); // Resume auto-rotation after 8 seconds (increased from 5)
+    }, 8000); // Resume auto-rotation after 8 seconds
   };
   
   return (
     <div className="flex min-h-screen flex-col bg-background">
-      <div className={`onetime-container ${isMobile ? "pb-24" : ""}`}>
+      <div className={`max-w-md mx-auto w-full ${isMobile ? "pb-24" : ""}`}>
         <header className="mb-2 flex items-center justify-between">
           <div className="flex items-center gap-3">
             <img 
@@ -114,12 +114,14 @@ const Dashboard = () => {
           </button>
         </header>
 
-        <BetOfTheDay 
-          currentIndex={topCarouselIndex}
-          onIndexChange={handleTopCarouselChange}
-        />
+        <div className="w-full">
+          <BetOfTheDay 
+            currentIndex={topCarouselIndex}
+            onIndexChange={handleTopCarouselChange}
+          />
+        </div>
         
-        <div className="mt-4">
+        <div className="mt-4 w-full">
           <LeaderboardCarousel 
             currentIndex={bottomCarouselIndex}
             onIndexChange={handleBottomCarouselChange}

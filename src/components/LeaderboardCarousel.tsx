@@ -35,7 +35,7 @@ const LeaderboardCarousel = ({ currentIndex, onIndexChange }: LeaderboardCarouse
     skipSnaps: false,
     containScroll: "trimSnaps",
     startIndex: currentIndex % 2,
-    duration: 1600, // Slower transitions (increased from 800)
+    duration: 1600, // Slower transitions
     slidesToScroll: 1,
     inViewThreshold: 1,
   };
@@ -97,10 +97,10 @@ const LeaderboardCarousel = ({ currentIndex, onIndexChange }: LeaderboardCarouse
 
   return (
     <div className="w-full transition-all duration-1600"> 
-      <div className="overflow-hidden" ref={emblaRef}>
+      <div className="overflow-hidden w-full" ref={emblaRef}>
         <div className="flex w-full transition-transform duration-1600"> 
           {/* Hot Bettors */}
-          <div className="min-w-0 flex-[0_0_100%] px-0 transition-transform duration-1600" 
+          <div className="min-w-full flex-none px-0 transition-transform duration-1600" 
                style={{
                  transform: `translateX(${currentIndex % 2 === 0 ? '0' : '100%'})`,
                }}>
@@ -132,7 +132,7 @@ const LeaderboardCarousel = ({ currentIndex, onIndexChange }: LeaderboardCarouse
           </div>
 
           {/* Cold Bettors */}
-          <div className="min-w-0 flex-[0_0_100%] px-0 transition-transform duration-1600"
+          <div className="min-w-full flex-none px-0 transition-transform duration-1600"
                style={{
                  transform: `translateX(${currentIndex % 2 === 1 ? '0' : '100%'})`,
                }}>
