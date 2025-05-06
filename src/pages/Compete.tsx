@@ -44,7 +44,7 @@ const Compete = () => {
   const [activeTab, setActiveTab] = useState("tournaments");
   const [user, setUser] = useState<any>(null);
   const [loading, setLoading] = useState(true);
-  const [bypassAuth, setBypassAuth] = useState(false);
+  const [bypassAuth, setBypassAuth] = useState(true); // Set to true by default now
   const isMobile = useIsMobile();
 
   useEffect(() => {

@@ -103,27 +103,42 @@ export const useChallengesByType = (type: "tournament" | "fixed" | "custom") => 
 
 // Function to join a challenge
 export const joinChallenge = async (challengeId: string) => {
+  // Get session
   const { data: session } = await supabase.auth.getSession();
   
-  if (!session.session) {
-    toast.error("You must be logged in to join a challenge");
+  // Generate a random test user ID if not logged in
+  const userId = session.session?.user.id || `test-user-${Math.random().toString(36).substring(2, 10)}`;
+  
+  // Check if this user already joined this challenge
+  const { data: existingParticipant, error: checkError } = await supabase
+    .from('challenge_participants')
+    .select('id')
+    .eq('challenge_id', challengeId)
+    .eq('user_id', userId)
+    .single();
+  
+  if (checkError && checkError.code !== 'PGRST116') { // PGRST116 is "no rows returned"
+    toast.error("Failed to check participation status");
+    console.error("Error checking challenge participation:", checkError);
+    return false;
+  }
+  
+  if (existingParticipant) {
+    toast.error("You've already joined this challenge");
     return false;
   }
 
+  // Join the challenge with the user ID (real or test)
   const { error } = await supabase
     .from('challenge_participants')
     .insert({
       challenge_id: challengeId,
-      user_id: session.session.user.id,
+      user_id: userId,
     });
 
   if (error) {
-    if (error.code === '23505') { // Unique violation
-      toast.error("You've already joined this challenge");
-    } else {
-      toast.error("Failed to join challenge");
-      console.error("Error joining challenge:", error);
-    }
+    toast.error("Failed to join challenge");
+    console.error("Error joining challenge:", error);
     return false;
   }
 
