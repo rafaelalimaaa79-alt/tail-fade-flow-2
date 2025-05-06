@@ -6,6 +6,7 @@ import PaginationIndicator from "./PaginationIndicator";
 import { playsOfTheDay } from "@/types/betTypes";
 import useWaveAnimation from "@/hooks/useWaveAnimation";
 import { useNavigate } from "react-router-dom";
+import useEmblaCarousel from "embla-carousel-react";
 
 interface BetOfTheDayProps {
   currentIndex: number;
@@ -13,8 +14,7 @@ interface BetOfTheDayProps {
 }
 
 const BetOfTheDay = ({ currentIndex, onIndexChange }: BetOfTheDayProps) => {
-  // Ensure we're using the correct index from the total number of plays
-  const currentPlay = playsOfTheDay[currentIndex % playsOfTheDay.length];
+  const [emblaRef, emblaApi] = useEmblaCarousel({ loop: true, align: "start", direction: "ltr" });
   const touchStartX = useRef(0);
   const touchEndX = useRef(0);
   const navigate = useNavigate();
@@ -26,7 +26,18 @@ const BetOfTheDay = ({ currentIndex, onIndexChange }: BetOfTheDayProps) => {
     pauseDuration: 300
   });
   
-  const isFade = currentPlay.suggestionType === "fade";
+  // Setup embla carousel to sync with the current index
+  useEffect(() => {
+    if (!emblaApi) return;
+    
+    if (emblaApi.selectedScrollSnap() !== currentIndex % playsOfTheDay.length) {
+      emblaApi.scrollTo(currentIndex % playsOfTheDay.length);
+    }
+    
+    console.log('BetOfTheDay currentIndex:', currentIndex, 'Current Play:', playsOfTheDay[currentIndex % playsOfTheDay.length]);
+  }, [currentIndex, emblaApi]);
+  
+  const isFade = playsOfTheDay[currentIndex % playsOfTheDay.length].suggestionType === "fade";
   
   // Render the wave text with improved component
   const renderWaveText = (text: string, lineIndex: number) => {
@@ -87,19 +98,26 @@ const BetOfTheDay = ({ currentIndex, onIndexChange }: BetOfTheDayProps) => {
     navigate(`/leaders?type=${type}`);
   };
   
-  // Add console.log to debug the currentIndex and which play is being shown
-  console.log('BetOfTheDay currentIndex:', currentIndex, 'Current Play:', currentPlay);
-  
   return (
     <div 
       onTouchStart={handleTouchStart}
       onTouchEnd={handleTouchEnd}
     >
-      <PlayCard 
-        play={currentPlay} 
-        renderWaveText={renderWaveText}
-        onActionClick={() => navigateToLeaders(isFade ? 'fade' : 'tail')}
-      />
+      <div className="overflow-hidden" ref={emblaRef}>
+        <div className="flex">
+          {playsOfTheDay.map((play, idx) => (
+            <div key={idx} className="min-w-0 flex-[0_0_100%] pl-0">
+              {idx === currentIndex % playsOfTheDay.length && (
+                <PlayCard 
+                  play={play}
+                  renderWaveText={renderWaveText}
+                  onActionClick={() => navigateToLeaders(play.suggestionType === 'fade' ? 'fade' : 'tail')}
+                />
+              )}
+            </div>
+          ))}
+        </div>
+      </div>
       <PaginationIndicator 
         currentIndex={currentIndex % playsOfTheDay.length} 
         totalItems={playsOfTheDay.length} 

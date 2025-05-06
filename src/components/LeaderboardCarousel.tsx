@@ -27,7 +27,7 @@ const coldestBettors = [
 ];
 
 const LeaderboardCarousel = ({ currentIndex, onIndexChange }: LeaderboardCarouselProps) => {
-  const [emblaRef, emblaApi] = useEmblaCarousel({ loop: true, align: "start" });
+  const [emblaRef, emblaApi] = useEmblaCarousel({ loop: true, align: "start", direction: "ltr" });
   const navigate = useNavigate();
   
   // Function to handle navigation to leaders page
@@ -89,7 +89,7 @@ const LeaderboardCarousel = ({ currentIndex, onIndexChange }: LeaderboardCarouse
           </div>
 
           {/* Cold Bettors */}
-          <div className="min-w-0 flex-[0_0_100%] pl-4">
+          <div className="min-w-0 flex-[0_0_100%] pl-0">
             <div className="rounded-xl bg-card p-5 shadow-lg border border-white/10">
               <div className="mb-4 flex items-center justify-center">
                 <h3 className="text-lg font-bold text-white/90">Can't buy a win right now</h3>
