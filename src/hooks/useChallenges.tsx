@@ -54,23 +54,26 @@ const fetchChallengesByType = async (type: string): Promise<Challenge[]> => {
     return [];
   }
   
-  // Fetch counts of participants per challenge - using proper Supabase query syntax
-  const { data: participantCounts, error: countsError } = await supabase
+  // Instead of trying to use group/count in the query, fetch all participants
+  // and then count them in memory
+  const { data: participants, error: countsError } = await supabase
     .from('challenge_participants')
-    .select('challenge_id, count', { count: 'exact' })
-    .in('challenge_id', challengeIds)
-    .groupBy('challenge_id');
+    .select('challenge_id')
+    .in('challenge_id', challengeIds);
   
   if (countsError) {
     console.error("Error fetching participant counts:", countsError);
     // Continue without counts rather than failing completely
   }
   
-  // Create a map of challenge_id to count
+  // Create a map of challenge_id to count by counting occurrences
   const countMap: Record<string, number> = {};
-  if (participantCounts) {
-    participantCounts.forEach(item => {
-      countMap[item.challenge_id] = parseInt(item.count as unknown as string);
+  if (participants) {
+    participants.forEach(item => {
+      if (!countMap[item.challenge_id]) {
+        countMap[item.challenge_id] = 0;
+      }
+      countMap[item.challenge_id]++;
     });
   }
   
