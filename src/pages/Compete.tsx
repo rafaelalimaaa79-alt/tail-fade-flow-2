@@ -125,7 +125,7 @@ const Compete = () => {
 
           {/* Fixed Matches Tab Content */}
           <TabsContent value="fixed" className="space-y-4">
-            <h2 className="text-lg font-semibold mb-2">1v1 Matches</h2>
+            <h2 className="text-lg font-semibold mb-2 text-center">1v1 Matches</h2>
             <div className="grid grid-cols-1 gap-4 mb-6">
               {[
                 { buyIn: 5, days: 1 },
@@ -154,7 +154,7 @@ const Compete = () => {
               ))}
             </div>
 
-            <h2 className="text-lg font-semibold mb-2">2v2 Duos</h2>
+            <h2 className="text-lg font-semibold mb-2 text-center">2v2 Duos</h2>
             <div className="grid grid-cols-1 gap-4">
               {[
                 { buyIn: 5, days: 2 },
@@ -189,7 +189,7 @@ const Compete = () => {
               Create Custom Match
             </Button>
 
-            <h2 className="text-lg font-semibold mb-2">Open Custom Matches</h2>
+            <h2 className="text-lg font-semibold mb-2 text-center">Open Custom Matches</h2>
             <div className="space-y-4">
               <Card className="p-4 border border-white/10 bg-card hover:shadow-lg transition-all">
                 <div className="flex justify-between items-start">
