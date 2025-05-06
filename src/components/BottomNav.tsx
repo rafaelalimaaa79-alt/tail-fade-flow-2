@@ -1,7 +1,7 @@
 
 import React, { useEffect, useState } from "react";
 import { Link, useLocation } from "react-router-dom";
-import { Flame, Snowflake, BarChart2, ArrowUp, ArrowDown, LayoutDashboard, Users } from "lucide-react";
+import { Flame, Snowflake, Trophy, ArrowUp, ArrowDown, LayoutDashboard, Users } from "lucide-react";
 import { cn } from "@/lib/utils";
 import { useIsMobile } from "@/hooks/use-mobile";
 
@@ -52,9 +52,9 @@ const BottomNav = () => {
       activeColor: "#36daf7", // Neon blue
     },
     {
-      icon: BarChart2,
-      text: "Portfolio",
-      href: "/portfolio",
+      icon: Trophy,
+      text: "1v1",
+      href: "/compete",
       activeColor: "#ff7e33", // Neon orange
     },
   ];

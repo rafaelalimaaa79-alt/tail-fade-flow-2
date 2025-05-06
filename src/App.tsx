@@ -13,6 +13,7 @@ import Profile from "./pages/Profile";
 import BettorDetail from "./pages/BettorDetail";
 import Leaders from "./pages/Leaders";
 import NotFound from "./pages/NotFound";
+import Compete from "./pages/Compete";
 
 const queryClient = new QueryClient();
 
@@ -30,6 +31,7 @@ const App = () => (
           <Route path="/profile" element={<Profile />} />
           <Route path="/bettor/:id" element={<BettorDetail />} />
           <Route path="/leaders" element={<Leaders />} />
+          <Route path="/compete" element={<Compete />} />
           {/* ADD ALL CUSTOM ROUTES ABOVE THE CATCH-ALL "*" ROUTE */}
           <Route path="*" element={<NotFound />} />
         </Routes>
