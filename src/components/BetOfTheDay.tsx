@@ -1,3 +1,4 @@
+
 import React, { useRef, useEffect } from "react";
 import WaveText from "./WaveText";
 import PlayCard from "./PlayCard";
@@ -155,14 +156,14 @@ const BetOfTheDay = ({ currentIndex, onIndexChange }: BetOfTheDayProps) => {
     <div 
       onTouchStart={handleTouchStart}
       onTouchEnd={handleTouchEnd}
-      className="transition-all duration-2000 w-full mx-auto px-1" 
+      className="transition-all duration-2000 w-full mx-auto px-3" 
     >
       <div className="overflow-hidden w-full" ref={emblaRef}>
         <div className="flex w-full transition-transform duration-2000"> 
           {playsOfTheDay.map((play, idx) => (
             <div 
               key={idx} 
-              className="min-w-full flex-none px-1 transition-transform duration-2000" 
+              className="min-w-full flex-none transition-transform duration-2000 px-3" 
               style={{
                 transform: `translateX(${idx === currentIndex % playsOfTheDay.length ? '0' : '100%'})`,
               }}

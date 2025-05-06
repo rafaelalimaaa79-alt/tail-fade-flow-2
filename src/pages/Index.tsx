@@ -1,3 +1,4 @@
+
 import React, { useState, useEffect, useRef } from "react";
 import { useNavigate } from "react-router-dom";
 import BottomNav from "@/components/BottomNav";
@@ -96,7 +97,7 @@ const Dashboard = () => {
   
   return (
     <div className="flex min-h-screen flex-col bg-background">
-      <div className={`max-w-md mx-auto w-full px-4 ${isMobile ? "pb-24" : ""}`}>
+      <div className={`max-w-md mx-auto w-full px-5 ${isMobile ? "pb-24" : ""}`}>
         <header className="mb-2 flex items-center justify-between">
           <div className="flex items-center gap-3">
             <img 
