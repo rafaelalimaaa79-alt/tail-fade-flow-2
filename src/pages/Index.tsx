@@ -1,4 +1,3 @@
-
 import React, { useState, useEffect, useRef } from "react";
 import { useNavigate } from "react-router-dom";
 import BottomNav from "@/components/BottomNav";
@@ -18,7 +17,7 @@ const Dashboard = () => {
   const topRotationPausedRef = useRef(false);
   const bottomRotationPausedRef = useRef(false);
   
-  // Setup top carousel auto-rotation (6 seconds)
+  // Setup top carousel auto-rotation (7 seconds - increased from 6)
   const setupTopAutoRotation = () => {
     // Clear any existing interval first
     if (topRotationRef.current) {
@@ -31,10 +30,10 @@ const Dashboard = () => {
         setTopCarouselIndex(prevIndex => (prevIndex + 1) % playsOfTheDay.length);
         console.log("Auto-rotating top carousel to next index");
       }
-    }, 6000); // Top carousel rotates every 6 seconds
+    }, 7000); // Top carousel rotates every 7 seconds (increased from 6)
   };
   
-  // Setup bottom carousel auto-rotation (3 seconds)
+  // Setup bottom carousel auto-rotation (5 seconds - increased from 3)
   const setupBottomAutoRotation = () => {
     // Clear any existing interval first
     if (bottomRotationRef.current) {
@@ -47,7 +46,7 @@ const Dashboard = () => {
         setBottomCarouselIndex(prevIndex => (prevIndex + 1) % 2); // Bottom carousel has 2 items
         console.log("Auto-rotating bottom carousel to next index");
       }
-    }, 3000); // Bottom carousel rotates every 3 seconds
+    }, 5000); // Bottom carousel rotates every 5 seconds (increased from 3)
   };
   
   // Set up the auto-rotation on component mount
@@ -97,7 +96,7 @@ const Dashboard = () => {
   
   return (
     <div className="flex min-h-screen flex-col bg-background">
-      <div className={`max-w-md mx-auto w-full ${isMobile ? "pb-24" : ""}`}>
+      <div className={`max-w-md mx-auto w-full px-4 ${isMobile ? "pb-24" : ""}`}>
         <header className="mb-2 flex items-center justify-between">
           <div className="flex items-center gap-3">
             <img 
