@@ -1,13 +1,15 @@
 
 import React from "react";
-import { Bell } from "lucide-react";
+import { useNavigate } from "react-router-dom";
 import BottomNav from "@/components/BottomNav";
 import BetOfTheDay from "@/components/BetOfTheDay";
 import LeaderboardCarousel from "@/components/LeaderboardCarousel";
 import { useIsMobile } from "@/hooks/use-mobile";
+import { WalletCards } from "lucide-react";
 
 const Dashboard = () => {
   const isMobile = useIsMobile();
+  const navigate = useNavigate();
   
   return (
     <div className="flex min-h-screen flex-col bg-background">
@@ -20,8 +22,12 @@ const Dashboard = () => {
               className="h-20"
             />
           </div>
-          <button className="rounded-full p-2 text-white/80 hover:text-white">
-            <Bell className="h-6 w-6" />
+          <button 
+            className="rounded-full p-2 text-white/80 hover:text-white flex items-center gap-1"
+            onClick={() => navigate('/portfolio')}
+          >
+            <span className="text-sm font-medium mr-1">Portfolio</span>
+            <WalletCards className="h-5 w-5" />
           </button>
         </header>
 
