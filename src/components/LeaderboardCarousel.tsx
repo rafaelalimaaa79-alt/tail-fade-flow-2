@@ -27,7 +27,7 @@ const coldestBettors = [
 ];
 
 const LeaderboardCarousel = ({ currentIndex, onIndexChange }: LeaderboardCarouselProps) => {
-  // Updated carousel settings for proper horizontal slide animation
+  // Enhanced carousel settings for smooth horizontal slide animation
   const [emblaRef, emblaApi] = useEmblaCarousel({ 
     loop: true, 
     align: "start",
@@ -35,7 +35,7 @@ const LeaderboardCarousel = ({ currentIndex, onIndexChange }: LeaderboardCarouse
     skipSnaps: false,
     containScroll: "trimSnaps",
     direction: "ltr",
-    duration: 800, // Smoother animation duration for page-turning effect
+    duration: 400, // Faster animation for smoother transitions
   });
   
   const navigate = useNavigate();
@@ -46,9 +46,9 @@ const LeaderboardCarousel = ({ currentIndex, onIndexChange }: LeaderboardCarouse
     navigate(`/leaders?type=${type}`);
   };
   
-  // Set up embla carousel
+  // Set up embla carousel with improved animation handling
   useEffect(() => {
-    if (!emblaApi || isAnimating.current) return;
+    if (!emblaApi) return;
     
     // Calculate whether to show hot or cold bettors based on currentIndex
     // We alternate between hot (0) and cold (1) based on even/odd in playsOfTheDay
@@ -57,13 +57,13 @@ const LeaderboardCarousel = ({ currentIndex, onIndexChange }: LeaderboardCarouse
     if (emblaApi.selectedScrollSnap() !== selectedIndex) {
       isAnimating.current = true;
       
-      // Create a proper slide animation effect
+      // Create a smooth slide animation effect for auto-transitions
       emblaApi.scrollTo(selectedIndex, true);
       
       // Reset animation flag after the animation completes
       setTimeout(() => {
         isAnimating.current = false;
-      }, 850); // Slightly longer than animation duration
+      }, 450); // Slightly longer than animation duration
     }
     
     // Handle manual user swipe events
@@ -84,11 +84,11 @@ const LeaderboardCarousel = ({ currentIndex, onIndexChange }: LeaderboardCarouse
   }, [currentIndex, emblaApi, onIndexChange]);
 
   return (
-    <div className="w-full transition-all duration-800">
+    <div className="w-full transition-all duration-400">
       <div className="overflow-hidden" ref={emblaRef}>
         <div className="flex">
           {/* Hot Bettors */}
-          <div className="min-w-0 flex-[0_0_100%] px-2 transition-transform duration-800">
+          <div className="min-w-0 flex-[0_0_100%] px-2 transition-transform duration-400">
             <div className="rounded-xl bg-card p-5 shadow-lg border border-white/10">
               <div className="mb-4 flex items-center justify-center">
                 <h3 className="text-lg font-bold text-white/90">These guys can't miss</h3>
@@ -117,7 +117,7 @@ const LeaderboardCarousel = ({ currentIndex, onIndexChange }: LeaderboardCarouse
           </div>
 
           {/* Cold Bettors */}
-          <div className="min-w-0 flex-[0_0_100%] px-2 transition-transform duration-800">
+          <div className="min-w-0 flex-[0_0_100%] px-2 transition-transform duration-400">
             <div className="rounded-xl bg-card p-5 shadow-lg border border-white/10">
               <div className="mb-4 flex items-center justify-center">
                 <h3 className="text-lg font-bold text-white/90">Can't buy a win right now</h3>

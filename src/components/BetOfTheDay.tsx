@@ -14,7 +14,7 @@ interface BetOfTheDayProps {
 }
 
 const BetOfTheDay = ({ currentIndex, onIndexChange }: BetOfTheDayProps) => {
-  // Updated carousel settings for proper horizontal slide animation
+  // Enhanced carousel settings for smooth horizontal slide animation
   const [emblaRef, emblaApi] = useEmblaCarousel({ 
     loop: true,
     align: "start",
@@ -22,7 +22,7 @@ const BetOfTheDay = ({ currentIndex, onIndexChange }: BetOfTheDayProps) => {
     containScroll: "trimSnaps",
     skipSnaps: false,
     direction: "ltr",
-    duration: 800, // Smoother animation duration for page-turning effect
+    duration: 400, // Faster animation for smoother transitions
   });
   
   const touchStartX = useRef(0);
@@ -39,18 +39,18 @@ const BetOfTheDay = ({ currentIndex, onIndexChange }: BetOfTheDayProps) => {
   
   // Setup embla carousel to sync with the current index
   useEffect(() => {
-    if (!emblaApi || isAnimating.current) return;
+    if (!emblaApi) return;
     
     if (emblaApi.selectedScrollSnap() !== currentIndex % playsOfTheDay.length) {
       isAnimating.current = true;
       
-      // Create a proper slide animation effect
+      // Create a smooth slide animation effect for auto-transitions
       emblaApi.scrollTo(currentIndex % playsOfTheDay.length, true);
       
       // Reset animation flag after the animation completes
       setTimeout(() => {
         isAnimating.current = false;
-      }, 850); // Slightly longer than animation duration
+      }, 450); // Slightly longer than animation duration
     }
     
     console.log('BetOfTheDay currentIndex:', currentIndex, 'Current Play:', playsOfTheDay[currentIndex % playsOfTheDay.length]);
@@ -79,13 +79,6 @@ const BetOfTheDay = ({ currentIndex, onIndexChange }: BetOfTheDayProps) => {
     if (isAnimating.current) return;
     const nextIndex = (currentIndex + 1) % playsOfTheDay.length;
     onIndexChange(nextIndex);
-  };
-  
-  // Handle previous play - we'll keep this for completeness but won't show UI for it
-  const prevPlay = () => {
-    if (isAnimating.current) return;
-    const prevIndex = currentIndex === 0 ? playsOfTheDay.length - 1 : currentIndex - 1;
-    onIndexChange(prevIndex);
   };
   
   // Touch event handlers for swipe
@@ -145,14 +138,14 @@ const BetOfTheDay = ({ currentIndex, onIndexChange }: BetOfTheDayProps) => {
     <div 
       onTouchStart={handleTouchStart}
       onTouchEnd={handleTouchEnd}
-      className="transition-all duration-800"
+      className="transition-all duration-400"
     >
       <div className="overflow-hidden" ref={emblaRef}>
         <div className="flex">
           {playsOfTheDay.map((play, idx) => (
             <div 
               key={idx} 
-              className="min-w-0 flex-[0_0_100%] px-2 transition-transform duration-800"
+              className="min-w-0 flex-[0_0_100%] px-2 transition-transform duration-400"
             >
               <PlayCard 
                 play={play}
