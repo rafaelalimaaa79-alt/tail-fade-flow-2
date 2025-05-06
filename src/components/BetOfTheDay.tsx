@@ -1,4 +1,3 @@
-
 import React, { useState, useRef, useEffect } from "react";
 import WaveText from "./WaveText";
 import PlayCard from "./PlayCard";
@@ -14,7 +13,7 @@ const BetOfTheDay = () => {
   
   // Use the improved hook with custom options
   const { animationPosition, activeLine } = useWaveAnimation({
-    totalDuration: 3500,  // Slightly slower for better visual effect
+    totalDuration: 2500,  // Reduced from 3500ms to 2500ms (1 second faster)
     lineChangePoint: 0.5,
     pauseDuration: 300
   });
