@@ -9,7 +9,98 @@ export type Json =
 export type Database = {
   public: {
     Tables: {
-      [_ in never]: never
+      challenge_participants: {
+        Row: {
+          bets_placed: number | null
+          challenge_id: string
+          id: string
+          is_eliminated: boolean | null
+          is_winner: boolean | null
+          joined_at: string
+          team: string | null
+          units_gained: number | null
+          user_id: string
+        }
+        Insert: {
+          bets_placed?: number | null
+          challenge_id: string
+          id?: string
+          is_eliminated?: boolean | null
+          is_winner?: boolean | null
+          joined_at?: string
+          team?: string | null
+          units_gained?: number | null
+          user_id: string
+        }
+        Update: {
+          bets_placed?: number | null
+          challenge_id?: string
+          id?: string
+          is_eliminated?: boolean | null
+          is_winner?: boolean | null
+          joined_at?: string
+          team?: string | null
+          units_gained?: number | null
+          user_id?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "challenge_participants_challenge_id_fkey"
+            columns: ["challenge_id"]
+            isOneToOne: false
+            referencedRelation: "challenges"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      challenges: {
+        Row: {
+          created_at: string
+          creator_user_id: string
+          duration_days: number
+          end_time: string | null
+          entry_fee: number
+          format: string
+          id: string
+          min_bets_required: number
+          pot_total_cents: number
+          rake_cents: number
+          start_time: string | null
+          status: string
+          type: string
+        }
+        Insert: {
+          created_at?: string
+          creator_user_id: string
+          duration_days: number
+          end_time?: string | null
+          entry_fee: number
+          format: string
+          id?: string
+          min_bets_required?: number
+          pot_total_cents?: number
+          rake_cents?: number
+          start_time?: string | null
+          status?: string
+          type: string
+        }
+        Update: {
+          created_at?: string
+          creator_user_id?: string
+          duration_days?: number
+          end_time?: string | null
+          entry_fee?: number
+          format?: string
+          id?: string
+          min_bets_required?: number
+          pot_total_cents?: number
+          rake_cents?: number
+          start_time?: string | null
+          status?: string
+          type?: string
+        }
+        Relationships: []
+      }
     }
     Views: {
       [_ in never]: never
