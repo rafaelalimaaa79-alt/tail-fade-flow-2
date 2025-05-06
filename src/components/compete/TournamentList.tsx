@@ -11,7 +11,7 @@ const TournamentList: React.FC = () => {
         <div className="absolute top-0 right-0 bg-primary/20 px-3 py-1 text-xs font-semibold text-primary">
           LIVE
         </div>
-        <h3 className="text-lg font-bold">3-Day Heater</h3>
+        <h3 className="text-lg font-bold text-center">3-Day Heater</h3>
         <div className="grid grid-cols-2 gap-4 mt-3">
           <div className="flex items-center gap-2 text-sm">
             <DollarSign className="h-4 w-4 text-green-500" />
@@ -39,7 +39,7 @@ const TournamentList: React.FC = () => {
         <div className="absolute top-0 right-0 bg-yellow-500/20 px-3 py-1 text-xs font-semibold text-yellow-500">
           STARTING SOON
         </div>
-        <h3 className="text-lg font-bold">Weekend Warrior</h3>
+        <h3 className="text-lg font-bold text-center">Weekend Warrior</h3>
         <div className="grid grid-cols-2 gap-4 mt-3">
           <div className="flex items-center gap-2 text-sm">
             <DollarSign className="h-4 w-4 text-green-500" />

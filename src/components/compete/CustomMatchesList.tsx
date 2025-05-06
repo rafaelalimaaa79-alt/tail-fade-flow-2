@@ -15,7 +15,7 @@ const CustomMatchesList: React.FC = () => {
       <div className="space-y-4">
         <Card className="p-4 border border-white/10 bg-card hover:shadow-lg transition-all">
           <div className="flex justify-between items-start">
-            <h3 className="text-lg font-bold">1v1 Challenge</h3>
+            <h3 className="text-lg font-bold text-center w-full">1v1 Challenge</h3>
             <div className="bg-blue-500/20 px-2 py-1 rounded text-xs font-semibold text-blue-500">
               PUBLIC
             </div>
@@ -41,7 +41,7 @@ const CustomMatchesList: React.FC = () => {
 
         <Card className="p-4 border border-white/10 bg-card hover:shadow-lg transition-all">
           <div className="flex justify-between items-start">
-            <h3 className="text-lg font-bold">2v2 Duos</h3>
+            <h3 className="text-lg font-bold text-center w-full">2v2 Duos</h3>
             <div className="bg-blue-500/20 px-2 py-1 rounded text-xs font-semibold text-blue-500">
               PUBLIC
             </div>

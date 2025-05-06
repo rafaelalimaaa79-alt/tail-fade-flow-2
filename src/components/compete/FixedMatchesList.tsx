@@ -27,7 +27,7 @@ const FixedMatchesList: React.FC = () => {
       <div className="grid grid-cols-1 gap-4 mb-6">
         {oneVsOneMatches.map((match, index) => (
           <Card key={index} className="p-4 border border-white/10 bg-card hover:shadow-lg transition-all">
-            <h3 className="text-lg font-bold">1v1 Challenge</h3>
+            <h3 className="text-lg font-bold text-center">1v1 Challenge</h3>
             <div className="grid grid-cols-2 gap-4 mt-3">
               <div className="flex items-center gap-2 text-sm">
                 <DollarSign className="h-4 w-4 text-green-500" />
@@ -52,7 +52,7 @@ const FixedMatchesList: React.FC = () => {
       <div className="grid grid-cols-1 gap-4">
         {duoMatches.map((match, index) => (
           <Card key={index} className="p-4 border border-white/10 bg-card hover:shadow-lg transition-all">
-            <h3 className="text-lg font-bold">2v2 Duos</h3>
+            <h3 className="text-lg font-bold text-center">2v2 Duos</h3>
             <div className="grid grid-cols-2 gap-4 mt-3">
               <div className="flex items-center gap-2 text-sm">
                 <DollarSign className="h-4 w-4 text-green-500" />
