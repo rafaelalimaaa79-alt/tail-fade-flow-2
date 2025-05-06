@@ -14,14 +14,23 @@ interface BetOfTheDayProps {
 }
 
 const BetOfTheDay = ({ currentIndex, onIndexChange }: BetOfTheDayProps) => {
-  const [emblaRef, emblaApi] = useEmblaCarousel({ loop: true, align: "start", direction: "ltr" });
+  // Always slide from right to left with a smooth transition
+  const [emblaRef, emblaApi] = useEmblaCarousel({ 
+    loop: true, 
+    align: "start", 
+    direction: "ltr", // ensures left-to-right DOM order
+    dragFree: false,
+    slidesToScroll: 1,
+    speed: 15 // Slower animation speed (higher number = slower)
+  });
+  
   const touchStartX = useRef(0);
   const touchEndX = useRef(0);
   const navigate = useNavigate();
   
   // Use the improved hook with custom options
   const { animationPosition, activeLine } = useWaveAnimation({
-    totalDuration: 2500,  // Reduced from 3500ms to 2500ms (1 second faster)
+    totalDuration: 2500,
     lineChangePoint: 0.5,
     pauseDuration: 300
   });
@@ -31,7 +40,8 @@ const BetOfTheDay = ({ currentIndex, onIndexChange }: BetOfTheDayProps) => {
     if (!emblaApi) return;
     
     if (emblaApi.selectedScrollSnap() !== currentIndex % playsOfTheDay.length) {
-      emblaApi.scrollTo(currentIndex % playsOfTheDay.length);
+      // Always scroll to the right (which appears as sliding from right to left)
+      emblaApi.scrollTo(currentIndex % playsOfTheDay.length, true);
     }
     
     console.log('BetOfTheDay currentIndex:', currentIndex, 'Current Play:', playsOfTheDay[currentIndex % playsOfTheDay.length]);
@@ -48,9 +58,9 @@ const BetOfTheDay = ({ currentIndex, onIndexChange }: BetOfTheDayProps) => {
         activeLine={activeLine}
         animationPosition={animationPosition}
         isFade={isFade}
-        waveWidth={0.4}  // Wider wave effect
-        maxScale={0.25}  // Slightly reduced scale for smoother animation
-        maxGlow={10}     // Adjusted glow intensity
+        waveWidth={0.4}
+        maxScale={0.25}
+        maxGlow={10}
       />
     );
   };
@@ -102,11 +112,15 @@ const BetOfTheDay = ({ currentIndex, onIndexChange }: BetOfTheDayProps) => {
     <div 
       onTouchStart={handleTouchStart}
       onTouchEnd={handleTouchEnd}
+      className="transition-all duration-500"
     >
       <div className="overflow-hidden" ref={emblaRef}>
         <div className="flex">
           {playsOfTheDay.map((play, idx) => (
-            <div key={idx} className="min-w-0 flex-[0_0_100%] pl-0">
+            <div 
+              key={idx} 
+              className="min-w-0 flex-[0_0_100%] pl-0 transition-transform duration-700"
+            >
               {idx === currentIndex % playsOfTheDay.length && (
                 <PlayCard 
                   play={play}

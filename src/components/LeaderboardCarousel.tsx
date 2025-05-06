@@ -27,7 +27,16 @@ const coldestBettors = [
 ];
 
 const LeaderboardCarousel = ({ currentIndex, onIndexChange }: LeaderboardCarouselProps) => {
-  const [emblaRef, emblaApi] = useEmblaCarousel({ loop: true, align: "start", direction: "ltr" });
+  // Match settings with BetOfTheDay carousel
+  const [emblaRef, emblaApi] = useEmblaCarousel({ 
+    loop: true, 
+    align: "start", 
+    direction: "ltr",
+    dragFree: false,
+    slidesToScroll: 1,
+    speed: 15 // Slower animation speed (higher number = slower)
+  });
+  
   const navigate = useNavigate();
   
   // Function to handle navigation to leaders page
@@ -44,7 +53,8 @@ const LeaderboardCarousel = ({ currentIndex, onIndexChange }: LeaderboardCarouse
     const selectedIndex = currentIndex % 2;
     
     if (emblaApi.selectedScrollSnap() !== selectedIndex) {
-      emblaApi.scrollTo(selectedIndex);
+      // Always scroll to the right (which appears as sliding from right to left)
+      emblaApi.scrollTo(selectedIndex, true);
     }
     
     // Add debugging
@@ -56,11 +66,11 @@ const LeaderboardCarousel = ({ currentIndex, onIndexChange }: LeaderboardCarouse
   }, [currentIndex, emblaApi]);
 
   return (
-    <div className="w-full">
+    <div className="w-full transition-all duration-500">
       <div className="overflow-hidden" ref={emblaRef}>
         <div className="flex">
           {/* Hot Bettors */}
-          <div className="min-w-0 flex-[0_0_100%] pl-0">
+          <div className="min-w-0 flex-[0_0_100%] pl-0 transition-transform duration-700">
             <div className="rounded-xl bg-card p-5 shadow-lg border border-white/10">
               <div className="mb-4 flex items-center justify-center">
                 <h3 className="text-lg font-bold text-white/90">These guys can't miss</h3>
@@ -89,7 +99,7 @@ const LeaderboardCarousel = ({ currentIndex, onIndexChange }: LeaderboardCarouse
           </div>
 
           {/* Cold Bettors */}
-          <div className="min-w-0 flex-[0_0_100%] pl-0">
+          <div className="min-w-0 flex-[0_0_100%] pl-0 transition-transform duration-700">
             <div className="rounded-xl bg-card p-5 shadow-lg border border-white/10">
               <div className="mb-4 flex items-center justify-center">
                 <h3 className="text-lg font-bold text-white/90">Can't buy a win right now</h3>
