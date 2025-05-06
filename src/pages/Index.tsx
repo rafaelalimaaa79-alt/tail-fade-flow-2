@@ -1,5 +1,5 @@
 
-import React, { useState, useEffect } from "react";
+import React, { useState, useEffect, useRef } from "react";
 import { useNavigate } from "react-router-dom";
 import BottomNav from "@/components/BottomNav";
 import BetOfTheDay from "@/components/BetOfTheDay";
@@ -12,21 +12,49 @@ const Dashboard = () => {
   const isMobile = useIsMobile();
   const navigate = useNavigate();
   const [carouselIndex, setCarouselIndex] = useState(0);
+  const autoRotationRef = useRef<NodeJS.Timeout | null>(null);
+  const rotationPausedRef = useRef(false);
   
-  // Auto rotation for carousels with interval of 5 seconds
-  useEffect(() => {
-    const interval = setInterval(() => {
-      setCarouselIndex(prevIndex => (prevIndex + 1) % playsOfTheDay.length);
-      console.log("Auto-rotating carousel to next index");
-    }, 5000); // Rotate every 5 seconds
+  // Setup auto-rotation with improved timing
+  const setupAutoRotation = () => {
+    // Clear any existing interval first
+    if (autoRotationRef.current) {
+      clearInterval(autoRotationRef.current);
+    }
     
-    return () => clearInterval(interval);
+    // Set up a new interval
+    autoRotationRef.current = setInterval(() => {
+      if (!rotationPausedRef.current) {
+        setCarouselIndex(prevIndex => (prevIndex + 1) % playsOfTheDay.length);
+        console.log("Auto-rotating carousel to next index");
+      }
+    }, 5000); // Rotate every 5 seconds
+  };
+  
+  // Set up the auto-rotation on component mount
+  useEffect(() => {
+    setupAutoRotation();
+    
+    return () => {
+      if (autoRotationRef.current) {
+        clearInterval(autoRotationRef.current);
+      }
+    };
   }, []);
   
   // This function will be shared between both carousels
   const handleCarouselChange = (index: number) => {
+    // Pause auto-rotation temporarily when user interacts
+    rotationPausedRef.current = true;
+    
     setCarouselIndex(index);
     console.log("Manual carousel change to index:", index);
+    
+    // Resume auto-rotation after a delay
+    setTimeout(() => {
+      rotationPausedRef.current = false;
+      setupAutoRotation();
+    }, 3000); // Wait 3 seconds before resuming auto-rotation
   };
   
   return (

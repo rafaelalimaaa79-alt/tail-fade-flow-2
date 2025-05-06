@@ -7,6 +7,7 @@ import { playsOfTheDay } from "@/types/betTypes";
 import useWaveAnimation from "@/hooks/useWaveAnimation";
 import { useNavigate } from "react-router-dom";
 import useEmblaCarousel from "embla-carousel-react";
+import { EmblaOptionsType } from "embla-carousel";
 
 interface BetOfTheDayProps {
   currentIndex: number;
@@ -14,21 +15,25 @@ interface BetOfTheDayProps {
 }
 
 const BetOfTheDay = ({ currentIndex, onIndexChange }: BetOfTheDayProps) => {
-  // Enhanced carousel settings for smooth horizontal slide animation
-  const [emblaRef, emblaApi] = useEmblaCarousel({ 
+  // Configure Embla carousel for smooth, natural-looking transitions
+  const emblaOptions: EmblaOptionsType = {
     loop: true,
-    align: "start",
+    align: "center",
     dragFree: false,
     containScroll: "trimSnaps",
     skipSnaps: false,
-    direction: "ltr",
-    duration: 400, // Faster animation for smoother transitions
-  });
+    speed: 25, // Lower number = slower, more visible animation
+    startIndex: currentIndex % playsOfTheDay.length,
+    duration: 700, // Longer duration for more visible animation
+  };
+  
+  const [emblaRef, emblaApi] = useEmblaCarousel(emblaOptions);
   
   const touchStartX = useRef(0);
   const touchEndX = useRef(0);
   const navigate = useNavigate();
   const isAnimating = useRef(false);
+  const lastIndexRef = useRef(currentIndex);
   
   // Use the improved hook with custom options
   const { animationPosition, activeLine } = useWaveAnimation({
@@ -41,16 +46,18 @@ const BetOfTheDay = ({ currentIndex, onIndexChange }: BetOfTheDayProps) => {
   useEffect(() => {
     if (!emblaApi) return;
     
-    if (emblaApi.selectedScrollSnap() !== currentIndex % playsOfTheDay.length) {
+    // Only animate if the index has actually changed
+    if (lastIndexRef.current !== currentIndex) {
       isAnimating.current = true;
       
-      // Create a smooth slide animation effect for auto-transitions
+      // Ensure smooth transition animation
       emblaApi.scrollTo(currentIndex % playsOfTheDay.length, true);
       
       // Reset animation flag after the animation completes
       setTimeout(() => {
         isAnimating.current = false;
-      }, 450); // Slightly longer than animation duration
+        lastIndexRef.current = currentIndex;
+      }, 750); // Slightly longer than animation duration
     }
     
     console.log('BetOfTheDay currentIndex:', currentIndex, 'Current Play:', playsOfTheDay[currentIndex % playsOfTheDay.length]);
@@ -138,14 +145,14 @@ const BetOfTheDay = ({ currentIndex, onIndexChange }: BetOfTheDayProps) => {
     <div 
       onTouchStart={handleTouchStart}
       onTouchEnd={handleTouchEnd}
-      className="transition-all duration-400"
+      className="transition-all duration-700"
     >
       <div className="overflow-hidden" ref={emblaRef}>
-        <div className="flex">
+        <div className="flex transition-transform">
           {playsOfTheDay.map((play, idx) => (
             <div 
               key={idx} 
-              className="min-w-0 flex-[0_0_100%] px-2 transition-transform duration-400"
+              className="min-w-0 flex-[0_0_100%] px-2 transition-transform duration-700"
             >
               <PlayCard 
                 play={play}

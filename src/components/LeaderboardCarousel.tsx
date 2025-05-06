@@ -5,6 +5,7 @@ import BettorStreakItem from "./BettorStreakItem";
 import ActionButton from "./ActionButton";
 import useEmblaCarousel from "embla-carousel-react";
 import { playsOfTheDay } from "@/types/betTypes";
+import { EmblaOptionsType } from "embla-carousel";
 
 interface LeaderboardCarouselProps {
   currentIndex: number;
@@ -27,19 +28,23 @@ const coldestBettors = [
 ];
 
 const LeaderboardCarousel = ({ currentIndex, onIndexChange }: LeaderboardCarouselProps) => {
-  // Enhanced carousel settings for smooth horizontal slide animation
-  const [emblaRef, emblaApi] = useEmblaCarousel({ 
-    loop: true, 
-    align: "start",
+  // Configure Embla carousel for smooth, natural-looking transitions
+  const emblaOptions: EmblaOptionsType = {
+    loop: true,
+    align: "center", 
     dragFree: false,
     skipSnaps: false,
     containScroll: "trimSnaps",
-    direction: "ltr",
-    duration: 400, // Faster animation for smoother transitions
-  });
+    speed: 25, // Lower = slower animation
+    startIndex: currentIndex % 2,
+    duration: 700, // Longer duration for more visible transition
+  };
+  
+  const [emblaRef, emblaApi] = useEmblaCarousel(emblaOptions);
   
   const navigate = useNavigate();
   const isAnimating = useRef(false);
+  const lastIndexRef = useRef(currentIndex);
   
   // Function to handle navigation to leaders page
   const navigateToLeaders = (type: 'tail' | 'fade') => {
@@ -54,16 +59,18 @@ const LeaderboardCarousel = ({ currentIndex, onIndexChange }: LeaderboardCarouse
     // We alternate between hot (0) and cold (1) based on even/odd in playsOfTheDay
     const selectedIndex = currentIndex % 2;
     
-    if (emblaApi.selectedScrollSnap() !== selectedIndex) {
+    // Only animate if index has changed
+    if (lastIndexRef.current !== currentIndex) {
       isAnimating.current = true;
       
-      // Create a smooth slide animation effect for auto-transitions
+      // Create a visible, smooth animation effect
       emblaApi.scrollTo(selectedIndex, true);
       
       // Reset animation flag after the animation completes
       setTimeout(() => {
         isAnimating.current = false;
-      }, 450); // Slightly longer than animation duration
+        lastIndexRef.current = currentIndex;
+      }, 750); // Slightly longer than animation duration
     }
     
     // Handle manual user swipe events
@@ -84,11 +91,11 @@ const LeaderboardCarousel = ({ currentIndex, onIndexChange }: LeaderboardCarouse
   }, [currentIndex, emblaApi, onIndexChange]);
 
   return (
-    <div className="w-full transition-all duration-400">
+    <div className="w-full transition-all duration-700">
       <div className="overflow-hidden" ref={emblaRef}>
-        <div className="flex">
+        <div className="flex transition-transform">
           {/* Hot Bettors */}
-          <div className="min-w-0 flex-[0_0_100%] px-2 transition-transform duration-400">
+          <div className="min-w-0 flex-[0_0_100%] px-2 transition-transform duration-700">
             <div className="rounded-xl bg-card p-5 shadow-lg border border-white/10">
               <div className="mb-4 flex items-center justify-center">
                 <h3 className="text-lg font-bold text-white/90">These guys can't miss</h3>
@@ -117,7 +124,7 @@ const LeaderboardCarousel = ({ currentIndex, onIndexChange }: LeaderboardCarouse
           </div>
 
           {/* Cold Bettors */}
-          <div className="min-w-0 flex-[0_0_100%] px-2 transition-transform duration-400">
+          <div className="min-w-0 flex-[0_0_100%] px-2 transition-transform duration-700">
             <div className="rounded-xl bg-card p-5 shadow-lg border border-white/10">
               <div className="mb-4 flex items-center justify-center">
                 <h3 className="text-lg font-bold text-white/90">Can't buy a win right now</h3>
