@@ -1,16 +1,26 @@
 
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import { useNavigate } from "react-router-dom";
 import BottomNav from "@/components/BottomNav";
 import BetOfTheDay from "@/components/BetOfTheDay";
 import LeaderboardCarousel from "@/components/LeaderboardCarousel";
 import { useIsMobile } from "@/hooks/use-mobile";
 import { BarChart2 } from "lucide-react";
+import { playsOfTheDay } from "@/types/betTypes";
 
 const Dashboard = () => {
   const isMobile = useIsMobile();
   const navigate = useNavigate();
   const [carouselIndex, setCarouselIndex] = useState(0);
+  
+  // Auto rotation for carousels
+  useEffect(() => {
+    const interval = setInterval(() => {
+      setCarouselIndex(prevIndex => (prevIndex + 1) % playsOfTheDay.length);
+    }, 4000); // Rotate every 4 seconds
+    
+    return () => clearInterval(interval);
+  }, []);
   
   // This function will be shared between both carousels
   const handleCarouselChange = (index: number) => {

@@ -1,5 +1,5 @@
 
-import React, { useEffect, useCallback } from "react";
+import React, { useEffect } from "react";
 import { useNavigate } from "react-router-dom";
 import BettorStreakItem from "./BettorStreakItem";
 import ActionButton from "./ActionButton";

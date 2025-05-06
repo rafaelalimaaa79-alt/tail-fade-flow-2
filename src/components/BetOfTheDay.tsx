@@ -1,5 +1,5 @@
 
-import React, { useRef, useEffect } from "react";
+import React, { useRef } from "react";
 import WaveText from "./WaveText";
 import PlayCard from "./PlayCard";
 import PaginationIndicator from "./PaginationIndicator";
