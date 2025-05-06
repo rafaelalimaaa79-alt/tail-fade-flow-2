@@ -18,7 +18,7 @@ export interface Challenge {
   pot_total_cents: number;
   rake_cents: number;
   created_at: string;
-  participants_count?: number;
+  participants_count: number;
 }
 
 export interface ChallengeParticipant {
@@ -35,24 +35,48 @@ export interface ChallengeParticipant {
 
 // Function to fetch challenges by type
 const fetchChallengesByType = async (type: string): Promise<Challenge[]> => {
-  const { data, error } = await supabase
+  // First fetch the challenges
+  const { data: challenges, error: challengesError } = await supabase
     .from('challenges')
-    .select('*, challenge_participants(count)')
+    .select('*')
     .eq('type', type)
     .order('created_at', { ascending: false });
 
-  if (error) {
-    console.error("Error fetching challenges:", error);
+  if (challengesError) {
+    console.error("Error fetching challenges:", challengesError);
     throw new Error(`Failed to fetch ${type} challenges`);
   }
 
-  // Process the data to include participant count and ensure proper typing
-  return data.map(challenge => ({
+  // Then fetch participant counts for each challenge
+  const challengeIds = challenges.map(c => c.id);
+  
+  const { data: participantCounts, error: countsError } = await supabase
+    .from('challenge_participants')
+    .select('challenge_id, count')
+    .in('challenge_id', challengeIds)
+    .select('challenge_id, count(*)', { count: 'exact' })
+    .group('challenge_id');
+  
+  if (countsError) {
+    console.error("Error fetching participant counts:", countsError);
+    // Continue without counts rather than failing completely
+  }
+  
+  // Create a map of challenge_id to count
+  const countMap: Record<string, number> = {};
+  if (participantCounts) {
+    participantCounts.forEach(item => {
+      countMap[item.challenge_id] = item.count;
+    });
+  }
+  
+  // Merge the challenges with their participant counts
+  return challenges.map(challenge => ({
     ...challenge,
     type: challenge.type as "tournament" | "fixed" | "custom",
     format: challenge.format as "1v1" | "2v2" | "multi",
     status: challenge.status as "open" | "in_progress" | "completed",
-    participants_count: challenge.challenge_participants[0]?.count || 0
+    participants_count: countMap[challenge.id] || 0
   }));
 };
 
