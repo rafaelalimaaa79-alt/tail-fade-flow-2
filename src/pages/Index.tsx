@@ -28,7 +28,7 @@ const Dashboard = () => {
         setCarouselIndex(prevIndex => (prevIndex + 1) % playsOfTheDay.length);
         console.log("Auto-rotating carousel to next index");
       }
-    }, 5000); // Rotate every 5 seconds
+    }, 8000); // Increased to 8 seconds to give more time to view the slower animations
   };
   
   // Set up the auto-rotation on component mount
@@ -54,7 +54,7 @@ const Dashboard = () => {
     setTimeout(() => {
       rotationPausedRef.current = false;
       setupAutoRotation();
-    }, 3000); // Wait 3 seconds before resuming auto-rotation
+    }, 5000); // Increased to 5 seconds before resuming auto-rotation
   };
   
   return (

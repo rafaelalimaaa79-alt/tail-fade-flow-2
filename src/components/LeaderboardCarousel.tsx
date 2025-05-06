@@ -31,12 +31,12 @@ const LeaderboardCarousel = ({ currentIndex, onIndexChange }: LeaderboardCarouse
   // Configure Embla carousel for smooth, natural-looking transitions
   const emblaOptions: EmblaOptionsType = {
     loop: true,
-    align: "center", 
+    align: "center", // Ensure slides are centered
     dragFree: false,
     skipSnaps: false,
     containScroll: "trimSnaps",
     startIndex: currentIndex % 2,
-    duration: 700, // Longer duration for more visible transition
+    duration: 1200, // Increased duration for slower animation
     slidesToScroll: 1, // Move one slide at a time
     inViewThreshold: 1, // Full slide must be in view
   };
@@ -71,7 +71,7 @@ const LeaderboardCarousel = ({ currentIndex, onIndexChange }: LeaderboardCarouse
       setTimeout(() => {
         isAnimating.current = false;
         lastIndexRef.current = currentIndex;
-      }, 750); // Slightly longer than animation duration
+      }, 1300); // Slightly longer than animation duration
     }
     
     // Handle manual user swipe events
@@ -92,11 +92,11 @@ const LeaderboardCarousel = ({ currentIndex, onIndexChange }: LeaderboardCarouse
   }, [currentIndex, emblaApi, onIndexChange]);
 
   return (
-    <div className="w-full transition-all duration-700">
+    <div className="w-full transition-all duration-1200"> {/* Slow down the overall transition */}
       <div className="overflow-hidden" ref={emblaRef}>
-        <div className="flex transition-transform">
+        <div className="flex transition-transform duration-1200"> {/* Slow down the transform animation */}
           {/* Hot Bettors */}
-          <div className="min-w-0 flex-[0_0_100%] px-2 transition-transform duration-700">
+          <div className="min-w-0 flex-[0_0_100%] px-2 transition-transform duration-1200"> {/* Slow down individual slide transitions */}
             <div className="rounded-xl bg-card p-5 shadow-lg border border-white/10">
               <div className="mb-4 flex items-center justify-center">
                 <h3 className="text-lg font-bold text-white/90">These guys can't miss</h3>
@@ -125,7 +125,7 @@ const LeaderboardCarousel = ({ currentIndex, onIndexChange }: LeaderboardCarouse
           </div>
 
           {/* Cold Bettors */}
-          <div className="min-w-0 flex-[0_0_100%] px-2 transition-transform duration-700">
+          <div className="min-w-0 flex-[0_0_100%] px-2 transition-transform duration-1200"> {/* Slow down individual slide transitions */}
             <div className="rounded-xl bg-card p-5 shadow-lg border border-white/10">
               <div className="mb-4 flex items-center justify-center">
                 <h3 className="text-lg font-bold text-white/90">Can't buy a win right now</h3>

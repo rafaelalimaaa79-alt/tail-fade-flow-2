@@ -1,3 +1,4 @@
+
 import React, { useRef, useEffect } from "react";
 import WaveText from "./WaveText";
 import PlayCard from "./PlayCard";
@@ -17,12 +18,12 @@ const BetOfTheDay = ({ currentIndex, onIndexChange }: BetOfTheDayProps) => {
   // Configure Embla carousel for smooth, natural-looking transitions
   const emblaOptions: EmblaOptionsType = {
     loop: true,
-    align: "center",
+    align: "center", // Ensure slides are centered
     dragFree: false,
     containScroll: "trimSnaps",
     skipSnaps: false,
     startIndex: currentIndex % playsOfTheDay.length,
-    duration: 700, // Longer duration for more visible animation
+    duration: 1200, // Increased duration for slower animation
     slidesToScroll: 1, // Move one slide at a time
     inViewThreshold: 1, // Full slide must be in view
   };
@@ -57,7 +58,7 @@ const BetOfTheDay = ({ currentIndex, onIndexChange }: BetOfTheDayProps) => {
       setTimeout(() => {
         isAnimating.current = false;
         lastIndexRef.current = currentIndex;
-      }, 750); // Slightly longer than animation duration
+      }, 1300); // Slightly longer than animation duration
     }
     
     console.log('BetOfTheDay currentIndex:', currentIndex, 'Current Play:', playsOfTheDay[currentIndex % playsOfTheDay.length]);
@@ -145,14 +146,14 @@ const BetOfTheDay = ({ currentIndex, onIndexChange }: BetOfTheDayProps) => {
     <div 
       onTouchStart={handleTouchStart}
       onTouchEnd={handleTouchEnd}
-      className="transition-all duration-700"
+      className="transition-all duration-1200" // Slow down the overall transition
     >
       <div className="overflow-hidden" ref={emblaRef}>
-        <div className="flex transition-transform">
+        <div className="flex transition-transform duration-1200"> {/* Slow down the transform animation */}
           {playsOfTheDay.map((play, idx) => (
             <div 
               key={idx} 
-              className="min-w-0 flex-[0_0_100%] px-2 transition-transform duration-700"
+              className="min-w-0 flex-[0_0_100%] px-2 transition-transform duration-1200" // Slow down individual slide transitions
             >
               <PlayCard 
                 play={play}
