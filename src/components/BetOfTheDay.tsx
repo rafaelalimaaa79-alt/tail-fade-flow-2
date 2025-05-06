@@ -120,7 +120,11 @@ const BetOfTheDay = ({ currentIndex, onIndexChange }: BetOfTheDayProps) => {
     };
     
     emblaApi.on('select', onSelect);
-    return () => emblaApi.off('select', onSelect);
+    
+    // Return the cleanup function directly
+    return () => {
+      emblaApi.off('select', onSelect);
+    };
   }, [emblaApi, currentIndex, onIndexChange]);
   
   return (
