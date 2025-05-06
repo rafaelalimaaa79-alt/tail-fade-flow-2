@@ -27,7 +27,7 @@ const coldestBettors = [
 ];
 
 const LeaderboardCarousel = ({ currentIndex, onIndexChange }: LeaderboardCarouselProps) => {
-  // Configure Embla carousel with improved centering and faster transitions
+  // Configure Embla carousel with improved mobile-first centering and slower transitions
   const emblaOptions: EmblaOptionsType = {
     loop: true,
     align: "center", // Perfect center alignment
@@ -35,7 +35,7 @@ const LeaderboardCarousel = ({ currentIndex, onIndexChange }: LeaderboardCarouse
     skipSnaps: false,
     containScroll: "trimSnaps",
     startIndex: currentIndex % 2,
-    duration: 800, // Faster transitions for the bottom carousel
+    duration: 1600, // Slower transitions (increased from 800)
     slidesToScroll: 1,
     inViewThreshold: 1,
   };
@@ -51,7 +51,7 @@ const LeaderboardCarousel = ({ currentIndex, onIndexChange }: LeaderboardCarouse
     navigate(`/leaders?type=${type}`);
   };
   
-  // Set up embla carousel with improved animation handling
+  // Set up embla carousel with improved animation handling for mobile
   useEffect(() => {
     if (!emblaApi) return;
     
@@ -59,14 +59,15 @@ const LeaderboardCarousel = ({ currentIndex, onIndexChange }: LeaderboardCarouse
     if (lastIndexRef.current !== currentIndex) {
       isAnimating.current = true;
       
-      // Create a visible, smooth animation effect
+      // Create a visible, smooth animation effect with better centering
       emblaApi.scrollTo(currentIndex % 2, true);
+      emblaApi.reInit(emblaOptions);
       
       // Reset animation flag after the animation completes
       setTimeout(() => {
         isAnimating.current = false;
         lastIndexRef.current = currentIndex;
-      }, 900); // Slightly longer than animation duration
+      }, 1700); // Slightly longer than animation duration
     }
     
     // Ensure the carousel is perfectly centered
@@ -92,14 +93,14 @@ const LeaderboardCarousel = ({ currentIndex, onIndexChange }: LeaderboardCarouse
       emblaApi.off('settle', centerCarousel);
     };
     
-  }, [currentIndex, emblaApi, onIndexChange]);
+  }, [currentIndex, emblaApi, onIndexChange, emblaOptions]);
 
   return (
-    <div className="w-full transition-all duration-800"> 
+    <div className="w-full transition-all duration-1600"> 
       <div className="overflow-hidden" ref={emblaRef}>
-        <div className="flex w-full transition-transform duration-800"> 
+        <div className="flex w-full transition-transform duration-1600"> 
           {/* Hot Bettors */}
-          <div className="min-w-0 flex-[0_0_100%] px-2 transition-transform duration-800" 
+          <div className="min-w-0 flex-[0_0_100%] px-0 transition-transform duration-1600" 
                style={{
                  transform: `translateX(${currentIndex % 2 === 0 ? '0' : '100%'})`,
                }}>
@@ -131,7 +132,7 @@ const LeaderboardCarousel = ({ currentIndex, onIndexChange }: LeaderboardCarouse
           </div>
 
           {/* Cold Bettors */}
-          <div className="min-w-0 flex-[0_0_100%] px-2 transition-transform duration-800"
+          <div className="min-w-0 flex-[0_0_100%] px-0 transition-transform duration-1600"
                style={{
                  transform: `translateX(${currentIndex % 2 === 1 ? '0' : '100%'})`,
                }}>

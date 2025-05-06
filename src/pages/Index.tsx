@@ -77,7 +77,7 @@ const Dashboard = () => {
     setTimeout(() => {
       topRotationPausedRef.current = false;
       setupTopAutoRotation();
-    }, 5000); // Resume auto-rotation after 5 seconds
+    }, 8000); // Resume auto-rotation after 8 seconds (increased from 5)
   };
   
   // This function will handle the bottom carousel changes
@@ -92,7 +92,7 @@ const Dashboard = () => {
     setTimeout(() => {
       bottomRotationPausedRef.current = false;
       setupBottomAutoRotation();
-    }, 5000); // Resume auto-rotation after 5 seconds
+    }, 8000); // Resume auto-rotation after 8 seconds (increased from 5)
   };
   
   return (

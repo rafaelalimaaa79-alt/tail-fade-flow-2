@@ -15,17 +15,17 @@ interface BetOfTheDayProps {
 }
 
 const BetOfTheDay = ({ currentIndex, onIndexChange }: BetOfTheDayProps) => {
-  // Configure Embla carousel with improved centering and transition settings
+  // Configure Embla carousel with improved centering and slower transition settings
   const emblaOptions: EmblaOptionsType = {
     loop: true,
-    align: "center", // Ensure slides are perfectly centered
+    align: "center", // Perfect center alignment
     dragFree: false,
     containScroll: "trimSnaps",
     skipSnaps: false,
     startIndex: currentIndex % playsOfTheDay.length,
-    duration: 1200, // Smooth animation duration
-    slidesToScroll: 1, // Move one slide at a time
-    inViewThreshold: 1, // Full slide must be in view
+    duration: 2000, // Slower animation duration (increased from 1200)
+    slidesToScroll: 1,
+    inViewThreshold: 1,
   };
   
   const [emblaRef, emblaApi] = useEmblaCarousel(emblaOptions);
@@ -51,18 +51,19 @@ const BetOfTheDay = ({ currentIndex, onIndexChange }: BetOfTheDayProps) => {
     if (lastIndexRef.current !== currentIndex) {
       isAnimating.current = true;
       
-      // Ensure smooth transition animation
+      // Ensure smooth transition animation with better centering
       emblaApi.scrollTo(currentIndex % playsOfTheDay.length, true);
+      emblaApi.reInit(emblaOptions);
       
       // Reset animation flag after the animation completes
       setTimeout(() => {
         isAnimating.current = false;
         lastIndexRef.current = currentIndex;
-      }, 1300); // Slightly longer than animation duration
+      }, 2100); // Slightly longer than animation duration
     }
     
     console.log('BetOfTheDay currentIndex:', currentIndex, 'Current Play:', playsOfTheDay[currentIndex % playsOfTheDay.length]);
-  }, [currentIndex, emblaApi]);
+  }, [currentIndex, emblaApi, emblaOptions]);
   
   // Function to navigate to leaders page
   const navigateToLeaders = (type: 'tail' | 'fade') => {
@@ -155,14 +156,14 @@ const BetOfTheDay = ({ currentIndex, onIndexChange }: BetOfTheDayProps) => {
     <div 
       onTouchStart={handleTouchStart}
       onTouchEnd={handleTouchEnd}
-      className="transition-all duration-1200" 
+      className="transition-all duration-2000" 
     >
       <div className="overflow-hidden" ref={emblaRef}>
-        <div className="flex w-full transition-transform duration-1200"> 
+        <div className="flex w-full transition-transform duration-2000"> 
           {playsOfTheDay.map((play, idx) => (
             <div 
               key={idx} 
-              className="min-w-0 flex-[0_0_100%] px-2 transition-transform duration-1200" 
+              className="min-w-0 flex-[0_0_100%] px-0 transition-transform duration-2000" 
               style={{
                 transform: `translateX(${idx === currentIndex % playsOfTheDay.length ? '0' : '100%'})`,
               }}
