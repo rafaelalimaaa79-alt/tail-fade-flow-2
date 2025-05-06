@@ -35,9 +35,10 @@ const LeaderboardCarousel = ({ currentIndex, onIndexChange }: LeaderboardCarouse
     dragFree: false,
     skipSnaps: false,
     containScroll: "trimSnaps",
-    speed: 25, // Lower = slower animation
     startIndex: currentIndex % 2,
     duration: 700, // Longer duration for more visible transition
+    slidesToScroll: 1, // Move one slide at a time
+    inViewThreshold: 1, // Full slide must be in view
   };
   
   const [emblaRef, emblaApi] = useEmblaCarousel(emblaOptions);

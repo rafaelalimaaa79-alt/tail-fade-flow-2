@@ -22,9 +22,10 @@ const BetOfTheDay = ({ currentIndex, onIndexChange }: BetOfTheDayProps) => {
     dragFree: false,
     containScroll: "trimSnaps",
     skipSnaps: false,
-    speed: 25, // Lower number = slower, more visible animation
     startIndex: currentIndex % playsOfTheDay.length,
     duration: 700, // Longer duration for more visible animation
+    slidesToScroll: 1, // Move one slide at a time
+    inViewThreshold: 1, // Full slide must be in view
   };
   
   const [emblaRef, emblaApi] = useEmblaCarousel(emblaOptions);
@@ -110,11 +111,6 @@ const BetOfTheDay = ({ currentIndex, onIndexChange }: BetOfTheDayProps) => {
     if (diff > 0) {
       nextPlay();
     }
-  };
-  
-  // Navigate to leaders page based on type
-  const navigateToLeaders = (type: 'tail' | 'fade') => {
-    navigate(`/leaders?type=${type}`);
   };
   
   useEffect(() => {
