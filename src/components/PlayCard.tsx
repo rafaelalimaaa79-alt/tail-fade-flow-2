@@ -16,17 +16,12 @@ const PlayCard: React.FC<PlayCardProps> = ({ play, renderWaveText, onActionClick
   const isFade = play.suggestionType === "fade";
   const actionText = isFade ? "Fade" : "Tail";
   
-  // Handle the bet action with notification
+  // Handle the bet action with notification only, no more redirection
   const handleBetClick = () => {
     if (isFade) {
       showFadeNotification(play.bettorName, play.bet);
     } else {
       showTailNotification(play.bettorName, play.bet);
-    }
-    
-    // Still call the original onActionClick if provided
-    if (onActionClick) {
-      onActionClick();
     }
   };
   

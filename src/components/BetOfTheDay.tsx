@@ -5,7 +5,6 @@ import PlayCard from "./PlayCard";
 import PaginationIndicator from "./PaginationIndicator";
 import { playsOfTheDay } from "@/types/betTypes";
 import useWaveAnimation from "@/hooks/useWaveAnimation";
-import { useNavigate } from "react-router-dom";
 import {
   Carousel,
   CarouselContent,
@@ -19,7 +18,6 @@ interface BetOfTheDayProps {
 }
 
 const BetOfTheDay = ({ currentIndex, onIndexChange }: BetOfTheDayProps) => {
-  const navigate = useNavigate();
   const { animationPosition, activeLine } = useWaveAnimation({
     totalDuration: 2500,
     lineChangePoint: 0.5,
@@ -28,11 +26,6 @@ const BetOfTheDay = ({ currentIndex, onIndexChange }: BetOfTheDayProps) => {
   
   // Track carousel API
   const [api, setApi] = React.useState<CarouselApi | null>(null);
-  
-  // Function to navigate to leaders page
-  const navigateToLeaders = (type: 'tail' | 'fade') => {
-    navigate(`/leaders?type=${type}`);
-  };
   
   // Update the current index when the carousel changes
   React.useEffect(() => {
@@ -88,7 +81,6 @@ const BetOfTheDay = ({ currentIndex, onIndexChange }: BetOfTheDayProps) => {
               <PlayCard 
                 play={play}
                 renderWaveText={renderWaveText}
-                onActionClick={() => navigateToLeaders(play.suggestionType === 'fade' ? 'fade' : 'tail')}
               />
             </CarouselItem>
           ))}
