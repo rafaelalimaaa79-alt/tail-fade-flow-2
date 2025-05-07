@@ -6,6 +6,11 @@ import PaginationIndicator from "./PaginationIndicator";
 import { playsOfTheDay } from "@/types/betTypes";
 import useWaveAnimation from "@/hooks/useWaveAnimation";
 import { useNavigate } from "react-router-dom";
+import {
+  Carousel,
+  CarouselContent,
+  CarouselItem,
+} from "@/components/ui/carousel";
 
 interface BetOfTheDayProps {
   currentIndex: number;
@@ -45,20 +50,33 @@ const BetOfTheDay = ({ currentIndex, onIndexChange }: BetOfTheDayProps) => {
 
   return (
     <div className="w-full mx-auto px-2">
-      <div className="w-full">
-        {playsOfTheDay.map((play, idx) => (
-          <div 
-            key={idx} 
-            className={`w-full ${idx === currentIndex % playsOfTheDay.length ? 'block' : 'hidden'}`}
-          >
-            <PlayCard 
-              play={play}
-              renderWaveText={renderWaveText}
-              onActionClick={() => navigateToLeaders(play.suggestionType === 'fade' ? 'fade' : 'tail')}
-            />
-          </div>
-        ))}
-      </div>
+      <Carousel 
+        className="w-full"
+        opts={{
+          align: "start",
+          loop: true,
+          skipSnaps: false,
+          startIndex: currentIndex % playsOfTheDay.length,
+        }}
+        onSelect={(api) => {
+          if (api) {
+            const selected = api.selectedScrollSnap();
+            onIndexChange(selected);
+          }
+        }}
+      >
+        <CarouselContent className="w-full">
+          {playsOfTheDay.map((play, idx) => (
+            <CarouselItem key={idx} className="w-full">
+              <PlayCard 
+                play={play}
+                renderWaveText={renderWaveText}
+                onActionClick={() => navigateToLeaders(play.suggestionType === 'fade' ? 'fade' : 'tail')}
+              />
+            </CarouselItem>
+          ))}
+        </CarouselContent>
+      </Carousel>
       <PaginationIndicator 
         currentIndex={currentIndex % playsOfTheDay.length} 
         totalItems={playsOfTheDay.length} 
