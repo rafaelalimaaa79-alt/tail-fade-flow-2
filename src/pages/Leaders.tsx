@@ -1,6 +1,6 @@
 
 import React, { useState, useEffect } from "react";
-import { Bell, Award, Flame, Snowflake } from "lucide-react";
+import { Bell, Award } from "lucide-react";
 import BottomNav from "@/components/BottomNav";
 import { useIsMobile } from "@/hooks/use-mobile";
 import { useSearchParams } from "react-router-dom";
@@ -10,26 +10,26 @@ import { Table, TableHeader, TableRow, TableHead, TableBody, TableCell } from "@
 import { useNavigate } from "react-router-dom";
 import { ScrollArea } from "@/components/ui/scroll-area";
 
-// Mock data for hottest and coldest bettors
+// Mock data for hottest bettors with rounded numbers
 const hottestBettors = Array.from({ length: 100 }, (_, i) => ({
   id: `hot-${i + 1}`,
   name: `HotBettor${i + 1}`,
-  profit: Math.round((5000 - i * 45) * 100) / 100,
-  winRate: Math.round(75 - i * 0.3),
+  profit: Math.round(50 - i * 0.04),
+  winRate: Math.round(75 - i * 0.03),
   streak: Math.min(15, 10 - Math.floor(i / 10)),
 }));
 
 const coldestBettors = Array.from({ length: 100 }, (_, i) => ({
   id: `cold-${i + 1}`,
   name: `ColdBettor${i + 1}`,
-  profit: Math.round((-4500 + i * 40) * 100) / 100,
+  profit: Math.round(-(45 - i * 0.04)),
   winRate: Math.round(30 + i * 0.25),
   streak: -Math.min(12, 8 - Math.floor(i / 12)),
 }));
 
 const Leaders = () => {
   const [searchParams, setSearchParams] = useSearchParams();
-  const initialType = searchParams.get("type") === "cold" ? "cold" : "hot";
+  const initialType = searchParams.get("type") === "fade" ? "cold" : "hot";
   const [activeTab, setActiveTab] = useState<"hot" | "cold">(initialType);
   const [showAll, setShowAll] = useState(false);
   const isMobile = useIsMobile();
@@ -72,13 +72,13 @@ const Leaders = () => {
         <Tabs defaultValue={activeTab} onValueChange={handleTabChange} className="w-full">
           <TabsList className="grid w-full grid-cols-2 mb-4">
             <TabsTrigger value="hot" className="relative">
-              <span className="text-onetime-green text-base font-bold flex items-center">
-                Hottest Bettors <Flame className="ml-1 h-4 w-4" />
+              <span className="text-onetime-green text-base font-bold">
+                Tail Leaders
               </span>
             </TabsTrigger>
             <TabsTrigger value="cold" className="relative">
-              <span className="text-onetime-red text-base font-bold flex items-center">
-                Coldest Bettors <Snowflake className="ml-1 h-4 w-4" />
+              <span className="text-onetime-red text-base font-bold">
+                Fade Leaders
               </span>
             </TabsTrigger>
           </TabsList>
@@ -89,10 +89,10 @@ const Leaders = () => {
                 <Table>
                   <TableHeader>
                     <TableRow>
-                      <TableHead className="w-[60px] py-2">Rank</TableHead>
-                      <TableHead className="py-2">Bettor</TableHead>
-                      <TableHead className="w-[80px] py-2">Units up</TableHead>
-                      <TableHead className="w-[60px] py-2">Win %</TableHead>
+                      <TableHead className="w-[60px]">Rank</TableHead>
+                      <TableHead>Bettor</TableHead>
+                      <TableHead className="w-[80px]">Units up</TableHead>
+                      <TableHead className="w-[60px]">Win %</TableHead>
                     </TableRow>
                   </TableHeader>
                   <TableBody>
@@ -102,17 +102,17 @@ const Leaders = () => {
                         className="cursor-pointer hover:bg-muted/30"
                         onClick={() => navigate(`/bettor/${bettor.id}`)}
                       >
-                        <TableCell className="font-medium py-2">
+                        <TableCell className="font-medium">
                           {index < 3 && (
                             <Award className="inline-block mr-1 text-yellow-500" size={14} />
                           )}
                           {index + 1}
                         </TableCell>
-                        <TableCell className="py-2">@{bettor.name}</TableCell>
-                        <TableCell className="text-onetime-green py-2">
-                          +{Math.round(bettor.profit / 100)}u
+                        <TableCell>@{bettor.name}</TableCell>
+                        <TableCell className="text-onetime-green">
+                          +{bettor.profit}u
                         </TableCell>
-                        <TableCell className="py-2">{bettor.winRate}%</TableCell>
+                        <TableCell>{bettor.winRate}%</TableCell>
                       </TableRow>
                     ))}
                   </TableBody>
@@ -139,10 +139,10 @@ const Leaders = () => {
                 <Table>
                   <TableHeader>
                     <TableRow>
-                      <TableHead className="w-[60px] py-2">Rank</TableHead>
-                      <TableHead className="py-2">Bettor</TableHead>
-                      <TableHead className="w-[80px] py-2">Units down</TableHead>
-                      <TableHead className="w-[60px] py-2">Win %</TableHead>
+                      <TableHead className="w-[60px]">Rank</TableHead>
+                      <TableHead>Bettor</TableHead>
+                      <TableHead className="w-[80px]">Units down</TableHead>
+                      <TableHead className="w-[60px]">Win %</TableHead>
                     </TableRow>
                   </TableHeader>
                   <TableBody>
@@ -152,17 +152,17 @@ const Leaders = () => {
                         className="cursor-pointer hover:bg-muted/30"
                         onClick={() => navigate(`/bettor/${bettor.id}`)}
                       >
-                        <TableCell className="font-medium py-2">
+                        <TableCell className="font-medium">
                           {index < 3 && (
                             <Award className="inline-block mr-1 text-yellow-500" size={14} />
                           )}
                           {index + 1}
                         </TableCell>
-                        <TableCell className="py-2">@{bettor.name}</TableCell>
-                        <TableCell className="text-onetime-red py-2">
-                          {Math.round(bettor.profit / 100)}u
+                        <TableCell>@{bettor.name}</TableCell>
+                        <TableCell className="text-onetime-red">
+                          {bettor.profit}u
                         </TableCell>
-                        <TableCell className="py-2">{bettor.winRate}%</TableCell>
+                        <TableCell>{bettor.winRate}%</TableCell>
                       </TableRow>
                     ))}
                   </TableBody>

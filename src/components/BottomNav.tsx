@@ -48,7 +48,7 @@ const BottomNav = () => {
     {
       icon: Users,
       text: "Leaderboards",
-      href: "/cold",
+      href: "/leaders", // Update to '/leaders' instead of '/cold'
       activeColor: "#36daf7", // Neon blue
     },
     {
