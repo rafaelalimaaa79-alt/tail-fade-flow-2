@@ -1,10 +1,11 @@
+
 import React, { useState, useEffect, useRef } from "react";
 import { useNavigate } from "react-router-dom";
 import BottomNav from "@/components/BottomNav";
 import BetOfTheDay from "@/components/BetOfTheDay";
 import LeaderboardCarousel from "@/components/LeaderboardCarousel";
 import { useIsMobile } from "@/hooks/use-mobile";
-import { BarChart2 } from "lucide-react";
+import { Briefcase } from "lucide-react";
 import { playsOfTheDay } from "@/types/betTypes";
 import { useNotificationStore } from "@/utils/betting-notifications";
 import FullscreenNotification from "@/components/FullscreenNotification";
@@ -112,7 +113,7 @@ const Dashboard = () => {
             className="rounded-full p-2 text-white/80 hover:text-white flex items-center justify-center self-center"
             onClick={() => navigate('/portfolio')}
           >
-            <BarChart2 className="h-6 w-6" />
+            <Briefcase className="h-6 w-6" />
           </button>
         </header>
 

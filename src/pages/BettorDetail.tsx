@@ -1,11 +1,12 @@
 
 import React from "react";
-import { useParams } from "react-router-dom";
+import { useParams, useNavigate } from "react-router-dom";
 import BottomNav from "@/components/BottomNav";
 import BettorTimeFilter from "@/components/BettorTimeFilter";
 import BettorBetList from "@/components/BettorBetList";
 import BetHistoryModal from "@/components/BetHistoryModal";
 import { useBettorProfile } from "@/hooks/useBettorProfile";
+import { Briefcase } from "lucide-react";
 
 // Imported components
 import BettorHeader from "@/components/bettor/BettorHeader";
@@ -15,6 +16,7 @@ import ViewBetHistoryButton from "@/components/bettor/ViewBetHistoryButton";
 
 const BettorDetail = () => {
   const { id } = useParams<{ id: string }>();
+  const navigate = useNavigate();
   
   const {
     timeframe,
@@ -62,6 +64,22 @@ const BettorDetail = () => {
   return (
     <div className="bg-onetime-dark min-h-screen pb-20">
       <div className="onetime-container">
+        <header className="mb-4 flex items-center justify-between">
+          <div className="flex items-center gap-3">
+            <img 
+              src="/lovable-uploads/57cb1fb4-7471-451e-bf49-d4d5fa12bdcb.png" 
+              alt="ONE TIME logo" 
+              className="h-16"
+            />
+          </div>
+          <button 
+            className="rounded-full p-2 text-white/80 hover:text-white"
+            onClick={() => navigate('/portfolio')}
+          >
+            <Briefcase className="h-5 w-5" />
+          </button>
+        </header>
+        
         <BettorHeader profile={summary.profile} />
         
         <BettorTimeFilter

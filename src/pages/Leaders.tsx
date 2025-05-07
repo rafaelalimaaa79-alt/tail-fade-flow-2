@@ -1,13 +1,12 @@
 
 import React, { useState, useEffect } from "react";
-import { Bell, Award } from "lucide-react";
+import { Briefcase, Award } from "lucide-react";
 import BottomNav from "@/components/BottomNav";
 import { useIsMobile } from "@/hooks/use-mobile";
-import { useSearchParams } from "react-router-dom";
+import { useSearchParams, useNavigate } from "react-router-dom";
 import { Tabs, TabsList, TabsTrigger, TabsContent } from "@/components/ui/tabs";
 import ActionButton from "@/components/ActionButton";
 import { Table, TableHeader, TableRow, TableHead, TableBody, TableCell } from "@/components/ui/table";
-import { useNavigate } from "react-router-dom";
 import { ScrollArea } from "@/components/ui/scroll-area";
 
 // Mock data for hottest bettors with rounded numbers - reduced to 50
@@ -59,8 +58,11 @@ const Leaders = () => {
               className="h-16"
             />
           </div>
-          <button className="rounded-full p-2 text-white/80 hover:text-white">
-            <Bell className="h-5 w-5" />
+          <button 
+            className="rounded-full p-2 text-white/80 hover:text-white"
+            onClick={() => navigate('/portfolio')}
+          >
+            <Briefcase className="h-5 w-5" />
           </button>
         </header>
 

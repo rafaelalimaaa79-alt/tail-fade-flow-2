@@ -1,12 +1,14 @@
 
 import React from "react";
-import { Bell } from "lucide-react";
+import { Briefcase } from "lucide-react";
 import BottomNav from "@/components/BottomNav";
 import ColdestBettors from "@/components/ColdestBettors";
 import { useIsMobile } from "@/hooks/use-mobile";
+import { useNavigate } from "react-router-dom";
 
 const ColdPage = () => {
   const isMobile = useIsMobile();
+  const navigate = useNavigate();
   
   return (
     <div className="flex min-h-screen flex-col bg-background">
@@ -19,8 +21,11 @@ const ColdPage = () => {
               className="h-20"
             />
           </div>
-          <button className="rounded-full p-2 text-white/80 hover:text-white">
-            <Bell className="h-6 w-6" />
+          <button 
+            className="rounded-full p-2 text-white/80 hover:text-white"
+            onClick={() => navigate('/portfolio')}
+          >
+            <Briefcase className="h-6 w-6" />
           </button>
         </header>
 

@@ -1,10 +1,10 @@
-
 import React, { useState } from "react";
 import BottomNav from "@/components/BottomNav";
 import TimeFilter from "@/components/TimeFilter";
 import BettorCard from "@/components/BettorCard";
-import { Bell } from "lucide-react";
+import { Briefcase } from "lucide-react";
 import { useIsMobile } from "@/hooks/use-mobile";
+import { useNavigate } from "react-router-dom";
 
 // Mock data
 const mockPortfolio = {
@@ -45,6 +45,7 @@ const Portfolio = () => {
   const [activeFilter, setActiveFilter] = useState("1w");
   const [activeTab, setActiveTab] = useState<"tailing" | "fading">("tailing");
   const isMobile = useIsMobile();
+  const navigate = useNavigate();
 
   return (
     <div className="flex min-h-screen flex-col bg-background">
@@ -57,8 +58,11 @@ const Portfolio = () => {
               className="h-20"
             />
           </div>
-          <button className="rounded-full p-2 text-white/80 hover:text-white">
-            <Bell className="h-6 w-6" />
+          <button 
+            className="rounded-full p-2 text-white/80 hover:text-white"
+            onClick={() => navigate('/portfolio')}
+          >
+            <Briefcase className="h-6 w-6" />
           </button>
         </header>
 

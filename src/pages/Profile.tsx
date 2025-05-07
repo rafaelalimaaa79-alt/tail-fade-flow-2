@@ -1,9 +1,9 @@
-
 import React, { useState } from "react";
-import { User as UserIcon } from "lucide-react";
+import { User as UserIcon, Briefcase } from "lucide-react";
 import BottomNav from "@/components/BottomNav";
 import TimeFilter from "@/components/TimeFilter";
 import BetHistoryChart from "@/components/BetHistoryChart";
+import { useNavigate } from "react-router-dom";
 
 // Mock data
 const userProfile = {
@@ -30,22 +30,29 @@ const userProfile = {
 
 const ProfilePage = () => {
   const [activeFilter, setActiveFilter] = useState("ytd");
+  const navigate = useNavigate();
 
   return (
     <>
       <div className="onetime-container">
+        <header className="mb-8 flex items-center justify-between">
+          <div className="flex items-center gap-3">
+            <img 
+              src="/lovable-uploads/57cb1fb4-7471-451e-bf49-d4d5fa12bdcb.png" 
+              alt="ONE TIME logo" 
+              className="h-20"
+            />
+          </div>
+          <button 
+            className="rounded-full p-2 text-white/80 hover:text-white"
+            onClick={() => navigate('/portfolio')}
+          >
+            <Briefcase className="h-6 w-6" />
+          </button>
+        </header>
+
         <div className="mb-6">
           <h1 className="text-2xl font-bold">My Profile</h1>
-        </div>
-
-        <div className="mb-6 flex items-center gap-4">
-          <div className="flex h-16 w-16 items-center justify-center rounded-full bg-onetime-purple bg-opacity-10">
-            <UserIcon className="h-8 w-8 text-onetime-purple" />
-          </div>
-          <div>
-            <h2 className="text-xl font-bold">@{userProfile.username}</h2>
-            <p className="text-sm text-gray-500">Joined {userProfile.joinDate}</p>
-          </div>
         </div>
 
         <TimeFilter

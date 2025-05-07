@@ -1,8 +1,11 @@
 
 import React from "react";
-import { Bell } from "lucide-react";
+import { Briefcase } from "lucide-react";
+import { useNavigate } from "react-router-dom";
 
 const PageHeader: React.FC = () => {
+  const navigate = useNavigate();
+  
   return (
     <>
       <header className="mb-6 flex items-center justify-between">
@@ -13,8 +16,11 @@ const PageHeader: React.FC = () => {
             className="h-20"
           />
         </div>
-        <button className="rounded-full p-2 text-white/80 hover:text-white">
-          <Bell className="h-6 w-6" />
+        <button 
+          className="rounded-full p-2 text-white/80 hover:text-white"
+          onClick={() => navigate('/portfolio')}
+        >
+          <Briefcase className="h-6 w-6" />
         </button>
       </header>
 

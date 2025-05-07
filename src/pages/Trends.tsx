@@ -1,10 +1,11 @@
 import React from "react";
-import { Bell } from "lucide-react";
+import { Briefcase } from "lucide-react";
 import BottomNav from "@/components/BottomNav";
 import TrendItem from "@/components/TrendItem";
 import { useIsMobile } from "@/hooks/use-mobile";
 import FullscreenNotification from "@/components/FullscreenNotification";
 import { useNotificationStore } from "@/utils/betting-notifications";
+import { useNavigate } from "react-router-dom";
 
 // Mock data for the trends page
 const trendData = [
@@ -84,6 +85,7 @@ const trendData = [
 
 const Trends = () => {
   const isMobile = useIsMobile();
+  const navigate = useNavigate();
   const { isOpen, message, variant, closeNotification, bettorName, betDescription } = useNotificationStore();
   
   // Sort the trend data by confidence score (either tailScore or fadeScore)
@@ -104,8 +106,11 @@ const Trends = () => {
               className="h-16"
             />
           </div>
-          <button className="rounded-full p-2 text-white/80 hover:text-white">
-            <Bell className="h-6 w-6" />
+          <button 
+            className="rounded-full p-2 text-white/80 hover:text-white"
+            onClick={() => navigate('/portfolio')}
+          >
+            <Briefcase className="h-6 w-6" />
           </button>
         </header>
 
