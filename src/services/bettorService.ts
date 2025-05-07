@@ -9,4 +9,5 @@ export {
 } from './bettor/bettorService';
 
 // Also export types if needed
-export { TimeFrame, BettorActivity } from './bettor/types';
+export type { TimeFrame, BettorActivity } from './bettor/types';
+
