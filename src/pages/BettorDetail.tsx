@@ -1,4 +1,3 @@
-
 import React from "react";
 import { useParams, useNavigate } from "react-router-dom";
 import BottomNav from "@/components/BottomNav";
@@ -90,17 +89,12 @@ const BettorDetail = () => {
         <TodaysBets todayBets={todayBets} className="my-4" />
         
         <div className="my-4 rounded-xl bg-onetime-darkBlue p-4 shadow-md">
-          {/* Performance Section with Time Filter - Now First */}
+          {/* Performance Section with integrated stats */}
           <BettorPerformanceSection 
             summary={summary}
             timeframe={timeframe}
             onTimeframeChange={setTimeframe}
           />
-
-          {/* Stats moved after the Performance Graph */}
-          <div className="mt-4 pt-2 border-t border-gray-700">
-            <BettorStats profile={summary.profile} />
-          </div>
         </div>
         
         {/* Best Bets Section with Tabs */}
