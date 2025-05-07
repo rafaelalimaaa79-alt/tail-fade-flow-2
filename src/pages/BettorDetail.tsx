@@ -1,18 +1,16 @@
 import React from "react";
 import { useParams, useNavigate } from "react-router-dom";
 import BottomNav from "@/components/BottomNav";
-import BettorTimeFilter from "@/components/BettorTimeFilter";
 import BetHistoryModal from "@/components/BetHistoryModal";
 import { useBettorProfile } from "@/hooks/useBettorProfile";
 import { Briefcase } from "lucide-react";
 
 // Imported components
 import BettorHeader from "@/components/bettor/BettorHeader";
-import BettorStats from "@/components/bettor/BettorStats";
 import BettorPerformanceSection from "@/components/bettor/BettorPerformanceSection";
 import ViewBetHistoryButton from "@/components/bettor/ViewBetHistoryButton";
 import BettorBetList from "@/components/BettorBetList";
-import TodaysBets from "@/components/bettor/TodaysBets";
+import PendingBets from "@/components/bettor/PendingBets";
 
 const BettorDetail = () => {
   const { id } = useParams<{ id: string }>();
@@ -85,8 +83,8 @@ const BettorDetail = () => {
         {/* Bettor header with adjusted spacing */}
         <BettorHeader profile={summary.profile} />
         
-        {/* Today's Bets Section - HIGH PRIORITY */}
-        <TodaysBets todayBets={todayBets} className="my-4" />
+        {/* Pending Bets Section - HIGH PRIORITY - Replacing Today's Bets */}
+        <PendingBets pendingBets={pendingBets} className="my-4" />
         
         <div className="my-4 rounded-xl bg-onetime-darkBlue p-4 shadow-md">
           {/* Performance Section with integrated stats */}
