@@ -10,21 +10,21 @@ import { Table, TableHeader, TableRow, TableHead, TableBody, TableCell } from "@
 import { useNavigate } from "react-router-dom";
 import { ScrollArea } from "@/components/ui/scroll-area";
 
-// Mock data for hottest bettors with rounded numbers
-const hottestBettors = Array.from({ length: 100 }, (_, i) => ({
+// Mock data for hottest bettors with rounded numbers - reduced to 50
+const hottestBettors = Array.from({ length: 50 }, (_, i) => ({
   id: `hot-${i + 1}`,
   name: `HotBettor${i + 1}`,
-  profit: Math.round(50 - i * 0.04),
-  winRate: Math.round(75 - i * 0.03),
-  streak: Math.min(15, 10 - Math.floor(i / 10)),
+  profit: Math.round(50 - i * 0.08),
+  winRate: Math.round(75 - i * 0.06),
+  streak: Math.min(15, 10 - Math.floor(i / 5)),
 }));
 
-const coldestBettors = Array.from({ length: 100 }, (_, i) => ({
+const coldestBettors = Array.from({ length: 50 }, (_, i) => ({
   id: `cold-${i + 1}`,
   name: `ColdBettor${i + 1}`,
-  profit: Math.round(-(45 - i * 0.04)),
-  winRate: Math.round(30 + i * 0.25),
-  streak: -Math.min(12, 8 - Math.floor(i / 12)),
+  profit: Math.round(-(45 - i * 0.08)),
+  winRate: Math.round(30 + i * 0.5),
+  streak: -Math.min(12, 8 - Math.floor(i / 6)),
 }));
 
 const Leaders = () => {
@@ -126,7 +126,7 @@ const Leaders = () => {
                     onClick={() => setShowAll(true)}
                     className="h-10 text-base"
                   >
-                    View All 100 Hottest Bettors
+                    View All 50 Hottest Bettors
                   </ActionButton>
                 </div>
               )}
@@ -176,7 +176,7 @@ const Leaders = () => {
                     onClick={() => setShowAll(true)}
                     className="h-10 text-base"
                   >
-                    View All 100 Coldest Bettors
+                    View All 50 Coldest Bettors
                   </ActionButton>
                 </div>
               )}
