@@ -25,16 +25,6 @@ const BettorTimeFilter: React.FC<BettorTimeFilterProps> = ({
     { value: '1Y', label: '1Y' },
   ];
 
-  const getButtonColorClass = (timeframe: TimeFrameOption): string => {
-    // All filters have the same color, active one is just darker gray
-    if (activeFilter === timeframe) {
-      return "bg-gray-300 text-gray-700";
-    }
-    
-    // All inactive filters have the same background color
-    return "bg-gray-100 text-gray-600 hover:bg-gray-200";
-  };
-
   return (
     <div className={cn("flex items-center gap-0.5", className)}>
       {filters.map((filter) => (
@@ -42,7 +32,9 @@ const BettorTimeFilter: React.FC<BettorTimeFilterProps> = ({
           key={filter.value}
           className={cn(
             "min-w-8 px-1.5 py-0.5 rounded-full text-xs font-medium transition-colors",
-            getButtonColorClass(filter.value)
+            activeFilter === filter.value
+              ? "bg-gray-300 text-gray-700" // Active button: darker gray
+              : "bg-gray-100 text-gray-600 hover:bg-gray-200" // Inactive buttons: lighter gray
           )}
           onClick={() => onChange(filter.value)}
         >
