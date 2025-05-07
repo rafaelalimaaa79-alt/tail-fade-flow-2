@@ -63,7 +63,7 @@ const BettorPerformanceGraph: React.FC<BettorPerformanceGraphProps> = ({
       <ResponsiveContainer width="100%" height="100%">
         <LineChart
           data={chartData}
-          margin={{ top: 20, right: 10, left: 0, bottom: 5 }}
+          margin={{ top: 10, right: 2, left: -20, bottom: 0 }} // Reduced margins to use more space
           onMouseMove={(e) => {
             if (e.activePayload) {
               setActivePoint(e.activePayload[0].payload);
@@ -88,7 +88,7 @@ const BettorPerformanceGraph: React.FC<BettorPerformanceGraphProps> = ({
             tickLine={false}
             tick={{ fontSize: 10, fill: '#94A3B8' }}
             interval="preserveStartEnd"
-            minTickGap={10}
+            minTickGap={5} // Reduced from 10 to 5 to show more labels
           />
           <YAxis 
             ticks={generateYAxisTicks()}
