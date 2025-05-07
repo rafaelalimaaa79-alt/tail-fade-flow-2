@@ -33,8 +33,7 @@ const BettorTimeFilter: React.FC<BettorTimeFilterProps> = ({
         if (performance > 0) return "bg-onetime-green text-white";
         if (performance < 0) return "bg-onetime-red text-white";
       }
-      // Default active color if no performance data
-      return "bg-onetime-purple text-white";
+      return "bg-gray-300 text-gray-700"; // Default active color if no performance data
     }
     
     // All inactive filters have the same background color
