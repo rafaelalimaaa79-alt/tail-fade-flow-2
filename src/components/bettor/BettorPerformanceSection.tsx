@@ -28,7 +28,7 @@ const BettorPerformanceSection: React.FC<BettorPerformanceSectionProps> = ({
   };
 
   return (
-    <div className="my-2 px-0.5">
+    <div className="my-2">
       <div className="flex items-center justify-between mb-2">
         <h3 className="text-sm font-semibold">Performance</h3>
         <BettorTimeFilter
@@ -69,13 +69,13 @@ const BettorPerformanceSection: React.FC<BettorPerformanceSectionProps> = ({
         </div>
       </div>
 
-      {/* Graph positioned after the stats now with increased height and width */}
-      <div className="mx-0">
+      {/* Graph positioned after the stats now with increased height and full width */}
+      <div className="w-full">
         <BettorPerformanceGraph 
           data={graphData.data} 
           timeframe={timeframe}
           isPositive={isPositivePerformance}
-          className="h-40" 
+          className="h-44" 
         />
       </div>
     </div>

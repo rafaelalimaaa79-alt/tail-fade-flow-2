@@ -63,7 +63,7 @@ const BettorPerformanceGraph: React.FC<BettorPerformanceGraphProps> = ({
       <ResponsiveContainer width="100%" height="100%">
         <LineChart
           data={chartData}
-          margin={{ top: 10, right: 2, left: 2, bottom: 0 }} // Equal margins on left and right
+          margin={{ top: 10, right: 5, left: 10, bottom: 0 }} // Adjusted margins to show Y-axis numbers clearly
           onMouseMove={(e) => {
             if (e.activePayload) {
               setActivePoint(e.activePayload[0].payload);
