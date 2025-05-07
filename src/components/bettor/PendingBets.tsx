@@ -19,17 +19,17 @@ const PendingBets: React.FC<PendingBetsProps> = ({ pendingBets, className }) => 
   };
 
   const getConfidenceLevel = (units: number) => {
-    if (units >= 5) return { label: "High", color: "bg-onetime-green/20 text-onetime-green border-onetime-green/30" };
-    if (units >= 3) return { label: "Medium", color: "bg-onetime-orange/20 text-onetime-orange border-onetime-orange/30" };
-    return { label: "Low", color: "bg-white/10 text-white/80 border-white/20" };
+    if (units >= 5) return { label: "High", score: 85, color: "bg-onetime-green/20 text-onetime-green border-onetime-green/30" };
+    if (units >= 3) return { label: "Medium", score: 65, color: "bg-onetime-orange/20 text-onetime-orange border-onetime-orange/30" };
+    return { label: "Low", score: 40, color: "bg-white/10 text-white/80 border-white/20" };
   };
 
   const handleTail = (bet: BettorBet) => {
-    showTailNotification("Bettor", bet.teams);
+    showTailNotification("Bettor", bet.betType);
   };
 
   const handleFade = (bet: BettorBet) => {
-    showFadeNotification("Bettor", bet.teams);
+    showFadeNotification("Bettor", bet.betType);
   };
 
   return (
@@ -40,6 +40,11 @@ const PendingBets: React.FC<PendingBetsProps> = ({ pendingBets, className }) => 
         <div className="space-y-4">
           {pendingBets.map((bet) => {
             const confidence = getConfidenceLevel(bet.unitsRisked);
+            // Calculate potential win amount (simple calculation for demonstration)
+            const potentialWin = parseFloat(bet.odds) > 0 
+              ? (bet.unitsRisked * parseFloat(bet.odds) / 100).toFixed(1)
+              : (bet.unitsRisked * 100 / Math.abs(parseFloat(bet.odds))).toFixed(1);
+            
             return (
               <div 
                 key={bet.id} 
@@ -48,24 +53,22 @@ const PendingBets: React.FC<PendingBetsProps> = ({ pendingBets, className }) => 
                 {/* Accent light effect */}
                 <div className="absolute -top-12 -right-12 h-24 w-24 rounded-full bg-onetime-purple/30 blur-xl"></div>
                 
-                {/* Top row: Teams & Time */}
+                {/* Top row: Bet Type as header & Time */}
                 <div className="flex items-center justify-between mb-2">
-                  <h4 className="text-lg font-bold text-white tracking-tight">{bet.teams}</h4>
+                  <h4 className="text-lg font-bold text-white tracking-tight">{bet.betType}</h4>
                   <span className="text-xs text-white/60">
                     {formatTime(bet.timestamp)}
                   </span>
                 </div>
                 
-                {/* Middle row: Bet type, odds, and units */}
+                {/* Middle row: Units and potential win */}
                 <div className="flex flex-wrap items-center justify-between mb-3">
-                  <div className="flex items-center gap-2 text-sm text-white/80">
-                    <span className="font-medium">{bet.betType}</span>
-                    <span className="px-2 py-0.5 bg-white/10 rounded-full text-xs">{bet.odds}</span>
-                    <Badge variant="outline" className={cn("border", confidence.color)}>
-                      {confidence.label} Confidence
-                    </Badge>
+                  <div className="text-sm text-white/80">
+                    <span className="font-medium">{bet.unitsRisked} units to win {potentialWin}</span>
                   </div>
-                  <span className="font-bold text-onetime-purple">{bet.unitsRisked} units</span>
+                  <Badge variant="outline" className={cn("border", confidence.color)}>
+                    {confidence.score}%
+                  </Badge>
                 </div>
                 
                 {/* Bottom row: Action buttons */}

@@ -1,9 +1,12 @@
+
 import React from "react";
 import { useParams, useNavigate } from "react-router-dom";
 import BottomNav from "@/components/BottomNav";
 import BetHistoryModal from "@/components/BetHistoryModal";
 import { useBettorProfile } from "@/hooks/useBettorProfile";
 import { Briefcase } from "lucide-react";
+import { useNotificationStore } from "@/utils/betting-notifications";
+import FullscreenNotification from "@/components/FullscreenNotification";
 
 // Imported components
 import BettorHeader from "@/components/bettor/BettorHeader";
@@ -30,6 +33,9 @@ const BettorDetail = () => {
     upcomingBets,
     activityLoading
   } = useBettorProfile(id || "1");
+  
+  // Notification store
+  const { isOpen, variant, bettorName, betDescription, closeNotification } = useNotificationStore();
   
   if (loading && !summary) {
     return (
@@ -113,6 +119,16 @@ const BettorDetail = () => {
         timeframe={timeframe}
         onTimeframeChange={setTimeframe}
         isLoading={loading}
+      />
+      
+      {/* Fullscreen notification component */}
+      <FullscreenNotification
+        message=""
+        isOpen={isOpen}
+        variant={variant || "tail"}
+        onClose={closeNotification}
+        bettorName={bettorName}
+        betDescription={betDescription}
       />
       
       <BottomNav />
