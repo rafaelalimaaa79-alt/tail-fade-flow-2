@@ -33,7 +33,7 @@ const BettorTimeFilter: React.FC<BettorTimeFilterProps> = ({
           className={cn(
             "min-w-8 px-1.5 py-0.5 rounded-full text-xs font-medium transition-colors",
             activeFilter === filter.value
-              ? "bg-black text-white border border-white/10" // Active button: black background (matching app background)
+              ? "bg-onetime-darkBlue text-white border border-white/10" // Active button: bluish background (matching container)
               : "bg-gray-100 text-gray-600 hover:bg-gray-200" // Inactive buttons: lighter gray
           )}
           onClick={() => onChange(filter.value)}
