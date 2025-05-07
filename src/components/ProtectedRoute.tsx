@@ -19,23 +19,31 @@ const ProtectedRoute = ({ children }: ProtectedRouteProps) => {
   useEffect(() => {
     const checkAuth = async () => {
       try {
+        console.log("ProtectedRoute: Checking authentication status");
         // First check if we have a session already
         const { data: { session } } = await supabase.auth.getSession();
         
         if (!session) {
+          console.log("ProtectedRoute: No session found, checking biometric options");
           // If biometric authentication is enabled, try it first
           const biometricEnabled = localStorage.getItem('biometricEnabled') === 'true';
           
           if (biometricEnabled) {
+            console.log("ProtectedRoute: Attempting biometric authentication");
             const success = await attemptBiometricAuth();
             if (success) {
+              console.log("ProtectedRoute: Biometric authentication successful");
               setIsVerifying(false);
               return;
             }
+            console.log("ProtectedRoute: Biometric authentication failed");
           }
           
           // If biometric failed or is not enabled, redirect to signin
+          console.log("ProtectedRoute: Redirecting to signin page", { from: location.pathname });
           navigate('/signin', { state: { from: location.pathname } });
+        } else {
+          console.log("ProtectedRoute: Valid session found");
         }
       } catch (error) {
         console.error('Error verifying auth:', error);
@@ -47,8 +55,10 @@ const ProtectedRoute = ({ children }: ProtectedRouteProps) => {
 
     if (!loading) {
       if (!user) {
+        console.log("ProtectedRoute: No user in context, checking session");
         checkAuth();
       } else {
+        console.log("ProtectedRoute: User found in context", { id: user.id });
         setIsVerifying(false);
       }
     }

@@ -21,15 +21,19 @@ export const useBiometricAuth = () => {
       // Simulate a brief delay for the biometric check
       await new Promise((resolve) => setTimeout(resolve, 1000));
       
+      console.log("Attempting biometric authentication");
+      
       // Check if we have a valid session token in storage
       const { data } = await supabase.auth.getSession();
       
       if (data.session) {
         // If we have a session, biometric authentication is successful
+        console.log("Biometric authentication successful - valid session found");
         toast.success('Biometric authentication successful');
         return true;
       } else {
         // If no session exists, biometric authentication failed
+        console.log("Biometric authentication failed - no valid session");
         toast.error('Biometric authentication failed');
         return false;
       }
@@ -45,8 +49,10 @@ export const useBiometricAuth = () => {
   // Function that attempts biometric auth and redirects on success
   const attemptBiometricAuth = async (redirectPath = '/') => {
     if (biometricEnabled && !user) {
+      console.log("Attempting biometric authentication for redirect to:", redirectPath);
       const success = await authenticateWithBiometrics();
       if (success) {
+        console.log("Biometric auth successful, redirecting to:", redirectPath);
         navigate(redirectPath);
         return true;
       }

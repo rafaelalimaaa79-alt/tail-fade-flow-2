@@ -27,6 +27,7 @@ const SignIn = () => {
     const checkUser = async () => {
       const { data } = await supabase.auth.getSession();
       if (data.session?.user) {
+        console.log("User already logged in, redirecting to:", from);
         navigate(from);
       }
     };
@@ -79,6 +80,7 @@ const SignIn = () => {
           if (!biometricEnabled && supportsBiometrics) {
             setShowBiometricPrompt(true);
           } else {
+            console.log("Redirecting to:", from);
             navigate(from);
           }
           
@@ -98,6 +100,7 @@ const SignIn = () => {
           if (supportsBiometrics) {
             setShowBiometricPrompt(true);
           } else {
+            console.log("Redirecting after account creation to:", from);
             navigate(from);
           }
         } else {
@@ -120,6 +123,7 @@ const SignIn = () => {
           setShowBiometricPrompt(true);
         } else {
           toast.success("Signed in successfully");
+          console.log("Redirecting after regular login to:", from);
           navigate(from);
         }
       }
@@ -144,12 +148,14 @@ const SignIn = () => {
     localStorage.setItem('biometricEnabled', 'true');
     toast.success("Biometric authentication enabled");
     setShowBiometricPrompt(false);
+    console.log("Redirecting after enabling biometrics to:", from);
     navigate(from);
   };
   
   const handleSkipBiometrics = () => {
     localStorage.setItem('biometricEnabled', 'false');
     setShowBiometricPrompt(false);
+    console.log("Redirecting after skipping biometrics to:", from);
     navigate(from);
   };
 
