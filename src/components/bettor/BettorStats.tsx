@@ -9,14 +9,14 @@ type BettorStatsProps = {
 const BettorStats: React.FC<BettorStatsProps> = ({ profile }) => {
   return (
     <div className="grid grid-cols-3 gap-2">
-      <div className="stat-card">
+      <div className="rounded-lg bg-white/5 p-3 text-center">
         <p className="text-xs text-gray-400">Win Rate</p>
-        <p className="text-lg font-semibold text-white">{profile.stats.winRate}%</p>
+        <p className="text-lg font-bold text-white">{profile.stats.winRate}%</p>
       </div>
-      <div className="stat-card">
+      <div className="rounded-lg bg-white/5 p-3 text-center">
         <p className="text-xs text-gray-400">ROI</p>
         <p
-          className={`text-lg font-semibold ${
+          className={`text-lg font-bold ${
             profile.stats.roi >= 0 ? "text-onetime-green" : "text-onetime-red"
           }`}
         >
@@ -24,10 +24,10 @@ const BettorStats: React.FC<BettorStatsProps> = ({ profile }) => {
           {profile.stats.roi}%
         </p>
       </div>
-      <div className="stat-card">
+      <div className="rounded-lg bg-white/5 p-3 text-center">
         <p className="text-xs text-gray-400">Profit</p>
         <p
-          className={`text-lg font-semibold ${
+          className={`text-lg font-bold ${
             profile.stats.unitsGained >= 0 ? "text-onetime-green" : "text-onetime-red"
           }`}
         >

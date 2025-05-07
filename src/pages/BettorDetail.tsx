@@ -3,7 +3,6 @@ import React from "react";
 import { useParams, useNavigate } from "react-router-dom";
 import BottomNav from "@/components/BottomNav";
 import BettorTimeFilter from "@/components/BettorTimeFilter";
-import BettorBetList from "@/components/BettorBetList";
 import BetHistoryModal from "@/components/BetHistoryModal";
 import { useBettorProfile } from "@/hooks/useBettorProfile";
 import { Briefcase } from "lucide-react";
@@ -13,7 +12,8 @@ import BettorHeader from "@/components/bettor/BettorHeader";
 import BettorStats from "@/components/bettor/BettorStats";
 import BettorPerformanceSection from "@/components/bettor/BettorPerformanceSection";
 import ViewBetHistoryButton from "@/components/bettor/ViewBetHistoryButton";
-import BettorBettingStatus from "@/components/bettor/BettorBettingStatus";
+import BettorBetList from "@/components/BettorBetList";
+import TodaysBets from "@/components/bettor/TodaysBets";
 
 const BettorDetail = () => {
   const { id } = useParams<{ id: string }>();
@@ -25,8 +25,6 @@ const BettorDetail = () => {
     loading,
     error,
     summary,
-    showLargestBets,
-    setShowLargestBets,
     betHistory,
     isHistoryModalOpen,
     setIsHistoryModalOpen,
@@ -85,38 +83,36 @@ const BettorDetail = () => {
           </button>
         </header>
         
-        <BettorHeader profile={summary.profile} />
+        <div className="flex items-center justify-between">
+          <BettorHeader profile={summary.profile} />
+          <BettorTimeFilter
+            activeFilter={timeframe}
+            onChange={(newTimeframe) => setTimeframe(newTimeframe)}
+          />
+        </div>
         
-        <BettorTimeFilter
-          activeFilter={timeframe}
-          onChange={(newTimeframe) => setTimeframe(newTimeframe)}
-          className="my-4"
-        />
+        {/* Today's Bets Section - HIGH PRIORITY */}
+        <TodaysBets todayBets={todayBets} className="my-4" />
         
-        <div className="my-6 rounded-xl bg-onetime-darkBlue p-4 shadow-md">
+        <div className="my-4 rounded-xl bg-onetime-darkBlue p-4 shadow-md">
+          {/* Performance Stats */}
           <BettorStats profile={summary.profile} />
 
+          {/* Performance Graph */}
           <BettorPerformanceSection 
             summary={summary}
             timeframe={timeframe}
           />
         </div>
         
-        <BettorBettingStatus
-          todayBets={todayBets}
-          pendingBets={pendingBets}
-          upcomingBets={upcomingBets}
-          className="my-6"
-        />
-        
+        {/* Best Bets Section with Tabs */}
         <BettorBetList
           biggestWinners={summary.biggestWinners}
           largestBets={summary.largestBets}
-          showLargestBets={showLargestBets}
-          onToggleChange={setShowLargestBets}
-          className="my-6"
+          className="my-4"
         />
         
+        {/* View Bet History Button */}
         <ViewBetHistoryButton onClick={() => setIsHistoryModalOpen(true)} />
       </div>
       

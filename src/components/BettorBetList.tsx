@@ -1,51 +1,29 @@
 
 import React from "react";
-import { Switch } from "@/components/ui/switch";
 import { BettorBet } from "@/types/bettor";
 import { cn } from "@/lib/utils";
+import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 
 type BettorBetListProps = {
   biggestWinners: BettorBet[];
   largestBets: BettorBet[];
-  showLargestBets: boolean;
-  onToggleChange: (value: boolean) => void;
   className?: string;
 };
 
 const BettorBetList: React.FC<BettorBetListProps> = ({
   biggestWinners,
   largestBets,
-  showLargestBets,
-  onToggleChange,
   className
 }) => {
-  const betsToShow = showLargestBets ? largestBets : biggestWinners;
-  // Limit to top 5 bets
-  const topBets = betsToShow.slice(0, 5);
+  // Find top bet in the current period (by units won)
+  const topBet = [...biggestWinners].sort((a, b) => b.unitsWonLost - a.unitsWonLost)[0];
   
-  return (
-    <div className={cn("rounded-xl bg-onetime-darkBlue p-4 shadow-md", className)}>
-      <div className="mb-4 flex items-center justify-between">
-        <h3 className="text-lg font-bold text-white">
-          {showLargestBets ? "Largest 5 Bets" : "Biggest Winners"}
-        </h3>
-        
-        <div className="flex items-center gap-2">
-          <span className={`text-xs ${!showLargestBets ? 'font-bold text-white' : 'text-gray-400'}`}>
-            Big Winners
-          </span>
-          <Switch 
-            checked={showLargestBets}
-            onCheckedChange={onToggleChange}
-            className="data-[state=checked]:bg-onetime-purple"
-          />
-          <span className={`text-xs ${showLargestBets ? 'font-bold text-white' : 'text-gray-400'}`}>
-            Largest Bets
-          </span>
-        </div>
-      </div>
-      
-      <div className="space-y-3">
+  const renderBetList = (bets: BettorBet[], limit = 5) => {
+    // Limit to top bets
+    const topBets = bets.slice(0, limit);
+    
+    return (
+      <div className="space-y-3 mt-4">
         {topBets.map((bet, index) => (
           <div 
             key={bet.id}
@@ -70,6 +48,39 @@ const BettorBetList: React.FC<BettorBetListProps> = ({
           </div>
         ))}
       </div>
+    );
+  };
+  
+  return (
+    <div className={cn("rounded-xl bg-onetime-darkBlue p-4 shadow-md", className)}>
+      <div className="flex justify-between items-center">
+        <h3 className="text-lg font-bold text-white">Best Bets</h3>
+        
+        {topBet && (
+          <div className="text-xs text-gray-400">
+            <span>Top Bet: </span>
+            <span className={cn(
+              "font-medium",
+              topBet.unitsWonLost > 0 ? "text-onetime-green" : "text-onetime-red"
+            )}>
+              {topBet.unitsWonLost > 0 ? '+' : ''}{topBet.unitsWonLost}U {topBet.betType}
+            </span>
+          </div>
+        )}
+      </div>
+      
+      <Tabs defaultValue="winners" className="mt-2">
+        <TabsList className="grid w-full grid-cols-2 bg-onetime-dark">
+          <TabsTrigger value="winners">Biggest Winners</TabsTrigger>
+          <TabsTrigger value="largest">Largest Bets</TabsTrigger>
+        </TabsList>
+        <TabsContent value="winners">
+          {renderBetList(biggestWinners)}
+        </TabsContent>
+        <TabsContent value="largest">
+          {renderBetList(largestBets)}
+        </TabsContent>
+      </Tabs>
     </div>
   );
 };

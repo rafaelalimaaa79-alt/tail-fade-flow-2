@@ -24,12 +24,12 @@ const BettorTimeFilter: React.FC<BettorTimeFilterProps> = ({
   ];
 
   return (
-    <div className={cn("flex items-center justify-between gap-2", className)}>
+    <div className={cn("flex items-center gap-1", className)}>
       {filters.map((filter) => (
         <button
           key={filter.value}
           className={cn(
-            "px-4 py-1.5 rounded-full text-sm font-medium transition-colors",
+            "px-2 py-1 rounded-full text-xs font-medium transition-colors",
             activeFilter === filter.value
               ? "bg-onetime-purple text-white"
               : "bg-gray-100 text-gray-600 hover:bg-gray-200"
