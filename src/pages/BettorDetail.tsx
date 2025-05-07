@@ -1,4 +1,3 @@
-
 import React from "react";
 import { useParams, useNavigate } from "react-router-dom";
 import BottomNav from "@/components/BottomNav";
@@ -86,15 +85,6 @@ const BettorDetail = () => {
         {/* Bettor header with adjusted spacing */}
         <BettorHeader profile={summary.profile} />
         
-        {/* Time filter on its own line with better spacing */}
-        <div className="mb-4">
-          <BettorTimeFilter
-            activeFilter={timeframe}
-            onChange={(newTimeframe) => setTimeframe(newTimeframe)}
-            className="justify-start mt-2"
-          />
-        </div>
-        
         {/* Today's Bets Section - HIGH PRIORITY */}
         <TodaysBets todayBets={todayBets} className="my-4" />
         
@@ -102,10 +92,11 @@ const BettorDetail = () => {
           {/* Performance Stats */}
           <BettorStats profile={summary.profile} />
 
-          {/* Performance Graph */}
+          {/* Performance Graph with Time Filter */}
           <BettorPerformanceSection 
             summary={summary}
             timeframe={timeframe}
+            onTimeframeChange={setTimeframe}
           />
         </div>
         
