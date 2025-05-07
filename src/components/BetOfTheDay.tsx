@@ -10,6 +10,7 @@ import {
   Carousel,
   CarouselContent,
   CarouselItem,
+  type CarouselApi,
 } from "@/components/ui/carousel";
 
 interface BetOfTheDayProps {
@@ -25,10 +26,31 @@ const BetOfTheDay = ({ currentIndex, onIndexChange }: BetOfTheDayProps) => {
     pauseDuration: 300
   });
   
+  // Track carousel API
+  const [api, setApi] = React.useState<CarouselApi | null>(null);
+  
   // Function to navigate to leaders page
   const navigateToLeaders = (type: 'tail' | 'fade') => {
     navigate(`/leaders?type=${type}`);
   };
+  
+  // Update the current index when the carousel changes
+  React.useEffect(() => {
+    if (!api) return;
+    
+    const handleSelect = () => {
+      const selectedIndex = api.selectedScrollSnap();
+      onIndexChange(selectedIndex);
+    };
+    
+    // Subscribe to carousel events
+    api.on("select", handleSelect);
+    
+    // Cleanup
+    return () => {
+      api.off("select", handleSelect);
+    };
+  }, [api, onIndexChange]);
   
   const isFade = playsOfTheDay[currentIndex % playsOfTheDay.length].suggestionType === "fade";
   
@@ -58,12 +80,7 @@ const BetOfTheDay = ({ currentIndex, onIndexChange }: BetOfTheDayProps) => {
           skipSnaps: false,
           startIndex: currentIndex % playsOfTheDay.length,
         }}
-        onSelect={(api) => {
-          if (api) {
-            const selected = api.selectedScrollSnap();
-            onIndexChange(selected);
-          }
-        }}
+        setApi={setApi}
       >
         <CarouselContent className="w-full">
           {playsOfTheDay.map((play, idx) => (
