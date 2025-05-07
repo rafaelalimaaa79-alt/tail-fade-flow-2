@@ -1,9 +1,11 @@
-
 import { useState, useEffect } from "react";
-import { fetchBettorSummary, fetchBettorHistory, fetchBettorActivity } from "@/services/bettorService";
+import { 
+  fetchBettorSummary, 
+  fetchBettorHistory, 
+  fetchBettorActivity,
+  TimeFrame 
+} from "@/services/bettorService";
 import { BettorSummary, BettorBet } from "@/types/bettor";
-
-type TimeFrame = '1D' | '1W' | '1M' | '3M' | '1Y';
 
 export const useBettorProfile = (bettorId: string) => {
   const [timeframe, setTimeframe] = useState<TimeFrame>('1M');
