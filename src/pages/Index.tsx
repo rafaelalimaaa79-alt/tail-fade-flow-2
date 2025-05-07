@@ -1,4 +1,3 @@
-
 import React, { useState, useEffect, useRef } from "react";
 import { useNavigate } from "react-router-dom";
 import BottomNav from "@/components/BottomNav";
@@ -7,6 +6,8 @@ import LeaderboardCarousel from "@/components/LeaderboardCarousel";
 import { useIsMobile } from "@/hooks/use-mobile";
 import { BarChart2 } from "lucide-react";
 import { playsOfTheDay } from "@/types/betTypes";
+import { useNotificationStore } from "@/utils/betting-notifications";
+import FullscreenNotification from "@/components/FullscreenNotification";
 
 const Dashboard = () => {
   const isMobile = useIsMobile();
@@ -17,6 +18,7 @@ const Dashboard = () => {
   const bottomRotationRef = useRef<NodeJS.Timeout | null>(null);
   const topRotationPausedRef = useRef(false);
   const bottomRotationPausedRef = useRef(false);
+  const { isOpen, message, variant, closeNotification, bettorName, betDescription } = useNotificationStore();
   
   // Setup top carousel auto-rotation (7 seconds)
   const setupTopAutoRotation = () => {
@@ -128,6 +130,17 @@ const Dashboard = () => {
           />
         </div>
       </div>
+      
+      {/* Add the fullscreen notification component */}
+      <FullscreenNotification 
+        isOpen={isOpen}
+        message={message}
+        variant={variant || "tail"}
+        onClose={closeNotification}
+        bettorName={bettorName}
+        betDescription={betDescription}
+      />
+      
       <BottomNav />
     </div>
   );

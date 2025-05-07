@@ -4,6 +4,7 @@ import { Link } from "react-router-dom";
 import { ArrowRight } from "lucide-react";
 import ActionButton from "./ActionButton";
 import { BetterPlay } from "@/types/betTypes";
+import { showTailNotification, showFadeNotification } from "@/utils/betting-notifications";
 
 interface PlayCardProps {
   play: BetterPlay;
@@ -14,6 +15,20 @@ interface PlayCardProps {
 const PlayCard: React.FC<PlayCardProps> = ({ play, renderWaveText, onActionClick }) => {
   const isFade = play.suggestionType === "fade";
   const actionText = isFade ? "Fade" : "Tail";
+  
+  // Handle the bet action with notification
+  const handleBetClick = () => {
+    if (isFade) {
+      showFadeNotification(play.bettorName, play.bet);
+    } else {
+      showTailNotification(play.bettorName, play.bet);
+    }
+    
+    // Still call the original onActionClick if provided
+    if (onActionClick) {
+      onActionClick();
+    }
+  };
   
   return (
     <div className="rounded-xl bg-card p-6 shadow-lg border border-white/10 neon-glow">
@@ -42,7 +57,7 @@ const PlayCard: React.FC<PlayCardProps> = ({ play, renderWaveText, onActionClick
         <ActionButton 
           variant={isFade ? "fade" : "tail"}
           className="h-14 text-xl font-bold"
-          onClick={onActionClick}
+          onClick={handleBetClick}
         >
           {`${actionText}\n${play.bet}`}
         </ActionButton>
