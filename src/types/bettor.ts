@@ -8,6 +8,13 @@ export interface BettorProfile {
     roi: number;
     unitsGained: number;
     winRate: number;
+    performanceByTimeframe?: {
+      '1D': number;
+      '1W': number;
+      '1M': number;
+      '3M': number;
+      '1Y': number;
+    };
   };
 }
 

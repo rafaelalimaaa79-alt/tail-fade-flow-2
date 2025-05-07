@@ -1,3 +1,4 @@
+
 import { BettorSummary, BettorBet } from "@/types/bettor";
 
 // This would eventually be replaced with actual API calls
@@ -115,6 +116,15 @@ const generateMockBettorData = (
   const totalUnitsWon = allBets.reduce((sum, bet) => sum + bet.unitsWonLost, 0);
   const roi = totalUnitsRisked > 0 ? (totalUnitsWon / totalUnitsRisked) * 100 : 0;
   
+  // Generate mock performance by timeframe
+  const performanceByTimeframe = {
+    '1D': parseFloat((Math.random() * 10 - 5).toFixed(1)),
+    '1W': parseFloat((Math.random() * 20 - 8).toFixed(1)),
+    '1M': parseFloat((Math.random() * 30 - 10).toFixed(1)),
+    '3M': parseFloat((Math.random() * 40 - 15).toFixed(1)),
+    '1Y': parseFloat(currentUnits.toFixed(1))
+  };
+  
   return {
     profile: {
       userId: bettorId,
@@ -124,7 +134,8 @@ const generateMockBettorData = (
         totalBets,
         roi: parseFloat(roi.toFixed(1)),
         unitsGained: parseFloat(currentUnits.toFixed(1)),
-        winRate: parseFloat(winRate.toFixed(1))
+        winRate: parseFloat(winRate.toFixed(1)),
+        performanceByTimeframe
       }
     },
     graphData: {
