@@ -1,6 +1,6 @@
 
 import { useState, useEffect } from "react";
-import { fetchBettorSummary, fetchBettorHistory } from "@/services/bettorService";
+import { fetchBettorSummary, fetchBettorHistory, fetchBettorActivity } from "@/services/bettorService";
 import { BettorSummary, BettorBet } from "@/types/bettor";
 
 type TimeFrame = '1D' | '1W' | '1M' | '3M' | '1Y';
@@ -13,6 +13,10 @@ export const useBettorProfile = (bettorId: string) => {
   const [showLargestBets, setShowLargestBets] = useState(false);
   const [betHistory, setBetHistory] = useState<BettorBet[]>([]);
   const [isHistoryModalOpen, setIsHistoryModalOpen] = useState(false);
+  const [todayBets, setTodayBets] = useState<BettorBet[]>([]);
+  const [pendingBets, setPendingBets] = useState<BettorBet[]>([]);
+  const [upcomingBets, setUpcomingBets] = useState<BettorBet[]>([]);
+  const [activityLoading, setActivityLoading] = useState(true);
   
   // Fetch bettor summary when timeframe changes
   useEffect(() => {
@@ -49,6 +53,23 @@ export const useBettorProfile = (bettorId: string) => {
     }
   }, [bettorId, timeframe, isHistoryModalOpen]);
   
+  // Fetch bettor activity when component mounts
+  useEffect(() => {
+    setActivityLoading(true);
+    
+    fetchBettorActivity(bettorId)
+      .then(data => {
+        setTodayBets(data.todayBets);
+        setPendingBets(data.pendingBets);
+        setUpcomingBets(data.upcomingBets);
+        setActivityLoading(false);
+      })
+      .catch(err => {
+        console.error("Error fetching bettor activity:", err);
+        setActivityLoading(false);
+      });
+  }, [bettorId]);
+  
   return {
     timeframe,
     setTimeframe,
@@ -59,6 +80,10 @@ export const useBettorProfile = (bettorId: string) => {
     setShowLargestBets,
     betHistory,
     isHistoryModalOpen,
-    setIsHistoryModalOpen
+    setIsHistoryModalOpen,
+    todayBets,
+    pendingBets,
+    upcomingBets,
+    activityLoading
   };
 };

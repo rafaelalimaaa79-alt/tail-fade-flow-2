@@ -13,6 +13,7 @@ import BettorHeader from "@/components/bettor/BettorHeader";
 import BettorStats from "@/components/bettor/BettorStats";
 import BettorPerformanceSection from "@/components/bettor/BettorPerformanceSection";
 import ViewBetHistoryButton from "@/components/bettor/ViewBetHistoryButton";
+import BettorBettingStatus from "@/components/bettor/BettorBettingStatus";
 
 const BettorDetail = () => {
   const { id } = useParams<{ id: string }>();
@@ -28,7 +29,11 @@ const BettorDetail = () => {
     setShowLargestBets,
     betHistory,
     isHistoryModalOpen,
-    setIsHistoryModalOpen
+    setIsHistoryModalOpen,
+    todayBets,
+    pendingBets,
+    upcomingBets,
+    activityLoading
   } = useBettorProfile(id || "1");
   
   if (loading && !summary) {
@@ -96,6 +101,13 @@ const BettorDetail = () => {
             timeframe={timeframe}
           />
         </div>
+        
+        <BettorBettingStatus
+          todayBets={todayBets}
+          pendingBets={pendingBets}
+          upcomingBets={upcomingBets}
+          className="my-6"
+        />
         
         <BettorBetList
           biggestWinners={summary.biggestWinners}
