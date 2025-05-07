@@ -15,7 +15,7 @@ const BettorBetList: React.FC<BettorBetListProps> = ({
   largestBets,
   className
 }) => {
-  // Find top bet in the current period (by units won)
+  // Find top bet all-time (by units won)
   const topBet = [...biggestWinners].sort((a, b) => b.unitsWonLost - a.unitsWonLost)[0];
   
   const renderBetList = (bets: BettorBet[], limit = 5) => {
@@ -54,7 +54,7 @@ const BettorBetList: React.FC<BettorBetListProps> = ({
   return (
     <div className={cn("rounded-xl bg-onetime-darkBlue p-4 shadow-md", className)}>
       <div className="flex justify-between items-center">
-        <h3 className="text-lg font-bold text-white">Best Bets</h3>
+        <h3 className="text-lg font-bold text-white">Best Bets (All Time)</h3>
         
         {topBet && (
           <div className="text-xs text-gray-400">

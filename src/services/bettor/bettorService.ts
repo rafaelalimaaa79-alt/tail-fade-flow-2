@@ -6,7 +6,8 @@ import { generateMockBetHistory } from "./mockBetHistory";
 import { 
   generateMockTodayBets, 
   generateMockPendingBets, 
-  generateMockUpcomingBets 
+  generateMockUpcomingBets,
+  generateAllTimeBestBets
 } from "./mockBettorActivity";
 
 // Fetch bettor summary
@@ -16,8 +17,13 @@ export const fetchBettorSummary = async (
 ): Promise<BettorSummary> => {
   console.log(`Fetching bettor summary for ${bettorId} with timeframe ${timeframe}`);
   
-  // In a real implementation, this would call your backend API
+  // Generate basic mock data for the current timeframe
   const mockData = generateMockBettorData(bettorId, timeframe);
+  
+  // Override with all-time best bets
+  const allTimeBets = generateAllTimeBestBets(bettorId);
+  mockData.biggestWinners = allTimeBets.biggestWinners;
+  mockData.largestBets = allTimeBets.largestBets;
   
   // Simulate API latency
   await new Promise(resolve => setTimeout(resolve, 500));
