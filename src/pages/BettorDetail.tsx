@@ -83,11 +83,15 @@ const BettorDetail = () => {
           </button>
         </header>
         
-        <div className="flex items-center justify-between">
-          <BettorHeader profile={summary.profile} />
+        {/* Bettor header with adjusted spacing */}
+        <BettorHeader profile={summary.profile} />
+        
+        {/* Time filter on its own line with better spacing */}
+        <div className="mb-4">
           <BettorTimeFilter
             activeFilter={timeframe}
             onChange={(newTimeframe) => setTimeframe(newTimeframe)}
+            className="justify-start mt-2"
           />
         </div>
         
