@@ -3,6 +3,9 @@ import React, { useState } from "react";
 import { Eye, EyeOff } from "lucide-react";
 import { Input } from "@/components/ui/input";
 import { Button } from "@/components/ui/button";
+import SignInHeader from "./SignInHeader";
+import CreateAccountLink from "./CreateAccountLink";
+import ForgotPasswordLink from "./ForgotPasswordLink";
 
 interface SignInFormProps {
   email: string;
@@ -29,15 +32,7 @@ const SignInForm: React.FC<SignInFormProps> = ({
 
   return (
     <div className="w-full max-w-md space-y-8">
-      <div className="text-center">
-        <img 
-          src="/lovable-uploads/57cb1fb4-7471-451e-bf49-d4d5fa12bdcb.png" 
-          alt="ONE TIME logo" 
-          className="h-24 mx-auto mb-4"
-        />
-        <h1 className="text-2xl font-bold text-white">Welcome Back to One Time</h1>
-        <p className="text-muted-foreground mt-2">Sign in to continue</p>
-      </div>
+      <SignInHeader />
       
       <form onSubmit={onSubmit} className="space-y-6">
         <div className="space-y-4">
@@ -81,21 +76,8 @@ const SignInForm: React.FC<SignInFormProps> = ({
       </form>
       
       <div className="flex flex-col items-center space-y-4 pt-4 text-sm">
-        <button
-          type="button"
-          onClick={onCreateAccount}
-          className="text-white/80 hover:text-white transition-colors"
-        >
-          Don't have an account? <span className="text-primary">Create one</span>
-        </button>
-        
-        <button
-          type="button"
-          onClick={onForgotPassword}
-          className="text-white/80 hover:text-white transition-colors"
-        >
-          Forgot password?
-        </button>
+        <CreateAccountLink onClick={onCreateAccount} />
+        <ForgotPasswordLink onClick={onForgotPassword} />
       </div>
     </div>
   );
