@@ -69,8 +69,8 @@ const BettorPerformanceSection: React.FC<BettorPerformanceSectionProps> = ({
         </div>
       </div>
 
-      {/* Graph positioned after the stats now with increased height and full width */}
-      <div className="w-full">
+      {/* Graph container with no padding to ensure full width */}
+      <div className="w-full -ml-0.5 pr-0.5">
         <BettorPerformanceGraph 
           data={graphData.data} 
           timeframe={timeframe}

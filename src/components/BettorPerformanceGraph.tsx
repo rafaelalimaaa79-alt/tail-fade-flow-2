@@ -1,4 +1,3 @@
-
 import React, { useState } from "react";
 import {
   LineChart,
@@ -63,7 +62,7 @@ const BettorPerformanceGraph: React.FC<BettorPerformanceGraphProps> = ({
       <ResponsiveContainer width="100%" height="100%">
         <LineChart
           data={chartData}
-          margin={{ top: 10, right: 5, left: 10, bottom: 0 }} // Adjusted margins to show Y-axis numbers clearly
+          margin={{ top: 10, right: 5, left: 0, bottom: 0 }} // Reduced left margin to 0 to extend graph fully to the left
           onMouseMove={(e) => {
             if (e.activePayload) {
               setActivePoint(e.activePayload[0].payload);
@@ -96,6 +95,8 @@ const BettorPerformanceGraph: React.FC<BettorPerformanceGraphProps> = ({
             axisLine={false}
             tickLine={false}
             tick={{ fontSize: 10, fill: '#94A3B8' }}
+            width={25} // Explicitly set width to control Y-axis space
+            tickMargin={1} // Reduce tick margin to bring labels closer to axis
           />
           <Tooltip 
             content={({ active, payload }) => {
