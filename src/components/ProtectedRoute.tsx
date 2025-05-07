@@ -3,6 +3,7 @@ import { useEffect, useState } from "react";
 import { useNavigate, useLocation } from "react-router-dom";
 import { supabase } from "@/integrations/supabase/client";
 import { useAuth } from "@/contexts/AuthContext";
+import { useBiometricAuth } from "@/hooks/useBiometricAuth";
 
 type ProtectedRouteProps = {
   children: React.ReactNode;
@@ -13,7 +14,8 @@ const ProtectedRoute = ({ children }: ProtectedRouteProps) => {
   const navigate = useNavigate();
   const location = useLocation();
   const { user, loading } = useAuth();
-
+  const { attemptBiometricAuth } = useBiometricAuth();
+  
   useEffect(() => {
     const checkAuth = async () => {
       try {
@@ -21,6 +23,18 @@ const ProtectedRoute = ({ children }: ProtectedRouteProps) => {
         const { data: { session } } = await supabase.auth.getSession();
         
         if (!session) {
+          // If biometric authentication is enabled, try it first
+          const biometricEnabled = localStorage.getItem('biometricEnabled') === 'true';
+          
+          if (biometricEnabled) {
+            const success = await attemptBiometricAuth();
+            if (success) {
+              setIsVerifying(false);
+              return;
+            }
+          }
+          
+          // If biometric failed or is not enabled, redirect to signin
           navigate('/signin', { state: { from: location.pathname } });
         }
       } catch (error) {
@@ -38,7 +52,7 @@ const ProtectedRoute = ({ children }: ProtectedRouteProps) => {
         setIsVerifying(false);
       }
     }
-  }, [user, loading, navigate, location.pathname]);
+  }, [user, loading, navigate, location.pathname, attemptBiometricAuth]);
 
   if (loading || isVerifying) {
     return (

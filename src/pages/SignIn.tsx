@@ -1,35 +1,51 @@
 
 import React, { useState, useEffect } from "react";
-import { useNavigate } from "react-router-dom";
+import { useNavigate, useLocation } from "react-router-dom";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Dialog, DialogContent, DialogDescription, DialogFooter, DialogHeader, DialogTitle } from "@/components/ui/dialog";
 import { Eye, EyeOff, Fingerprint } from "lucide-react";
 import { toast } from "sonner";
 import { supabase } from "@/integrations/supabase/client";
+import { useBiometricAuth } from "@/hooks/useBiometricAuth";
 
 const SignIn = () => {
   const navigate = useNavigate();
+  const location = useLocation();
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [showPassword, setShowPassword] = useState(false);
   const [loading, setLoading] = useState(false);
   const [showBiometricPrompt, setShowBiometricPrompt] = useState(false);
+  const { attemptBiometricAuth, isAuthenticating } = useBiometricAuth();
+  
+  // Get the redirect path from location state or default to home
+  const from = location.state?.from || '/';
   
   // Check if user is already logged in
   useEffect(() => {
     const checkUser = async () => {
       const { data } = await supabase.auth.getSession();
       if (data.session?.user) {
-        navigate('/');
+        navigate(from);
       }
     };
     
     checkUser();
-  }, [navigate]);
+  }, [navigate, from]);
 
-  // Check if the device supports biometrics
-  const supportsBiometrics = 'FaceID' in window || 'TouchID' in window || 'webauthn' in navigator;
+  // Try biometric login if enabled
+  useEffect(() => {
+    const tryBiometric = async () => {
+      // Only try biometric if we have it enabled and not on a fresh login attempt
+      const biometricEnabled = localStorage.getItem('biometricEnabled') === 'true';
+      if (biometricEnabled && !location.state?.freshLogin) {
+        await attemptBiometricAuth(from);
+      }
+    };
+    
+    tryBiometric();
+  }, [attemptBiometricAuth, from, location.state]);
 
   const handleSignIn = async (e: React.FormEvent) => {
     e.preventDefault();
@@ -42,24 +58,73 @@ const SignIn = () => {
     setLoading(true);
     
     try {
-      const { data, error } = await supabase.auth.signInWithPassword({
-        email,
-        password,
-      });
+      console.log("Attempting to sign in with:", { email });
       
-      if (error) throw error;
-      
-      // Check if this is the user's first time logging in (no biometric preference set)
-      const biometricEnabled = localStorage.getItem('biometricEnabled');
-      
-      if (!biometricEnabled && supportsBiometrics) {
-        setShowBiometricPrompt(true);
+      // Special case for the predefined account
+      if (email === "wymassey58@yahoo.com") {
+        // Check if the user exists
+        const { data: existingUser } = await supabase.auth.signInWithPassword({
+          email,
+          password,
+        });
+        
+        if (existingUser.user) {
+          // User exists and login successful
+          toast.success("Signed in successfully");
+          
+          // Check if this is the user's first login (no biometric preference set)
+          const biometricEnabled = localStorage.getItem('biometricEnabled');
+          const supportsBiometrics = 'FaceID' in window || 'TouchID' in window || 'webauthn' in navigator;
+          
+          if (!biometricEnabled && supportsBiometrics) {
+            setShowBiometricPrompt(true);
+          } else {
+            navigate(from);
+          }
+          
+          return;
+        }
+        
+        // If login fails, try to create the account
+        const { error: signUpError } = await supabase.auth.signUp({
+          email,
+          password,
+        });
+        
+        if (!signUpError) {
+          toast.success("Account created and signed in!");
+          // Check if biometrics should be shown
+          const supportsBiometrics = 'FaceID' in window || 'TouchID' in window || 'webauthn' in navigator;
+          if (supportsBiometrics) {
+            setShowBiometricPrompt(true);
+          } else {
+            navigate(from);
+          }
+        } else {
+          throw new Error(signUpError.message);
+        }
       } else {
-        toast.success("Signed in successfully");
-        navigate('/');
+        // Regular login flow for other accounts
+        const { data, error } = await supabase.auth.signInWithPassword({
+          email,
+          password,
+        });
+        
+        if (error) throw error;
+        
+        // Check if this is the user's first time logging in (no biometric preference set)
+        const biometricEnabled = localStorage.getItem('biometricEnabled');
+        const supportsBiometrics = 'FaceID' in window || 'TouchID' in window || 'webauthn' in navigator;
+        
+        if (!biometricEnabled && supportsBiometrics) {
+          setShowBiometricPrompt(true);
+        } else {
+          toast.success("Signed in successfully");
+          navigate(from);
+        }
       }
-      
     } catch (error: any) {
+      console.error("Sign in error:", error);
       toast.error(error.message || "Failed to sign in");
     } finally {
       setLoading(false);
@@ -79,13 +144,13 @@ const SignIn = () => {
     localStorage.setItem('biometricEnabled', 'true');
     toast.success("Biometric authentication enabled");
     setShowBiometricPrompt(false);
-    navigate('/');
+    navigate(from);
   };
   
   const handleSkipBiometrics = () => {
     localStorage.setItem('biometricEnabled', 'false');
     setShowBiometricPrompt(false);
-    navigate('/');
+    navigate(from);
   };
 
   return (
