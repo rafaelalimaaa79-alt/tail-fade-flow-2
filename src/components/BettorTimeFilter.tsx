@@ -26,14 +26,9 @@ const BettorTimeFilter: React.FC<BettorTimeFilterProps> = ({
   ];
 
   const getButtonColorClass = (timeframe: TimeFrameOption): string => {
-    // Only apply performance-based coloring to the active filter
+    // All filters have the same color, active one is just darker gray
     if (activeFilter === timeframe) {
-      const performance = performanceByTimeframe[timeframe];
-      if (performance !== undefined) {
-        if (performance > 0) return "bg-onetime-green text-white";
-        if (performance < 0) return "bg-onetime-red text-white";
-      }
-      return "bg-gray-300 text-gray-700"; // Default active color if no performance data
+      return "bg-gray-300 text-gray-700";
     }
     
     // All inactive filters have the same background color
