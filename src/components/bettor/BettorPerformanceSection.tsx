@@ -28,7 +28,7 @@ const BettorPerformanceSection: React.FC<BettorPerformanceSectionProps> = ({
   };
 
   return (
-    <div className="my-2 px-1">
+    <div className="my-2 px-0.5">
       <div className="flex items-center justify-between mb-2">
         <h3 className="text-sm font-semibold">Performance</h3>
         <BettorTimeFilter
@@ -70,12 +70,12 @@ const BettorPerformanceSection: React.FC<BettorPerformanceSectionProps> = ({
       </div>
 
       {/* Graph positioned after the stats now with increased height and width */}
-      <div className="mx-0.5 mb-1">
+      <div className="mx-0">
         <BettorPerformanceGraph 
           data={graphData.data} 
           timeframe={timeframe}
           isPositive={isPositivePerformance}
-          className="h-40" // Increased height from h-32 to h-40
+          className="h-40" 
         />
       </div>
     </div>
