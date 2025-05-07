@@ -1,161 +1,83 @@
 
-import React, { useEffect, useState } from "react";
+import React from "react";
 import { Link, useLocation } from "react-router-dom";
-import { Flame, Snowflake, Trophy, ArrowUp, ArrowDown, LayoutDashboard, Users } from "lucide-react";
+import { Home, Sparkles, Flame, Award, User } from "lucide-react";
 import { cn } from "@/lib/utils";
-import { useIsMobile } from "@/hooks/use-mobile";
+import { useAuth } from "@/contexts/AuthContext";
 
 const BottomNav = () => {
   const location = useLocation();
-  const path = location.pathname;
-  const isMobile = useIsMobile();
-  const [isVisible, setIsVisible] = useState(true);
-  const [lastScrollY, setLastScrollY] = useState(0);
+  const { signOut } = useAuth();
   
-  useEffect(() => {
-    const handleScroll = () => {
-      const currentScrollY = window.scrollY;
-      const isAtBottom = window.innerHeight + currentScrollY >= document.body.scrollHeight - 10;
-      
-      if (isAtBottom) {
-        setIsVisible(true);
-      } else if (currentScrollY > lastScrollY && currentScrollY > 40) {
-        setIsVisible(false);
-      } else {
-        setIsVisible(true);
-      }
-      
-      setLastScrollY(currentScrollY);
-    };
-    
-    window.addEventListener("scroll", handleScroll, { passive: true });
-    return () => window.removeEventListener("scroll", handleScroll);
-  }, [lastScrollY]);
-
-  const navItems = [
-    {
-      icon: LayoutDashboard,
-      text: "Dashboard",
-      href: "/",
-      activeColor: "#9b87f5", // Changed to purple
-    },
-    {
-      customIcon: true,
-      text: "Trends",
-      href: "/trends",
-      activeColor: "#14f195", // Neon green
-    },
-    {
-      icon: Users,
-      text: "Leaderboards",
-      href: "/leaders", // Update to '/leaders' instead of '/cold'
-      activeColor: "#36daf7", // Neon blue
-    },
-    {
-      icon: Trophy,
-      text: "1v1",
-      href: "/compete",
-      activeColor: "#ff7e33", // Neon orange
-    },
-  ];
-
-  if (!isMobile) {
-    return null;
-  }
+  const isActive = (path: string) => {
+    if (path === "/" && location.pathname === "/") {
+      return true;
+    }
+    if (path !== "/" && location.pathname.startsWith(path)) {
+      return true;
+    }
+    return false;
+  };
 
   return (
-    <div 
-      className={cn(
-        "fixed bottom-0 left-0 right-0 z-50 backdrop-blur-lg bg-black/70 border-t border-white/10 px-2 pb-3 pt-2 transition-transform duration-300",
-        !isVisible ? "translate-y-full" : "translate-y-0"
-      )}
-    >
-      {/* Curved top shape */}
-      <div className="absolute -top-6 left-0 right-0 h-6 overflow-hidden">
-        <div className="w-full h-12 rounded-full bg-black/70 backdrop-blur-lg transform translate-y-6"></div>
+    <nav className="bottom-nav">
+      <Link
+        to="/"
+        className={cn("nav-item", isActive("/") && "active")}
+      >
+        <Home className="h-6 w-6 mb-1" />
+        <span>Home</span>
+      </Link>
+      <Link
+        to="/trends"
+        className={cn("nav-item", isActive("/trends") && "active")}
+      >
+        <Sparkles className="h-6 w-6 mb-1" />
+        <span>Trends</span>
+      </Link>
+      <Link
+        to="/cold"
+        className={cn("nav-item", isActive("/cold") && "active")}
+      >
+        <Flame className="h-6 w-6 mb-1" />
+        <span>Cold</span>
+      </Link>
+      <Link
+        to="/leaders"
+        className={cn("nav-item", isActive("/leaders") && "active")}
+      >
+        <Award className="h-6 w-6 mb-1" />
+        <span>Leaders</span>
+      </Link>
+      <div className="nav-item relative group">
+        <div className="cursor-pointer flex flex-col items-center">
+          <User className={cn("h-6 w-6 mb-1", isActive("/profile") && "text-primary")} />
+          <span className={cn(isActive("/profile") && "text-primary")}>Profile</span>
+        </div>
+        
+        {/* Dropdown Menu */}
+        <div className="absolute bottom-full mb-2 left-1/2 transform -translate-x-1/2 w-32 bg-black border border-white/10 rounded-lg shadow-lg opacity-0 invisible group-hover:opacity-100 group-hover:visible transition-all duration-200">
+          <Link
+            to="/profile"
+            className="block w-full px-4 py-2 text-sm text-white/80 hover:text-white hover:bg-white/10 rounded-t-lg"
+          >
+            My Profile
+          </Link>
+          <Link
+            to="/compete"
+            className="block w-full px-4 py-2 text-sm text-white/80 hover:text-white hover:bg-white/10"
+          >
+            Compete
+          </Link>
+          <button
+            onClick={signOut}
+            className="block w-full text-left px-4 py-2 text-sm text-white/80 hover:text-white hover:bg-white/10 rounded-b-lg"
+          >
+            Sign Out
+          </button>
+        </div>
       </div>
-      
-      <div className="flex items-center justify-around mx-auto max-w-md">
-        {navItems.map((item) => {
-          const isActive = path === item.href;
-          return (
-            <Link
-              key={item.href}
-              to={item.href}
-              className="relative flex flex-col items-center group"
-            >
-              <span 
-                className={cn(
-                  "absolute -top-2 w-8 h-1 rounded-full transition-all duration-200",
-                  isActive ? "scale-100" : "scale-0"
-                )}
-                style={{ backgroundColor: item.activeColor }}
-              />
-              <div 
-                className={cn(
-                  "flex items-center justify-center w-10 h-10 rounded-full transition-all duration-200",
-                  isActive ? "" : "hover:shadow-[0_0_8px_rgba(255,255,255,0.6)]"
-                )}
-                style={{ 
-                  backgroundColor: isActive ? `${item.activeColor}20` : "rgba(255, 255, 255, 0.05)",
-                  color: isActive ? item.activeColor : "#ffffff",
-                  textShadow: isActive 
-                    ? `0 0 10px ${item.activeColor}` 
-                    : '0 0 8px rgba(255, 255, 255, 0.8)',
-                  opacity: isActive ? 1 : 0.8
-                }}
-              >
-                {item.customIcon ? (
-                  <div className="relative flex items-center justify-center">
-                    <ArrowUp 
-                      className="h-5 w-5 absolute -top-1.5 -right-1.5" 
-                      style={{ 
-                        color: isActive ? '#14f195' : '#ffffff',
-                        filter: isActive 
-                          ? 'drop-shadow(0 0 2px #14f195)' 
-                          : 'drop-shadow(0 0 2px rgba(255, 255, 255, 0.8))',
-                        opacity: isActive ? 1 : 0.8
-                      }} 
-                    />
-                    <ArrowDown 
-                      className="h-5 w-5 absolute -bottom-1.5 -left-1.5" 
-                      style={{ 
-                        color: isActive ? '#ea384c' : '#ffffff',
-                        filter: isActive 
-                          ? 'drop-shadow(0 0 2px #ea384c)' 
-                          : 'drop-shadow(0 0 2px rgba(255, 255, 255, 0.8))',
-                        opacity: isActive ? 1 : 0.8
-                      }} 
-                    />
-                  </div>
-                ) : (
-                  <item.icon 
-                    className="h-4 w-4" 
-                    style={{ 
-                      filter: isActive 
-                        ? 'drop-shadow(0 0 2px currentColor)' 
-                        : 'drop-shadow(0 0 3px rgba(255, 255, 255, 0.8))'
-                    }} 
-                  />
-                )}
-              </div>
-              <span 
-                className="mt-0.5 text-[10px] font-medium transition-all duration-200 group-hover:opacity-100"
-                style={{ 
-                  color: isActive ? item.activeColor : "#ffffff",
-                  textShadow: isActive 
-                    ? `0 0 5px ${item.activeColor}` 
-                    : '0 0 5px rgba(255, 255, 255, 0.6)',
-                  opacity: isActive ? 1 : 0.7
-                }}
-              >
-                {item.text}
-              </span>
-            </Link>
-          );
-        })}
-      </div>
-    </div>
+    </nav>
   );
 };
 

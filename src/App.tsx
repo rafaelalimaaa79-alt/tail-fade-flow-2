@@ -4,6 +4,8 @@ import { Toaster as Sonner } from "@/components/ui/sonner";
 import { TooltipProvider } from "@/components/ui/tooltip";
 import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
 import { BrowserRouter, Routes, Route } from "react-router-dom";
+import { AuthProvider } from "@/contexts/AuthContext";
+import ProtectedRoute from "@/components/ProtectedRoute";
 
 import Index from "./pages/Index";
 import Cold from "./pages/Cold";
@@ -14,6 +16,10 @@ import BettorDetail from "./pages/BettorDetail";
 import Leaders from "./pages/Leaders";
 import NotFound from "./pages/NotFound";
 import Compete from "./pages/Compete";
+import SignIn from "./pages/SignIn";
+import SignUp from "./pages/SignUp";
+import ForgotPassword from "./pages/ForgotPassword";
+import ResetPassword from "./pages/ResetPassword";
 
 const queryClient = new QueryClient();
 
@@ -23,18 +29,28 @@ const App = () => (
       <Toaster />
       <Sonner position="top-center" />
       <BrowserRouter>
-        <Routes>
-          <Route path="/" element={<Index />} />
-          <Route path="/cold" element={<Cold />} />
-          <Route path="/trends" element={<Trends />} />
-          <Route path="/portfolio" element={<Portfolio />} />
-          <Route path="/profile" element={<Profile />} />
-          <Route path="/bettor/:id" element={<BettorDetail />} />
-          <Route path="/leaders" element={<Leaders />} />
-          <Route path="/compete" element={<Compete />} />
-          {/* ADD ALL CUSTOM ROUTES ABOVE THE CATCH-ALL "*" ROUTE */}
-          <Route path="*" element={<NotFound />} />
-        </Routes>
+        <AuthProvider>
+          <Routes>
+            {/* Auth Routes */}
+            <Route path="/signin" element={<SignIn />} />
+            <Route path="/signup" element={<SignUp />} />
+            <Route path="/forgot-password" element={<ForgotPassword />} />
+            <Route path="/reset-password" element={<ResetPassword />} />
+            
+            {/* Protected Routes */}
+            <Route path="/" element={<ProtectedRoute><Index /></ProtectedRoute>} />
+            <Route path="/cold" element={<ProtectedRoute><Cold /></ProtectedRoute>} />
+            <Route path="/trends" element={<ProtectedRoute><Trends /></ProtectedRoute>} />
+            <Route path="/portfolio" element={<ProtectedRoute><Portfolio /></ProtectedRoute>} />
+            <Route path="/profile" element={<ProtectedRoute><Profile /></ProtectedRoute>} />
+            <Route path="/bettor/:id" element={<ProtectedRoute><BettorDetail /></ProtectedRoute>} />
+            <Route path="/leaders" element={<ProtectedRoute><Leaders /></ProtectedRoute>} />
+            <Route path="/compete" element={<ProtectedRoute><Compete /></ProtectedRoute>} />
+            
+            {/* Catch-all Route */}
+            <Route path="*" element={<NotFound />} />
+          </Routes>
+        </AuthProvider>
       </BrowserRouter>
     </TooltipProvider>
   </QueryClientProvider>
