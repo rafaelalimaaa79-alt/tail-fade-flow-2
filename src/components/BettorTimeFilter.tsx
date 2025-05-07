@@ -26,16 +26,18 @@ const BettorTimeFilter: React.FC<BettorTimeFilterProps> = ({
   ];
 
   const getButtonColorClass = (timeframe: TimeFrameOption): string => {
+    // Only apply performance-based coloring to the active filter
     if (activeFilter === timeframe) {
+      const performance = performanceByTimeframe[timeframe];
+      if (performance !== undefined) {
+        if (performance > 0) return "bg-onetime-green text-white";
+        if (performance < 0) return "bg-onetime-red text-white";
+      }
+      // Default active color if no performance data
       return "bg-onetime-purple text-white";
     }
     
-    const performance = performanceByTimeframe[timeframe];
-    if (performance !== undefined) {
-      if (performance > 0) return "bg-onetime-green text-white hover:bg-onetime-green/90";
-      if (performance < 0) return "bg-onetime-red text-white hover:bg-onetime-red/90";
-    }
-    
+    // All inactive filters have the same background color
     return "bg-gray-100 text-gray-600 hover:bg-gray-200";
   };
 
