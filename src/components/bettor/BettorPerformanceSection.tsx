@@ -38,7 +38,8 @@ const BettorPerformanceSection: React.FC<BettorPerformanceSectionProps> = ({
           className="scale-90 origin-right"
         />
       </div>
-      
+
+      {/* Graph positioned first now */}
       <BettorPerformanceGraph 
         data={graphData.data} 
         timeframe={timeframe}
