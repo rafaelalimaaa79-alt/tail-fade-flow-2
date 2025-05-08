@@ -12,7 +12,7 @@ const DashboardHeader = ({ getPortfolioRect }: DashboardHeaderProps) => {
   const portfolioButtonRef = useRef<HTMLButtonElement>(null);
   
   return (
-    <header className="mb-2 flex items-center justify-between">
+    <header className="mb-2 flex items-center">
       <div className="flex items-center gap-3">
         <img 
           src="/lovable-uploads/57cb1fb4-7471-451e-bf49-d4d5fa12bdcb.png" 
@@ -20,7 +20,8 @@ const DashboardHeader = ({ getPortfolioRect }: DashboardHeaderProps) => {
           className="h-24"
         />
       </div>
-      <BriefcaseButton />
+      <div className="flex-grow" />
+      <BriefcaseButton className="mr-4" />
     </header>
   );
 };

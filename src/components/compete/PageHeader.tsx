@@ -5,7 +5,7 @@ import BriefcaseButton from "@/components/common/BriefcaseButton";
 const PageHeader: React.FC = () => {
   return (
     <>
-      <header className="mb-6 flex items-center justify-between">
+      <header className="mb-6 flex items-center">
         <div className="flex items-center gap-3">
           <img 
             src="/lovable-uploads/57cb1fb4-7471-451e-bf49-d4d5fa12bdcb.png" 
@@ -13,7 +13,8 @@ const PageHeader: React.FC = () => {
             className="h-20"
           />
         </div>
-        <BriefcaseButton />
+        <div className="flex-grow" />
+        <BriefcaseButton className="mr-4" />
       </header>
 
       <div className="mb-6">

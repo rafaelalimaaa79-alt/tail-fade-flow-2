@@ -24,7 +24,7 @@ const BriefcaseButton: React.FC<BriefcaseButtonProps> = ({ className }) => {
       className={`relative rounded-full p-2 text-white/80 hover:text-white ${pendingBets.length > 0 && !viewed ? "animate-glow-pulse" : ""} ${className || ""}`}
       onClick={handlePortfolioClick}
     >
-      <Briefcase className="h-6 w-6" />
+      <Briefcase className="h-8 w-8" />
       <PortfolioBadge 
         count={pendingBets.length} 
         showAnimation={showBadgeAnimation}
