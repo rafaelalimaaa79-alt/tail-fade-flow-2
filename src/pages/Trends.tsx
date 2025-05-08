@@ -6,7 +6,6 @@ import { useIsMobile } from "@/hooks/use-mobile";
 import FullscreenNotification from "@/components/FullscreenNotification";
 import { useNotificationStore } from "@/utils/betting-notifications";
 import { useNavigate } from "react-router-dom";
-import BetTrackingAnimation from "@/components/BetTrackingAnimation";
 import PortfolioBadge from "@/components/PortfolioBadge";
 import { usePortfolioStore } from "@/utils/portfolio-state";
 
@@ -97,10 +96,7 @@ const Trends = () => {
     variant, 
     closeNotification, 
     bettorName, 
-    betDescription,
-    showFlyAnimation,
-    sourceRect,
-    completeFlyAnimation
+    betDescription
   } = useNotificationStore();
   
   // Sort the trend data by confidence score (either tailScore or fadeScore)
@@ -109,14 +105,6 @@ const Trends = () => {
     const scoreB = b.isTailRecommendation ? b.tailScore : b.fadeScore;
     return scoreB - scoreA; // Sort in descending order
   });
-  
-  // Get the position of the portfolio button for animation target
-  const getPortfolioRect = () => {
-    if (portfolioButtonRef.current) {
-      return portfolioButtonRef.current.getBoundingClientRect();
-    }
-    return null;
-  };
   
   return (
     <div className="flex min-h-screen flex-col bg-background font-rajdhani">
@@ -173,15 +161,6 @@ const Trends = () => {
         onClose={closeNotification}
         bettorName={bettorName}
         betDescription={betDescription}
-      />
-      
-      {/* Animation to show bet flying to portfolio */}
-      <BetTrackingAnimation
-        isActive={showFlyAnimation}
-        onComplete={completeFlyAnimation}
-        sourceRect={sourceRect}
-        targetRect={getPortfolioRect()}
-        variant={variant || "tail"}
       />
       
       <BottomNav />

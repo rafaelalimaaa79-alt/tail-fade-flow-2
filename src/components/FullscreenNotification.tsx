@@ -20,35 +20,28 @@ const FullscreenNotification = ({
 }: FullscreenNotificationProps) => {
   const [isVisible, setIsVisible] = useState(false);
   const [textAppeared, setTextAppeared] = useState(false);
-  const [isImploding, setIsImploding] = useState(false);
 
   useEffect(() => {
     if (isOpen) {
       // Quick animation sequence for elements appearing
       console.log("Fullscreen notification opening");
       setIsVisible(true);
-      setIsImploding(false);
       
       // Start animation sequence
       setTimeout(() => setTextAppeared(true), 300);
       
-      // Display for a moderate amount of time then transition to animation
+      // Display for a moderate amount of time then close
       const timer = setTimeout(() => {
-        console.log("Beginning notification implode sequence");
+        console.log("Closing notification");
         setTextAppeared(false);
         
-        // Start imploding effect before completely closing
+        // Fade out effect before completely closing
         setTimeout(() => {
-          setIsImploding(true);
-          
-          // Very quick transition to the dart animation
-          setTimeout(() => {
-            setIsVisible(false);
-            console.log("Notification imploded, triggering dart animation");
-            onClose();
-          }, 400);
-        }, 150);
-      }, 1800);
+          setIsVisible(false);
+          console.log("Notification closed");
+          onClose();
+        }, 400);
+      }, 2500); // Show for 2.5 seconds
       
       return () => {
         clearTimeout(timer);
@@ -57,15 +50,12 @@ const FullscreenNotification = ({
   }, [isOpen, onClose]);
 
   const handleBackdropClick = () => {
-    console.log("Backdrop clicked, imploding notification");
+    console.log("Backdrop clicked, closing notification");
     setTextAppeared(false);
     setTimeout(() => {
-      setIsImploding(true);
-      setTimeout(() => {
-        setIsVisible(false);
-        onClose();
-      }, 400);
-    }, 150);
+      setIsVisible(false);
+      onClose();
+    }, 400);
   };
 
   if (!isOpen) return null;
@@ -81,18 +71,17 @@ const FullscreenNotification = ({
         isVisible ? "opacity-100" : "opacity-0"
       }`}
     >
-      {/* Background overlay with blur effect and animated burst */}
+      {/* Background overlay with blur effect */}
       <div 
         className={`absolute inset-0 backdrop-blur-md transition-all duration-700 ${
           isVisible ? "bg-black/80" : "bg-black/0"
-        } ${isVisible ? "animate-subtle-shake" : ""}`}
+        }`}
         onClick={handleBackdropClick}
       ></div>
       
-      {/* Notification card with enhanced animations */}
+      {/* Notification card with animations */}
       <div
         className={`relative max-w-md w-full rounded-xl p-8 shadow-2xl text-center transform transition-all ${
-          isImploding ? "duration-400 scale-[0.15] rounded-full overflow-hidden" :
           isVisible ? "duration-500 scale-100 translate-y-0" : "duration-300 scale-95 translate-y-8"
         } ${bgGradient} text-white overflow-hidden ${
           isVisible ? "shadow-glow" : ""
@@ -103,11 +92,6 @@ const FullscreenNotification = ({
             "none"
         }}
       >
-        {/* Background flash effect */}
-        {isVisible && !isImploding && (
-          <div className="absolute inset-0 bg-white/20 animate-quick-flash pointer-events-none"></div>
-        )}
-        
         {/* App logo positioned at top left */}
         <div className="absolute top-4 left-4">
           <img 

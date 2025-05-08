@@ -8,12 +8,8 @@ type NotificationStore = {
   variant: "tail" | "fade" | null;
   bettorName: string;
   betDescription: string;
-  showFlyAnimation: boolean;
-  sourceRect: DOMRect | null;
-  openNotification: (params: { variant: "tail" | "fade", bettorName: string, betDescription: string, sourceRect?: DOMRect | null }) => void;
+  openNotification: (params: { variant: "tail" | "fade", bettorName: string, betDescription: string }) => void;
   closeNotification: () => void;
-  startFlyAnimation: () => void;
-  completeFlyAnimation: () => void;
 };
 
 export const useNotificationStore = create<NotificationStore>((set) => ({
@@ -22,9 +18,7 @@ export const useNotificationStore = create<NotificationStore>((set) => ({
   variant: null,
   bettorName: "",
   betDescription: "",
-  showFlyAnimation: false,
-  sourceRect: null,
-  openNotification: ({ variant, bettorName, betDescription, sourceRect = null }) => {
+  openNotification: ({ variant, bettorName, betDescription }) => {
     // Trigger haptic feedback if available
     if (navigator.vibrate) {
       navigator.vibrate([100]);
@@ -38,77 +32,41 @@ export const useNotificationStore = create<NotificationStore>((set) => ({
       message: "", // No longer needed but keeping the property for compatibility
       variant,
       bettorName,
-      betDescription,
-      sourceRect,
-      showFlyAnimation: false // Ensure animation is reset
+      betDescription
     });
   },
-  closeNotification: () => set(state => {
-    console.log("Notification closed, transitioning to dart animation");
-    if (state.isOpen) {
-      return {
-        isOpen: false,
-        // Immediately start the fly animation when notification closes
-        showFlyAnimation: true
-      };
-    }
-    return state;
-  }),
-  startFlyAnimation: () => {
-    console.log("Start dart flight animation");
-    set({ showFlyAnimation: true });
-  },
-  completeFlyAnimation: () => {
-    // When the animation completes, add the bet to the portfolio
+  closeNotification: () => {
+    // When closing, add the bet to the portfolio directly
     const { variant, bettorName, betDescription } = useNotificationStore.getState();
     const { addBet } = usePortfolioStore.getState();
     
-    console.log("Dart animation complete, adding bet to portfolio");
-    
     if (variant && bettorName && betDescription) {
+      console.log("Adding bet to portfolio:", { variant, bettorName, betDescription });
       addBet(bettorName, betDescription, variant);
     }
     
-    // Reset the fly animation state
-    set({ 
-      showFlyAnimation: false,
-      sourceRect: null
-    });
+    set({ isOpen: false });
   }
 }));
 
 /**
  * Show a notification for tailing a bet
  */
-export const showTailNotification = (bettorName: string, betDescription: string, sourceElement?: HTMLElement | null) => {
-  let sourceRect: DOMRect | null = null;
-  
-  if (sourceElement) {
-    sourceRect = sourceElement.getBoundingClientRect();
-  }
-  
+export const showTailNotification = (bettorName: string, betDescription: string) => {
   useNotificationStore.getState().openNotification({ 
     variant: "tail", 
     bettorName, 
-    betDescription,
-    sourceRect
+    betDescription
   });
 };
 
 /**
  * Show a notification for fading a bet
  */
-export const showFadeNotification = (bettorName: string, betDescription: string, sourceElement?: HTMLElement | null) => {
-  let sourceRect: DOMRect | null = null;
-  
-  if (sourceElement) {
-    sourceRect = sourceElement.getBoundingClientRect();
-  }
-  
+export const showFadeNotification = (bettorName: string, betDescription: string) => {
   useNotificationStore.getState().openNotification({ 
     variant: "fade", 
     bettorName, 
-    betDescription,
-    sourceRect
+    betDescription
   });
 };
