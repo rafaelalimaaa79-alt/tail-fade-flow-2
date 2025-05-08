@@ -1,13 +1,6 @@
 
 import { create } from "zustand";
-
-/**
- * Get a random message from an array of messages
- */
-const getRandomMessage = (messages: string[]): string => {
-  const randomIndex = Math.floor(Math.random() * messages.length);
-  return messages[randomIndex];
-};
+import { usePortfolioStore } from "./portfolio-state";
 
 type NotificationStore = {
   isOpen: boolean;
@@ -15,8 +8,12 @@ type NotificationStore = {
   variant: "tail" | "fade" | null;
   bettorName: string;
   betDescription: string;
-  openNotification: (params: { variant: "tail" | "fade", bettorName: string, betDescription: string }) => void;
+  showFlyAnimation: boolean;
+  sourceRect: DOMRect | null;
+  openNotification: (params: { variant: "tail" | "fade", bettorName: string, betDescription: string, sourceRect?: DOMRect | null }) => void;
   closeNotification: () => void;
+  startFlyAnimation: () => void;
+  completeFlyAnimation: () => void;
 };
 
 export const useNotificationStore = create<NotificationStore>((set) => ({
@@ -25,7 +22,9 @@ export const useNotificationStore = create<NotificationStore>((set) => ({
   variant: null,
   bettorName: "",
   betDescription: "",
-  openNotification: ({ variant, bettorName, betDescription }) => {
+  showFlyAnimation: false,
+  sourceRect: null,
+  openNotification: ({ variant, bettorName, betDescription, sourceRect = null }) => {
     // Trigger haptic feedback if available
     if (navigator.vibrate) {
       navigator.vibrate([100]);
@@ -36,30 +35,70 @@ export const useNotificationStore = create<NotificationStore>((set) => ({
       message: "", // No longer needed but keeping the property for compatibility
       variant,
       bettorName,
-      betDescription
+      betDescription,
+      sourceRect
     });
   },
-  closeNotification: () => set({ isOpen: false }),
+  closeNotification: () => set(state => {
+    if (state.isOpen) {
+      return {
+        isOpen: false,
+        // We'll start the fly animation when notification closes
+        showFlyAnimation: true
+      };
+    }
+    return state;
+  }),
+  startFlyAnimation: () => set({ showFlyAnimation: true }),
+  completeFlyAnimation: () => {
+    // When the animation completes, add the bet to the portfolio
+    const { variant, bettorName, betDescription } = useNotificationStore.getState();
+    const { addBet } = usePortfolioStore.getState();
+    
+    if (variant && bettorName && betDescription) {
+      addBet(bettorName, betDescription, variant);
+    }
+    
+    // Reset the fly animation state
+    set({ 
+      showFlyAnimation: false,
+      sourceRect: null
+    });
+  }
 }));
 
 /**
  * Show a notification for tailing a bet
  */
-export const showTailNotification = (bettorName: string, betDescription: string) => {
+export const showTailNotification = (bettorName: string, betDescription: string, sourceElement?: HTMLElement | null) => {
+  let sourceRect: DOMRect | null = null;
+  
+  if (sourceElement) {
+    sourceRect = sourceElement.getBoundingClientRect();
+  }
+  
   useNotificationStore.getState().openNotification({ 
     variant: "tail", 
     bettorName, 
-    betDescription 
+    betDescription,
+    sourceRect
   });
 };
 
 /**
  * Show a notification for fading a bet
  */
-export const showFadeNotification = (bettorName: string, betDescription: string) => {
+export const showFadeNotification = (bettorName: string, betDescription: string, sourceElement?: HTMLElement | null) => {
+  let sourceRect: DOMRect | null = null;
+  
+  if (sourceElement) {
+    sourceRect = sourceElement.getBoundingClientRect();
+  }
+  
   useNotificationStore.getState().openNotification({ 
     variant: "fade", 
     bettorName, 
-    betDescription 
+    betDescription,
+    sourceRect
   });
 };

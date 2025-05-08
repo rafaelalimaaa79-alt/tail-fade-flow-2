@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useRef } from "react";
 import { Briefcase } from "lucide-react";
 import BottomNav from "@/components/BottomNav";
 import TrendItem from "@/components/TrendItem";
@@ -6,6 +6,9 @@ import { useIsMobile } from "@/hooks/use-mobile";
 import FullscreenNotification from "@/components/FullscreenNotification";
 import { useNotificationStore } from "@/utils/betting-notifications";
 import { useNavigate } from "react-router-dom";
+import BetTrackingAnimation from "@/components/BetTrackingAnimation";
+import PortfolioBadge from "@/components/PortfolioBadge";
+import { usePortfolioStore } from "@/utils/portfolio-state";
 
 // Mock data for the trends page
 const trendData = [
@@ -86,7 +89,19 @@ const trendData = [
 const Trends = () => {
   const isMobile = useIsMobile();
   const navigate = useNavigate();
-  const { isOpen, message, variant, closeNotification, bettorName, betDescription } = useNotificationStore();
+  const portfolioButtonRef = useRef<HTMLButtonElement>(null);
+  const { pendingBets, showBadgeAnimation } = usePortfolioStore();
+  const { 
+    isOpen, 
+    message, 
+    variant, 
+    closeNotification, 
+    bettorName, 
+    betDescription,
+    showFlyAnimation,
+    sourceRect,
+    completeFlyAnimation
+  } = useNotificationStore();
   
   // Sort the trend data by confidence score (either tailScore or fadeScore)
   const sortedTrendData = [...trendData].sort((a, b) => {
@@ -94,6 +109,14 @@ const Trends = () => {
     const scoreB = b.isTailRecommendation ? b.tailScore : b.fadeScore;
     return scoreB - scoreA; // Sort in descending order
   });
+  
+  // Get the position of the portfolio button for animation target
+  const getPortfolioRect = () => {
+    if (portfolioButtonRef.current) {
+      return portfolioButtonRef.current.getBoundingClientRect();
+    }
+    return null;
+  };
   
   return (
     <div className="flex min-h-screen flex-col bg-background font-rajdhani">
@@ -107,10 +130,15 @@ const Trends = () => {
             />
           </div>
           <button 
-            className="rounded-full p-2 text-white/80 hover:text-white"
+            ref={portfolioButtonRef}
+            className="rounded-full p-2 text-white/80 hover:text-white relative"
             onClick={() => navigate('/portfolio')}
           >
             <Briefcase className="h-6 w-6" />
+            <PortfolioBadge 
+              count={pendingBets.length} 
+              showAnimation={showBadgeAnimation}
+            />
           </button>
         </header>
 
@@ -145,6 +173,15 @@ const Trends = () => {
         onClose={closeNotification}
         bettorName={bettorName}
         betDescription={betDescription}
+      />
+      
+      {/* Animation to show bet flying to portfolio */}
+      <BetTrackingAnimation
+        isActive={showFlyAnimation}
+        onComplete={completeFlyAnimation}
+        sourceRect={sourceRect}
+        targetRect={getPortfolioRect()}
+        variant={variant || "tail"}
       />
       
       <BottomNav />

@@ -1,5 +1,5 @@
 
-import React from "react";
+import React, { useRef } from "react";
 import { Link } from "react-router-dom";
 import { ArrowRight } from "lucide-react";
 import ActionButton from "./ActionButton";
@@ -15,13 +15,14 @@ interface PlayCardProps {
 const PlayCard: React.FC<PlayCardProps> = ({ play, renderWaveText, onActionClick }) => {
   const isFade = play.suggestionType === "fade";
   const actionText = isFade ? "Fade" : "Tail";
+  const buttonRef = useRef<HTMLButtonElement>(null);
   
   // Handle the bet action with notification only, no more redirection
   const handleBetClick = () => {
     if (isFade) {
-      showFadeNotification(play.bettorName, play.bet);
+      showFadeNotification(play.bettorName, play.bet, buttonRef.current);
     } else {
-      showTailNotification(play.bettorName, play.bet);
+      showTailNotification(play.bettorName, play.bet, buttonRef.current);
     }
   };
   
@@ -50,6 +51,7 @@ const PlayCard: React.FC<PlayCardProps> = ({ play, renderWaveText, onActionClick
       {/* Combined suggestion and action in a single card */}
       <div className="mb-6 rounded-lg bg-muted p-5 text-center border border-white/10 shadow-lg">
         <ActionButton 
+          ref={buttonRef}
           variant={isFade ? "fade" : "tail"}
           className="h-14 text-xl font-bold"
           onClick={handleBetClick}

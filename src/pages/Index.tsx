@@ -1,4 +1,3 @@
-
 import React, { useState, useEffect, useRef } from "react";
 import { useNavigate } from "react-router-dom";
 import BottomNav from "@/components/BottomNav";
@@ -9,6 +8,9 @@ import { Briefcase } from "lucide-react";
 import { playsOfTheDay } from "@/types/betTypes";
 import { useNotificationStore } from "@/utils/betting-notifications";
 import FullscreenNotification from "@/components/FullscreenNotification";
+import BetTrackingAnimation from "@/components/BetTrackingAnimation";
+import PortfolioBadge from "@/components/PortfolioBadge";
+import { usePortfolioStore } from "@/utils/portfolio-state";
 
 const Dashboard = () => {
   const isMobile = useIsMobile();
@@ -19,7 +21,31 @@ const Dashboard = () => {
   const bottomRotationRef = useRef<NodeJS.Timeout | null>(null);
   const topRotationPausedRef = useRef(false);
   const bottomRotationPausedRef = useRef(false);
-  const { isOpen, message, variant, closeNotification, bettorName, betDescription } = useNotificationStore();
+  const portfolioButtonRef = useRef<HTMLButtonElement>(null);
+  const { pendingBets, showBadgeAnimation, resetBadgeAnimation } = usePortfolioStore();
+  
+  const { 
+    isOpen, 
+    message, 
+    variant, 
+    closeNotification, 
+    bettorName, 
+    betDescription,
+    showFlyAnimation,
+    sourceRect,
+    completeFlyAnimation
+  } = useNotificationStore();
+  
+  // Reset badge animation effect after it plays
+  useEffect(() => {
+    if (showBadgeAnimation) {
+      const timer = setTimeout(() => {
+        resetBadgeAnimation();
+      }, 2000);
+      
+      return () => clearTimeout(timer);
+    }
+  }, [showBadgeAnimation, resetBadgeAnimation]);
   
   // Setup top carousel auto-rotation (7 seconds)
   const setupTopAutoRotation = () => {
@@ -98,6 +124,14 @@ const Dashboard = () => {
     }, 8000); // Resume auto-rotation after 8 seconds
   };
   
+  // Calculate target rect for the animation
+  const getPortfolioRect = () => {
+    if (portfolioButtonRef.current) {
+      return portfolioButtonRef.current.getBoundingClientRect();
+    }
+    return null;
+  };
+  
   return (
     <div className="flex min-h-screen flex-col bg-background">
       <div className={`max-w-md mx-auto w-full px-2 ${isMobile ? "pb-24" : ""}`}>
@@ -110,10 +144,15 @@ const Dashboard = () => {
             />
           </div>
           <button 
-            className="rounded-full p-2 text-white/80 hover:text-white flex items-center justify-center self-center"
+            ref={portfolioButtonRef}
+            className="rounded-full p-2 text-white/80 hover:text-white flex items-center justify-center self-center relative"
             onClick={() => navigate('/portfolio')}
           >
             <Briefcase className="h-6 w-6" />
+            <PortfolioBadge 
+              count={pendingBets.length} 
+              showAnimation={showBadgeAnimation}
+            />
           </button>
         </header>
 
@@ -132,7 +171,7 @@ const Dashboard = () => {
         </div>
       </div>
       
-      {/* Add the fullscreen notification component */}
+      {/* Fullscreen notification component */}
       <FullscreenNotification 
         isOpen={isOpen}
         message={message}
@@ -140,6 +179,15 @@ const Dashboard = () => {
         onClose={closeNotification}
         bettorName={bettorName}
         betDescription={betDescription}
+      />
+      
+      {/* Animation to show bet flying to portfolio */}
+      <BetTrackingAnimation
+        isActive={showFlyAnimation}
+        onComplete={completeFlyAnimation}
+        sourceRect={sourceRect}
+        targetRect={getPortfolioRect()}
+        variant={variant || "tail"}
       />
       
       <BottomNav />

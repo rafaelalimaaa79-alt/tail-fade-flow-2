@@ -1,5 +1,5 @@
 
-import React from "react";
+import React, { forwardRef } from "react";
 import { Button } from "@/components/ui/button";
 import { cn } from "@/lib/utils";
 
@@ -11,15 +11,16 @@ type ActionButtonProps = {
   style?: React.CSSProperties;
 };
 
-const ActionButton = ({
+const ActionButton = forwardRef<HTMLButtonElement, ActionButtonProps>(({
   children,
   variant = "default",
   className,
   onClick,
   style,
-}: ActionButtonProps) => {
+}, ref) => {
   return (
     <Button
+      ref={ref}
       onClick={onClick}
       className={cn(
         "h-12 w-full rounded-xl font-bold border border-white/10 text-lg",
@@ -33,6 +34,8 @@ const ActionButton = ({
       {children}
     </Button>
   );
-};
+});
+
+ActionButton.displayName = "ActionButton";
 
 export default ActionButton;

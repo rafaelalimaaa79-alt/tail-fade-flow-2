@@ -1,5 +1,5 @@
 
-import React from "react";
+import React, { useRef } from "react";
 import { BettorBet } from "@/types/bettor";
 import { cn } from "@/lib/utils";
 import { format } from "date-fns";
@@ -24,12 +24,12 @@ const PendingBets: React.FC<PendingBetsProps> = ({ pendingBets, className }) => 
     return { label: "Low", score: 40, color: "bg-white/10 text-white/80 border-white/20" };
   };
 
-  const handleTail = (bet: BettorBet) => {
-    showTailNotification("Bettor", bet.betType);
+  const handleTail = (bet: BettorBet, buttonElement: HTMLButtonElement | null) => {
+    showTailNotification("Bettor", bet.betType, buttonElement);
   };
 
-  const handleFade = (bet: BettorBet) => {
-    showFadeNotification("Bettor", bet.betType);
+  const handleFade = (bet: BettorBet, buttonElement: HTMLButtonElement | null) => {
+    showFadeNotification("Bettor", bet.betType, buttonElement);
   };
 
   return (
@@ -44,6 +44,9 @@ const PendingBets: React.FC<PendingBetsProps> = ({ pendingBets, className }) => 
             const potentialWin = parseFloat(bet.odds) > 0 
               ? (bet.unitsRisked * parseFloat(bet.odds) / 100).toFixed(1)
               : (bet.unitsRisked * 100 / Math.abs(parseFloat(bet.odds))).toFixed(1);
+            
+            const tailButtonRef = useRef<HTMLButtonElement>(null);
+            const fadeButtonRef = useRef<HTMLButtonElement>(null);
             
             return (
               <div 
@@ -74,17 +77,19 @@ const PendingBets: React.FC<PendingBetsProps> = ({ pendingBets, className }) => 
                 {/* Bottom row: Action buttons */}
                 <div className="flex gap-2 mt-2">
                   <ActionButton 
+                    ref={tailButtonRef}
                     variant="tail" 
                     className="h-9 py-0 text-sm"
-                    onClick={() => handleTail(bet)}
+                    onClick={() => handleTail(bet, tailButtonRef.current)}
                   >
                     <ThumbsUp className="h-4 w-4 mr-1" /> Tail
                   </ActionButton>
                   
                   <ActionButton 
+                    ref={fadeButtonRef}
                     variant="fade" 
                     className="h-9 py-0 text-sm"
-                    onClick={() => handleFade(bet)}
+                    onClick={() => handleFade(bet, fadeButtonRef.current)}
                   >
                     <ThumbsDown className="h-4 w-4 mr-1" /> Fade
                   </ActionButton>
