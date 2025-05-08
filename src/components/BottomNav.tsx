@@ -1,7 +1,7 @@
 
 import React from "react";
 import { Link, useLocation } from "react-router-dom";
-import { Home, Sparkles, Swords, Award, User, ArrowUp, ArrowDown } from "lucide-react";
+import { Home, Swords, Award, User, ArrowUp, ArrowDown } from "lucide-react";
 import { cn } from "@/lib/utils";
 import { useAuth } from "@/contexts/AuthContext";
 
@@ -39,7 +39,27 @@ const BottomNav = () => {
         to="/trends"
         className={cn("nav-item", isActive("/trends") ? trendsStyle : "text-white/70")}
       >
-        <span className="mt-7">Trends</span>
+        <div className="relative h-6 w-6 mb-1">
+          <div className="absolute inset-0 flex flex-col items-center justify-center">
+            <ArrowUp 
+              className={cn(
+                "h-4 w-4 -mb-1", 
+                isActive("/trends") 
+                  ? "text-green-400 drop-shadow-[0_0_6px_rgba(74,222,128,0.9)]" 
+                  : "text-white/70"
+              )} 
+            />
+            <ArrowDown 
+              className={cn(
+                "h-4 w-4", 
+                isActive("/trends") 
+                  ? "text-red-400 drop-shadow-[0_0_6px_rgba(248,113,113,0.9)]" 
+                  : "text-white/70"
+              )} 
+            />
+          </div>
+        </div>
+        <span>Trends</span>
       </Link>
       <Link
         to="/compete"
