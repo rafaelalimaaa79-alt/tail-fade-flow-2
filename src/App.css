@@ -81,9 +81,9 @@
   animation: vibrate 2s ease-in-out infinite;
 }
 
-/* Shadow glow effect */
+/* Shadow glow effect for neon white text */
 .shadow-glow {
-  box-shadow: 0 0 15px rgba(147, 51, 234, 0.5);
+  text-shadow: 0 0 10px rgba(255, 255, 255, 0.8), 0 0 20px rgba(255, 255, 255, 0.4);
 }
 
 /* Animation for the fly effect - more pronounced */

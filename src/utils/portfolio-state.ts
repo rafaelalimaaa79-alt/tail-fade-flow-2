@@ -13,8 +13,10 @@ interface Bet {
 interface PortfolioState {
   pendingBets: Bet[];
   showBadgeAnimation: boolean;
+  viewed: boolean;
   addBet: (bettorName: string, betDescription: string, variant: "tail" | "fade") => void;
   resetBadgeAnimation: () => void;
+  stopVibration: () => void;
 }
 
 export const usePortfolioStore = create<PortfolioState>()(
@@ -22,6 +24,7 @@ export const usePortfolioStore = create<PortfolioState>()(
     (set) => ({
       pendingBets: [],
       showBadgeAnimation: false,
+      viewed: true,
       addBet: (bettorName: string, betDescription: string, variant: "tail" | "fade") => set((state) => {
         const newBet = {
           id: Date.now().toString(),
@@ -33,10 +36,12 @@ export const usePortfolioStore = create<PortfolioState>()(
         
         return {
           pendingBets: [...state.pendingBets, newBet],
-          showBadgeAnimation: true
+          showBadgeAnimation: true,
+          viewed: false
         };
       }),
-      resetBadgeAnimation: () => set({ showBadgeAnimation: false })
+      resetBadgeAnimation: () => set({ showBadgeAnimation: false }),
+      stopVibration: () => set({ viewed: true })
     }),
     {
       name: "portfolio-storage"

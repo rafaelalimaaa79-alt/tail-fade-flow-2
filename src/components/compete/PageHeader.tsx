@@ -7,8 +7,13 @@ import PortfolioBadge from "@/components/PortfolioBadge";
 
 const PageHeader: React.FC = () => {
   const navigate = useNavigate();
-  const { pendingBets, showBadgeAnimation } = usePortfolioStore();
+  const { pendingBets, showBadgeAnimation, stopVibration } = usePortfolioStore();
   
+  const handlePortfolioClick = () => {
+    stopVibration(); // Stop vibration when user clicks on portfolio button
+    navigate('/portfolio');
+  };
+
   return (
     <>
       <header className="mb-6 flex items-center justify-between">
@@ -20,8 +25,8 @@ const PageHeader: React.FC = () => {
           />
         </div>
         <button 
-          className={`rounded-full p-2 text-white/80 hover:text-white relative ${pendingBets.length > 0 ? "animate-vibrate" : ""}`}
-          onClick={() => navigate('/portfolio')}
+          className={`rounded-full p-2 text-white/80 hover:text-white relative ${pendingBets.length > 0 && !pendingBets.viewed ? "animate-vibrate" : ""}`}
+          onClick={handlePortfolioClick}
         >
           <Briefcase className="h-6 w-6" />
           <PortfolioBadge 

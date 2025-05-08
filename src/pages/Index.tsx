@@ -1,4 +1,3 @@
-
 import React, { useState, useEffect, useRef } from "react";
 import { useNavigate } from "react-router-dom";
 import BottomNav from "@/components/BottomNav";
@@ -23,7 +22,7 @@ const Dashboard = () => {
   const topRotationPausedRef = useRef(false);
   const bottomRotationPausedRef = useRef(false);
   const portfolioButtonRef = useRef<HTMLButtonElement>(null);
-  const { pendingBets, showBadgeAnimation, resetBadgeAnimation } = usePortfolioStore();
+  const { pendingBets, showBadgeAnimation, resetBadgeAnimation, stopVibration } = usePortfolioStore();
   
   const { 
     isOpen, 
@@ -133,6 +132,11 @@ const Dashboard = () => {
     return null;
   };
   
+  const handlePortfolioClick = () => {
+    stopVibration(); // Stop vibration when user clicks on portfolio
+    navigate('/portfolio');
+  };
+  
   return (
     <div className="flex min-h-screen flex-col bg-background">
       <div className={`max-w-md mx-auto w-full px-2 ${isMobile ? "pb-24" : ""}`}>
@@ -146,8 +150,8 @@ const Dashboard = () => {
           </div>
           <button 
             ref={portfolioButtonRef}
-            className={`rounded-full p-2 text-white/80 hover:text-white flex items-center justify-center self-center relative ${pendingBets.length > 0 ? "animate-vibrate" : ""}`}
-            onClick={() => navigate('/portfolio')}
+            className={`rounded-full p-2 text-white/80 hover:text-white flex items-center justify-center self-center relative ${pendingBets.length > 0 && !pendingBets.viewed ? "animate-vibrate" : ""}`}
+            onClick={handlePortfolioClick}
           >
             <Briefcase className="h-6 w-6" />
             <PortfolioBadge 
