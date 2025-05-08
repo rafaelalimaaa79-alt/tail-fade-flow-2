@@ -2,9 +2,12 @@
 import React from "react";
 import { Briefcase } from "lucide-react";
 import { useNavigate } from "react-router-dom";
+import { usePortfolioStore } from "@/utils/portfolio-state";
+import PortfolioBadge from "@/components/PortfolioBadge";
 
 const PageHeader: React.FC = () => {
   const navigate = useNavigate();
+  const { pendingBets, showBadgeAnimation } = usePortfolioStore();
   
   return (
     <>
@@ -17,10 +20,14 @@ const PageHeader: React.FC = () => {
           />
         </div>
         <button 
-          className="rounded-full p-2 text-white/80 hover:text-white"
+          className={`rounded-full p-2 text-white/80 hover:text-white relative ${pendingBets.length > 0 ? "animate-bounce" : ""}`}
           onClick={() => navigate('/portfolio')}
         >
           <Briefcase className="h-6 w-6" />
+          <PortfolioBadge 
+            count={pendingBets.length} 
+            showAnimation={showBadgeAnimation}
+          />
         </button>
       </header>
 
