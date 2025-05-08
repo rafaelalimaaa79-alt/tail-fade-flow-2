@@ -1,3 +1,4 @@
+
 import React, { useState, useEffect, useRef } from "react";
 import { useNavigate } from "react-router-dom";
 import BottomNav from "@/components/BottomNav";
@@ -145,7 +146,7 @@ const Dashboard = () => {
           </div>
           <button 
             ref={portfolioButtonRef}
-            className={`rounded-full p-2 text-white/80 hover:text-white flex items-center justify-center self-center relative ${pendingBets.length > 0 ? "animate-bounce" : ""}`}
+            className={`rounded-full p-2 text-white/80 hover:text-white flex items-center justify-center self-center relative ${pendingBets.length > 0 ? "animate-vibrate" : ""}`}
             onClick={() => navigate('/portfolio')}
           >
             <Briefcase className="h-6 w-6" />

@@ -14,8 +14,8 @@ const PortfolioBadge = ({ count, className, showAnimation }: PortfolioBadgeProps
   return (
     <div 
       className={cn(
-        "absolute -top-2 -right-2 min-w-[20px] h-5 flex items-center justify-center text-xs font-bold text-onetime-orange",
-        count > 0 && "animate-bounce",
+        "absolute -top-2 -left-2 min-w-[20px] h-5 flex items-center justify-center text-xs font-bold text-onetime-orange",
+        count > 0 && "animate-vibrate",
         showAnimation && "animate-bounce-once",
         className
       )}
