@@ -11,10 +11,11 @@ interface BriefcaseButtonProps {
 
 const BriefcaseButton: React.FC<BriefcaseButtonProps> = ({ className }) => {
   const navigate = useNavigate();
-  const { pendingBets, showBadgeAnimation, stopVibration, viewed } = usePortfolioStore();
+  const { pendingBets, showBadgeAnimation, stopVibration, viewed, clearPendingBets } = usePortfolioStore();
   
   const handlePortfolioClick = () => {
     stopVibration(); // Stop pulse when user clicks on portfolio
+    clearPendingBets(); // Clear pending bets when user clicks on portfolio
     navigate('/portfolio');
   };
   
