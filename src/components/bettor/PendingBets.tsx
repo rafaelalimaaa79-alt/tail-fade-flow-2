@@ -24,12 +24,12 @@ const PendingBets: React.FC<PendingBetsProps> = ({ pendingBets, className }) => 
     return { label: "Low", score: 40, color: "bg-white/10 text-white/80 border-white/20" };
   };
 
-  const handleTail = (bet: BettorBet, buttonElement: HTMLButtonElement | null) => {
-    showTailNotification("Bettor", bet.betType, buttonElement);
+  const handleTail = (bet: BettorBet) => {
+    showTailNotification("Bettor", bet.betType);
   };
 
-  const handleFade = (bet: BettorBet, buttonElement: HTMLButtonElement | null) => {
-    showFadeNotification("Bettor", bet.betType, buttonElement);
+  const handleFade = (bet: BettorBet) => {
+    showFadeNotification("Bettor", bet.betType);
   };
 
   return (
@@ -80,7 +80,7 @@ const PendingBets: React.FC<PendingBetsProps> = ({ pendingBets, className }) => 
                     ref={tailButtonRef}
                     variant="tail" 
                     className="h-9 py-0 text-sm"
-                    onClick={() => handleTail(bet, tailButtonRef.current)}
+                    onClick={() => handleTail(bet)}
                   >
                     <ThumbsUp className="h-4 w-4 mr-1" /> Tail
                   </ActionButton>
@@ -89,7 +89,7 @@ const PendingBets: React.FC<PendingBetsProps> = ({ pendingBets, className }) => 
                     ref={fadeButtonRef}
                     variant="fade" 
                     className="h-9 py-0 text-sm"
-                    onClick={() => handleFade(bet, fadeButtonRef.current)}
+                    onClick={() => handleFade(bet)}
                   >
                     <ThumbsDown className="h-4 w-4 mr-1" /> Fade
                   </ActionButton>

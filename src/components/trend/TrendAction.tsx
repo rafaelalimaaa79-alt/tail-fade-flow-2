@@ -20,11 +20,11 @@ const TrendAction = ({
   const buttonRef = useRef<HTMLButtonElement>(null);
   
   const handleTailClick = () => {
-    showTailNotification(bettorName, betDescription, buttonRef.current);
+    showTailNotification(bettorName, betDescription);
   };
 
   const handleFadeClick = () => {
-    showFadeNotification(bettorName, betDescription, buttonRef.current);
+    showFadeNotification(bettorName, betDescription);
   };
 
   return (

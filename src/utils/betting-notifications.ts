@@ -8,8 +8,11 @@ type NotificationStore = {
   variant: "tail" | "fade" | null;
   bettorName: string;
   betDescription: string;
+  sourceRect: DOMRect | null;
+  showFlyAnimation: boolean;
   openNotification: (params: { variant: "tail" | "fade", bettorName: string, betDescription: string }) => void;
   closeNotification: () => void;
+  completeFlyAnimation: () => void;
 };
 
 export const useNotificationStore = create<NotificationStore>((set) => ({
@@ -18,6 +21,8 @@ export const useNotificationStore = create<NotificationStore>((set) => ({
   variant: null,
   bettorName: "",
   betDescription: "",
+  sourceRect: null,
+  showFlyAnimation: false,
   openNotification: ({ variant, bettorName, betDescription }) => {
     // Trigger haptic feedback if available
     if (navigator.vibrate) {
@@ -46,6 +51,9 @@ export const useNotificationStore = create<NotificationStore>((set) => ({
     }
     
     set({ isOpen: false });
+  },
+  completeFlyAnimation: () => {
+    set({ showFlyAnimation: false });
   }
 }));
 
