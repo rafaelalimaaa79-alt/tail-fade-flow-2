@@ -29,12 +29,12 @@ const FullscreenNotification = ({
       // Start animation sequence
       setTimeout(() => setTextAppeared(true), 300);
       
-      // Auto-close after 5 seconds
+      // Auto-close after 3 seconds to get to the fly animation faster
       const timer = setTimeout(() => {
         setTextAppeared(false);
         setIsVisible(false);
         setTimeout(onClose, 500);
-      }, 5000);
+      }, 3000);
       
       return () => {
         clearTimeout(timer);

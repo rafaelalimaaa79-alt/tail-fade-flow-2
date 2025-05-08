@@ -26,11 +26,11 @@ const BetTrackingAnimation = ({
       const timer = setTimeout(() => {
         setAnimationActive(true);
         
-        // Complete animation after 500ms
+        // Complete animation after 600ms
         const completionTimer = setTimeout(() => {
           setAnimationActive(false);
           onComplete();
-        }, 500);
+        }, 600);
         
         return () => clearTimeout(completionTimer);
       }, 500);
@@ -50,17 +50,18 @@ const BetTrackingAnimation = ({
   const endY = targetRect.top + targetRect.height / 2;
   
   const backgroundColor = variant === 'tail' ? 'bg-onetime-green' : 'bg-onetime-red';
+  const glowColor = variant === 'tail' ? 'shadow-[0_0_15px_rgba(16,185,129,0.8)]' : 'shadow-[0_0_15px_rgba(239,68,68,0.8)]';
   
   return createPortal(
     <div
       ref={animationRef}
-      className={`fixed pointer-events-none z-[100] ${backgroundColor} rounded-full shadow-lg transition-all duration-500 ease-out`}
+      className={`fixed pointer-events-none z-[100] ${backgroundColor} rounded-full transition-all duration-600 ease-out ${animationActive ? glowColor : ''}`}
       style={{
-        width: animationActive ? '16px' : '40px',
-        height: animationActive ? '16px' : '40px',
-        opacity: animationActive ? 0.8 : 0,
+        width: animationActive ? '12px' : '40px',
+        height: animationActive ? '12px' : '40px',
+        opacity: animationActive ? 0.9 : 0,
         transform: animationActive 
-          ? `translate(${endX - 8}px, ${endY - 8}px) scale(0.5)`
+          ? `translate(${endX - 6}px, ${endY - 6}px) scale(0.5)`
           : `translate(${startX - 20}px, ${startY - 20}px) scale(1)`,
       }}
     />,
