@@ -3,6 +3,11 @@ import React from "react";
 import { useNavigate } from "react-router-dom";
 import BettorStreakItem from "./BettorStreakItem";
 import ActionButton from "./ActionButton";
+import {
+  Carousel,
+  CarouselContent,
+  CarouselItem,
+} from "@/components/ui/carousel";
 
 interface LeaderboardCarouselProps {
   currentIndex: number;
@@ -24,73 +29,109 @@ const coldestBettors = [
   { id: "9", name: "Emily", profit: -1100, streak: [0, 1, 0, 0, 0] },
 ];
 
-const LeaderboardCarousel = ({ currentIndex }: LeaderboardCarouselProps) => {
+const LeaderboardCarousel = ({ currentIndex, onIndexChange }: LeaderboardCarouselProps) => {
   const navigate = useNavigate();
   
   // Function to handle navigation to leaders page
   const navigateToLeaders = (type: 'tail' | 'fade') => {
     navigate(`/leaders?type=${type}`);
   };
-
+  
+  // Set up the carousel API
+  const [api, setApi] = React.useState<any>(null);
+  
+  // When the currentIndex changes from outside (like auto-rotation),
+  // make sure our carousel reflects that
+  React.useEffect(() => {
+    if (api) {
+      api.scrollTo(currentIndex % 2);
+    }
+  }, [api, currentIndex]);
+  
+  // When user scrolls the carousel, update our index
+  React.useEffect(() => {
+    if (!api) return;
+    
+    const handleSelect = () => {
+      const selectedIndex = api.selectedScrollSnap();
+      onIndexChange(selectedIndex);
+    };
+    
+    api.on("select", handleSelect);
+    return () => {
+      api.off("select", handleSelect);
+    };
+  }, [api, onIndexChange]);
+  
   return (
     <div className="w-full px-2"> 
-      {/* Hot Bettors */}
-      <div className={`w-full ${currentIndex % 2 === 0 ? 'block' : 'hidden'}`}>
-        <div className="rounded-xl bg-card p-5 shadow-lg border border-white/10">
-          <div className="mb-4 flex items-center justify-center">
-            <h3 className="text-lg font-bold text-white/90">These guys can't miss</h3>
-          </div>
-          
-          <div className="space-y-1">
-            {hottestBettors.map((bettor) => (
-              <BettorStreakItem
-                key={bettor.id}
-                id={bettor.id}
-                name={bettor.name}
-                profit={bettor.profit}
-                streak={bettor.streak}
-              />
-            ))}
-          </div>
-          
-          <ActionButton 
-            variant="tail" 
-            className="mt-4 h-10 text-sm"
-            onClick={() => navigateToLeaders('tail')}
-          >
-            View Tail Leaders
-          </ActionButton>
-        </div>
-      </div>
+      <Carousel
+        setApi={setApi}
+        opts={{
+          loop: true,
+          align: "start",
+        }}
+      >
+        <CarouselContent>
+          {/* Hot Bettors */}
+          <CarouselItem>
+            <div className="rounded-xl bg-card p-5 shadow-lg border border-white/10">
+              <div className="mb-4 flex items-center justify-center">
+                <h3 className="text-lg font-bold text-white/90">These guys can't miss</h3>
+              </div>
+              
+              <div className="space-y-1">
+                {hottestBettors.map((bettor) => (
+                  <BettorStreakItem
+                    key={bettor.id}
+                    id={bettor.id}
+                    name={bettor.name}
+                    profit={bettor.profit}
+                    streak={bettor.streak}
+                  />
+                ))}
+              </div>
+              
+              <ActionButton 
+                variant="tail" 
+                className="mt-4 h-10 text-sm"
+                onClick={() => navigateToLeaders('tail')}
+              >
+                View Tail Leaders
+              </ActionButton>
+            </div>
+          </CarouselItem>
 
-      {/* Cold Bettors */}
-      <div className={`w-full ${currentIndex % 2 === 1 ? 'block' : 'hidden'}`}>
-        <div className="rounded-xl bg-card p-5 shadow-lg border border-white/10">
-          <div className="mb-4 flex items-center justify-center">
-            <h3 className="text-lg font-bold text-white/90">Can't buy a win right now</h3>
-          </div>
-          
-          <div className="space-y-1">
-            {coldestBettors.map((bettor) => (
-              <BettorStreakItem
-                key={bettor.id}
-                id={bettor.id}
-                name={bettor.name}
-                profit={bettor.profit}
-                streak={bettor.streak}
-              />
-            ))}
-          </div>
-          
-          <ActionButton 
-            variant="fade" 
-            className="mt-4 h-10 text-sm"
-            onClick={() => navigateToLeaders('fade')}
-          >
-            View Fade Leaders
-          </ActionButton>
-        </div>
-      </div>
+          {/* Cold Bettors */}
+          <CarouselItem>
+            <div className="rounded-xl bg-card p-5 shadow-lg border border-white/10">
+              <div className="mb-4 flex items-center justify-center">
+                <h3 className="text-lg font-bold text-white/90">Can't buy a win right now</h3>
+              </div>
+              
+              <div className="space-y-1">
+                {coldestBettors.map((bettor) => (
+                  <BettorStreakItem
+                    key={bettor.id}
+                    id={bettor.id}
+                    name={bettor.name}
+                    profit={bettor.profit}
+                    streak={bettor.streak}
+                  />
+                ))}
+              </div>
+              
+              <ActionButton 
+                variant="fade" 
+                className="mt-4 h-10 text-sm"
+                onClick={() => navigateToLeaders('fade')}
+              >
+                View Fade Leaders
+              </ActionButton>
+            </div>
+          </CarouselItem>
+        </CarouselContent>
+      </Carousel>
     </div>
   );
 };

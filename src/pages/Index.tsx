@@ -31,7 +31,8 @@ const Dashboard = () => {
     handleCarouselChange: handleBottomCarouselChange 
   } = useCarouselRotation({
     itemsCount: 2, // Bottom carousel has 2 items
-    rotationInterval: 4000 // Bottom carousel rotates every 4 seconds
+    rotationInterval: 4000, // Bottom carousel rotates every 4 seconds
+    pauseDuration: 8000 // Longer pause after manual navigation
   });
   
   // Calculate target rect for the animation
