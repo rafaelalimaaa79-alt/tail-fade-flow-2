@@ -1,4 +1,3 @@
-
 #root {
   max-width: 1280px;
   margin: 0 auto;
@@ -54,6 +53,20 @@
 
 .animate-bounce-once {
   animation: bounce-once 0.8s cubic-bezier(0.28, 0.84, 0.42, 1);
+}
+
+/* Continuous bounce animation for badge with items */
+@keyframes bounce {
+  0%, 100% {
+    transform: translateY(0);
+  }
+  50% {
+    transform: translateY(-3px);
+  }
+}
+
+.animate-bounce {
+  animation: bounce 1s ease-in-out infinite;
 }
 
 /* Shadow glow effect */
