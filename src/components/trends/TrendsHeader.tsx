@@ -2,6 +2,7 @@
 import React from "react";
 import { usePortfolioStore } from "@/utils/portfolio-state";
 import BriefcaseButton from "@/components/common/BriefcaseButton";
+import { ArrowUp, ArrowDown } from "lucide-react";
 
 const TrendsHeader = () => {
   return (
@@ -12,6 +13,10 @@ const TrendsHeader = () => {
           alt="ONE TIME logo" 
           className="h-24"
         />
+        <div className="flex flex-col">
+          <ArrowUp className="h-6 w-6 text-onetime-green animate-pulse-heartbeat" />
+          <ArrowDown className="h-6 w-6 text-onetime-red animate-pulse-heartbeat" />
+        </div>
       </div>
       <div className="flex-grow" />
       <BriefcaseButton className="mr-4" />
