@@ -8,7 +8,12 @@ import { usePortfolioStore } from "@/utils/portfolio-state";
 const TrendsHeader = () => {
   const navigate = useNavigate();
   const portfolioButtonRef = useRef<HTMLButtonElement>(null);
-  const { pendingBets, showBadgeAnimation } = usePortfolioStore();
+  const { pendingBets, showBadgeAnimation, stopVibration, viewed } = usePortfolioStore();
+  
+  const handlePortfolioClick = () => {
+    stopVibration(); // Stop vibration when user clicks on portfolio
+    navigate('/portfolio');
+  };
   
   return (
     <header className="mb-4 flex items-center justify-between">
@@ -21,8 +26,8 @@ const TrendsHeader = () => {
       </div>
       <button 
         ref={portfolioButtonRef}
-        className="rounded-full p-2 text-white/80 hover:text-white relative"
-        onClick={() => navigate('/portfolio')}
+        className={`rounded-full p-2 text-white/80 hover:text-white relative ${pendingBets.length > 0 && !viewed ? "animate-vibrate" : ""}`}
+        onClick={handlePortfolioClick}
       >
         <Briefcase className="h-6 w-6" />
         <PortfolioBadge 
