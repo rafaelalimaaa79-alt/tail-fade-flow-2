@@ -22,7 +22,7 @@ const Dashboard = () => {
   const topRotationPausedRef = useRef(false);
   const bottomRotationPausedRef = useRef(false);
   const portfolioButtonRef = useRef<HTMLButtonElement>(null);
-  const { pendingBets, showBadgeAnimation, resetBadgeAnimation, stopVibration } = usePortfolioStore();
+  const { pendingBets, showBadgeAnimation, resetBadgeAnimation, stopVibration, viewed } = usePortfolioStore();
   
   const { 
     isOpen, 
@@ -150,7 +150,7 @@ const Dashboard = () => {
           </div>
           <button 
             ref={portfolioButtonRef}
-            className={`rounded-full p-2 text-white/80 hover:text-white flex items-center justify-center self-center relative ${pendingBets.length > 0 && !pendingBets.viewed ? "animate-vibrate" : ""}`}
+            className={`rounded-full p-2 text-white/80 hover:text-white flex items-center justify-center self-center relative ${pendingBets.length > 0 && !viewed ? "animate-vibrate" : ""}`}
             onClick={handlePortfolioClick}
           >
             <Briefcase className="h-6 w-6" />
