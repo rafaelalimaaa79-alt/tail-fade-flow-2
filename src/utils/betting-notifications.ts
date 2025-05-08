@@ -30,30 +30,40 @@ export const useNotificationStore = create<NotificationStore>((set) => ({
       navigator.vibrate([100]);
     }
     
+    // Log for debugging
+    console.log("Opening notification:", { variant, bettorName, betDescription });
+    
     set({
       isOpen: true,
       message: "", // No longer needed but keeping the property for compatibility
       variant,
       bettorName,
       betDescription,
-      sourceRect
+      sourceRect,
+      showFlyAnimation: false // Ensure animation is reset
     });
   },
   closeNotification: () => set(state => {
+    console.log("Closing notification, will trigger animation");
     if (state.isOpen) {
       return {
         isOpen: false,
-        // Start the fly animation immediately when notification closes
+        // Immediately start the fly animation when notification closes
         showFlyAnimation: true
       };
     }
     return state;
   }),
-  startFlyAnimation: () => set({ showFlyAnimation: true }),
+  startFlyAnimation: () => {
+    console.log("Start fly animation called manually");
+    set({ showFlyAnimation: true });
+  },
   completeFlyAnimation: () => {
     // When the animation completes, add the bet to the portfolio
     const { variant, bettorName, betDescription } = useNotificationStore.getState();
     const { addBet } = usePortfolioStore.getState();
+    
+    console.log("Animation complete, adding bet to portfolio");
     
     if (variant && bettorName && betDescription) {
       addBet(bettorName, betDescription, variant);

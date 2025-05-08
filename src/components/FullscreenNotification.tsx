@@ -24,22 +24,25 @@ const FullscreenNotification = ({
   useEffect(() => {
     if (isOpen) {
       // Quick animation sequence for elements appearing
+      console.log("Fullscreen notification opening");
       setIsVisible(true);
       
       // Start animation sequence
       setTimeout(() => setTextAppeared(true), 300);
       
-      // Auto-close after 2.5 seconds to get to the fly animation faster
+      // Display for a moderate amount of time (2 seconds) then transition to animation
       const timer = setTimeout(() => {
+        console.log("Beginning notification close sequence");
         setTextAppeared(false);
         
-        // Shorter fade out to make transition to fly animation more immediate
+        // Very quick fade out to transition immediately to the fly animation
         setTimeout(() => {
           setIsVisible(false);
-          // Call onClose sooner for a quicker transition to the fly animation
-          setTimeout(onClose, 300);
-        }, 200);
-      }, 2500);
+          console.log("Notification visually closed, triggering onClose");
+          // Call onClose immediately to start the fly animation without delay
+          onClose();
+        }, 150);
+      }, 2000);
       
       return () => {
         clearTimeout(timer);
@@ -48,9 +51,10 @@ const FullscreenNotification = ({
   }, [isOpen, onClose]);
 
   const handleBackdropClick = () => {
+    console.log("Backdrop clicked, closing notification");
     setTextAppeared(false);
     setIsVisible(false);
-    setTimeout(onClose, 300);
+    setTimeout(onClose, 150);
   };
 
   if (!isOpen) return null;
