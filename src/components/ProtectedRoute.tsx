@@ -9,14 +9,24 @@ type ProtectedRouteProps = {
   children: React.ReactNode;
 };
 
+// Development mode flag to bypass authentication checks
+const BYPASS_AUTH = true; // Toggle this to false when you want to enable authentication
+
 const ProtectedRoute = ({ children }: ProtectedRouteProps) => {
-  const [isVerifying, setIsVerifying] = useState(true);
+  const [isVerifying, setIsVerifying] = useState(!BYPASS_AUTH);
   const navigate = useNavigate();
   const location = useLocation();
   const { user, loading } = useAuth();
   const { attemptBiometricAuth } = useBiometricAuth();
   
   useEffect(() => {
+    // If we're bypassing authentication, don't perform any checks
+    if (BYPASS_AUTH) {
+      console.log("ProtectedRoute: Authentication bypassed for development");
+      setIsVerifying(false);
+      return;
+    }
+    
     const checkAuth = async () => {
       try {
         console.log("ProtectedRoute: Checking authentication status");
