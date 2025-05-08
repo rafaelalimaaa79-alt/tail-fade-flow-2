@@ -17,7 +17,7 @@ const PortfolioBadge = ({ count, className, showAnimation }: PortfolioBadgeProps
       variant="purple" 
       className={cn(
         "absolute -top-2 -right-2 min-w-[20px] h-5 flex items-center justify-center px-1 text-xs font-bold",
-        showAnimation && "animate-bounce-once shadow-glow",
+        showAnimation && "animate-bullseye shadow-glow",
         className
       )}
     >

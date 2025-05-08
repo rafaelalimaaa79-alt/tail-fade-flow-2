@@ -20,29 +20,35 @@ const FullscreenNotification = ({
 }: FullscreenNotificationProps) => {
   const [isVisible, setIsVisible] = useState(false);
   const [textAppeared, setTextAppeared] = useState(false);
+  const [isImploding, setIsImploding] = useState(false);
 
   useEffect(() => {
     if (isOpen) {
       // Quick animation sequence for elements appearing
       console.log("Fullscreen notification opening");
       setIsVisible(true);
+      setIsImploding(false);
       
       // Start animation sequence
       setTimeout(() => setTextAppeared(true), 300);
       
-      // Display for a moderate amount of time (2 seconds) then transition to animation
+      // Display for a moderate amount of time then transition to animation
       const timer = setTimeout(() => {
-        console.log("Beginning notification close sequence");
+        console.log("Beginning notification implode sequence");
         setTextAppeared(false);
         
-        // Very quick fade out to transition immediately to the fly animation
+        // Start imploding effect before completely closing
         setTimeout(() => {
-          setIsVisible(false);
-          console.log("Notification visually closed, triggering onClose");
-          // Call onClose immediately to start the fly animation without delay
-          onClose();
+          setIsImploding(true);
+          
+          // Very quick transition to the dart animation
+          setTimeout(() => {
+            setIsVisible(false);
+            console.log("Notification imploded, triggering dart animation");
+            onClose();
+          }, 400);
         }, 150);
-      }, 2000);
+      }, 1800);
       
       return () => {
         clearTimeout(timer);
@@ -51,10 +57,15 @@ const FullscreenNotification = ({
   }, [isOpen, onClose]);
 
   const handleBackdropClick = () => {
-    console.log("Backdrop clicked, closing notification");
+    console.log("Backdrop clicked, imploding notification");
     setTextAppeared(false);
-    setIsVisible(false);
-    setTimeout(onClose, 150);
+    setTimeout(() => {
+      setIsImploding(true);
+      setTimeout(() => {
+        setIsVisible(false);
+        onClose();
+      }, 400);
+    }, 150);
   };
 
   if (!isOpen) return null;
@@ -80,8 +91,9 @@ const FullscreenNotification = ({
       
       {/* Notification card with enhanced animations */}
       <div
-        className={`relative max-w-md w-full rounded-xl p-8 shadow-2xl text-center transform transition-all duration-500 ${
-          isVisible ? "scale-100 translate-y-0" : "scale-95 translate-y-8"
+        className={`relative max-w-md w-full rounded-xl p-8 shadow-2xl text-center transform transition-all ${
+          isImploding ? "duration-400 scale-[0.15] rounded-full overflow-hidden" :
+          isVisible ? "duration-500 scale-100 translate-y-0" : "duration-300 scale-95 translate-y-8"
         } ${bgGradient} text-white overflow-hidden ${
           isVisible ? "shadow-glow" : ""
         }`}
@@ -92,7 +104,7 @@ const FullscreenNotification = ({
         }}
       >
         {/* Background flash effect */}
-        {isVisible && (
+        {isVisible && !isImploding && (
           <div className="absolute inset-0 bg-white/20 animate-quick-flash pointer-events-none"></div>
         )}
         

@@ -44,7 +44,7 @@ export const useNotificationStore = create<NotificationStore>((set) => ({
     });
   },
   closeNotification: () => set(state => {
-    console.log("Closing notification, will trigger animation");
+    console.log("Notification closed, transitioning to dart animation");
     if (state.isOpen) {
       return {
         isOpen: false,
@@ -55,7 +55,7 @@ export const useNotificationStore = create<NotificationStore>((set) => ({
     return state;
   }),
   startFlyAnimation: () => {
-    console.log("Start fly animation called manually");
+    console.log("Start dart flight animation");
     set({ showFlyAnimation: true });
   },
   completeFlyAnimation: () => {
@@ -63,7 +63,7 @@ export const useNotificationStore = create<NotificationStore>((set) => ({
     const { variant, bettorName, betDescription } = useNotificationStore.getState();
     const { addBet } = usePortfolioStore.getState();
     
-    console.log("Animation complete, adding bet to portfolio");
+    console.log("Dart animation complete, adding bet to portfolio");
     
     if (variant && bettorName && betDescription) {
       addBet(bettorName, betDescription, variant);
