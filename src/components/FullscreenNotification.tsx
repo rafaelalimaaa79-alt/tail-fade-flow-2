@@ -29,12 +29,17 @@ const FullscreenNotification = ({
       // Start animation sequence
       setTimeout(() => setTextAppeared(true), 300);
       
-      // Auto-close after 3 seconds to get to the fly animation faster
+      // Auto-close after 2.5 seconds to get to the fly animation faster
       const timer = setTimeout(() => {
         setTextAppeared(false);
-        setIsVisible(false);
-        setTimeout(onClose, 500);
-      }, 3000);
+        
+        // Shorter fade out to make transition to fly animation more immediate
+        setTimeout(() => {
+          setIsVisible(false);
+          // Call onClose sooner for a quicker transition to the fly animation
+          setTimeout(onClose, 300);
+        }, 200);
+      }, 2500);
       
       return () => {
         clearTimeout(timer);

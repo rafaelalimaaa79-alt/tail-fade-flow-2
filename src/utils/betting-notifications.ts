@@ -43,7 +43,7 @@ export const useNotificationStore = create<NotificationStore>((set) => ({
     if (state.isOpen) {
       return {
         isOpen: false,
-        // We'll start the fly animation when notification closes
+        // Start the fly animation immediately when notification closes
         showFlyAnimation: true
       };
     }
