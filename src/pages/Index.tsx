@@ -1,5 +1,5 @@
 
-import React, { useRef } from "react";
+import React, { useRef, useEffect } from "react";
 import BottomNav from "@/components/BottomNav";
 import BetOfTheDay from "@/components/BetOfTheDay";
 import LeaderboardCarousel from "@/components/LeaderboardCarousel";
@@ -9,10 +9,13 @@ import DashboardHeader from "@/components/dashboard/DashboardHeader";
 import NotificationHandler from "@/components/dashboard/NotificationHandler";
 import BadgeAnimationHandler from "@/components/dashboard/BadgeAnimationHandler";
 import { useCarouselRotation } from "@/hooks/useCarouselRotation";
+import { usePortfolioStore } from "@/utils/portfolio-state";
+import { showTailNotification } from "@/utils/betting-notifications";
 
 const Dashboard = () => {
   const isMobile = useIsMobile();
   const portfolioButtonRef = useRef<HTMLButtonElement>(null);
+  const { resetViewedState } = usePortfolioStore();
   
   // Set up carousel rotations with custom hook
   const { 
@@ -38,6 +41,15 @@ const Dashboard = () => {
     }
     return null;
   };
+  
+  // For testing purposes - simulate a bet after component mounts
+  useEffect(() => {
+    const timer = setTimeout(() => {
+      resetViewedState(); // Reset the viewed state to make the briefcase shake
+    }, 1500);
+    
+    return () => clearTimeout(timer);
+  }, [resetViewedState]);
   
   return (
     <div className="flex min-h-screen flex-col bg-background">

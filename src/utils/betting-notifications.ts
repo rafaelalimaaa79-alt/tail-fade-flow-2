@@ -43,11 +43,14 @@ export const useNotificationStore = create<NotificationStore>((set) => ({
   closeNotification: () => {
     // When closing, add the bet to the portfolio directly
     const { variant, bettorName, betDescription } = useNotificationStore.getState();
-    const { addBet } = usePortfolioStore.getState();
+    const { addBet, resetViewedState } = usePortfolioStore.getState();
     
     if (variant && bettorName && betDescription) {
       console.log("Adding bet to portfolio:", { variant, bettorName, betDescription });
       addBet(bettorName, betDescription, variant);
+      
+      // Ensure the viewed state is reset when adding a new bet
+      resetViewedState();
     }
     
     set({ isOpen: false });

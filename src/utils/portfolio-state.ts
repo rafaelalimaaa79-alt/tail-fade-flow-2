@@ -17,6 +17,7 @@ interface PortfolioState {
   addBet: (bettorName: string, betDescription: string, variant: "tail" | "fade") => void;
   resetBadgeAnimation: () => void;
   stopVibration: () => void;
+  resetViewedState: () => void; // Added this new function
 }
 
 export const usePortfolioStore = create<PortfolioState>()(
@@ -37,11 +38,12 @@ export const usePortfolioStore = create<PortfolioState>()(
         return {
           pendingBets: [...state.pendingBets, newBet],
           showBadgeAnimation: true,
-          viewed: false
+          viewed: false // Set to false when a new bet is added
         };
       }),
       resetBadgeAnimation: () => set({ showBadgeAnimation: false }),
-      stopVibration: () => set({ viewed: true })
+      stopVibration: () => set({ viewed: true }),
+      resetViewedState: () => set({ viewed: false }) // Added this new function
     }),
     {
       name: "portfolio-storage"
