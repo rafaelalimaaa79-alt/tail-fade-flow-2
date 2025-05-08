@@ -1,20 +1,9 @@
 
-import React, { useRef } from "react";
-import { Briefcase } from "lucide-react";
-import { useNavigate } from "react-router-dom";
-import PortfolioBadge from "@/components/PortfolioBadge";
+import React from "react";
 import { usePortfolioStore } from "@/utils/portfolio-state";
+import BriefcaseButton from "@/components/common/BriefcaseButton";
 
 const TrendsHeader = () => {
-  const navigate = useNavigate();
-  const portfolioButtonRef = useRef<HTMLButtonElement>(null);
-  const { pendingBets, showBadgeAnimation, stopVibration, viewed } = usePortfolioStore();
-  
-  const handlePortfolioClick = () => {
-    stopVibration(); // Stop vibration when user clicks on portfolio
-    navigate('/portfolio');
-  };
-  
   return (
     <header className="mb-4 flex items-center justify-between">
       <div className="flex items-center gap-3">
@@ -24,17 +13,7 @@ const TrendsHeader = () => {
           className="h-16"
         />
       </div>
-      <button 
-        ref={portfolioButtonRef}
-        className={`rounded-full p-2 text-white/80 hover:text-white relative ${pendingBets.length > 0 && !viewed ? "animate-vibrate" : ""}`}
-        onClick={handlePortfolioClick}
-      >
-        <Briefcase className="h-6 w-6" />
-        <PortfolioBadge 
-          count={pendingBets.length} 
-          showAnimation={showBadgeAnimation}
-        />
-      </button>
+      <BriefcaseButton />
     </header>
   );
 };

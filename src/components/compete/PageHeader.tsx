@@ -1,19 +1,8 @@
 
 import React from "react";
-import { Briefcase } from "lucide-react";
-import { useNavigate } from "react-router-dom";
-import { usePortfolioStore } from "@/utils/portfolio-state";
-import PortfolioBadge from "@/components/PortfolioBadge";
+import BriefcaseButton from "@/components/common/BriefcaseButton";
 
 const PageHeader: React.FC = () => {
-  const navigate = useNavigate();
-  const { pendingBets, showBadgeAnimation, stopVibration, viewed } = usePortfolioStore();
-  
-  const handlePortfolioClick = () => {
-    stopVibration(); // Stop vibration when user clicks on portfolio button
-    navigate('/portfolio');
-  };
-
   return (
     <>
       <header className="mb-6 flex items-center justify-between">
@@ -24,16 +13,7 @@ const PageHeader: React.FC = () => {
             className="h-20"
           />
         </div>
-        <button 
-          className={`rounded-full p-2 text-white/80 hover:text-white relative ${pendingBets.length > 0 && !viewed ? "animate-vibrate" : ""}`}
-          onClick={handlePortfolioClick}
-        >
-          <Briefcase className="h-6 w-6" />
-          <PortfolioBadge 
-            count={pendingBets.length} 
-            showAnimation={showBadgeAnimation}
-          />
-        </button>
+        <BriefcaseButton />
       </header>
 
       <div className="mb-6">

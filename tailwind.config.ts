@@ -1,4 +1,3 @@
-
 import type { Config } from "tailwindcss";
 
 export default {
@@ -120,6 +119,12 @@ export default {
         'shimmer': {
           '0%': { backgroundPosition: '-100% 0' },
           '100%': { backgroundPosition: '200% 0' }
+        },
+        'shake': {
+          '0%, 100%': { transform: 'translateX(0)' },
+          '25%': { transform: 'translateX(-4px)' },
+          '50%': { transform: 'translateX(4px)' },
+          '75%': { transform: 'translateX(-4px)' },
         }
 			},
 			animation: {
@@ -128,7 +133,8 @@ export default {
         'pulse-heartbeat': 'pulse-heartbeat 1.5s ease-in-out infinite',
         'fingerprint-scan': 'fingerprint-scan 2s ease-in-out infinite',
         'glow-pulse': 'glow-pulse 2s ease-in-out infinite',
-        'shimmer': 'shimmer 2s infinite linear'
+        'shimmer': 'shimmer 2s infinite linear',
+        'shake': 'shake 0.4s ease-in-out infinite'
 			}
 		}
 	},
