@@ -39,16 +39,7 @@ const BottomNav = () => {
         to="/trends"
         className={cn("nav-item", isActive("/trends") ? trendsStyle : "text-white/70")}
       >
-        <div className="relative flex items-center justify-center">
-          <div className="relative">
-            <Sparkles className="h-6 w-6 mb-1" />
-            <div className="absolute -right-3 -top-1.5 flex space-x-0.5">
-              <ArrowUp className="h-3.5 w-3.5 text-green-400 animate-pulse drop-shadow-[0_0_6px_rgba(74,222,128,0.9)]" />
-              <ArrowDown className="h-3.5 w-3.5 text-red-400 animate-pulse drop-shadow-[0_0_6px_rgba(248,113,113,0.9)]" />
-            </div>
-          </div>
-        </div>
-        <span>Trends</span>
+        <span className="mt-7">Trends</span>
       </Link>
       <Link
         to="/compete"
