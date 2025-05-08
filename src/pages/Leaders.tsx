@@ -1,6 +1,4 @@
-
 import React, { useState, useEffect } from "react";
-import { Briefcase, Award } from "lucide-react";
 import BottomNav from "@/components/BottomNav";
 import { useIsMobile } from "@/hooks/use-mobile";
 import { useSearchParams, useNavigate } from "react-router-dom";
@@ -8,6 +6,8 @@ import { Tabs, TabsList, TabsTrigger, TabsContent } from "@/components/ui/tabs";
 import ActionButton from "@/components/ActionButton";
 import { Table, TableHeader, TableRow, TableHead, TableBody, TableCell } from "@/components/ui/table";
 import { ScrollArea } from "@/components/ui/scroll-area";
+import BriefcaseButton from "@/components/common/BriefcaseButton";
+import { Award } from "lucide-react";
 
 // Mock data for hottest bettors with rounded numbers - reduced to 50
 const hottestBettors = Array.from({ length: 50 }, (_, i) => ({
@@ -50,20 +50,16 @@ const Leaders = () => {
   return (
     <div className="flex min-h-screen flex-col bg-background">
       <div className={`onetime-container ${isMobile ? "pb-24" : ""}`}>
-        <header className="mb-4 flex items-center justify-between">
+        <header className="mb-4 flex items-center">
           <div className="flex items-center gap-2">
             <img 
               src="/lovable-uploads/57cb1fb4-7471-451e-bf49-d4d5fa12bdcb.png" 
               alt="ONE TIME logo" 
-              className="h-16"
+              className="h-24"
             />
           </div>
-          <button 
-            className="rounded-full p-2 text-white/80 hover:text-white"
-            onClick={() => navigate('/portfolio')}
-          >
-            <Briefcase className="h-5 w-5" />
-          </button>
+          <div className="flex-grow" />
+          <BriefcaseButton className="mr-4" />
         </header>
 
         <div className="mb-4">

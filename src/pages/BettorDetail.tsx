@@ -1,12 +1,11 @@
-
 import React from "react";
 import { useParams, useNavigate } from "react-router-dom";
 import BottomNav from "@/components/BottomNav";
 import BetHistoryModal from "@/components/BetHistoryModal";
 import { useBettorProfile } from "@/hooks/useBettorProfile";
-import { Briefcase } from "lucide-react";
 import { useNotificationStore } from "@/utils/betting-notifications";
 import FullscreenNotification from "@/components/FullscreenNotification";
+import BriefcaseButton from "@/components/common/BriefcaseButton";
 
 // Imported components
 import BettorHeader from "@/components/bettor/BettorHeader";
@@ -70,20 +69,16 @@ const BettorDetail = () => {
   return (
     <div className="bg-onetime-dark min-h-screen pb-20">
       <div className="onetime-container">
-        <header className="mb-4 flex items-center justify-between">
+        <header className="mb-4 flex items-center">
           <div className="flex items-center gap-3">
             <img 
               src="/lovable-uploads/57cb1fb4-7471-451e-bf49-d4d5fa12bdcb.png" 
               alt="ONE TIME logo" 
-              className="h-16"
+              className="h-24"
             />
           </div>
-          <button 
-            className="rounded-full p-2 text-white/80 hover:text-white"
-            onClick={() => navigate('/portfolio')}
-          >
-            <Briefcase className="h-5 w-5" />
-          </button>
+          <div className="flex-grow" />
+          <BriefcaseButton className="mr-4" />
         </header>
         
         {/* Bettor header with adjusted spacing */}

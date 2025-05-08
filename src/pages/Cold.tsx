@@ -1,10 +1,10 @@
 
 import React from "react";
-import { Briefcase } from "lucide-react";
 import BottomNav from "@/components/BottomNav";
 import ColdestBettors from "@/components/ColdestBettors";
 import { useIsMobile } from "@/hooks/use-mobile";
 import { useNavigate } from "react-router-dom";
+import BriefcaseButton from "@/components/common/BriefcaseButton";
 
 const ColdPage = () => {
   const isMobile = useIsMobile();
@@ -13,20 +13,16 @@ const ColdPage = () => {
   return (
     <div className="flex min-h-screen flex-col bg-background">
       <div className={`onetime-container ${isMobile ? "pb-24" : ""}`}>
-        <header className="mb-8 flex items-center justify-between">
+        <header className="mb-8 flex items-center">
           <div className="flex items-center gap-3">
             <img 
               src="/lovable-uploads/57cb1fb4-7471-451e-bf49-d4d5fa12bdcb.png" 
               alt="ONE TIME logo" 
-              className="h-20"
+              className="h-24"
             />
           </div>
-          <button 
-            className="rounded-full p-2 text-white/80 hover:text-white"
-            onClick={() => navigate('/portfolio')}
-          >
-            <Briefcase className="h-6 w-6" />
-          </button>
+          <div className="flex-grow" />
+          <BriefcaseButton className="mr-4" />
         </header>
 
         <div className="mt-4">
