@@ -17,7 +17,8 @@ interface PortfolioState {
   addBet: (bettorName: string, betDescription: string, variant: "tail" | "fade") => void;
   resetBadgeAnimation: () => void;
   stopVibration: () => void;
-  resetViewedState: () => void; // Added this new function
+  resetViewedState: () => void;
+  clearPendingBets: () => void; // Added new function to clear pending bets
 }
 
 export const usePortfolioStore = create<PortfolioState>()(
@@ -43,7 +44,8 @@ export const usePortfolioStore = create<PortfolioState>()(
       }),
       resetBadgeAnimation: () => set({ showBadgeAnimation: false }),
       stopVibration: () => set({ viewed: true }),
-      resetViewedState: () => set({ viewed: false }) // Added this new function
+      resetViewedState: () => set({ viewed: false }),
+      clearPendingBets: () => set({ pendingBets: [], viewed: true }) // Clear all pending bets and reset viewed state
     }),
     {
       name: "portfolio-storage"

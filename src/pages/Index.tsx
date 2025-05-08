@@ -45,7 +45,7 @@ const Dashboard = () => {
   // For testing purposes - simulate a bet after component mounts
   useEffect(() => {
     const timer = setTimeout(() => {
-      resetViewedState(); // Reset the viewed state to make the briefcase shake
+      resetViewedState(); // Reset the viewed state to make the briefcase glow
     }, 1500);
     
     return () => clearTimeout(timer);

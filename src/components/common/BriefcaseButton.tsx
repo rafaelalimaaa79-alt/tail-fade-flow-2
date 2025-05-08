@@ -14,13 +14,13 @@ const BriefcaseButton: React.FC<BriefcaseButtonProps> = ({ className }) => {
   const { pendingBets, showBadgeAnimation, stopVibration, viewed } = usePortfolioStore();
   
   const handlePortfolioClick = () => {
-    stopVibration(); // Stop vibration when user clicks on portfolio
+    stopVibration(); // Stop pulse when user clicks on portfolio
     navigate('/portfolio');
   };
   
   return (
     <button 
-      className={`relative rounded-full p-2 text-white/80 hover:text-white ${pendingBets.length > 0 && !viewed ? "animate-shake" : ""} ${className || ""}`}
+      className={`relative rounded-full p-2 text-white/80 hover:text-white ${pendingBets.length > 0 && !viewed ? "animate-glow-pulse" : ""} ${className || ""}`}
       onClick={handlePortfolioClick}
     >
       <Briefcase className="h-6 w-6" />
