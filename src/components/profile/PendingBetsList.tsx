@@ -65,20 +65,20 @@ const PendingBetsList = () => {
             
             {/* Top row: Bet Type as header & Time */}
             <div className="flex items-center justify-between mb-2">
-              <h4 className="text-lg font-bold text-white tracking-tight">{bet.betDescription}</h4>
-              <span className="text-xs text-white/60">
+              <h4 className="text-lg font-bold text-white tracking-tight text-center w-full">{bet.betDescription}</h4>
+              <span className="text-xs text-white/60 absolute top-4 right-4">
                 {formatTime(bet.timestamp)}
               </span>
             </div>
             
             {/* Middle row: Bettor and confidence */}
-            <div className="flex flex-wrap items-center justify-between mb-3">
-              <div className="text-sm text-white/80">
+            <div className="flex flex-wrap items-center justify-center mb-3">
+              <div className="text-sm text-white/80 text-center">
                 <span className="font-medium">
                   {bet.variant === "tail" ? "Tailing" : "Fading"} @{bet.bettorName}
                 </span>
               </div>
-              <Badge variant="outline" className={cn("border", confidence.color)}>
+              <Badge variant="outline" className={cn("border ml-2", confidence.color)}>
                 {confidence.score}%
               </Badge>
             </div>

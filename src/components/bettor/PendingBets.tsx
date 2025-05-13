@@ -34,7 +34,7 @@ const PendingBets: React.FC<PendingBetsProps> = ({ pendingBets, className }) => 
 
   return (
     <div className={cn("rounded-xl bg-onetime-darkBlue p-4 shadow-md", className)}>
-      <h3 className="mb-4 text-xl font-bold text-white">Pending Bets</h3>
+      <h3 className="mb-4 text-xl font-bold text-white text-center">Pending Bets</h3>
       
       {pendingBets.length > 0 ? (
         <div className="space-y-4">
@@ -54,25 +54,25 @@ const PendingBets: React.FC<PendingBetsProps> = ({ pendingBets, className }) => 
                 <div className="absolute -top-12 -right-12 h-24 w-24 rounded-full bg-onetime-purple/30 blur-xl"></div>
                 
                 {/* Top row: Bet Type as header & Time */}
-                <div className="flex items-center justify-between mb-2">
-                  <h4 className="text-lg font-bold text-white tracking-tight">{bet.betType}</h4>
-                  <span className="text-xs text-white/60">
+                <div className="flex flex-col items-center justify-center mb-2">
+                  <h4 className="text-lg font-bold text-white tracking-tight text-center">{bet.betType}</h4>
+                  <span className="text-xs text-white/60 absolute top-4 right-4">
                     {formatTime(bet.timestamp)}
                   </span>
                 </div>
                 
                 {/* Middle row: Units and potential win */}
-                <div className="flex flex-wrap items-center justify-between mb-3">
-                  <div className="text-sm text-white/80">
+                <div className="flex flex-wrap items-center justify-center mb-3">
+                  <div className="text-sm text-white/80 text-center">
                     <span className="font-medium">{bet.unitsRisked} units to win {potentialWin}</span>
                   </div>
-                  <Badge variant="outline" className={cn("border", confidence.color)}>
+                  <Badge variant="outline" className={cn("border ml-2", confidence.color)}>
                     {confidence.score}%
                   </Badge>
                 </div>
                 
                 {/* Bottom row: Action buttons */}
-                <div className="flex gap-2 mt-2">
+                <div className="flex gap-2 mt-2 justify-center">
                   <ActionButton 
                     variant="tail" 
                     className="h-9 py-0 text-sm"
