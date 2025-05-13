@@ -28,7 +28,7 @@ const BettorPerformanceSection: React.FC<BettorPerformanceSectionProps> = ({
   };
 
   return (
-    <div className="my-2">
+    <div className="my-4">
       <div className="flex items-center justify-between mb-2">
         <h3 className="text-sm font-semibold">Performance</h3>
         <BettorTimeFilter

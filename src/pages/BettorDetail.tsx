@@ -88,7 +88,7 @@ const BettorDetail = () => {
         {/* Pending Bets Section - HIGH PRIORITY - Replacing Today's Bets */}
         <PendingBets pendingBets={pendingBets} className="my-4" />
         
-        <div className="my-4 rounded-xl bg-onetime-darkBlue p-4 shadow-md">
+        <div className="my-4 rounded-xl bg-black border border-white/10 p-4 shadow-md">
           {/* Performance Section with integrated stats */}
           <BettorPerformanceSection 
             summary={summary}
