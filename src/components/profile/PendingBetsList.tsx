@@ -85,16 +85,16 @@ const PendingBetsList = () => {
             <div className="absolute -top-12 -right-12 h-28 w-28 rounded-full bg-onetime-purple/20 blur-xl"></div>
             <div className="absolute bottom-0 left-6 h-20 w-20 rounded-full bg-onetime-orange/10 blur-xl"></div>
             
-            {/* Bet Description as prominent header */}
+            {/* Bet Description as prominent header with cooler font */}
             <div className="mb-4 text-center">
-              <h4 className="text-xl font-extrabold text-white tracking-tight relative z-10">
+              <h4 className="text-xl font-extrabold text-white tracking-tight relative z-10 font-rajdhani">
                 {bet.betDescription}
                 <div className="h-1 w-16 bg-gradient-to-r from-onetime-purple via-onetime-purple/80 to-transparent rounded-full mx-auto mt-1"></div>
               </h4>
             </div>
             
             {/* Confidence percentage in top right with same style as time was */}
-            <div className={`absolute top-3 right-3 flex items-center gap-1 rounded-full bg-black/30 px-2 py-1 text-xs backdrop-blur-sm border border-white/10 ${confidenceData.colorClass}`}>
+            <div className={`absolute top-3 right-3 flex items-center gap-1 rounded-full bg-black/30 px-2.5 py-1.5 text-sm font-bold backdrop-blur-sm border border-white/10 ${confidenceData.colorClass}`}>
               <span>{confidenceData.score}%</span>
             </div>
             
