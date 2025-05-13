@@ -1,3 +1,4 @@
+
 import React from "react";
 import { useParams, useNavigate } from "react-router-dom";
 import BottomNav from "@/components/BottomNav";
@@ -38,7 +39,7 @@ const BettorDetail = () => {
   
   if (loading && !summary) {
     return (
-      <div className="onetime-container flex min-h-screen items-center justify-center bg-onetime-dark">
+      <div className="onetime-container flex min-h-screen items-center justify-center bg-black">
         <div className="text-center">
           <div className="mb-4 flex justify-center">
             <div className="h-8 w-8 animate-spin rounded-full border-2 border-onetime-purple border-t-transparent"></div>
@@ -51,7 +52,7 @@ const BettorDetail = () => {
   
   if (error || !summary) {
     return (
-      <div className="onetime-container flex min-h-screen flex-col items-center justify-center bg-onetime-dark">
+      <div className="onetime-container flex min-h-screen flex-col items-center justify-center bg-black">
         <div className="text-center">
           <h1 className="mb-2 text-2xl font-bold text-red-500">Error</h1>
           <p className="mb-4 text-gray-300">{error || "Failed to load bettor profile"}</p>
@@ -67,7 +68,7 @@ const BettorDetail = () => {
   }
   
   return (
-    <div className="bg-onetime-dark min-h-screen pb-20">
+    <div className="bg-black min-h-screen pb-20">
       <div className="onetime-container">
         <header className="mb-4 flex items-center">
           <div className="flex items-center gap-3">

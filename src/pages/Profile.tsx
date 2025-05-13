@@ -86,7 +86,7 @@ const ProfilePage = () => {
   const navigate = useNavigate();
 
   return (
-    <div className="bg-onetime-dark min-h-screen pb-20">
+    <div className="bg-black min-h-screen pb-20">
       <div className="onetime-container">
         <header className="mb-8 flex items-center">
           <div className="flex items-center gap-3">
