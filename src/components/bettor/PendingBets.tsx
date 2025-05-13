@@ -19,9 +19,9 @@ const PendingBets: React.FC<PendingBetsProps> = ({ pendingBets, className }) => 
   };
 
   const getConfidenceLevel = (units: number) => {
-    if (units >= 5) return { label: "High", score: 85, color: "bg-onetime-green/20 text-onetime-green border-onetime-green/30" };
-    if (units >= 3) return { label: "Medium", score: 65, color: "bg-onetime-orange/20 text-onetime-orange border-onetime-orange/30" };
-    return { label: "Low", score: 40, color: "bg-white/10 text-white/80 border-white/20" };
+    if (units >= 5) return { label: "High", color: "bg-onetime-green/20 text-onetime-green border-onetime-green/30" };
+    if (units >= 3) return { label: "Medium", color: "bg-onetime-orange/20 text-onetime-orange border-onetime-orange/30" };
+    return { label: "Low", color: "bg-white/10 text-white/80 border-white/20" };
   };
 
   const handleTail = (bet: BettorBet) => {
@@ -67,7 +67,7 @@ const PendingBets: React.FC<PendingBetsProps> = ({ pendingBets, className }) => 
                     <span className="font-medium">{bet.unitsRisked} units to win {potentialWin}</span>
                   </div>
                   <Badge variant="outline" className={cn("border ml-2", confidence.color)}>
-                    {confidence.score}%
+                    {confidence.label}
                   </Badge>
                 </div>
                 

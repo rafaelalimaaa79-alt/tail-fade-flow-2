@@ -52,8 +52,8 @@ const PendingBetsList = () => {
     <div className="space-y-4">
       {pendingBets.map((bet) => {
         const confidence = Math.random() < 0.5 ? 
-          { label: "Medium", score: 65, color: "bg-onetime-orange/20 text-onetime-orange border-onetime-orange/30" } :
-          { label: "High", score: 85, color: "bg-onetime-green/20 text-onetime-green border-onetime-green/30" };
+          { label: "Medium", color: "bg-onetime-orange/20 text-onetime-orange border-onetime-orange/30" } :
+          { label: "High", color: "bg-onetime-green/20 text-onetime-green border-onetime-green/30" };
         
         return (
           <div 
@@ -79,7 +79,7 @@ const PendingBetsList = () => {
                 </span>
               </div>
               <Badge variant="outline" className={cn("border ml-2", confidence.color)}>
-                {confidence.score}%
+                {confidence.label}
               </Badge>
             </div>
             
