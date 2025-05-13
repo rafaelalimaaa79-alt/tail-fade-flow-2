@@ -79,18 +79,15 @@ const PendingBets: React.FC<PendingBetsProps> = ({ pendingBets, className }) => 
                   </h4>
                 </div>
                 
-                {/* Time in stylish badge */}
-                <div className="absolute top-3 right-3 flex items-center gap-1 rounded-full bg-black/30 px-2 py-1 text-xs text-white/80 backdrop-blur-sm border border-white/10">
-                  <Clock className="h-3 w-3 text-onetime-purple" /> 
-                  <span>{formatTime(bet.timestamp)}</span>
+                {/* Confidence percentage in top right with same style as time was */}
+                <div className={`absolute top-3 right-3 flex items-center gap-1 rounded-full bg-black/30 px-2 py-1 text-xs backdrop-blur-sm border border-white/10 ${confidenceData.colorClass}`}>
+                  <span>{confidenceData.score}%</span>
                 </div>
                 
-                {/* Middle row: Confidence score with enhanced styling - REMOVED OVAL BORDER */}
+                {/* Middle row with enhanced styling - REMOVED confidence score since it's now in top right */}
                 <div className="flex flex-wrap items-center justify-center mb-4 relative z-10">
                   <div className="flex flex-col items-center">
-                    <div className={cn("font-bold text-white", confidenceData.colorClass)}>
-                      Confidence: {confidenceData.score}%
-                    </div>
+                    {/* Removed confidence score display as it's now in the top right */}
                   </div>
                 </div>
                 

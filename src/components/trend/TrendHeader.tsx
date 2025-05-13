@@ -21,22 +21,20 @@ const TrendHeader = ({
     
   return (
     <div className="mb-2 border-b border-white/10 pb-2">
-      <div className="flex justify-center items-center">
+      <div className="flex justify-center items-center relative">
         <h2 className="font-rajdhani text-xl font-bold text-white text-center">@{name}</h2>
-      </div>
-      <div className="flex justify-center mt-1">
-        <span 
-          className={cn(
-            "font-bold text-base px-3 py-0.5 rounded",
-            isTailRecommendation ? "bg-onetime-green/20 text-onetime-green" : "bg-onetime-red/20 text-onetime-red",
-            isMostVisible && "animate-pulse-heartbeat"
-          )}
-          style={{
-            boxShadow: isMostVisible ? glowColor : "none",
-          }}
-        >
-          Confidence Score: {score}%
-        </span>
+        
+        {/* Score percentage in top right with styled badge */}
+        <div className={cn(
+          "absolute top-0 right-0 rounded-full bg-black/30 px-2 py-1 text-xs backdrop-blur-sm border border-white/10",
+          isTailRecommendation ? "text-onetime-green" : "text-onetime-red",
+          isMostVisible && "animate-pulse-heartbeat"
+        )}
+        style={{
+          boxShadow: isMostVisible ? glowColor : "none",
+        }}>
+          <span>{score}%</span>
+        </div>
       </div>
     </div>
   );
