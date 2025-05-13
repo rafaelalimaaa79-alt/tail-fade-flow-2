@@ -58,11 +58,11 @@ const PendingBetsList = () => {
     
     let colorClass = "";
     if (score >= 70) {
-      colorClass = "bg-onetime-green text-white";
+      colorClass = "text-onetime-green";
     } else if (score >= 50) {
-      colorClass = "bg-onetime-orange text-white";
+      colorClass = "text-onetime-orange";
     } else {
-      colorClass = "bg-onetime-red text-white";
+      colorClass = "text-onetime-red";
     }
     
     return {
@@ -108,8 +108,8 @@ const PendingBetsList = () => {
                 </span>
               </div>
               
-              {/* Confidence Score Badge */}
-              <div className={cn("px-3 py-1 rounded-full font-bold text-sm", confidenceData.colorClass)}>
+              {/* Confidence Score - REMOVED OVAL BORDER */}
+              <div className={cn("font-bold text-white", confidenceData.colorClass)}>
                 Confidence: {confidenceData.score}%
               </div>
             </div>

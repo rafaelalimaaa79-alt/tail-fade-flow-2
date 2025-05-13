@@ -29,11 +29,11 @@ const PendingBets: React.FC<PendingBetsProps> = ({ pendingBets, className }) => 
     
     let colorClass = "";
     if (score >= 70) {
-      colorClass = "bg-onetime-green text-white";
+      colorClass = "text-onetime-green";
     } else if (score >= 50) {
-      colorClass = "bg-onetime-orange text-white"; 
+      colorClass = "text-onetime-orange"; 
     } else {
-      colorClass = "bg-onetime-red text-white";
+      colorClass = "text-onetime-red";
     }
     
     return {
@@ -85,10 +85,10 @@ const PendingBets: React.FC<PendingBetsProps> = ({ pendingBets, className }) => 
                   <span>{formatTime(bet.timestamp)}</span>
                 </div>
                 
-                {/* Middle row: Confidence score with enhanced styling */}
+                {/* Middle row: Confidence score with enhanced styling - REMOVED OVAL BORDER */}
                 <div className="flex flex-wrap items-center justify-center mb-4 relative z-10">
                   <div className="flex flex-col items-center">
-                    <div className={cn("px-3 py-1.5 rounded-full font-bold", confidenceData.colorClass)}>
+                    <div className={cn("font-bold text-white", confidenceData.colorClass)}>
                       Confidence: {confidenceData.score}%
                     </div>
                   </div>
