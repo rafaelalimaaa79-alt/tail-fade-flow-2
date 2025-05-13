@@ -51,7 +51,7 @@ const PendingBets: React.FC<PendingBetsProps> = ({ pendingBets, className }) => 
   };
 
   return (
-    <div className={cn("rounded-xl bg-onetime-darkBlue p-4 shadow-md relative animate-glow-pulse-purple overflow-hidden border border-onetime-purple/30", className)}>
+    <div className={cn("rounded-xl bg-black/30 p-4 shadow-md relative animate-glow-pulse-purple overflow-hidden border border-onetime-purple/30", className)}>
       <div className="absolute inset-0 bg-onetime-purple/5 backdrop-blur-sm pointer-events-none"></div>
       <h3 className="mb-5 text-xl font-bold text-white text-center relative inline-block left-1/2 transform -translate-x-1/2 z-10">
         Pending Bets
@@ -66,7 +66,7 @@ const PendingBets: React.FC<PendingBetsProps> = ({ pendingBets, className }) => 
             return (
               <div 
                 key={bet.id} 
-                className="relative overflow-hidden rounded-xl bg-gradient-to-br from-white/10 via-white/5 to-transparent p-4 shadow-lg border border-white/10 transition-all duration-300 hover:border-onetime-purple/50"
+                className="relative overflow-hidden rounded-xl bg-gradient-to-br from-black/40 via-black/30 to-transparent p-4 shadow-lg border border-white/10 transition-all duration-300 hover:border-onetime-purple/50"
               >
                 {/* Interactive blob effects in background */}
                 <div className="absolute -top-12 -right-12 h-28 w-28 rounded-full bg-onetime-purple/20 blur-xl"></div>
@@ -81,7 +81,7 @@ const PendingBets: React.FC<PendingBetsProps> = ({ pendingBets, className }) => 
                 </div>
                 
                 {/* Confidence percentage in top right with same style as time was */}
-                <div className={`absolute top-3 right-3 flex items-center gap-1 rounded-full bg-black/30 px-2.5 py-1.5 text-sm font-bold backdrop-blur-sm border border-white/10 ${confidenceData.colorClass}`}>
+                <div className={`absolute top-3 right-3 flex items-center gap-1 rounded-full bg-black/30 px-3 py-1.5 text-xl font-bold backdrop-blur-sm border border-white/10 ${confidenceData.colorClass}`}>
                   <span>{confidenceData.score}%</span>
                 </div>
                 
@@ -117,7 +117,7 @@ const PendingBets: React.FC<PendingBetsProps> = ({ pendingBets, className }) => 
           })}
         </div>
       ) : (
-        <div className="rounded-lg bg-white/5 p-6 text-center border border-white/10 relative z-10">
+        <div className="rounded-lg bg-black/20 p-6 text-center border border-white/10 relative z-10">
           <p className="text-white/70">This user has no active bets right now</p>
         </div>
       )}

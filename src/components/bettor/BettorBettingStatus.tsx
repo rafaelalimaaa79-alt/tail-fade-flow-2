@@ -22,7 +22,7 @@ const BettorBettingStatus: React.FC<BettorBettingStatusProps> = ({
   };
   
   return (
-    <div className={cn("rounded-xl bg-onetime-darkBlue p-4 shadow-md", className)}>
+    <div className={cn("rounded-xl bg-black/30 border border-white/10 p-4 shadow-md", className)}>
       <h3 className="mb-3 text-base font-bold text-white">Bettor's Activity</h3>
       
       <div className="space-y-4">

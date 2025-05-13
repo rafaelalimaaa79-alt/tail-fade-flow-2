@@ -52,7 +52,7 @@ const BettorBetList: React.FC<BettorBetListProps> = ({
   };
   
   return (
-    <div className={cn("rounded-xl bg-onetime-darkBlue p-4 shadow-md", className)}>
+    <div className={cn("rounded-xl bg-black/30 border border-white/10 p-4 shadow-md", className)}>
       <div className="flex justify-between items-center">
         <h3 className="text-lg font-bold text-white">Best Bets</h3>
         
@@ -70,7 +70,7 @@ const BettorBetList: React.FC<BettorBetListProps> = ({
       </div>
       
       <Tabs defaultValue="winners" className="mt-2">
-        <TabsList className="grid w-full grid-cols-2 bg-onetime-dark">
+        <TabsList className="grid w-full grid-cols-2 bg-black/50">
           <TabsTrigger value="winners">Biggest Winners</TabsTrigger>
           <TabsTrigger value="largest">Largest Bets</TabsTrigger>
         </TabsList>

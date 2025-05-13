@@ -10,13 +10,13 @@ type TodaysBetsProps = {
 
 const TodaysBets: React.FC<TodaysBetsProps> = ({ todayBets, className }) => {
   return (
-    <div className={cn("rounded-xl bg-onetime-darkBlue p-4 shadow-md", className)}>
+    <div className={cn("rounded-xl bg-black/30 border border-white/10 p-4 shadow-md", className)}>
       <h3 className="mb-3 text-lg font-bold text-white">Today's Bets</h3>
       
       {todayBets.length > 0 ? (
         <div className="space-y-2">
           {todayBets.map(bet => (
-            <div key={bet.id} className="rounded-md bg-white/10 p-3">
+            <div key={bet.id} className="rounded-md bg-white/5 p-3">
               <div className="flex justify-between">
                 <span className="font-medium text-white">{bet.teams}</span>
                 <span className={cn(
