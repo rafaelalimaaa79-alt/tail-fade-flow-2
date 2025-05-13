@@ -29,26 +29,26 @@ const coldestBettors = Array.from({ length: 50 }, (_, i) => ({
 
 const Leaders = () => {
   const [searchParams, setSearchParams] = useSearchParams();
-  const initialType = searchParams.get("type") === "fade" ? "cold" : "hot";
-  const [activeTab, setActiveTab] = useState<"hot" | "cold">(initialType);
+  const defaultTab = searchParams.get("type") === "fade" ? "cold" : "hot";
+  const [activeTab, setActiveTab] = useState<"hot" | "cold">(defaultTab);
   const [showAll, setShowAll] = useState(false);
   const isMobile = useIsMobile();
   const navigate = useNavigate();
 
-  // FIX: Modify the URL parameters update to prevent infinite loops
-  // Only update the URL when activeTab changes, not on every render
+  // Fix the infinite loop by using a ref to track first render
+  const isFirstRender = React.useRef(true);
+  
   useEffect(() => {
-    // Skip the initial render URL update since we already got it from the URL
-    const currentType = searchParams.get("type");
-    const newType = activeTab === "hot" ? "tail" : "fade";
-    
-    // Only update URL if needed to prevent refresh loops
-    if ((currentType === "fade" && activeTab === "hot") || 
-        (currentType === "tail" && activeTab === "cold") ||
-        (!currentType)) {
-      setSearchParams({ type: newType });
+    // Skip URL update on the first render since we already set activeTab from URL
+    if (isFirstRender.current) {
+      isFirstRender.current = false;
+      return;
     }
-  }, [activeTab]); // Only depend on activeTab, not searchParams or setSearchParams
+    
+    // Only update URL params when tab changes after the first render
+    const newType = activeTab === "hot" ? "tail" : "fade";
+    setSearchParams({ type: newType });
+  }, [activeTab, setSearchParams]);
 
   const handleTabChange = (value: string) => {
     setActiveTab(value as "hot" | "cold");
