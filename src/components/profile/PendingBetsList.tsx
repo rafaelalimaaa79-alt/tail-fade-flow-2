@@ -6,6 +6,7 @@ import { Button } from "@/components/ui/button";
 import { cn } from "@/lib/utils";
 import { useBetStore } from "@/utils/portfolio-state";
 import { useNavigate } from "react-router-dom";
+import { ArrowRight, Calendar, Clock } from "lucide-react";
 
 const SPORTSBOOKS = {
   "hardrock": {
@@ -58,48 +59,63 @@ const PendingBetsList = () => {
         return (
           <div 
             key={bet.id} 
-            className="relative overflow-hidden rounded-xl bg-gradient-to-r from-white/10 to-white/5 p-4 shadow-lg border border-white/10"
+            className="relative overflow-hidden rounded-xl bg-gradient-to-br from-white/10 via-white/5 to-transparent p-4 shadow-lg border border-white/10 transition-all duration-300 hover:border-onetime-purple/50 animate-pulse-heartbeat"
           >
-            {/* Accent light effect */}
-            <div className="absolute -top-12 -right-12 h-24 w-24 rounded-full bg-onetime-purple/30 blur-xl"></div>
+            {/* Interactive blob effect in background */}
+            <div className="absolute -top-12 -right-12 h-28 w-28 rounded-full bg-onetime-purple/20 blur-xl"></div>
+            <div className="absolute bottom-0 left-6 h-20 w-20 rounded-full bg-onetime-orange/10 blur-xl"></div>
             
-            {/* Top row: Bet Type as header & Time */}
-            <div className="flex items-center justify-between mb-2">
-              <h4 className="text-lg font-bold text-white tracking-tight text-center w-full">{bet.betDescription}</h4>
-              <span className="text-xs text-white/60 absolute top-4 right-4">
-                {formatTime(bet.timestamp)}
-              </span>
+            {/* Bet Description as prominent header */}
+            <div className="mb-4 text-center">
+              <h4 className="text-xl font-extrabold text-white tracking-tight relative z-10">
+                {bet.betDescription}
+                <div className="h-1 w-16 bg-gradient-to-r from-onetime-purple via-onetime-purple/80 to-transparent rounded-full mx-auto mt-1"></div>
+              </h4>
             </div>
             
-            {/* Middle row: Bettor and confidence */}
-            <div className="flex flex-wrap items-center justify-center mb-3">
-              <div className="text-sm text-white/80 text-center">
-                <span className="font-medium">
-                  {bet.variant === "tail" ? "Tailing" : "Fading"} @{bet.bettorName}
+            {/* Time in stylish badge */}
+            <div className="absolute top-3 right-3 flex items-center gap-1 rounded-full bg-black/30 px-2 py-1 text-xs text-white/80 backdrop-blur-sm border border-white/10">
+              <Clock className="h-3 w-3 text-onetime-purple" /> 
+              <span>{formatTime(bet.timestamp)}</span>
+            </div>
+            
+            {/* Middle row: Bettor info with nice styling */}
+            <div className="flex flex-col items-center justify-center mb-4 relative z-10">
+              <div className="flex items-center justify-center mb-1.5 gap-2">
+                <span className="text-sm font-medium text-white inline-flex items-center gap-1">
+                  {bet.variant === "tail" ? "Tailing" : "Fading"}
+                  <span className="text-onetime-purple">@{bet.bettorName}</span>
                 </span>
               </div>
-              <Badge variant="outline" className={cn("border ml-2", confidence.color)}>
+              <Badge variant="outline" className={cn("border", confidence.color)}>
                 {confidence.label}
               </Badge>
             </div>
             
-            {/* Bottom row: Action button */}
-            <div className="mt-3">
+            {/* Bottom row: Action button with enhanced styling */}
+            <div className="relative z-10">
               {bet.isPlaced ? (
-                <Button 
-                  variant="outline"
-                  className="w-full border-white/20 text-white/70"
-                  disabled
-                >
-                  Bet Placed on {bet.sportsbook || "Sportsbook"}
-                </Button>
+                <div className="relative overflow-hidden rounded-lg border border-white/20 bg-white/5 backdrop-blur-sm">
+                  <div className="absolute inset-0 bg-gradient-to-r from-onetime-green/20 to-transparent"></div>
+                  <Button 
+                    variant="outline"
+                    className="w-full border-0 text-white bg-transparent"
+                    disabled
+                  >
+                    Bet Placed on {bet.sportsbook || "Sportsbook"}
+                  </Button>
+                </div>
               ) : (
                 <Button 
                   variant="default"
-                  className="w-full bg-onetime-purple hover:bg-onetime-purple/80"
+                  className="w-full bg-gradient-to-r from-onetime-purple to-onetime-purple/80 hover:from-onetime-purple/90 hover:to-onetime-purple/70 shadow-lg shadow-onetime-purple/20 text-white font-bold flex items-center justify-center group relative overflow-hidden"
                   onClick={() => handleBetNow(bet.id)}
                 >
-                  Bet Now
+                  <span className="relative z-10 flex items-center">
+                    Bet Now 
+                    <ArrowRight className="ml-1 w-4 h-4 transition-transform group-hover:translate-x-1" />
+                  </span>
+                  <span className="absolute inset-0 bg-gradient-to-r from-transparent to-white/10 opacity-0 group-hover:opacity-100 transition-opacity"></span>
                 </Button>
               )}
             </div>

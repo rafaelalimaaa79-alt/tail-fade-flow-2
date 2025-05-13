@@ -17,6 +17,10 @@ interface BetState {
   addBet: (bettorName: string, betDescription: string, variant: "tail" | "fade") => void;
   markBetAsPlaced: (id: string, sportsbook?: string) => void;
   clearBets: () => void;
+  // Add these properties to fix the build errors
+  showBadgeAnimation?: boolean;
+  resetBadgeAnimation?: () => void;
+  resetViewedState?: () => void;
 }
 
 export const useBetStore = create<BetState>()(
@@ -42,7 +46,10 @@ export const useBetStore = create<BetState>()(
           bet.id === id ? { ...bet, isPlaced: true, sportsbook } : bet
         )
       })),
-      clearBets: () => set({ pendingBets: [] })
+      clearBets: () => set({ pendingBets: [] }),
+      // Add empty implementations for the missing properties
+      resetBadgeAnimation: () => set({ showBadgeAnimation: false }),
+      resetViewedState: () => {} // Empty implementation to avoid errors
     }),
     {
       name: "bet-storage"
