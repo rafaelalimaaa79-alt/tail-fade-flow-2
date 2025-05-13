@@ -112,7 +112,7 @@ const ProfilePage = () => {
         </div>
 
         {/* Pending Bets Section - Added purple neon pulse effect */}
-        <div className="my-4 rounded-xl bg-onetime-darkBlue p-4 shadow-md relative animate-glow-pulse-purple overflow-hidden border border-onetime-purple/30">
+        <div className="my-4 rounded-xl bg-black p-4 shadow-md relative animate-glow-pulse-purple overflow-hidden border border-onetime-purple/30">
           <div className="absolute inset-0 bg-onetime-purple/5 backdrop-blur-sm pointer-events-none"></div>
           <h3 className="mb-4 text-xl font-bold text-white relative z-10">Pending Bets</h3>
           <div className="relative z-10">
@@ -121,7 +121,7 @@ const ProfilePage = () => {
         </div>
 
         {/* Performance Section with integrated stats */}
-        <div className="my-4 rounded-xl bg-onetime-darkBlue p-4 shadow-md">
+        <div className="my-4 rounded-xl bg-black p-4 shadow-md border border-white/10">
           <div className="my-2">
             <div className="flex items-center justify-between mb-2">
               <h3 className="text-sm font-semibold">Performance</h3>
@@ -135,11 +135,11 @@ const ProfilePage = () => {
 
             {/* Stats positioned first now, before the graph */}
             <div className="grid grid-cols-3 gap-2 mb-3">
-              <div className="rounded-lg bg-white/5 p-3 text-center">
+              <div className="rounded-lg bg-black/30 border border-white/10 p-3 text-center">
                 <p className="text-xs text-gray-400">Win Rate</p>
                 <p className="text-lg font-bold text-white">{userProfile.winRate}%</p>
               </div>
-              <div className="rounded-lg bg-white/5 p-3 text-center">
+              <div className="rounded-lg bg-black/30 border border-white/10 p-3 text-center">
                 <p className="text-xs text-gray-400">ROI</p>
                 <p
                   className={`text-lg font-bold ${
@@ -150,7 +150,7 @@ const ProfilePage = () => {
                   {userProfile.roi}%
                 </p>
               </div>
-              <div className="rounded-lg bg-white/5 p-3 text-center">
+              <div className="rounded-lg bg-black/30 border border-white/10 p-3 text-center">
                 <p className="text-xs text-gray-400">Profit</p>
                 <p
                   className={`text-lg font-bold ${
@@ -176,13 +176,13 @@ const ProfilePage = () => {
         </div>
 
         {/* New Section: Biggest Wins from Tailing or Fading */}
-        <div className="my-6 rounded-xl bg-onetime-darkBlue p-4 shadow-md">
+        <div className="my-6 rounded-xl bg-black p-4 shadow-md border border-white/10">
           <h3 className="mb-4 text-xl font-bold text-white">Biggest Wins from Tailing or Fading</h3>
           
           {userProfile.tailingFadingWins.length > 0 ? (
             <div className="space-y-3">
               {userProfile.tailingFadingWins.map((win) => (
-                <div key={win.id} className="rounded-lg bg-white/5 p-3 flex items-center justify-between">
+                <div key={win.id} className="rounded-lg bg-black/30 border border-white/10 p-3 flex items-center justify-between">
                   <div className="flex flex-col">
                     <span className="font-medium text-white">{win.bet}</span>
                     <span className="text-sm text-white/60">
@@ -199,7 +199,7 @@ const ProfilePage = () => {
               ))}
             </div>
           ) : (
-            <div className="rounded-lg bg-white/5 p-6 text-center border border-white/10">
+            <div className="rounded-lg bg-black/30 border border-white/10 p-6 text-center">
               <p className="text-white/70">No tailing or fading wins yet</p>
             </div>
           )}

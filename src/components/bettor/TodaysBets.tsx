@@ -10,20 +10,20 @@ type TodaysBetsProps = {
 
 const TodaysBets: React.FC<TodaysBetsProps> = ({ todayBets, className }) => {
   return (
-    <div className={cn("rounded-xl bg-black/30 border border-white/10 p-4 shadow-md", className)}>
+    <div className={cn("rounded-xl bg-black border border-white/10 p-4 shadow-md", className)}>
       <h3 className="mb-3 text-lg font-bold text-white">Today's Bets</h3>
       
       {todayBets.length > 0 ? (
         <div className="space-y-2">
           {todayBets.map(bet => (
-            <div key={bet.id} className="rounded-md bg-white/5 p-3">
+            <div key={bet.id} className="rounded-md bg-black/50 border border-white/10 p-3">
               <div className="flex justify-between">
                 <span className="font-medium text-white">{bet.teams}</span>
                 <span className={cn(
                   "inline-flex items-center justify-center rounded-full px-2 py-1 text-xs font-medium",
-                  bet.result === 'W' ? 'bg-green-100 text-green-800' : 
-                  bet.result === 'L' ? 'bg-red-100 text-red-800' : 
-                  'bg-yellow-100 text-yellow-800'
+                  bet.result === 'W' ? 'bg-green-900/60 text-green-400 border border-green-500/30' : 
+                  bet.result === 'L' ? 'bg-red-900/60 text-red-400 border border-red-500/30' : 
+                  'bg-yellow-900/60 text-yellow-400 border border-yellow-500/30'
                 )}>
                   {bet.result === 'W' ? 'Won' : bet.result === 'L' ? 'Lost' : 'Pending'}
                 </span>
@@ -40,7 +40,7 @@ const TodaysBets: React.FC<TodaysBetsProps> = ({ todayBets, className }) => {
           ))}
         </div>
       ) : (
-        <div className="rounded-md bg-white/5 p-4 text-center">
+        <div className="rounded-md bg-black/50 border border-white/10 p-4 text-center">
           <p className="text-white/70">No bets placed today</p>
         </div>
       )}

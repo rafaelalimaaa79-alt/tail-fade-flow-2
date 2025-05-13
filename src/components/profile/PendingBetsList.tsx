@@ -31,7 +31,7 @@ const PendingBetsList = () => {
   
   if (pendingBets.length === 0) {
     return (
-      <div className="rounded-lg bg-black/20 p-6 text-center border border-white/10">
+      <div className="rounded-lg bg-black/30 p-6 text-center border border-white/10">
         <p className="text-white/70">You don't have any pending bets yet</p>
       </div>
     );
@@ -79,7 +79,7 @@ const PendingBetsList = () => {
         return (
           <div 
             key={bet.id} 
-            className="relative overflow-hidden rounded-xl bg-gradient-to-br from-black/40 via-black/30 to-transparent p-4 shadow-lg border border-white/10 transition-all duration-300 hover:border-onetime-purple/50"
+            className="relative overflow-hidden rounded-xl bg-gradient-to-br from-black via-black/80 to-black/60 p-4 shadow-lg border border-white/10 transition-all duration-300 hover:border-onetime-purple/50"
           >
             {/* Interactive blob effect in background */}
             <div className="absolute -top-12 -right-12 h-28 w-28 rounded-full bg-onetime-purple/20 blur-xl"></div>
@@ -94,7 +94,7 @@ const PendingBetsList = () => {
             </div>
             
             {/* Confidence percentage in top right with same style as time was, with larger text */}
-            <div className={`absolute top-3 right-3 flex items-center gap-1 rounded-full bg-black/30 px-3 py-1.5 text-xl font-bold backdrop-blur-sm border border-white/10 ${confidenceData.colorClass}`}>
+            <div className={`absolute top-3 right-3 flex items-center gap-1 rounded-full bg-black/50 px-3 py-1.5 text-xl font-bold backdrop-blur-sm border border-white/10 ${confidenceData.colorClass}`}>
               <span>{confidenceData.score}%</span>
             </div>
             
@@ -111,7 +111,7 @@ const PendingBetsList = () => {
             {/* Bottom row: Action button with enhanced styling */}
             <div className="relative z-10">
               {bet.isPlaced ? (
-                <div className="relative overflow-hidden rounded-lg border border-white/20 bg-black/30 backdrop-blur-sm">
+                <div className="relative overflow-hidden rounded-lg border border-white/20 bg-black/50 backdrop-blur-sm">
                   <div className="absolute inset-0 bg-gradient-to-r from-onetime-green/20 to-transparent"></div>
                   <Button 
                     variant="outline"

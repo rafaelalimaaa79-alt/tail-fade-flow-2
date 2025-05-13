@@ -30,7 +30,7 @@ const BettorBetList: React.FC<BettorBetListProps> = ({
             className="flex items-center justify-between border-b border-gray-700 pb-2 last:border-0"
           >
             <div className="flex items-center gap-3">
-              <div className="flex h-6 w-6 items-center justify-center rounded-full bg-gray-700 text-xs font-bold text-white">
+              <div className="flex h-6 w-6 items-center justify-center rounded-full bg-gray-800 text-xs font-bold text-white">
                 {index + 1}
               </div>
               <div>
@@ -52,7 +52,7 @@ const BettorBetList: React.FC<BettorBetListProps> = ({
   };
   
   return (
-    <div className={cn("rounded-xl bg-black/30 border border-white/10 p-4 shadow-md", className)}>
+    <div className={cn("rounded-xl bg-black border border-white/10 p-4 shadow-md", className)}>
       <div className="flex justify-between items-center">
         <h3 className="text-lg font-bold text-white">Best Bets</h3>
         

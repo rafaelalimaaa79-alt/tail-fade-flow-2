@@ -22,7 +22,7 @@ const BettorBettingStatus: React.FC<BettorBettingStatusProps> = ({
   };
   
   return (
-    <div className={cn("rounded-xl bg-black/30 border border-white/10 p-4 shadow-md", className)}>
+    <div className={cn("rounded-xl bg-black border border-white/10 p-4 shadow-md", className)}>
       <h3 className="mb-3 text-base font-bold text-white">Bettor's Activity</h3>
       
       <div className="space-y-4">
@@ -32,7 +32,7 @@ const BettorBettingStatus: React.FC<BettorBettingStatusProps> = ({
           {todayBets.length > 0 ? (
             <div className="mt-2 space-y-2">
               {todayBets.map(bet => (
-                <div key={bet.id} className="rounded-md bg-white/5 p-2 text-xs">
+                <div key={bet.id} className="rounded-md bg-black/50 border border-white/10 p-2 text-xs">
                   <div className="flex justify-between">
                     <span>{bet.teams}</span>
                     <span className={bet.result === 'W' ? 'text-green-400' : bet.result === 'L' ? 'text-red-400' : 'text-gray-400'}>
@@ -57,7 +57,7 @@ const BettorBettingStatus: React.FC<BettorBettingStatusProps> = ({
           {pendingBets.length > 0 ? (
             <div className="mt-2 space-y-2">
               {pendingBets.map(bet => (
-                <div key={bet.id} className="rounded-md bg-white/5 p-2 text-xs">
+                <div key={bet.id} className="rounded-md bg-black/50 border border-white/10 p-2 text-xs">
                   <div className="flex justify-between">
                     <span>{bet.teams}</span>
                     <span className="text-white/60">{formatTime(bet.timestamp)}</span>
@@ -80,7 +80,7 @@ const BettorBettingStatus: React.FC<BettorBettingStatusProps> = ({
           {upcomingBets.length > 0 ? (
             <div className="mt-2 space-y-2">
               {upcomingBets.map(bet => (
-                <div key={bet.id} className="rounded-md bg-white/5 p-2 text-xs">
+                <div key={bet.id} className="rounded-md bg-black/50 border border-white/10 p-2 text-xs">
                   <div className="flex justify-between">
                     <span>{bet.teams}</span>
                     <span className="text-white/60">{formatTime(bet.timestamp)}</span>
