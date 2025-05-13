@@ -1,5 +1,6 @@
 
 import React from "react";
+import { useNavigate } from "react-router-dom";
 
 interface BetTrackingAnimationProps {
   isActive: boolean;
@@ -13,14 +14,22 @@ const BetTrackingAnimation = ({
   isActive,
   onComplete,
 }: BetTrackingAnimationProps) => {
-  // Simple component that doesn't render anything but calls onComplete
-  // This is kept as a placeholder in case we want to add animations back later
+  const navigate = useNavigate();
+  
+  // When active, immediately redirect to profile page and mark as complete
   React.useEffect(() => {
     if (isActive) {
-      // Just call onComplete immediately
+      // Call onComplete to handle state changes
       onComplete();
+      
+      // Redirect to profile page after a brief delay
+      const timer = setTimeout(() => {
+        navigate('/profile');
+      }, 200);
+      
+      return () => clearTimeout(timer);
     }
-  }, [isActive, onComplete]);
+  }, [isActive, onComplete, navigate]);
   
   return null;
 };

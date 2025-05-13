@@ -1,16 +1,12 @@
 
-import React, { useRef } from "react";
+import React from "react";
 import { useNavigate } from "react-router-dom";
-import BriefcaseButton from "@/components/common/BriefcaseButton";
-import { usePortfolioStore } from "@/utils/portfolio-state";
 
 interface DashboardHeaderProps {
-  getPortfolioRect: () => DOMRect | null;
+  getPortfolioRect?: () => DOMRect | null;
 }
 
 const DashboardHeader = ({ getPortfolioRect }: DashboardHeaderProps) => {
-  const portfolioButtonRef = useRef<HTMLButtonElement>(null);
-  
   return (
     <header className="mb-2 flex items-center">
       <div className="flex items-center gap-3">
@@ -21,7 +17,6 @@ const DashboardHeader = ({ getPortfolioRect }: DashboardHeaderProps) => {
         />
       </div>
       <div className="flex-grow" />
-      <BriefcaseButton className="mr-4" />
     </header>
   );
 };

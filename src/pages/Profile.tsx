@@ -1,13 +1,13 @@
 
 import React, { useState } from "react";
 import BottomNav from "@/components/BottomNav";
-import BriefcaseButton from "@/components/common/BriefcaseButton";
 import { useNavigate } from "react-router-dom";
 import TimeFilter from "@/components/TimeFilter";
 import BetHistoryChart from "@/components/BetHistoryChart";
 import BettorPerformanceGraph from "@/components/BettorPerformanceGraph";
 import BettorTimeFilter from "@/components/BettorTimeFilter";
 import { Badge } from "@/components/ui/badge";
+import PendingBetsList from "@/components/profile/PendingBetsList";
 
 // Mock data
 const userProfile = {
@@ -37,28 +37,6 @@ const userProfile = {
     avgOdds: "+110",
     favorites: ["NBA", "NFL", "UFC"],
   },
-  pendingBets: [
-    {
-      id: "1",
-      timestamp: "2024-05-08T14:30:00Z",
-      betType: "Lakers -4.5",
-      teams: "Lakers vs Warriors",
-      odds: "+110",
-      unitsRisked: 3,
-      result: "P",
-      unitsWonLost: 0
-    },
-    {
-      id: "2",
-      timestamp: "2024-05-08T19:00:00Z",
-      betType: "Yankees ML",
-      teams: "Yankees vs Red Sox",
-      odds: "-125",
-      unitsRisked: 2,
-      result: "P",
-      unitsWonLost: 0
-    }
-  ],
   tailingFadingWins: [
     {
       id: "1",
@@ -119,7 +97,6 @@ const ProfilePage = () => {
             />
           </div>
           <div className="flex-grow" />
-          <BriefcaseButton className="mr-4" />
         </header>
 
         {/* User Header */}
@@ -135,52 +112,10 @@ const ProfilePage = () => {
         </div>
 
         {/* Pending Bets Section */}
-        {userProfile.pendingBets.length > 0 ? (
-          <div className="my-4 rounded-xl bg-onetime-darkBlue p-4 shadow-md">
-            <h3 className="mb-4 text-xl font-bold text-white">Pending Bets</h3>
-            <div className="space-y-4">
-              {userProfile.pendingBets.map((bet) => {
-                const confidence = bet.unitsRisked >= 5 
-                  ? { label: "High", score: 85, color: "bg-onetime-green/20 text-onetime-green border-onetime-green/30" }
-                  : bet.unitsRisked >= 3
-                    ? { label: "Medium", score: 65, color: "bg-onetime-orange/20 text-onetime-orange border-onetime-orange/30" }
-                    : { label: "Low", score: 40, color: "bg-white/10 text-white/80 border-white/20" };
-                
-                const potentialWin = parseFloat(bet.odds) > 0 
-                  ? (bet.unitsRisked * parseFloat(bet.odds) / 100).toFixed(1)
-                  : (bet.unitsRisked * 100 / Math.abs(parseFloat(bet.odds))).toFixed(1);
-                
-                return (
-                  <div 
-                    key={bet.id} 
-                    className="relative overflow-hidden rounded-xl bg-gradient-to-r from-white/10 to-white/5 p-4 shadow-lg border border-white/10"
-                  >
-                    {/* Accent light effect */}
-                    <div className="absolute -top-12 -right-12 h-24 w-24 rounded-full bg-onetime-purple/30 blur-xl"></div>
-                    
-                    {/* Top row: Bet Type as header & Time */}
-                    <div className="flex items-center justify-between mb-2">
-                      <h4 className="text-lg font-bold text-white tracking-tight">{bet.betType}</h4>
-                      <span className="text-xs text-white/60">
-                        {new Date(bet.timestamp).toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' })}
-                      </span>
-                    </div>
-                    
-                    {/* Middle row: Units and potential win */}
-                    <div className="flex flex-wrap items-center justify-between mb-3">
-                      <div className="text-sm text-white/80">
-                        <span className="font-medium">{bet.unitsRisked} units to win {potentialWin}</span>
-                      </div>
-                      <Badge variant="outline" className={`border ${confidence.color}`}>
-                        {confidence.score}%
-                      </Badge>
-                    </div>
-                  </div>
-                );
-              })}
-            </div>
-          </div>
-        ) : null}
+        <div className="my-4 rounded-xl bg-onetime-darkBlue p-4 shadow-md">
+          <h3 className="mb-4 text-xl font-bold text-white">Pending Bets</h3>
+          <PendingBetsList />
+        </div>
 
         {/* Performance Section with integrated stats */}
         <div className="my-4 rounded-xl bg-onetime-darkBlue p-4 shadow-md">

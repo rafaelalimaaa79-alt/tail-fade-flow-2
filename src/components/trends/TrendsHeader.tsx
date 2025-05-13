@@ -1,7 +1,5 @@
 
 import React from "react";
-import { usePortfolioStore } from "@/utils/portfolio-state";
-import BriefcaseButton from "@/components/common/BriefcaseButton";
 
 const TrendsHeader = () => {
   return (
@@ -14,7 +12,6 @@ const TrendsHeader = () => {
         />
       </div>
       <div className="flex-grow" />
-      <BriefcaseButton className="mr-4" />
     </header>
   );
 };

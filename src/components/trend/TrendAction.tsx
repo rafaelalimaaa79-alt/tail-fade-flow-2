@@ -1,5 +1,5 @@
 
-import React, { useRef } from "react";
+import React from "react";
 import { cn } from "@/lib/utils";
 import ActionButton from "@/components/ActionButton";
 import { showTailNotification, showFadeNotification } from "@/utils/betting-notifications";
@@ -17,8 +17,6 @@ const TrendAction = ({
   bettorName,
   isMostVisible = false,
 }: TrendActionProps) => {
-  const buttonRef = useRef<HTMLButtonElement>(null);
-  
   const handleTailClick = () => {
     showTailNotification(bettorName, betDescription);
   };
@@ -36,7 +34,6 @@ const TrendAction = ({
           className={cn(
             isMostVisible && "animate-pulse-heartbeat"
           )}
-          ref={buttonRef}
         >
           {betDescription}
         </ActionButton>
@@ -47,7 +44,6 @@ const TrendAction = ({
           className={cn(
             isMostVisible && "animate-pulse-heartbeat"
           )}
-          ref={buttonRef}
         >
           {betDescription}
         </ActionButton>

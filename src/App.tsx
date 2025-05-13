@@ -9,7 +9,6 @@ import ProtectedRoute from "@/components/ProtectedRoute";
 
 import Index from "./pages/Index";
 import Trends from "./pages/Trends";
-import Portfolio from "./pages/Portfolio";
 import Profile from "./pages/Profile";
 import BettorDetail from "./pages/BettorDetail";
 import Leaders from "./pages/Leaders";
@@ -39,7 +38,6 @@ const App = () => (
             {/* Protected Routes */}
             <Route path="/" element={<ProtectedRoute><Index /></ProtectedRoute>} />
             <Route path="/trends" element={<ProtectedRoute><Trends /></ProtectedRoute>} />
-            <Route path="/portfolio" element={<ProtectedRoute><Portfolio /></ProtectedRoute>} />
             <Route path="/profile" element={<ProtectedRoute><Profile /></ProtectedRoute>} />
             <Route path="/bettor/:id" element={<ProtectedRoute><BettorDetail /></ProtectedRoute>} />
             <Route path="/leaders" element={<ProtectedRoute><Leaders /></ProtectedRoute>} />

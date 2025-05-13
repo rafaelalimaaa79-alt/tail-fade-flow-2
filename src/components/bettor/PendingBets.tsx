@@ -1,5 +1,5 @@
 
-import React, { useRef } from "react";
+import React from "react";
 import { BettorBet } from "@/types/bettor";
 import { cn } from "@/lib/utils";
 import { format } from "date-fns";
@@ -45,9 +45,6 @@ const PendingBets: React.FC<PendingBetsProps> = ({ pendingBets, className }) => 
               ? (bet.unitsRisked * parseFloat(bet.odds) / 100).toFixed(1)
               : (bet.unitsRisked * 100 / Math.abs(parseFloat(bet.odds))).toFixed(1);
             
-            const tailButtonRef = useRef<HTMLButtonElement>(null);
-            const fadeButtonRef = useRef<HTMLButtonElement>(null);
-            
             return (
               <div 
                 key={bet.id} 
@@ -77,7 +74,6 @@ const PendingBets: React.FC<PendingBetsProps> = ({ pendingBets, className }) => 
                 {/* Bottom row: Action buttons */}
                 <div className="flex gap-2 mt-2">
                   <ActionButton 
-                    ref={tailButtonRef}
                     variant="tail" 
                     className="h-9 py-0 text-sm"
                     onClick={() => handleTail(bet)}
@@ -86,7 +82,6 @@ const PendingBets: React.FC<PendingBetsProps> = ({ pendingBets, className }) => 
                   </ActionButton>
                   
                   <ActionButton 
-                    ref={fadeButtonRef}
                     variant="fade" 
                     className="h-9 py-0 text-sm"
                     onClick={() => handleFade(bet)}

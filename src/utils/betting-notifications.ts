@@ -1,6 +1,6 @@
 
 import { create } from "zustand";
-import { usePortfolioStore } from "./portfolio-state";
+import { useBetStore } from "./portfolio-state";
 
 type NotificationStore = {
   isOpen: boolean;
@@ -41,16 +41,13 @@ export const useNotificationStore = create<NotificationStore>((set) => ({
     });
   },
   closeNotification: () => {
-    // When closing, add the bet to the portfolio directly
+    // When closing, add the bet to the profile directly
     const { variant, bettorName, betDescription } = useNotificationStore.getState();
-    const { addBet, resetViewedState } = usePortfolioStore.getState();
+    const { addBet } = useBetStore.getState();
     
     if (variant && bettorName && betDescription) {
-      console.log("Adding bet to portfolio:", { variant, bettorName, betDescription });
+      console.log("Adding bet to profile:", { variant, bettorName, betDescription });
       addBet(bettorName, betDescription, variant);
-      
-      // Ensure the viewed state is reset when adding a new bet
-      resetViewedState();
     }
     
     set({ isOpen: false });
