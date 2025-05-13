@@ -51,7 +51,7 @@ const PendingBets: React.FC<PendingBetsProps> = ({ pendingBets, className }) => 
             return (
               <div 
                 key={bet.id} 
-                className="relative overflow-hidden rounded-xl bg-gradient-to-br from-white/10 via-white/5 to-transparent p-4 shadow-lg border border-white/10 transition-all duration-300 hover:border-onetime-purple/50 animate-pulse-heartbeat"
+                className="relative overflow-hidden rounded-xl bg-gradient-to-br from-white/10 via-white/5 to-transparent p-4 shadow-lg border border-white/10 transition-all duration-300 hover:border-onetime-purple/50"
               >
                 {/* Interactive blob effects in background */}
                 <div className="absolute -top-12 -right-12 h-28 w-28 rounded-full bg-onetime-purple/20 blur-xl"></div>

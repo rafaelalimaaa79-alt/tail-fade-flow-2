@@ -1,3 +1,4 @@
+
 import type { Config } from "tailwindcss";
 
 export default {
@@ -116,6 +117,16 @@ export default {
           '0%, 100%': { boxShadow: '0 0 5px rgba(108, 92, 231, 0.5)' },
           '50%': { boxShadow: '0 0 20px rgba(108, 92, 231, 0.8)' },
         },
+        'glow-pulse-purple': {
+          '0%, 100%': { 
+            boxShadow: '0 0 5px rgba(108, 92, 231, 0.3)',
+            borderColor: 'rgba(108, 92, 231, 0.3)'
+          },
+          '50%': { 
+            boxShadow: '0 0 25px rgba(108, 92, 231, 0.8), 0 0 10px rgba(108, 92, 231, 0.4)',
+            borderColor: 'rgba(108, 92, 231, 0.7)'
+          },
+        },
         'shimmer': {
           '0%': { backgroundPosition: '-100% 0' },
           '100%': { backgroundPosition: '200% 0' }
@@ -133,6 +144,7 @@ export default {
         'pulse-heartbeat': 'pulse-heartbeat 1.5s ease-in-out infinite',
         'fingerprint-scan': 'fingerprint-scan 2s ease-in-out infinite',
         'glow-pulse': 'glow-pulse 2s ease-in-out infinite',
+        'glow-pulse-purple': 'glow-pulse-purple 2s infinite ease-in-out',
         'shimmer': 'shimmer 2s infinite linear',
         'shake': 'shake 0.4s ease-in-out infinite'
 			}
