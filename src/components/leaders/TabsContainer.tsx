@@ -1,5 +1,5 @@
 
-import React, { memo } from "react";
+import React, { memo, useMemo } from "react";
 import { Tabs, TabsList, TabsTrigger, TabsContent } from "@/components/ui/tabs";
 import LeaderboardTable from "./LeaderboardTable";
 
@@ -28,6 +28,25 @@ const TabsContainer: React.FC<TabsContainerProps> = ({
   hottestBettors,
   coldestBettors,
 }) => {
+  // Memoize the content of each tab to prevent unnecessary renders
+  const hotTabContent = useMemo(() => (
+    <LeaderboardTable 
+      bettors={hottestBettors}
+      showAll={showAll}
+      setShowAll={setShowAll}
+      variant="tail"
+    />
+  ), [hottestBettors, showAll, setShowAll]);
+
+  const coldTabContent = useMemo(() => (
+    <LeaderboardTable 
+      bettors={coldestBettors}
+      showAll={showAll}
+      setShowAll={setShowAll}
+      variant="fade"
+    />
+  ), [coldestBettors, showAll, setShowAll]);
+
   return (
     <Tabs value={activeTab} onValueChange={onTabChange} className="w-full">
       <TabsList className="grid w-full grid-cols-2 mb-4">
@@ -44,25 +63,21 @@ const TabsContainer: React.FC<TabsContainerProps> = ({
       </TabsList>
       
       <TabsContent value="hot" className="space-y-2">
-        <LeaderboardTable 
-          bettors={hottestBettors}
-          showAll={showAll}
-          setShowAll={setShowAll}
-          variant="tail"
-        />
+        {hotTabContent}
       </TabsContent>
       
       <TabsContent value="cold" className="space-y-2">
-        <LeaderboardTable 
-          bettors={coldestBettors}
-          showAll={showAll}
-          setShowAll={setShowAll}
-          variant="fade"
-        />
+        {coldTabContent}
       </TabsContent>
     </Tabs>
   );
 };
 
-// Memoize the component to prevent unnecessary re-renders
-export default memo(TabsContainer);
+// Use React.memo with a custom comparison function for optimal performance
+export default memo(TabsContainer, (prevProps, nextProps) => {
+  // Only re-render if these specific props change
+  return prevProps.activeTab === nextProps.activeTab &&
+         prevProps.showAll === nextProps.showAll &&
+         prevProps.hottestBettors === nextProps.hottestBettors &&
+         prevProps.coldestBettors === nextProps.coldestBettors;
+});

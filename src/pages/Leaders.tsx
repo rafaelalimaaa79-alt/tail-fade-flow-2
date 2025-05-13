@@ -44,7 +44,8 @@ const Leaders = () => {
   const memoizedHottestBettors = useMemo(() => hottestBettors, []);
   const memoizedColdestBettors = useMemo(() => coldestBettors, []);
 
-  return (
+  // Memoize the entire component output for optimal performance
+  return useMemo(() => (
     <div className="flex min-h-screen flex-col bg-background">
       <div className={`onetime-container ${isMobile ? "pb-24" : ""}`}>
         <PageHeader logoSrc="/lovable-uploads/57cb1fb4-7471-451e-bf49-d4d5fa12bdcb.png" />
@@ -60,7 +61,7 @@ const Leaders = () => {
       </div>
       <BottomNav />
     </div>
-  );
+  ), [activeTab, showAll, isMobile, handleTabChange, handleSetShowAll, memoizedHottestBettors, memoizedColdestBettors]);
 };
 
 export default Leaders;
