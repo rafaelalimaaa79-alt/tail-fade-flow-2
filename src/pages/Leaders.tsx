@@ -1,3 +1,4 @@
+
 import React, { useState, useEffect } from "react";
 import BottomNav from "@/components/BottomNav";
 import { useIsMobile } from "@/hooks/use-mobile";
@@ -34,10 +35,20 @@ const Leaders = () => {
   const isMobile = useIsMobile();
   const navigate = useNavigate();
 
-  // Update URL when tab changes
+  // FIX: Modify the URL parameters update to prevent infinite loops
+  // Only update the URL when activeTab changes, not on every render
   useEffect(() => {
-    setSearchParams({ type: activeTab });
-  }, [activeTab, setSearchParams]);
+    // Skip the initial render URL update since we already got it from the URL
+    const currentType = searchParams.get("type");
+    const newType = activeTab === "hot" ? "tail" : "fade";
+    
+    // Only update URL if needed to prevent refresh loops
+    if ((currentType === "fade" && activeTab === "hot") || 
+        (currentType === "tail" && activeTab === "cold") ||
+        (!currentType)) {
+      setSearchParams({ type: newType });
+    }
+  }, [activeTab]); // Only depend on activeTab, not searchParams or setSearchParams
 
   const handleTabChange = (value: string) => {
     setActiveTab(value as "hot" | "cold");
@@ -67,7 +78,7 @@ const Leaders = () => {
           <p className="text-sm text-muted-foreground">Top performers on the platform</p>
         </div>
 
-        <Tabs defaultValue={activeTab} onValueChange={handleTabChange} className="w-full">
+        <Tabs value={activeTab} onValueChange={handleTabChange} className="w-full">
           <TabsList className="grid w-full grid-cols-2 mb-4">
             <TabsTrigger value="hot" className="relative">
               <span className="text-onetime-green text-base font-bold">
