@@ -18,10 +18,28 @@ const PendingBets: React.FC<PendingBetsProps> = ({ pendingBets, className }) => 
     return format(new Date(isoString), "h:mm a");
   };
 
-  const getConfidenceLevel = (units: number) => {
-    if (units >= 5) return { label: "High", color: "bg-onetime-green/20 text-onetime-green border-onetime-green/30" };
-    if (units >= 3) return { label: "Medium", color: "bg-onetime-orange/20 text-onetime-orange border-onetime-orange/30" };
-    return { label: "Low", color: "bg-white/10 text-white/80 border-white/20" };
+  // Function to generate a confidence score and its styling
+  const getConfidenceScore = (bet: BettorBet) => {
+    // In a real app, this would come from actual confidence scores stored in the bet data
+    // For now, we'll use units risked as a proxy for confidence
+    const unitsRisked = bet.unitsRisked;
+    
+    // Calculate a score based on units risked (1-5 -> 0-100%)
+    const score = Math.min(Math.round((unitsRisked / 5) * 100), 100);
+    
+    let colorClass = "";
+    if (score >= 70) {
+      colorClass = "bg-onetime-green text-white";
+    } else if (score >= 50) {
+      colorClass = "bg-onetime-orange text-white"; 
+    } else {
+      colorClass = "bg-onetime-red text-white";
+    }
+    
+    return {
+      score,
+      colorClass
+    };
   };
 
   const handleTail = (bet: BettorBet) => {
@@ -42,11 +60,7 @@ const PendingBets: React.FC<PendingBetsProps> = ({ pendingBets, className }) => 
       {pendingBets.length > 0 ? (
         <div className="space-y-4">
           {pendingBets.map((bet) => {
-            const confidence = getConfidenceLevel(bet.unitsRisked);
-            // Calculate potential win amount (simple calculation for demonstration)
-            const potentialWin = parseFloat(bet.odds) > 0 
-              ? (bet.unitsRisked * parseFloat(bet.odds) / 100).toFixed(1)
-              : (bet.unitsRisked * 100 / Math.abs(parseFloat(bet.odds))).toFixed(1);
+            const confidenceData = getConfidenceScore(bet);
             
             return (
               <div 
@@ -71,18 +85,12 @@ const PendingBets: React.FC<PendingBetsProps> = ({ pendingBets, className }) => 
                   <span>{formatTime(bet.timestamp)}</span>
                 </div>
                 
-                {/* Middle row: Units and potential win with enhanced styling */}
+                {/* Middle row: Confidence score with enhanced styling */}
                 <div className="flex flex-wrap items-center justify-center mb-4 relative z-10">
                   <div className="flex flex-col items-center">
-                    <div className="px-3 py-1.5 rounded-lg bg-black/20 backdrop-blur-sm border border-white/10 mb-2">
-                      <span className="font-medium text-white flex items-center gap-1">
-                        <Star className="h-3.5 w-3.5 text-onetime-orange mr-0.5" />
-                        {bet.unitsRisked} units to win {potentialWin}
-                      </span>
+                    <div className={cn("px-3 py-1.5 rounded-full font-bold", confidenceData.colorClass)}>
+                      Confidence: {confidenceData.score}%
                     </div>
-                    <Badge variant="outline" className={cn("border", confidence.color)}>
-                      {confidence.label}
-                    </Badge>
                   </div>
                 </div>
                 

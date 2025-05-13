@@ -6,7 +6,7 @@ import { Button } from "@/components/ui/button";
 import { cn } from "@/lib/utils";
 import { useBetStore } from "@/utils/portfolio-state";
 import { useNavigate } from "react-router-dom";
-import { ArrowRight, Calendar, Clock, Star } from "lucide-react";
+import { ArrowRight, Clock, Star } from "lucide-react";
 
 const SPORTSBOOKS = {
   "hardrock": {
@@ -49,12 +49,32 @@ const PendingBetsList = () => {
     window.open(SPORTSBOOKS[sportsbook as keyof typeof SPORTSBOOKS]?.appUrl || SPORTSBOOKS[DEFAULT_SPORTSBOOK].appUrl, '_blank');
   };
   
+  // Function to generate a confidence score and its styling
+  const getConfidenceData = (id: string) => {
+    // Using a deterministic approach based on the bet ID to get consistent results
+    // In a real app, this would come from actual confidence scores stored in your state
+    const numValue = parseInt(id, 10) % 100;
+    const score = numValue > 0 ? numValue : 50;
+    
+    let colorClass = "";
+    if (score >= 70) {
+      colorClass = "bg-onetime-green text-white";
+    } else if (score >= 50) {
+      colorClass = "bg-onetime-orange text-white";
+    } else {
+      colorClass = "bg-onetime-red text-white";
+    }
+    
+    return {
+      score,
+      colorClass
+    };
+  };
+  
   return (
     <div className="space-y-4">
       {pendingBets.map((bet) => {
-        const confidence = Math.random() < 0.5 ? 
-          { label: "Medium", color: "bg-onetime-orange/20 text-onetime-orange border-onetime-orange/30" } :
-          { label: "High", color: "bg-onetime-green/20 text-onetime-green border-onetime-green/30" };
+        const confidenceData = getConfidenceData(bet.id);
         
         return (
           <div 
@@ -87,9 +107,11 @@ const PendingBetsList = () => {
                   <span className="text-onetime-purple">@{bet.bettorName}</span>
                 </span>
               </div>
-              <Badge variant="outline" className={cn("border", confidence.color)}>
-                {confidence.label}
-              </Badge>
+              
+              {/* Confidence Score Badge */}
+              <div className={cn("px-3 py-1 rounded-full font-bold text-sm", confidenceData.colorClass)}>
+                Confidence: {confidenceData.score}%
+              </div>
             </div>
             
             {/* Bottom row: Action button with enhanced styling */}
