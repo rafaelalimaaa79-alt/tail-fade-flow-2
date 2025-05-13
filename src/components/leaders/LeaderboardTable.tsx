@@ -1,5 +1,5 @@
 
-import React from "react";
+import React, { memo } from "react";
 import { useNavigate } from "react-router-dom";
 import { Table, TableHeader, TableRow, TableHead, TableBody, TableCell } from "@/components/ui/table";
 import { ScrollArea } from "@/components/ui/scroll-area";
@@ -84,4 +84,5 @@ const LeaderboardTable: React.FC<LeaderboardTableProps> = ({
   );
 };
 
-export default LeaderboardTable;
+// Memoize the component to prevent unnecessary re-renders
+export default memo(LeaderboardTable);

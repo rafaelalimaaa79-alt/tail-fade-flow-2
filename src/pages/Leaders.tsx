@@ -1,5 +1,5 @@
 
-import React, { useState, useEffect } from "react";
+import React, { useState, useEffect, useCallback, useMemo } from "react";
 import BottomNav from "@/components/BottomNav";
 import { useIsMobile } from "@/hooks/use-mobile";
 import { useSearchParams } from "react-router-dom";
@@ -29,10 +29,20 @@ const Leaders = () => {
     setSearchParams({ type: newType });
   }, [activeTab, setSearchParams]);
 
-  const handleTabChange = (value: string) => {
+  // Memoize the tab change handler to prevent recreating on each render
+  const handleTabChange = useCallback((value: string) => {
     setActiveTab(value as "hot" | "cold");
     setShowAll(false);
-  };
+  }, []);
+
+  // Memoize the setter for showAll to prevent recreating on each render
+  const handleSetShowAll = useCallback((show: boolean) => {
+    setShowAll(show);
+  }, []);
+
+  // Memoize the data to prevent unnecessary recalculations
+  const memoizedHottestBettors = useMemo(() => hottestBettors, []);
+  const memoizedColdestBettors = useMemo(() => coldestBettors, []);
 
   return (
     <div className="flex min-h-screen flex-col bg-background">
@@ -43,9 +53,9 @@ const Leaders = () => {
           activeTab={activeTab}
           onTabChange={handleTabChange}
           showAll={showAll}
-          setShowAll={setShowAll}
-          hottestBettors={hottestBettors}
-          coldestBettors={coldestBettors}
+          setShowAll={handleSetShowAll}
+          hottestBettors={memoizedHottestBettors}
+          coldestBettors={memoizedColdestBettors}
         />
       </div>
       <BottomNav />

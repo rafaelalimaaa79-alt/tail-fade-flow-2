@@ -1,5 +1,5 @@
 
-import React from "react";
+import React, { memo } from "react";
 import { Tabs, TabsList, TabsTrigger, TabsContent } from "@/components/ui/tabs";
 import LeaderboardTable from "./LeaderboardTable";
 
@@ -64,4 +64,5 @@ const TabsContainer: React.FC<TabsContainerProps> = ({
   );
 };
 
-export default TabsContainer;
+// Memoize the component to prevent unnecessary re-renders
+export default memo(TabsContainer);
