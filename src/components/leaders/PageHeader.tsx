@@ -21,7 +21,7 @@ const PageHeader: React.FC<PageHeaderProps> = ({ logoSrc }) => {
         <BriefcaseButton className="mr-4" />
       </header>
 
-      <div className="mb-4">
+      <div className="mb-4 text-center">
         <h1 className="text-xl font-bold">Leaderboard</h1>
         <p className="text-sm text-muted-foreground">Top performers on the platform</p>
       </div>
