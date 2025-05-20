@@ -1,4 +1,3 @@
-
 import React from "react";
 import { useParams, useNavigate } from "react-router-dom";
 import BottomNav from "@/components/BottomNav";
@@ -82,14 +81,14 @@ const BettorDetail = () => {
           <BriefcaseButton className="mr-4" />
         </header>
         
-        {/* Bettor header with adjusted spacing */}
+        {/* Bettor header with improved styling and organization */}
         <BettorHeader profile={summary.profile} />
         
-        {/* Pending Bets Section - HIGH PRIORITY - Replacing Today's Bets */}
+        {/* Pending Bets Section */}
         <PendingBets pendingBets={pendingBets} className="my-4" />
         
         <div className="my-4 rounded-xl bg-black border border-white/10 p-4 shadow-md">
-          {/* Performance Section with integrated stats */}
+          {/* Performance Section */}
           <BettorPerformanceSection 
             summary={summary}
             timeframe={timeframe}
@@ -97,7 +96,7 @@ const BettorDetail = () => {
           />
         </div>
         
-        {/* Best Bets Section with Tabs */}
+        {/* Best Bets Section */}
         <BettorBetList
           biggestWinners={summary.biggestWinners}
           largestBets={summary.largestBets}
@@ -108,6 +107,7 @@ const BettorDetail = () => {
         <ViewBetHistoryButton onClick={() => setIsHistoryModalOpen(true)} />
       </div>
       
+      {/* Keep existing modal and notification components */}
       <BetHistoryModal
         isOpen={isHistoryModalOpen}
         onClose={() => setIsHistoryModalOpen(false)}
@@ -117,7 +117,6 @@ const BettorDetail = () => {
         isLoading={loading}
       />
       
-      {/* Fullscreen notification component */}
       <FullscreenNotification
         message=""
         isOpen={isOpen}
