@@ -13,7 +13,6 @@ import Profile from "./pages/Profile";
 import BettorDetail from "./pages/BettorDetail";
 import Leaders from "./pages/Leaders";
 import NotFound from "./pages/NotFound";
-import Compete from "./pages/Compete";
 import SignIn from "./pages/SignIn";
 import SignUp from "./pages/SignUp";
 import ForgotPassword from "./pages/ForgotPassword";
@@ -41,7 +40,6 @@ const App = () => (
             <Route path="/profile" element={<ProtectedRoute><Profile /></ProtectedRoute>} />
             <Route path="/bettor/:id" element={<ProtectedRoute><BettorDetail /></ProtectedRoute>} />
             <Route path="/leaders" element={<ProtectedRoute><Leaders /></ProtectedRoute>} />
-            <Route path="/compete" element={<ProtectedRoute><Compete /></ProtectedRoute>} />
             
             {/* Catch-all Route */}
             <Route path="*" element={<NotFound />} />
