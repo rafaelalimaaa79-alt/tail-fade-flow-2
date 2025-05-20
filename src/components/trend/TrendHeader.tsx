@@ -24,16 +24,17 @@ const TrendHeader = ({
       <div className="flex justify-center items-center relative">
         <h2 className="font-rajdhani text-xl font-bold text-white text-center">@{name}</h2>
         
-        {/* Score percentage in top right with styled badge */}
+        {/* Score percentage in top right with improved visibility */}
         <div className={cn(
-          "absolute top-0 right-0 rounded-full bg-black/30 px-2 py-1 text-xs backdrop-blur-sm border border-white/10",
-          isTailRecommendation ? "text-onetime-green" : "text-onetime-red",
+          "absolute top-0 right-0 rounded-full bg-black/50 px-2 py-1 text-xs font-medium backdrop-blur-sm border border-white/20",
+          isTailRecommendation ? "text-emerald-300" : "text-rose-300",
           isMostVisible && "animate-pulse-heartbeat"
         )}
         style={{
           boxShadow: isMostVisible ? glowColor : "none",
+          textShadow: "0 0 5px rgba(255, 255, 255, 0.3)",
         }}>
-          <span>{score}%</span>
+          <span className="text-white">{score}%</span>
         </div>
       </div>
     </div>
