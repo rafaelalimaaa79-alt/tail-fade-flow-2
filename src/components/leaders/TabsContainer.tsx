@@ -49,24 +49,30 @@ const TabsContainer: React.FC<TabsContainerProps> = ({
 
   return (
     <Tabs value={activeTab} onValueChange={onTabChange} className="w-full">
-      <TabsList className="grid w-full grid-cols-2 mb-4">
-        <TabsTrigger value="hot" className="relative">
-          <span className="text-onetime-green text-base font-bold font-rajdhani text-lg transform uppercase tracking-wide">
+      <TabsList className="grid w-full grid-cols-2 rounded-xl bg-black/20 p-1 border border-white/10">
+        <TabsTrigger 
+          value="hot" 
+          className="rounded-lg py-2.5 data-[state=active]:bg-card data-[state=active]:shadow-md"
+        >
+          <span className="text-onetime-green font-bold font-rajdhani text-lg uppercase tracking-wide">
             Certified Wagons
           </span>
         </TabsTrigger>
-        <TabsTrigger value="cold" className="relative">
-          <span className="text-onetime-red text-base font-bold font-rajdhani text-lg transform uppercase tracking-wide">
+        <TabsTrigger 
+          value="cold" 
+          className="rounded-lg py-2.5 data-[state=active]:bg-card data-[state=active]:shadow-md"
+        >
+          <span className="text-onetime-red font-bold font-rajdhani text-lg uppercase tracking-wide">
             Walking L's
           </span>
         </TabsTrigger>
       </TabsList>
       
-      <TabsContent value="hot" className="space-y-2">
+      <TabsContent value="hot" className="mt-6 space-y-2">
         {hotTabContent}
       </TabsContent>
       
-      <TabsContent value="cold" className="space-y-2">
+      <TabsContent value="cold" className="mt-6 space-y-2">
         {coldTabContent}
       </TabsContent>
     </Tabs>
