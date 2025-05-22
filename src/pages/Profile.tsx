@@ -1,13 +1,11 @@
+
 import React, { useState } from "react";
 import BottomNav from "@/components/BottomNav";
 import { useNavigate } from "react-router-dom";
-import TimeFilter from "@/components/TimeFilter";
-import BetHistoryChart from "@/components/BetHistoryChart";
-import BettorPerformanceGraph from "@/components/BettorPerformanceGraph";
-import BettorTimeFilter from "@/components/BettorTimeFilter";
-import { Badge } from "@/components/ui/badge";
-import PendingBetsList from "@/components/profile/PendingBetsList";
-import { ArrowUp, ArrowDown } from "lucide-react";
+import UserHeader from "@/components/profile/UserHeader";
+import PendingBetsSection from "@/components/profile/PendingBetsSection";
+import PerformanceSection from "@/components/profile/PerformanceSection";
+import BiggestWinsSection from "@/components/profile/BiggestWinsSection";
 
 // Mock data
 const userProfile = {
@@ -101,122 +99,25 @@ const ProfilePage = () => {
           <div className="flex-grow" />
         </header>
 
-        {/* User Header - Rearranged and restyled */}
-        <div className="mb-4">
-          <div className="flex items-center justify-between mb-2">
-            <h1 className="text-2xl font-bold text-white font-rajdhani tracking-wider neon-text">@{userProfile.username}</h1>
-            {/* Rank information - border removed and size increased */}
-            <div className="inline-flex items-center gap-2 rounded-full px-4 py-1.5">
-              <span className="text-sm font-bold text-white">Rank {userProfile.rank}</span>
-              {userProfile.rankChange !== 0 && (
-                <div className="flex items-center gap-1">
-                  {userProfile.rankChange > 0 ? (
-                    <ArrowUp className="h-4 w-4 text-onetime-green" />
-                  ) : (
-                    <ArrowDown className="h-4 w-4 text-onetime-red" />
-                  )}
-                  <span className={`text-sm font-medium ${userProfile.rankChange > 0 ? 'text-onetime-green' : 'text-onetime-red'}`}>
-                    {Math.abs(userProfile.rankChange)}
-                  </span>
-                </div>
-              )}
-            </div>
-          </div>
-        </div>
+        <UserHeader 
+          username={userProfile.username} 
+          rank={userProfile.rank} 
+          rankChange={userProfile.rankChange} 
+        />
 
-        {/* Pending Bets Section - Added purple neon pulse effect */}
-        <div className="my-4 rounded-xl bg-black p-4 shadow-md relative animate-glow-pulse-purple overflow-hidden border border-onetime-purple/30">
-          <div className="absolute inset-0 bg-onetime-purple/5 backdrop-blur-sm pointer-events-none"></div>
-          <h3 className="mb-4 text-xl font-bold text-white relative z-10">Pending Bets</h3>
-          <div className="relative z-10">
-            <PendingBetsList />
-          </div>
-        </div>
+        <PendingBetsSection />
 
-        {/* Performance Section with integrated stats */}
-        <div className="my-4 rounded-xl bg-black p-4 shadow-md border border-white/10">
-          <div className="my-2">
-            <div className="flex items-center justify-between mb-2">
-              <h3 className="text-sm font-semibold">Performance</h3>
-              <BettorTimeFilter
-                activeFilter={timeframe}
-                onChange={setTimeframe}
-                performanceByTimeframe={userProfile.performanceByTimeframe}
-                className="scale-90 origin-right"
-              />
-            </div>
+        <PerformanceSection 
+          winRate={userProfile.winRate}
+          roi={userProfile.roi}
+          profit={userProfile.profit}
+          chartData={userProfile.chartData}
+          timeframe={timeframe}
+          setTimeframe={setTimeframe}
+          performanceByTimeframe={userProfile.performanceByTimeframe}
+        />
 
-            {/* Stats positioned first now, before the graph */}
-            <div className="grid grid-cols-3 gap-2 mb-3">
-              <div className="rounded-lg bg-black/30 border border-white/10 p-3 text-center">
-                <p className="text-xs text-gray-400">Win Rate</p>
-                <p className="text-lg font-bold text-white">{userProfile.winRate}%</p>
-              </div>
-              <div className="rounded-lg bg-black/30 border border-white/10 p-3 text-center">
-                <p className="text-xs text-gray-400">ROI</p>
-                <p
-                  className={`text-lg font-bold ${
-                    userProfile.roi >= 0 ? "text-onetime-green" : "text-onetime-red"
-                  }`}
-                >
-                  {userProfile.roi > 0 && "+"}
-                  {userProfile.roi}%
-                </p>
-              </div>
-              <div className="rounded-lg bg-black/30 border border-white/10 p-3 text-center">
-                <p className="text-xs text-gray-400">Profit</p>
-                <p
-                  className={`text-lg font-bold ${
-                    userProfile.profit >= 0 ? "text-onetime-green" : "text-onetime-red"
-                  }`}
-                >
-                  {userProfile.profit > 0 && "+"}
-                  {userProfile.profit}U
-                </p>
-              </div>
-            </div>
-
-            {/* Graph container with no padding to ensure full width */}
-            <div className="w-full -ml-0.5 pr-0.5">
-              <BettorPerformanceGraph 
-                data={userProfile.chartData} 
-                timeframe={timeframe}
-                isPositive={userProfile.profit >= 0}
-                className="h-44" 
-              />
-            </div>
-          </div>
-        </div>
-
-        {/* New Section: Biggest Wins from Tailing or Fading */}
-        <div className="my-6 rounded-xl bg-black p-4 shadow-md border border-white/10">
-          <h3 className="mb-4 text-xl font-bold text-white">Biggest Wins from Tailing or Fading</h3>
-          
-          {userProfile.tailingFadingWins.length > 0 ? (
-            <div className="space-y-3">
-              {userProfile.tailingFadingWins.map((win) => (
-                <div key={win.id} className="rounded-lg bg-black/30 border border-white/10 p-3 flex items-center justify-between">
-                  <div className="flex flex-col">
-                    <span className="font-medium text-white">{win.bet}</span>
-                    <span className="text-sm text-white/60">
-                      {win.action === "tailed" ? "Tailed" : "Faded"} @{win.bettorName}
-                    </span>
-                  </div>
-                  <div className="flex items-center gap-3">
-                    <span className="text-onetime-green font-bold">+{win.unitsGained}U</span>
-                    <span className="rounded-full bg-onetime-green px-2 py-0.5 text-xs font-medium text-onetime-dark">
-                      {win.outcome}
-                    </span>
-                  </div>
-                </div>
-              ))}
-            </div>
-          ) : (
-            <div className="rounded-lg bg-black/30 border border-white/10 p-6 text-center">
-              <p className="text-white/70">No tailing or fading wins yet</p>
-            </div>
-          )}
-        </div>
+        <BiggestWinsSection wins={userProfile.tailingFadingWins} />
       </div>
       <BottomNav />
     </div>
