@@ -48,9 +48,10 @@ const TrendItem = ({
   const score = isTailRecommendation ? tailScore : fadeScore;
   const userAction = isTailRecommendation ? "tailing" : "fading";
   
-  // Remove any record information from the reason to avoid duplication
-  // This regex captures all common patterns of record statements to ensure consistent cleaning
-  const cleanedReason = reason.replace(/\d+-\d+\s+(?:record|in last \d+ bets|on|with|in)\s+(?:.*bets|.*picks|.*favorites|.*underdogs)/gi, '').trim();
+  // Enhanced regex to catch all record pattern variations
+  // This will match patterns like "7-3 record with NFL bets", "2-4 in MLB moneyline picks", 
+  // "7-2 on NFL underdogs", etc.
+  const cleanedReason = reason.replace(/\d+-\d+(?:\s+(?:record|in|on|with))?(?:\s+(?:last \d+ bets|.*bets|.*picks|.*favorites|.*underdogs))?/gi, '').trim();
   
   return (
     <div className="block mb-4">
