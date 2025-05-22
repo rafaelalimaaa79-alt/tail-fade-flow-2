@@ -21,10 +21,10 @@ const TrendHeader = ({
     
   return (
     <div className="mb-2 border-b border-white/10 pb-2">
-      <div className="flex justify-between items-center relative">
-        {/* Recommendation Label - now on far left with larger font */}
+      <div className="flex items-center relative">
+        {/* Recommendation Label - on far left with larger font */}
         <span className={cn(
-          "text-2xl font-bold mr-2",
+          "text-2xl font-bold mr-4",
           isTailRecommendation 
             ? "text-emerald-300" 
             : "text-rose-300"
@@ -32,13 +32,14 @@ const TrendHeader = ({
           {isTailRecommendation ? "TAIL" : "FADE"}
         </span>
         
-        <div className="flex items-center gap-2">
-          <h2 className="font-rajdhani text-xl font-bold text-white text-center">@{name}</h2>
+        {/* Username - centered in the remaining space */}
+        <div className="flex-grow text-center">
+          <h2 className="font-rajdhani text-xl font-bold text-white">@{name}</h2>
         </div>
         
         {/* Score percentage in top right with improved visibility */}
         <div className={cn(
-          "absolute top-0 right-0 rounded-full bg-black/50 px-2 py-1 text-xs font-medium backdrop-blur-sm border border-white/20",
+          "rounded-full bg-black/50 px-2 py-1 text-xs font-medium backdrop-blur-sm border border-white/20",
           isTailRecommendation ? "text-emerald-300" : "text-rose-300",
           isMostVisible && "animate-pulse-heartbeat"
         )}
