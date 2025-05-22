@@ -35,11 +35,8 @@ const TrendAction = ({
           isMostVisible && "animate-pulse-heartbeat"
         )}
       >
-        <div className="text-center space-y-1">
+        <div className="text-center">
           <div className="text-lg">{betDescription}</div>
-          <div className="text-white/90 font-bold text-sm">
-            {wins}-{losses} record on {betType} bets
-          </div>
         </div>
       </Button>
     </div>
