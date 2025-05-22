@@ -21,9 +21,10 @@ const TrendStats = ({
 }: TrendStatsProps) => {
   return (
     <div className="mb-4 flex flex-col justify-center items-center">
-      {/* Empty container with padding preserved for spacing */}
-      <div className="flex flex-col items-center justify-center py-3">
-        {/* Text line removed */}
+      {/* Container with padding for spacing */}
+      <div className="flex flex-col items-center justify-center py-3 space-y-1">
+        <span className="text-white text-sm">{wins}-{losses} in last {recentBetsLength} {betType} picks</span>
+        <span className="text-white text-sm">{userCount} users {userAction} this trend</span>
       </div>
     </div>
   );
