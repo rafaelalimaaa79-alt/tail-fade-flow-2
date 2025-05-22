@@ -14,7 +14,7 @@ const UserHeader: React.FC<UserHeaderProps> = ({ username, rank, rankChange }) =
       <div className="flex items-center justify-between mb-2">
         <h1 className="text-2xl font-bold text-white font-rajdhani tracking-wider neon-text">@{username}</h1>
         <div className="flex items-center gap-2">
-          <span className="text-lg font-medium neon-text">Rank {rank}</span>
+          <span className="text-lg font-medium text-transparent bg-clip-text bg-gradient-to-br from-white via-primary to-white/90 shadow-[0_0_10px_rgba(255,255,255,0.5)]">Rank {rank}</span>
           {rankChange !== 0 && (
             <div className="flex items-center gap-1">
               {rankChange > 0 ? (
