@@ -21,7 +21,7 @@ const TrendStats = ({
 }: TrendStatsProps) => {
   return (
     <div className="mb-4 flex flex-col justify-center items-center">
-      {/* Container with padding to create space above and below */}
+      {/* Single container with padding for equal spacing */}
       <div className="flex flex-col items-center justify-center py-3">
         <span className="text-white text-sm">8-2 in last 10 bets with consistent NBA picks</span>
       </div>
