@@ -1,4 +1,3 @@
-
 import React from "react";
 import { Link } from "react-router-dom";
 import { Card } from "@/components/ui/card";
@@ -48,8 +47,7 @@ const TrendItem = ({
   const score = isTailRecommendation ? tailScore : fadeScore;
   const userAction = isTailRecommendation ? "tailing" : "fading";
   
-  // Complete removal of record information from reason text
-  // We want to display record information ONLY in the TrendStats component
+  // We'll still clean the reason text, but we won't display it
   const cleanedReason = reason
     .replace(/\d+-\d+(?:\s+(?:record|in|on|with|last))?(?:\s+(?:\d+\s+)?(?:bets|picks|favorites|underdogs|.*bets|.*picks))?/gi, '')
     .trim();
@@ -67,7 +65,7 @@ const TrendItem = ({
                 isMostVisible={isMostVisible}
               />
               
-              {/* No longer conditional - we pass an empty string if needed */}
+              {/* We'll keep this for future use but it's hidden */}
               <TrendReason reason={cleanedReason} />
               
               <TrendStats

@@ -24,7 +24,7 @@ const TrendAction = ({
   const buttonClass = isTailRecommendation ? "bg-onetime-green hover:bg-onetime-green/90" : "bg-onetime-red hover:bg-onetime-red/90";
   
   return (
-    <div className="mb-4">
+    <div className="mb-4 mt-0">
       <Button 
         className={cn(
           "w-full text-white font-bold py-3 px-2 rounded-md transition-all flex flex-col items-center justify-center h-auto max-w-[95%] mx-auto", 
