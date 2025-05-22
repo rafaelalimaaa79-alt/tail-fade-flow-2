@@ -1,4 +1,3 @@
-
 import React, { useState } from "react";
 import BottomNav from "@/components/BottomNav";
 import { useNavigate } from "react-router-dom";
@@ -106,8 +105,8 @@ const ProfilePage = () => {
         <div className="mb-4">
           <div className="flex items-center justify-between mb-2">
             <h1 className="text-2xl font-bold text-white font-rajdhani tracking-wider neon-text">@{userProfile.username}</h1>
-            {/* Rank information moved to top right where "Joined" used to be */}
-            <div className="inline-flex items-center gap-1.5 rounded-full bg-onetime-purple px-3 py-1">
+            {/* Rank information moved to top right where "Joined" used to be - purple background removed */}
+            <div className="inline-flex items-center gap-1.5 rounded-full border border-white/20 px-3 py-1">
               <span className="text-xs font-bold text-white">Rank {userProfile.rank}</span>
               {userProfile.rankChange !== 0 && (
                 <div className="flex items-center gap-0.5">
