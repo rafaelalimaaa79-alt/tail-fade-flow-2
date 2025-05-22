@@ -52,12 +52,12 @@ const TabsContainer: React.FC<TabsContainerProps> = ({
       <TabsList className="grid w-full grid-cols-2 mb-4">
         <TabsTrigger value="hot" className="relative">
           <span className="text-onetime-green text-base font-bold">
-            Tail Leaders
+            On Fire
           </span>
         </TabsTrigger>
         <TabsTrigger value="cold" className="relative">
           <span className="text-onetime-red text-base font-bold">
-            Fade Leaders
+            Walking L's
           </span>
         </TabsTrigger>
       </TabsList>
