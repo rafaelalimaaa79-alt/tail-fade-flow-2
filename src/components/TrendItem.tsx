@@ -61,8 +61,9 @@ const TrendItem = ({
                 isMostVisible={isMostVisible}
               />
               
-              {/* Swapped the order: TrendStats first, then TrendAction */}
-              <TrendStats 
+              <TrendReason reason={reason} />
+              
+              <TrendStats
                 wins={wins}
                 losses={losses}
                 betType={betType}
@@ -72,13 +73,14 @@ const TrendItem = ({
                 bettorName={name}
               />
               
-              <TrendReason reason={reason} />
-              
               <TrendAction 
                 isTailRecommendation={isTailRecommendation}
                 betDescription={betDescription}
                 bettorName={name}
                 isMostVisible={isMostVisible}
+                wins={wins}
+                losses={losses}
+                betType={betType}
               />
               
               <TrendBetHistory 
