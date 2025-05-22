@@ -19,13 +19,11 @@ const TrendStats = ({
   userCount,
   userAction
 }: TrendStatsProps) => {
-  // Removed user count display
   return (
     <div className="mb-4 flex flex-col justify-center items-center">
       {/* Empty container kept for spacing consistency */}
       <div className="flex flex-col items-center justify-center">
-        {/* User count display removed */}
-        <span className="text-white text-sm">{wins}-{losses} record on {betType} bets</span>
+        {/* Record display removed */}
       </div>
     </div>
   );
