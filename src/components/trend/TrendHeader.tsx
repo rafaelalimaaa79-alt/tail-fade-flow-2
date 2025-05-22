@@ -15,9 +15,6 @@ const TrendHeader = ({
   isTailRecommendation,
   isMostVisible
 }: TrendHeaderProps) => {
-  // Use the same animation class for both the recommendation label and score
-  const pulseClass = isMostVisible ? "animate-pulse-heartbeat" : "";
-  
   const glowColor = isTailRecommendation 
     ? "0 0 10px rgba(16, 185, 129, 0.7)" 
     : "0 0 10px rgba(239, 68, 68, 0.7)";
@@ -31,7 +28,7 @@ const TrendHeader = ({
           isTailRecommendation 
             ? "text-emerald-300" 
             : "text-rose-300",
-          pulseClass  // Using the same pulse class variable
+          isMostVisible && "animate-pulse-heartbeat"
         )}>
           {isTailRecommendation ? "TAIL" : "FADE"}
         </span>
@@ -43,7 +40,7 @@ const TrendHeader = ({
         <div className={cn(
           "rounded-full bg-black/50 px-2 py-1 text-xs font-medium backdrop-blur-sm border border-white/20",
           isTailRecommendation ? "text-emerald-300" : "text-rose-300",
-          pulseClass  // Using the same pulse class variable
+          isMostVisible && "animate-pulse-heartbeat"
         )}
         style={{
           boxShadow: isMostVisible ? glowColor : "none",
