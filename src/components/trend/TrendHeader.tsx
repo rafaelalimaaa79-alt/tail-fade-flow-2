@@ -21,18 +21,18 @@ const TrendHeader = ({
     
   return (
     <div className="mb-2 border-b border-white/10 pb-2">
-      <div className="flex justify-center items-center relative">
+      <div className="flex justify-between items-center relative">
+        {/* Recommendation Label - now on far left with larger font */}
+        <span className={cn(
+          "text-2xl font-bold mr-2",
+          isTailRecommendation 
+            ? "text-emerald-300" 
+            : "text-rose-300"
+        )}>
+          {isTailRecommendation ? "TAIL" : "FADE"}
+        </span>
+        
         <div className="flex items-center gap-2">
-          {/* Recommendation Label - without background block */}
-          <span className={cn(
-            "text-xs font-bold",
-            isTailRecommendation 
-              ? "text-emerald-300" 
-              : "text-rose-300"
-          )}>
-            {isTailRecommendation ? "TAIL" : "FADE"}
-          </span>
-          
           <h2 className="font-rajdhani text-xl font-bold text-white text-center">@{name}</h2>
         </div>
         
