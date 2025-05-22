@@ -14,6 +14,8 @@ type TrendData = {
   tailScore?: number;
   fadeScore?: number;
   userCount?: number;
+  categoryBets?: number[]; // Added for category-specific bets
+  categoryName?: string;   // Added for the category name
 };
 
 type TrendsListProps = {
@@ -44,6 +46,8 @@ const TrendsList = ({ trendData }: TrendsListProps) => {
           tailScore={trend.tailScore}
           fadeScore={trend.fadeScore}
           userCount={trend.userCount}
+          categoryBets={trend.categoryBets}
+          categoryName={trend.categoryName}
         />
       ))}
     </div>

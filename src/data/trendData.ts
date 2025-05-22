@@ -12,6 +12,8 @@ export const trendData = [
     unitPerformance: 8.5,
     tailScore: 85,
     userCount: 342,
+    categoryBets: [1, 1, 1, 0, 1, 1, 0, 1, 1, 1],
+    categoryName: "NBA Spread",
   },
   {
     id: "2",
@@ -24,6 +26,8 @@ export const trendData = [
     unitPerformance: 6.7,
     tailScore: 78,
     userCount: 215,
+    categoryBets: [1, 1, 0, 0, 1, 1, 0],
+    categoryName: "NFL ML",
   },
   {
     id: "3",
@@ -36,6 +40,8 @@ export const trendData = [
     unitPerformance: -7.2,
     fadeScore: 88,
     userCount: 176,
+    categoryBets: [0, 0, 0, 0, 1, 0, 0, 0],
+    categoryName: "NBA O/U",
   },
   {
     id: "4",
@@ -48,6 +54,8 @@ export const trendData = [
     unitPerformance: 5.9,
     tailScore: 72,
     userCount: 295,
+    categoryBets: [1, 0, 1, 1, 0, 1, 1, 0, 1],
+    categoryName: "NFL Spread",
   },
   {
     id: "5",
@@ -60,6 +68,8 @@ export const trendData = [
     unitPerformance: -8.3,
     fadeScore: 84,
     userCount: 138,
+    categoryBets: [0, 0, 1, 0, 0, 0],
+    categoryName: "MLB ML",
   },
   {
     id: "6",
@@ -72,5 +82,7 @@ export const trendData = [
     unitPerformance: 7.1,
     tailScore: 76,
     userCount: 254,
+    categoryBets: [1, 1, 0, 1, 0, 1, 1, 1, 0],
+    categoryName: "NFL Spread",
   }
 ];

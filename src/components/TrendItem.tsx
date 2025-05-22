@@ -23,6 +23,8 @@ type TrendItemProps = {
   tailScore?: number; // Optional score for tail recommendation
   fadeScore?: number; // Optional score for fade recommendation
   userCount?: number; // Number of users tailing or fading
+  categoryBets?: number[]; // Added: category-specific bet history
+  categoryName?: string; // Added: specific category name (e.g., "NBA O/U")
 };
 
 const TrendItem = ({
@@ -37,6 +39,8 @@ const TrendItem = ({
   tailScore = 75, // Default value
   fadeScore = 80, // Default value
   userCount = 210, // Default value
+  categoryBets, // New prop
+  categoryName, // New prop
 }: TrendItemProps) => {
   // Calculate win-loss record
   const wins = recentBets.filter(bet => bet === 1).length;
@@ -81,6 +85,8 @@ const TrendItem = ({
               <TrendBetHistory 
                 recentBets={recentBets}
                 betType={betType}
+                categoryBets={categoryBets}
+                categoryName={categoryName}
               />
             </div>
           </Card>
