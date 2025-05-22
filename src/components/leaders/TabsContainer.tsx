@@ -49,30 +49,32 @@ const TabsContainer: React.FC<TabsContainerProps> = ({
 
   return (
     <Tabs value={activeTab} onValueChange={onTabChange} className="w-full">
-      <TabsList className="grid w-full grid-cols-2 rounded-xl bg-black/20 p-1 border border-white/10">
-        <TabsTrigger 
-          value="hot" 
-          className="rounded-lg py-2.5 data-[state=active]:bg-card data-[state=active]:shadow-md"
-        >
-          <span className="text-onetime-green font-bold font-rajdhani text-lg uppercase tracking-wide">
-            Certified Wagons
-          </span>
-        </TabsTrigger>
-        <TabsTrigger 
-          value="cold" 
-          className="rounded-lg py-2.5 data-[state=active]:bg-card data-[state=active]:shadow-md"
-        >
-          <span className="text-onetime-red font-bold font-rajdhani text-lg uppercase tracking-wide">
-            Walking L's
-          </span>
-        </TabsTrigger>
-      </TabsList>
+      <div className="bg-black/30 p-3 rounded-xl border border-white/20 shadow-lg mb-6">
+        <TabsList className="grid w-full grid-cols-2 rounded-xl overflow-hidden">
+          <TabsTrigger 
+            value="hot" 
+            className="rounded-none py-3 border-r border-white/10 data-[state=active]:bg-onetime-green/20 data-[state=active]:shadow-[0_0_10px_rgba(16,185,129,0.5)]"
+          >
+            <span className="text-onetime-green font-bold font-rajdhani text-xl uppercase tracking-wider">
+              Certified Wagons
+            </span>
+          </TabsTrigger>
+          <TabsTrigger 
+            value="cold" 
+            className="rounded-none py-3 data-[state=active]:bg-onetime-red/20 data-[state=active]:shadow-[0_0_10px_rgba(239,68,68,0.5)]"
+          >
+            <span className="text-onetime-red font-bold font-rajdhani text-xl uppercase tracking-wider">
+              Walking L's
+            </span>
+          </TabsTrigger>
+        </TabsList>
+      </div>
       
-      <TabsContent value="hot" className="mt-6 space-y-2">
+      <TabsContent value="hot" className="space-y-2">
         {hotTabContent}
       </TabsContent>
       
-      <TabsContent value="cold" className="mt-6 space-y-2">
+      <TabsContent value="cold" className="space-y-2">
         {coldTabContent}
       </TabsContent>
     </Tabs>
