@@ -1,4 +1,3 @@
-
 import React, { useState } from "react";
 import BottomNav from "@/components/BottomNav";
 import { useNavigate } from "react-router-dom";
@@ -104,11 +103,8 @@ const ProfilePage = () => {
 
         {/* User Header - Rearranged and restyled */}
         <div className="mb-4">
-          <div className="flex items-center justify-between mb-2">
+          <div className="mb-2">
             <h1 className="text-2xl font-bold text-white font-rajdhani tracking-wider neon-text">@{userProfile.username}</h1>
-            <div className="inline-block rounded-full bg-onetime-purple px-2 py-0.5">
-              <span className="text-xs font-bold text-white">Joined {userProfile.joinDate}</span>
-            </div>
           </div>
           {/* Rank information with up/down indicator */}
           <div className="flex items-center gap-1.5">
