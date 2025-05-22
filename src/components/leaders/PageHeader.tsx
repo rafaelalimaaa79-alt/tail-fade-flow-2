@@ -21,7 +21,7 @@ const PageHeader: React.FC<PageHeaderProps> = ({ logoSrc }) => {
 
       <div className="mb-4 text-center">
         <h1 className="text-xl font-bold">The Watchlist</h1>
-        <p className="text-sm text-muted-foreground">This week's best runs and worst disasters, all in one place.</p>
+        <p className="text-sm text-muted-foreground">Track this week's best runs and worst disasters.</p>
       </div>
     </>
   );
