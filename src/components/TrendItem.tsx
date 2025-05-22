@@ -1,4 +1,3 @@
-
 import React from "react";
 import { Link } from "react-router-dom";
 import { Card } from "@/components/ui/card";
@@ -61,8 +60,6 @@ const TrendItem = ({
                 isMostVisible={isMostVisible}
               />
               
-              <TrendReason reason={reason} />
-              
               <TrendStats 
                 wins={wins}
                 losses={losses}
@@ -73,7 +70,7 @@ const TrendItem = ({
                 bettorName={name}
               />
               
-              <Separator className="mb-4 bg-white/10" />
+              <TrendReason reason={reason} />
               
               <TrendAction 
                 isTailRecommendation={isTailRecommendation}

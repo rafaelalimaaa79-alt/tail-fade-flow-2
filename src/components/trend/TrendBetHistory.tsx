@@ -27,12 +27,12 @@ const TrendBetHistory = ({
   return (
     <div>
       {/* Dynamic label above the bet history */}
-      <p className="text-xs text-white/40 uppercase font-medium mb-2 text-center tracking-wide">
+      <p className="text-xs text-white/40 uppercase font-medium text-center tracking-wide">
         {labelText}
       </p>
       
       {displayBets ? (
-        <div className="flex justify-center space-x-1.5">
+        <div className="flex justify-center space-x-1.5 mt-2">
           {displayBets.map((bet, index) => (
             <div 
               key={index} 
@@ -56,4 +56,3 @@ const TrendBetHistory = ({
 };
 
 export default TrendBetHistory;
-

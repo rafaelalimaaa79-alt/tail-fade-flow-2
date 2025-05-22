@@ -21,18 +21,17 @@ const TrendAction = ({
   const buttonClass = isTailRecommendation ? "bg-onetime-green hover:bg-onetime-green/90" : "bg-onetime-red hover:bg-onetime-red/90";
   
   return (
-    <div className="mb-4"> {/* Changed back from mb-6 to mb-4 */}
-      <p className="text-center text-lg font-semibold mb-3 text-white">
-        {betDescription}
-      </p>
+    <div className="mb-4">
       <Button 
         className={cn(
-          "w-full text-white font-bold py-2 rounded transition-all", 
+          "w-full text-white font-bold py-6 px-4 rounded-md transition-all flex flex-col items-center justify-center h-auto", 
           buttonClass,
           isMostVisible && "animate-pulse-heartbeat"
         )}
       >
-        {actionText} {bettorName.toUpperCase()}
+        <div className="text-center">
+          <div className="text-lg mb-1">{betDescription}</div>
+        </div>
       </Button>
     </div>
   );
