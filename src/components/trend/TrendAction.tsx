@@ -1,53 +1,59 @@
 
 import React from "react";
 import { cn } from "@/lib/utils";
-import ActionButton from "@/components/ActionButton";
-import { showTailNotification, showFadeNotification } from "@/utils/betting-notifications";
+import { Button } from "@/components/ui/button";
 
 type TrendActionProps = {
   isTailRecommendation: boolean;
   betDescription: string;
   bettorName: string;
-  isMostVisible?: boolean;
+  isMostVisible: boolean;
 };
 
 const TrendAction = ({
   isTailRecommendation,
   betDescription,
   bettorName,
-  isMostVisible = false,
+  isMostVisible
 }: TrendActionProps) => {
-  const handleTailClick = () => {
-    showTailNotification(bettorName, betDescription);
-  };
-
-  const handleFadeClick = () => {
-    showFadeNotification(bettorName, betDescription);
-  };
-
+  // Use the same animation class as TrendHeader for synchronization
+  const pulseClass = isMostVisible ? "animate-pulse-heartbeat" : "";
+  
   return (
-    <div className="flex w-full flex-col space-y-2">
-      {isTailRecommendation ? (
-        <ActionButton
-          variant="tail"
-          onClick={() => handleTailClick()}
+    <div className="mb-4 space-y-3">
+      {/* Bet description */}
+      <div className={cn(
+        "text-center text-base font-medium",
+        isTailRecommendation ? "text-emerald-300" : "text-rose-300",
+        pulseClass // Using the same pulse class variable for synchronization
+      )}>
+        {betDescription}
+      </div>
+      
+      {/* Action buttons */}
+      <div className="flex justify-center space-x-2">
+        <Button 
+          variant="outline"
+          size="sm"
           className={cn(
-            isMostVisible && "animate-pulse-heartbeat"
+            "border-white/20 bg-black/30 text-white hover:bg-black/50",
+            isMostVisible && "border-white/40"
           )}
         >
-          {betDescription}
-        </ActionButton>
-      ) : (
-        <ActionButton
-          variant="fade"
-          onClick={() => handleFadeClick()}
+          View @{bettorName}
+        </Button>
+        
+        <Button 
+          size="sm" 
           className={cn(
-            isMostVisible && "animate-pulse-heartbeat"
+            isTailRecommendation 
+              ? "bg-emerald-600 hover:bg-emerald-700" 
+              : "bg-rose-600 hover:bg-rose-700"
           )}
         >
-          {betDescription}
-        </ActionButton>
-      )}
+          {isTailRecommendation ? "Tail $25" : "Fade $25"}
+        </Button>
+      </div>
     </div>
   );
 };
