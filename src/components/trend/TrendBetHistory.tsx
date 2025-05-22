@@ -19,7 +19,7 @@ const TrendBetHistory = ({
   const betsToShow = categoryBets || recentBets;
   const displayBets = betsToShow.length > 0 ? betsToShow : null;
   
-  // Create the label text based on available data
+  // Create the label text based on available data and actual number of bets
   const labelText = categoryName 
     ? `LAST ${betsToShow.length} ${categoryName.toUpperCase()} BETS`
     : `LAST ${betsToShow.length} ${betType} BETS`;

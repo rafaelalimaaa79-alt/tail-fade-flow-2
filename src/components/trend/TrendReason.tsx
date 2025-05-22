@@ -7,17 +7,10 @@ type TrendReasonProps = {
 
 const TrendReason = ({ reason }: TrendReasonProps) => {
   return (
-    <div className="mb-4 px-2">
-      <div className="text-center">
-        <span 
-          className="font-bold text-lg text-white"
-          style={{ 
-            letterSpacing: "0.5px"
-          }}
-        >
-          {reason}
-        </span>
-      </div>
+    <div className="mb-4">
+      <p className="text-sm text-center text-white/80">
+        {reason}
+      </p>
     </div>
   );
 };

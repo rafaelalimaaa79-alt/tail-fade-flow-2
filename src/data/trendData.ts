@@ -12,7 +12,7 @@ export const trendData = [
     unitPerformance: 8.5,
     tailScore: 85,
     userCount: 342,
-    categoryBets: [1, 1, 1, 0, 1, 1, 0, 1, 1, 1],
+    categoryBets: [1, 1, 1, 0, 1, 1, 0, 1, 1, 1], // 10 bets for NBA Spread
     categoryName: "NBA Spread",
   },
   {
@@ -26,7 +26,7 @@ export const trendData = [
     unitPerformance: 6.7,
     tailScore: 78,
     userCount: 215,
-    categoryBets: [1, 1, 0, 0, 1, 1, 0],
+    categoryBets: [1, 1, 0, 0, 1, 1, 0], // Only 7 bets for NFL ML
     categoryName: "NFL ML",
   },
   {
@@ -35,12 +35,12 @@ export const trendData = [
     betDescription: "Celtics vs Heat Over 220",
     betType: "NBA",
     isTailRecommendation: false,
-    reason: "2-8 record on over/under bets",
+    reason: "2-6 record on over/under bets",
     recentBets: [0, 0, 1, 0, 0, 0, 1, 0, 0, 0],
     unitPerformance: -7.2,
     fadeScore: 88,
     userCount: 176,
-    categoryBets: [0, 0, 0, 0, 1, 0, 0, 0],
+    categoryBets: [0, 0, 0, 0, 1, 0], // Only 6 bets for NBA O/U
     categoryName: "NBA O/U",
   },
   {
@@ -54,7 +54,7 @@ export const trendData = [
     unitPerformance: 5.9,
     tailScore: 72,
     userCount: 295,
-    categoryBets: [1, 0, 1, 1, 0, 1, 1, 0, 1],
+    categoryBets: [1, 0, 1, 1, 0, 1, 1, 0, 1], // 9 bets for NFL Spread
     categoryName: "NFL Spread",
   },
   {
@@ -63,12 +63,12 @@ export const trendData = [
     betDescription: "Yankees ML",
     betType: "MLB",
     isTailRecommendation: false,
-    reason: "Only 2-8 in MLB moneyline picks",
+    reason: "Only 2-4 in MLB moneyline picks",
     recentBets: [0, 0, 0, 1, 0, 0, 0, 1, 0, 0],
     unitPerformance: -8.3,
     fadeScore: 84,
     userCount: 138,
-    categoryBets: [0, 0, 1, 0, 0, 0],
+    categoryBets: [0, 0, 1, 0, 0, 0], // 6 bets for MLB ML
     categoryName: "MLB ML",
   },
   {
@@ -77,12 +77,12 @@ export const trendData = [
     betDescription: "Steelers +3.5",
     betType: "NFL",
     isTailRecommendation: true,
-    reason: "7-3 on NFL underdogs",
+    reason: "7-2 on NFL underdogs",
     recentBets: [1, 1, 1, 0, 1, 0, 1, 1, 1, 0],
     unitPerformance: 7.1,
     tailScore: 76,
     userCount: 254,
-    categoryBets: [1, 1, 0, 1, 0, 1, 1, 1, 0],
+    categoryBets: [1, 1, 0, 1, 0, 1, 1, 1, 0], // 9 bets for NFL Spread
     categoryName: "NFL Spread",
   }
 ];
