@@ -7,7 +7,6 @@ type TrendStatsProps = {
   wins: number;
   losses: number;
   betType: string;
-  recentBetsLength: number;
   userCount: number;
   userAction: string;
   bettorName: string;
@@ -17,7 +16,6 @@ const TrendStats = ({
   wins,
   losses,
   betType,
-  recentBetsLength,
   userCount,
   userAction,
   bettorName
