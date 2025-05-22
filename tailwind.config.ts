@@ -102,8 +102,8 @@ export default {
 					}
 				},
         'pulse-heartbeat': {
-          '0%, 100%': { opacity: '0.9', transform: 'scale(1)' },
-          '50%': { opacity: '1', transform: 'scale(1.05)' },
+          '0%, 100%': { opacity: '0.85', transform: 'scale(1)' },
+          '50%': { opacity: '1', transform: 'scale(1.08)' },
         },
         'fingerprint-scan': {
           '0%': { opacity: '0.5', transform: 'scale(0.95)' },
@@ -138,7 +138,7 @@ export default {
 			animation: {
 				'accordion-down': 'accordion-down 0.2s ease-out',
 				'accordion-up': 'accordion-up 0.2s ease-out',
-        'pulse-heartbeat': 'pulse-heartbeat 1.5s ease-in-out infinite', // Changed back to 1.5s from 3s
+        'pulse-heartbeat': 'pulse-heartbeat 1s ease-in-out infinite', // Changed to 1s from 1.5s
         'fingerprint-scan': 'fingerprint-scan 2s ease-in-out infinite',
         'glow-pulse': 'glow-pulse 2s ease-in-out infinite',
         'glow-pulse-purple': 'glow-pulse-purple 2s infinite ease-in-out',
