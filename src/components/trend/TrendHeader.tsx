@@ -23,12 +23,12 @@ const TrendHeader = ({
     <div className="mb-2 border-b border-white/10 pb-2">
       <div className="flex justify-center items-center relative">
         <div className="flex items-center gap-2">
-          {/* Recommendation Label */}
+          {/* Recommendation Label - without background block */}
           <span className={cn(
-            "px-2 py-1 text-xs font-bold rounded-md border",
+            "text-xs font-bold",
             isTailRecommendation 
-              ? "bg-emerald-900/60 text-emerald-300 border-emerald-500/30" 
-              : "bg-rose-900/60 text-rose-300 border-rose-500/30"
+              ? "text-emerald-300" 
+              : "text-rose-300"
           )}>
             {isTailRecommendation ? "TAIL" : "FADE"}
           </span>
