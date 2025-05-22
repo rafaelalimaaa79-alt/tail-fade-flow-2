@@ -1,52 +1,39 @@
 
 import React from "react";
+import { Button } from "@/components/ui/button";
 import { cn } from "@/lib/utils";
-import ActionButton from "@/components/ActionButton";
-import { showTailNotification, showFadeNotification } from "@/utils/betting-notifications";
 
 type TrendActionProps = {
   isTailRecommendation: boolean;
   betDescription: string;
   bettorName: string;
-  isMostVisible?: boolean;
+  isMostVisible: boolean;
 };
 
 const TrendAction = ({
   isTailRecommendation,
   betDescription,
   bettorName,
-  isMostVisible = false,
+  isMostVisible
 }: TrendActionProps) => {
-  const handleTailClick = () => {
-    showTailNotification(bettorName, betDescription);
-  };
-
-  const handleFadeClick = () => {
-    showFadeNotification(bettorName, betDescription);
-  };
-
-  // Create a shared pulse class to sync animations with header
-  const pulseClass = isMostVisible ? "animate-pulse-heartbeat" : "";
-
+  // Determine text and style based on recommendation type
+  const actionText = isTailRecommendation ? "TAIL" : "FADE";
+  const buttonClass = isTailRecommendation ? "bg-onetime-green hover:bg-onetime-green/90" : "bg-onetime-red hover:bg-onetime-red/90";
+  
   return (
-    <div className="flex w-full flex-col space-y-2">
-      {isTailRecommendation ? (
-        <ActionButton
-          variant="tail"
-          onClick={() => handleTailClick()}
-          className={cn(pulseClass)}
-        >
-          {betDescription}
-        </ActionButton>
-      ) : (
-        <ActionButton
-          variant="fade"
-          onClick={() => handleFadeClick()}
-          className={cn(pulseClass)}
-        >
-          {betDescription}
-        </ActionButton>
-      )}
+    <div className="mb-6"> {/* Increased from mb-4 to mb-6 for more spacing */}
+      <p className="text-center text-lg font-semibold mb-3 text-white">
+        {betDescription}
+      </p>
+      <Button 
+        className={cn(
+          "w-full text-white font-bold py-2 rounded transition-all", 
+          buttonClass,
+          isMostVisible && "animate-pulse-heartbeat"
+        )}
+      >
+        {actionText} {bettorName.toUpperCase()}
+      </Button>
     </div>
   );
 };
