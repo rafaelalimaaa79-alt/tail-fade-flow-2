@@ -49,7 +49,8 @@ const TrendItem = ({
   const userAction = isTailRecommendation ? "tailing" : "fading";
   
   // Remove any record information from the reason to avoid duplication
-  const cleanedReason = reason.replace(/\d+-\d+ (?:in last \d+ bets|record) (?:on|with) .+/g, '').trim();
+  // This regex captures various formats of record statements to prevent duplicates
+  const cleanedReason = reason.replace(/\d+-\d+ (?:in last \d+ bets|record) (?:on|with|in) .+/g, '').trim();
   
   return (
     <div className="block mb-4">
