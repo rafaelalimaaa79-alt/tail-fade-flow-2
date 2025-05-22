@@ -67,7 +67,6 @@ const TrendItem = ({
                 wins={wins}
                 losses={losses}
                 betType={betType}
-                recentBetsLength={recentBets.length}
                 userCount={userCount}
                 userAction={userAction}
                 bettorName={name}
