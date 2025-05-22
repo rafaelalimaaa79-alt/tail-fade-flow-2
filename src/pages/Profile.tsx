@@ -105,17 +105,17 @@ const ProfilePage = () => {
         <div className="mb-4">
           <div className="flex items-center justify-between mb-2">
             <h1 className="text-2xl font-bold text-white font-rajdhani tracking-wider neon-text">@{userProfile.username}</h1>
-            {/* Rank information moved to top right where "Joined" used to be - purple background removed */}
-            <div className="inline-flex items-center gap-1.5 rounded-full border border-white/20 px-3 py-1">
-              <span className="text-xs font-bold text-white">Rank {userProfile.rank}</span>
+            {/* Rank information - border removed and size increased */}
+            <div className="inline-flex items-center gap-2 rounded-full px-4 py-1.5">
+              <span className="text-sm font-bold text-white">Rank {userProfile.rank}</span>
               {userProfile.rankChange !== 0 && (
-                <div className="flex items-center gap-0.5">
+                <div className="flex items-center gap-1">
                   {userProfile.rankChange > 0 ? (
-                    <ArrowUp className="h-3 w-3 text-onetime-green" />
+                    <ArrowUp className="h-4 w-4 text-onetime-green" />
                   ) : (
-                    <ArrowDown className="h-3 w-3 text-onetime-red" />
+                    <ArrowDown className="h-4 w-4 text-onetime-red" />
                   )}
-                  <span className={`text-xs font-medium ${userProfile.rankChange > 0 ? 'text-onetime-green' : 'text-onetime-red'}`}>
+                  <span className={`text-sm font-medium ${userProfile.rankChange > 0 ? 'text-onetime-green' : 'text-onetime-red'}`}>
                     {Math.abs(userProfile.rankChange)}
                   </span>
                 </div>
