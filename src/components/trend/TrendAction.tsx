@@ -17,10 +17,7 @@ const TrendAction = ({
   isTailRecommendation,
   betDescription,
   bettorName,
-  isMostVisible,
-  wins,
-  losses,
-  betType
+  isMostVisible
 }: TrendActionProps) => {
   // Determine text and style based on recommendation type
   const actionText = isTailRecommendation ? "TAIL" : "FADE";
