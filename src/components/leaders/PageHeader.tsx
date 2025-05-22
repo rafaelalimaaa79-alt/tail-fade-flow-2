@@ -1,6 +1,5 @@
 
 import React from "react";
-import BriefcaseButton from "@/components/common/BriefcaseButton";
 
 interface PageHeaderProps {
   logoSrc: string;
@@ -18,7 +17,6 @@ const PageHeader: React.FC<PageHeaderProps> = ({ logoSrc }) => {
           />
         </div>
         <div className="flex-grow" />
-        <BriefcaseButton className="mr-4" />
       </header>
 
       <div className="mb-4 text-center">
