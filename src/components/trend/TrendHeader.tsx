@@ -27,7 +27,8 @@ const TrendHeader = ({
           "text-2xl font-bold",
           isTailRecommendation 
             ? "text-emerald-300" 
-            : "text-rose-300"
+            : "text-rose-300",
+          isMostVisible && "animate-pulse-heartbeat"
         )}>
           {isTailRecommendation ? "TAIL" : "FADE"}
         </span>
