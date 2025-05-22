@@ -33,9 +33,6 @@ const TrendHeader = ({
           {isTailRecommendation ? "TAIL" : "FADE"}
         </span>
         
-        {/* Username - centered */}
-        <h2 className="font-rajdhani text-xl font-bold text-white">@{name}</h2>
-        
         {/* Score percentage - right side */}
         <div className={cn(
           "rounded-full bg-black/50 px-2 py-1 text-xs font-medium backdrop-blur-sm border border-white/20",
