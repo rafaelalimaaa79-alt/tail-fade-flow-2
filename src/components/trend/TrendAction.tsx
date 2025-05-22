@@ -21,7 +21,7 @@ const TrendAction = ({
   const buttonClass = isTailRecommendation ? "bg-onetime-green hover:bg-onetime-green/90" : "bg-onetime-red hover:bg-onetime-red/90";
   
   return (
-    <div className="mb-6"> {/* Increased from mb-4 to mb-6 for more spacing */}
+    <div className="mb-4"> {/* Changed back from mb-6 to mb-4 */}
       <p className="text-center text-lg font-semibold mb-3 text-white">
         {betDescription}
       </p>
