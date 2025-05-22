@@ -49,14 +49,14 @@ const TrendItem = ({
   const userAction = isTailRecommendation ? "tailing" : "fading";
   
   // Remove any record information from the reason to avoid duplication
-  // This regex captures various formats of record statements to prevent duplicates
-  const cleanedReason = reason.replace(/\d+-\d+ (?:in last \d+ bets|record) (?:on|with|in) .+/g, '').trim();
+  // This regex captures all common patterns of record statements to ensure consistent cleaning
+  const cleanedReason = reason.replace(/\d+-\d+\s+(?:record|in last \d+ bets|on|with|in)\s+(?:.*bets|.*picks|.*favorites|.*underdogs)/gi, '').trim();
   
   return (
     <div className="block mb-4">
       <TrendVisibilityWrapper>
         {(isVisible, isMostVisible) => (
-          <Card className="rounded-lg bg-card shadow-md border border-white/10 overflow-hidden min-h-[240px]">
+          <Card className="rounded-lg bg-card shadow-md border border-white/10 overflow-hidden min-h-[260px]">
             <div className="flex flex-col p-4">
               <TrendHeader 
                 name={name}

@@ -21,7 +21,7 @@ const TrendStats = ({
   bettorName
 }: TrendStatsProps) => {
   return (
-    <div className="mb-3 flex flex-col justify-center items-center space-y-3">
+    <div className="mb-4 flex flex-col justify-center items-center space-y-3">
       {/* Record info (in bold) */}
       <p className="text-white font-extrabold text-base">
         {wins}-{losses} record with {betType} bets
