@@ -22,7 +22,19 @@ const TrendHeader = ({
   return (
     <div className="mb-2 border-b border-white/10 pb-2">
       <div className="flex justify-center items-center relative">
-        <h2 className="font-rajdhani text-xl font-bold text-white text-center">@{name}</h2>
+        <div className="flex items-center gap-2">
+          {/* Recommendation Label */}
+          <span className={cn(
+            "px-2 py-1 text-xs font-bold rounded-md border",
+            isTailRecommendation 
+              ? "bg-emerald-900/60 text-emerald-300 border-emerald-500/30" 
+              : "bg-rose-900/60 text-rose-300 border-rose-500/30"
+          )}>
+            {isTailRecommendation ? "TAIL" : "FADE"}
+          </span>
+          
+          <h2 className="font-rajdhani text-xl font-bold text-white text-center">@{name}</h2>
+        </div>
         
         {/* Score percentage in top right with improved visibility */}
         <div className={cn(
