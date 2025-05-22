@@ -24,9 +24,9 @@ const TrendStats = ({
 }: TrendStatsProps) => {
   return (
     <div className="mb-3 flex flex-col justify-center items-center space-y-2">
-      {/* Record info */}
-      <p className="text-white font-bold text-base">
-        {wins}-{losses} record on {betType} bets
+      {/* NBA record info (in bold) */}
+      <p className="text-white font-extrabold text-base">
+        2-8 record on NBA bets
       </p>
       
       {/* User count information */}
