@@ -8,6 +8,7 @@ import BettorPerformanceGraph from "@/components/BettorPerformanceGraph";
 import BettorTimeFilter from "@/components/BettorTimeFilter";
 import { Badge } from "@/components/ui/badge";
 import PendingBetsList from "@/components/profile/PendingBetsList";
+import { ArrowUp, ArrowDown } from "lucide-react";
 
 // Mock data
 const userProfile = {
@@ -17,6 +18,8 @@ const userProfile = {
   roi: 14.7,
   profit: 780,
   totalBets: 67,
+  rank: 76,
+  rankChange: 22, // positive number means they've gone up
   chartData: [
     { timestamp: "2024-01-01", units: 120 },
     { timestamp: "2024-02-01", units: 200 },
@@ -99,15 +102,30 @@ const ProfilePage = () => {
           <div className="flex-grow" />
         </header>
 
-        {/* User Header */}
-        <div className="mb-2">
-          <div className="flex items-center">
-            <div className="flex flex-1 items-center justify-between">
-              <div className="inline-block rounded-full bg-onetime-purple px-2 py-0.5">
-                <span className="text-xs font-bold text-white">Joined {userProfile.joinDate}</span>
-              </div>
-              <h1 className="text-xl font-bold">@{userProfile.username}</h1>
+        {/* User Header - Rearranged and restyled */}
+        <div className="mb-4">
+          <div className="flex items-center justify-between mb-2">
+            <h1 className="text-2xl font-bold text-white font-rajdhani tracking-wider neon-text">@{userProfile.username}</h1>
+            <div className="inline-block rounded-full bg-onetime-purple px-2 py-0.5">
+              <span className="text-xs font-bold text-white">Joined {userProfile.joinDate}</span>
             </div>
+          </div>
+          {/* Rank information with up/down indicator */}
+          <div className="flex items-center gap-1.5">
+            <span className="text-sm text-gray-400">Rank</span>
+            <span className="text-base font-bold">{userProfile.rank}</span>
+            {userProfile.rankChange !== 0 && (
+              <div className="flex items-center gap-0.5">
+                {userProfile.rankChange > 0 ? (
+                  <ArrowUp className="h-3.5 w-3.5 text-onetime-green" />
+                ) : (
+                  <ArrowDown className="h-3.5 w-3.5 text-onetime-red" />
+                )}
+                <span className={`text-xs font-medium ${userProfile.rankChange > 0 ? 'text-onetime-green' : 'text-onetime-red'}`}>
+                  {Math.abs(userProfile.rankChange)}
+                </span>
+              </div>
+            )}
           </div>
         </div>
 
