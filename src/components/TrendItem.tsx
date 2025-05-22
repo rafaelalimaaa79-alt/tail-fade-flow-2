@@ -66,6 +66,7 @@ const TrendItem = ({
                 recentBetsLength={recentBets.length}
                 userCount={userCount}
                 userAction={userAction}
+                bettorName={name}
               />
               
               <Separator className="mb-4 bg-white/10" />

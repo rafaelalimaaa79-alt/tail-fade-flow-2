@@ -9,6 +9,7 @@ type TrendStatsProps = {
   recentBetsLength: number;
   userCount: number;
   userAction: string;
+  bettorName: string;
 };
 
 const TrendStats = ({
@@ -17,14 +18,15 @@ const TrendStats = ({
   betType,
   recentBetsLength,
   userCount,
-  userAction
+  userAction,
+  bettorName
 }: TrendStatsProps) => {
   return (
     <div className="mb-4 flex flex-col justify-center items-center">
       {/* Container with padding for spacing */}
       <div className="flex flex-col items-center justify-center py-3 space-y-1">
         <span className="text-white text-sm">{wins}-{losses} in last {recentBetsLength} {betType} picks</span>
-        <span className="text-white text-sm">{userCount} users {userAction} this trend</span>
+        <span className="text-white text-sm">{userCount} users {userAction} @{bettorName}</span>
       </div>
     </div>
   );
