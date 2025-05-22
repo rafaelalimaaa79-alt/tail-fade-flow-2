@@ -52,11 +52,11 @@ const TrendItem = ({
   const cleanedReason = reason.replace(/\d+-\d+ (?:in last \d+ bets|record) (?:on|with) .+/g, '').trim();
   
   return (
-    <div className="block mb-3">
+    <div className="block mb-4">
       <TrendVisibilityWrapper>
         {(isVisible, isMostVisible) => (
-          <Card className="rounded-lg bg-card shadow-md border border-white/10 overflow-hidden">
-            <div className="flex flex-col p-3">
+          <Card className="rounded-lg bg-card shadow-md border border-white/10 overflow-hidden min-h-[240px]">
+            <div className="flex flex-col p-4">
               <TrendHeader 
                 name={name}
                 score={score}
