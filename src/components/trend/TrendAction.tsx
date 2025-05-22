@@ -24,7 +24,7 @@ const TrendAction = ({
     <div className="mb-4">
       <Button 
         className={cn(
-          "w-full text-white font-bold py-5 px-4 rounded-md transition-all flex flex-col items-center justify-center h-auto max-w-[85%] mx-auto", 
+          "w-full text-white font-bold py-4 px-2 rounded-md transition-all flex flex-col items-center justify-center h-auto max-w-[90%] mx-auto", 
           buttonClass,
           isMostVisible && "animate-pulse-heartbeat"
         )}

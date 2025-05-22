@@ -1,3 +1,4 @@
+
 import React from "react";
 import { Link } from "react-router-dom";
 import { Card } from "@/components/ui/card";
@@ -60,6 +61,7 @@ const TrendItem = ({
                 isMostVisible={isMostVisible}
               />
               
+              {/* Swapped the order: TrendStats first, then TrendAction */}
               <TrendStats 
                 wins={wins}
                 losses={losses}
