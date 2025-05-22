@@ -18,17 +18,23 @@ const TrendHeader = ({
   const glowColor = isTailRecommendation 
     ? "0 0 10px rgba(16, 185, 129, 0.7)" 
     : "0 0 10px rgba(239, 68, 68, 0.7)";
+  
+  // Create a shared pulse class to sync animations
+  const pulseClass = isMostVisible ? "animate-pulse-heartbeat" : "";
     
   return (
     <div className="mb-2 border-b border-white/10 pb-2">
       <div className="flex items-center justify-between">
-        {/* Recommendation Label - left side */}
+        {/* Left side - empty space for balance */}
+        <div className="w-16"></div>
+        
+        {/* Recommendation Label - centered */}
         <span className={cn(
-          "text-2xl font-bold",
+          "text-3xl font-bold",  // Increased font size from text-2xl to text-3xl
           isTailRecommendation 
             ? "text-emerald-300" 
             : "text-rose-300",
-          isMostVisible && "animate-pulse-heartbeat"
+          pulseClass
         )}>
           {isTailRecommendation ? "TAIL" : "FADE"}
         </span>
@@ -37,7 +43,7 @@ const TrendHeader = ({
         <div className={cn(
           "rounded-full bg-black/50 px-2 py-1 text-xs font-medium backdrop-blur-sm border border-white/20",
           isTailRecommendation ? "text-emerald-300" : "text-rose-300",
-          isMostVisible && "animate-pulse-heartbeat"
+          pulseClass
         )}
         style={{
           boxShadow: isMostVisible ? glowColor : "none",

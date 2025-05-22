@@ -1,4 +1,3 @@
-
 import type { Config } from "tailwindcss";
 
 export default {
@@ -103,10 +102,7 @@ export default {
 				},
         'pulse-heartbeat': {
           '0%, 100%': { opacity: '0.9', transform: 'scale(1)' },
-          '15%': { opacity: '1', transform: 'scale(1.05)' },
-          '30%': { opacity: '0.9', transform: 'scale(1)' },
-          '45%': { opacity: '1', transform: 'scale(1.05)' },
-          '60%': { opacity: '0.9', transform: 'scale(1)' },
+          '50%': { opacity: '1', transform: 'scale(1.05)' },
         },
         'fingerprint-scan': {
           '0%': { opacity: '0.5', transform: 'scale(0.95)' },
@@ -141,7 +137,7 @@ export default {
 			animation: {
 				'accordion-down': 'accordion-down 0.2s ease-out',
 				'accordion-up': 'accordion-up 0.2s ease-out',
-        'pulse-heartbeat': 'pulse-heartbeat 1.5s ease-in-out infinite',
+        'pulse-heartbeat': 'pulse-heartbeat 3s ease-in-out infinite', // Slowed down from 1.5s to 3s
         'fingerprint-scan': 'fingerprint-scan 2s ease-in-out infinite',
         'glow-pulse': 'glow-pulse 2s ease-in-out infinite',
         'glow-pulse-purple': 'glow-pulse-purple 2s infinite ease-in-out',

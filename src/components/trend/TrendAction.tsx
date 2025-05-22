@@ -25,15 +25,16 @@ const TrendAction = ({
     showFadeNotification(bettorName, betDescription);
   };
 
+  // Create a shared pulse class to sync animations with header
+  const pulseClass = isMostVisible ? "animate-pulse-heartbeat" : "";
+
   return (
     <div className="flex w-full flex-col space-y-2">
       {isTailRecommendation ? (
         <ActionButton
           variant="tail"
           onClick={() => handleTailClick()}
-          className={cn(
-            isMostVisible && "animate-pulse-heartbeat"
-          )}
+          className={cn(pulseClass)}
         >
           {betDescription}
         </ActionButton>
@@ -41,9 +42,7 @@ const TrendAction = ({
         <ActionButton
           variant="fade"
           onClick={() => handleFadeClick()}
-          className={cn(
-            isMostVisible && "animate-pulse-heartbeat"
-          )}
+          className={cn(pulseClass)}
         >
           {betDescription}
         </ActionButton>
