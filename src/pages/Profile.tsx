@@ -1,3 +1,4 @@
+
 import React, { useState } from "react";
 import BottomNav from "@/components/BottomNav";
 import { useNavigate } from "react-router-dom";
@@ -103,25 +104,24 @@ const ProfilePage = () => {
 
         {/* User Header - Rearranged and restyled */}
         <div className="mb-4">
-          <div className="mb-2">
+          <div className="flex items-center justify-between mb-2">
             <h1 className="text-2xl font-bold text-white font-rajdhani tracking-wider neon-text">@{userProfile.username}</h1>
-          </div>
-          {/* Rank information with up/down indicator */}
-          <div className="flex items-center gap-1.5">
-            <span className="text-sm text-gray-400">Rank</span>
-            <span className="text-base font-bold">{userProfile.rank}</span>
-            {userProfile.rankChange !== 0 && (
-              <div className="flex items-center gap-0.5">
-                {userProfile.rankChange > 0 ? (
-                  <ArrowUp className="h-3.5 w-3.5 text-onetime-green" />
-                ) : (
-                  <ArrowDown className="h-3.5 w-3.5 text-onetime-red" />
-                )}
-                <span className={`text-xs font-medium ${userProfile.rankChange > 0 ? 'text-onetime-green' : 'text-onetime-red'}`}>
-                  {Math.abs(userProfile.rankChange)}
-                </span>
-              </div>
-            )}
+            {/* Rank information moved to top right where "Joined" used to be */}
+            <div className="inline-flex items-center gap-1.5 rounded-full bg-onetime-purple px-3 py-1">
+              <span className="text-xs font-bold text-white">Rank {userProfile.rank}</span>
+              {userProfile.rankChange !== 0 && (
+                <div className="flex items-center gap-0.5">
+                  {userProfile.rankChange > 0 ? (
+                    <ArrowUp className="h-3 w-3 text-onetime-green" />
+                  ) : (
+                    <ArrowDown className="h-3 w-3 text-onetime-red" />
+                  )}
+                  <span className={`text-xs font-medium ${userProfile.rankChange > 0 ? 'text-onetime-green' : 'text-onetime-red'}`}>
+                    {Math.abs(userProfile.rankChange)}
+                  </span>
+                </div>
+              )}
+            </div>
           </div>
         </div>
 
