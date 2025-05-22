@@ -25,21 +25,7 @@ const TrendHeader = ({
   return (
     <div className="mb-2 border-b border-white/10 pb-2">
       <div className="flex items-center justify-between">
-        {/* Left side - empty space for balance */}
-        <div className="w-16"></div>
-        
-        {/* Recommendation Label - centered */}
-        <span className={cn(
-          "text-3xl font-bold",  // Increased font size from text-2xl to text-3xl
-          isTailRecommendation 
-            ? "text-emerald-300" 
-            : "text-rose-300",
-          pulseClass
-        )}>
-          {isTailRecommendation ? "TAIL" : "FADE"}
-        </span>
-        
-        {/* Score percentage - right side */}
+        {/* Score percentage - left side */}
         <div className={cn(
           "rounded-full bg-black/50 px-2 py-1 text-xs font-medium backdrop-blur-sm border border-white/20",
           isTailRecommendation ? "text-emerald-300" : "text-rose-300",
@@ -51,6 +37,20 @@ const TrendHeader = ({
         }}>
           <span className="text-white">{score}%</span>
         </div>
+        
+        {/* Recommendation Label - centered */}
+        <span className={cn(
+          "text-3xl font-bold",
+          isTailRecommendation 
+            ? "text-emerald-300" 
+            : "text-rose-300",
+          pulseClass
+        )}>
+          {isTailRecommendation ? "TAIL" : "FADE"}
+        </span>
+        
+        {/* Right side - empty space for balance */}
+        <div className="w-16"></div>
       </div>
     </div>
   );
