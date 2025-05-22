@@ -20,8 +20,8 @@ const PageHeader: React.FC<PageHeaderProps> = ({ logoSrc }) => {
       </header>
 
       <div className="mb-4 text-center">
-        <h1 className="text-xl font-bold">Leaderboard</h1>
-        <p className="text-sm text-muted-foreground">Top performers on the platform</p>
+        <h1 className="text-xl font-bold">The Watchlist</h1>
+        <p className="text-sm text-muted-foreground">This week's best runs and worst disasters, all in one place.</p>
       </div>
     </>
   );
