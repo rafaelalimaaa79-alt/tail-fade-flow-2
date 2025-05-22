@@ -65,7 +65,7 @@ const BottomNav = () => {
         className={cn("nav-item", isActive("/leaders") ? leadersStyle : "text-white/70")}
       >
         <Award className="h-6 w-6 mb-1" />
-        <span>Leaders</span>
+        <span>Streakers</span>
       </Link>
       <Link
         to="/profile"
