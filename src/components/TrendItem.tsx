@@ -48,6 +48,9 @@ const TrendItem = ({
   const score = isTailRecommendation ? tailScore : fadeScore;
   const userAction = isTailRecommendation ? "tailing" : "fading";
   
+  // Remove any record information from the reason to avoid duplication
+  const cleanedReason = reason.replace(/\d+-\d+ (?:in last \d+ bets|record) (?:on|with) .+/g, '').trim();
+  
   return (
     <div className="block mb-3">
       <TrendVisibilityWrapper>
@@ -61,7 +64,7 @@ const TrendItem = ({
                 isMostVisible={isMostVisible}
               />
               
-              <TrendReason reason={reason} />
+              {cleanedReason && <TrendReason reason={cleanedReason} />}
               
               <TrendStats
                 wins={wins}
