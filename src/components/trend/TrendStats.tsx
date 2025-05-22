@@ -22,12 +22,12 @@ const TrendStats = ({
 }: TrendStatsProps) => {
   return (
     <div className="mb-4 flex flex-col justify-center items-center space-y-3">
-      {/* Record info (in bold) */}
+      {/* Record info (in bold) - always display in the same format */}
       <p className="text-white font-extrabold text-base">
         {wins}-{losses} record with {betType} bets
       </p>
       
-      {/* User count information */}
+      {/* User count information - always in the same format */}
       <div className="flex items-center gap-1.5">
         <Users className="h-4 w-4 text-white/70" />
         <span className="text-white/80 text-sm">{userCount} users {userAction} @{bettorName}</span>

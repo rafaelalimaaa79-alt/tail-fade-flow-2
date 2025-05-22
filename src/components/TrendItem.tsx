@@ -48,16 +48,17 @@ const TrendItem = ({
   const score = isTailRecommendation ? tailScore : fadeScore;
   const userAction = isTailRecommendation ? "tailing" : "fading";
   
-  // Enhanced regex to catch all record pattern variations
-  // This will match patterns like "7-3 record with NFL bets", "2-4 in MLB moneyline picks", 
-  // "7-2 on NFL underdogs", etc.
-  const cleanedReason = reason.replace(/\d+-\d+(?:\s+(?:record|in|on|with))?(?:\s+(?:last \d+ bets|.*bets|.*picks|.*favorites|.*underdogs))?/gi, '').trim();
+  // Complete removal of record information from reason text
+  // We want to display record information ONLY in the TrendStats component
+  const cleanedReason = reason
+    .replace(/\d+-\d+(?:\s+(?:record|in|on|with|last))?(?:\s+(?:\d+\s+)?(?:bets|picks|favorites|underdogs|.*bets|.*picks))?/gi, '')
+    .trim();
   
   return (
     <div className="block mb-4">
       <TrendVisibilityWrapper>
         {(isVisible, isMostVisible) => (
-          <Card className="rounded-lg bg-card shadow-md border border-white/10 overflow-hidden min-h-[260px]">
+          <Card className="rounded-lg bg-card shadow-md border border-white/10 overflow-hidden min-h-[280px]">
             <div className="flex flex-col p-4">
               <TrendHeader 
                 name={name}
@@ -66,7 +67,8 @@ const TrendItem = ({
                 isMostVisible={isMostVisible}
               />
               
-              {cleanedReason && <TrendReason reason={cleanedReason} />}
+              {/* No longer conditional - we pass an empty string if needed */}
+              <TrendReason reason={cleanedReason} />
               
               <TrendStats
                 wins={wins}
