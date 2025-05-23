@@ -23,7 +23,7 @@ const Dashboard = () => {
     handleCarouselChange: handleTopCarouselChange 
   } = useCarouselRotation({
     itemsCount: playsOfTheDay.length,
-    rotationInterval: 4000 // Faster rotation - reduced from 7000ms to 4000ms (4 seconds)
+    rotationInterval: 5000 // Updated to 5 seconds (5000ms)
   });
   
   const { 
@@ -31,7 +31,7 @@ const Dashboard = () => {
     handleCarouselChange: handleBottomCarouselChange 
   } = useCarouselRotation({
     itemsCount: 2, // Bottom carousel has 2 items
-    rotationInterval: 4000, // Bottom carousel rotates every 4 seconds
+    rotationInterval: 5000, // Updated to 5 seconds (5000ms)
     pauseDuration: 8000 // Longer pause after manual navigation
   });
   

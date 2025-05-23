@@ -19,9 +19,9 @@ interface BetOfTheDayProps {
 
 const BetOfTheDay = ({ currentIndex, onIndexChange }: BetOfTheDayProps) => {
   const { animationPosition, activeLine } = useWaveAnimation({
-    totalDuration: 1500, // Reduced from 2500ms to 1500ms for faster animations
+    totalDuration: 2000, // Updated to 2 seconds to fit well within the 5-second rotation
     lineChangePoint: 0.5,
-    pauseDuration: 200  // Reduced from 300ms to 200ms for quicker transitions
+    pauseDuration: 200  // Maintained shorter pause for smooth transitions
   });
   
   // Track carousel API

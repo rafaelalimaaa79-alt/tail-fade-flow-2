@@ -8,9 +8,9 @@ interface WaveAnimationOptions {
 }
 
 const useWaveAnimation = ({
-  totalDuration = 1500, // Reduced from 2000ms to 1500ms (25% faster)
+  totalDuration = 2000, // Set to 2000ms (2 seconds) to create a smooth animation within the 5-second rotation
   lineChangePoint = 0.5,
-  pauseDuration = 200  // Reduced from 300ms to 200ms
+  pauseDuration = 200  // Maintained shorter pause for smooth transitions
 }: WaveAnimationOptions = {}) => {
   const [animationPosition, setAnimationPosition] = useState(0);
   const [activeLine, setActiveLine] = useState(0);
