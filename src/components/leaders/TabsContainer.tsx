@@ -53,7 +53,7 @@ const TabsContainer: React.FC<TabsContainerProps> = ({
         <TabsList className="grid w-full grid-cols-2 rounded-xl overflow-hidden">
           <TabsTrigger 
             value="hot" 
-            className="rounded-none py-2.5 border-r border-white/10 data-[state=active]:bg-onetime-green/20 data-[state=active]:shadow-[0_0_10px_rgba(16,185,129,0.5)]"
+            className="rounded-none py-2.5 border-r border-white/10 data-[state=active]:bg-onetime-green/20 data-[state=active]:shadow-[0_0_10px_rgba(16,185,129,0.5)] flex items-center justify-center"
           >
             <span className="text-onetime-green font-bold font-rajdhani text-lg uppercase tracking-wide truncate px-1">
               CANT MISS
@@ -61,7 +61,7 @@ const TabsContainer: React.FC<TabsContainerProps> = ({
           </TabsTrigger>
           <TabsTrigger 
             value="cold" 
-            className="rounded-none py-2.5 data-[state=active]:bg-onetime-red/20 data-[state=active]:shadow-[0_0_10px_rgba(239,68,68,0.5)]"
+            className="rounded-none py-2.5 data-[state=active]:bg-onetime-red/20 data-[state=active]:shadow-[0_0_10px_rgba(239,68,68,0.5)] flex items-center justify-center"
           >
             <span className="text-onetime-red font-bold font-rajdhani text-lg uppercase tracking-wide truncate px-1">
               Walking L's
