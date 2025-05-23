@@ -56,7 +56,7 @@ const TabsContainer: React.FC<TabsContainerProps> = ({
             className="rounded-none py-2.5 border-r border-white/10 data-[state=active]:bg-onetime-green/20 data-[state=active]:shadow-[0_0_10px_rgba(16,185,129,0.5)]"
           >
             <span className="text-onetime-green font-bold font-rajdhani text-lg uppercase tracking-wide truncate px-1">
-              Certified Wagons
+              CANT MISS
             </span>
           </TabsTrigger>
           <TabsTrigger 
