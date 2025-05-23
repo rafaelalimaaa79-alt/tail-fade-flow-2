@@ -1,3 +1,4 @@
+
 import { useState, useEffect, useRef, useCallback } from "react";
 
 interface WaveAnimationOptions {
@@ -7,9 +8,9 @@ interface WaveAnimationOptions {
 }
 
 const useWaveAnimation = ({
-  totalDuration = 2000, // Reduced from 3000ms to 2000ms (1 second faster)
+  totalDuration = 1500, // Reduced from 2000ms to 1500ms (25% faster)
   lineChangePoint = 0.5,
-  pauseDuration = 300
+  pauseDuration = 200  // Reduced from 300ms to 200ms
 }: WaveAnimationOptions = {}) => {
   const [animationPosition, setAnimationPosition] = useState(0);
   const [activeLine, setActiveLine] = useState(0);

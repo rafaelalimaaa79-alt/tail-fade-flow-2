@@ -23,7 +23,7 @@ const Dashboard = () => {
     handleCarouselChange: handleTopCarouselChange 
   } = useCarouselRotation({
     itemsCount: playsOfTheDay.length,
-    rotationInterval: 7000 // Top carousel rotates every 7 seconds
+    rotationInterval: 4000 // Faster rotation - reduced from 7000ms to 4000ms (4 seconds)
   });
   
   const { 
