@@ -1,3 +1,4 @@
+
 import React from "react";
 import { Link } from "react-router-dom";
 import { Card } from "@/components/ui/card";
@@ -61,7 +62,7 @@ const TrendItem = ({
         {(isVisible, isMostVisible) => (
           <Card 
             className={cn(
-              "rounded-lg bg-card shadow-md overflow-hidden min-h-[280px]",
+              "rounded-lg bg-card shadow-md overflow-hidden min-h-[280px] flex flex-col",
               borderColor,
               isMostVisible && "animate-pulse-heartbeat"
             )}
@@ -71,7 +72,7 @@ const TrendItem = ({
                 : "0 0 10px rgba(239, 68, 68, 0.7)"
             } : undefined}
           >
-            <div className="flex flex-col p-4">
+            <div className="flex flex-col p-4 flex-grow">
               <TrendHeader 
                 name={name}
                 score={score}
@@ -101,12 +102,18 @@ const TrendItem = ({
                 betType={betType}
               />
               
-              <TrendBetHistory 
-                recentBets={recentBets}
-                betType={betType}
-                categoryBets={categoryBets}
-                categoryName={categoryName}
-              />
+              {/* Spacer to push bet history to bottom */}
+              <div className="flex-grow"></div>
+              
+              {/* Bet history at the very bottom with minimal padding */}
+              <div className="mt-auto pb-1">
+                <TrendBetHistory 
+                  recentBets={recentBets}
+                  betType={betType}
+                  categoryBets={categoryBets}
+                  categoryName={categoryName}
+                />
+              </div>
             </div>
           </Card>
         )}
