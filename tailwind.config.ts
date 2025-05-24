@@ -103,7 +103,7 @@ export default {
 				},
         'pulse-heartbeat': {
           '0%, 100%': { opacity: '0.85', transform: 'scale(1)' },
-          '50%': { opacity: '1', transform: 'scale(1.08)' },
+          '50%': { opacity: '1', transform: 'scale(1.02)' },
         },
         'fingerprint-scan': {
           '0%': { opacity: '0.5', transform: 'scale(0.95)' },
