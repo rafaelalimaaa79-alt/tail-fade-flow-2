@@ -1,3 +1,4 @@
+
 import React from "react";
 import { Link } from "react-router-dom";
 import { Card } from "@/components/ui/card";
@@ -52,11 +53,17 @@ const TrendItem = ({
     .replace(/\d+-\d+(?:\s+(?:record|in|on|with|last))?(?:\s+(?:\d+\s+)?(?:bets|picks|favorites|underdogs|.*bets|.*picks))?/gi, '')
     .trim();
   
+  // Determine border color based on recommendation type
+  const borderColor = isTailRecommendation ? "border-onetime-green" : "border-onetime-red";
+  
   return (
     <div className="block mb-4">
       <TrendVisibilityWrapper>
         {(isVisible, isMostVisible) => (
-          <Card className="rounded-lg bg-card shadow-md border border-white/10 overflow-hidden min-h-[280px]">
+          <Card className={cn(
+            "rounded-lg bg-card shadow-md overflow-hidden min-h-[280px]",
+            borderColor
+          )}>
             <div className="flex flex-col p-4">
               <TrendHeader 
                 name={name}
