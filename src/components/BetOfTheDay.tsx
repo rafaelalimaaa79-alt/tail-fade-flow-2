@@ -1,4 +1,3 @@
-
 import React, { useRef, useEffect } from "react";
 import { ChevronLeft, ChevronRight } from "lucide-react";
 import WaveText from "./WaveText";
@@ -76,19 +75,19 @@ const BetOfTheDay = ({ currentIndex, onIndexChange }: BetOfTheDayProps) => {
 
   return (
     <div className="w-full mx-auto px-2 relative">
-      {/* Left Arrow */}
+      {/* Left Arrow - moved inside the block */}
       <button
         onClick={goToPrevious}
-        className="absolute left-0 top-1/2 -translate-y-1/2 z-10 bg-white/10 hover:bg-white/20 backdrop-blur-sm rounded-full p-2 transition-all duration-200 hover:scale-110"
+        className="absolute left-4 top-1/2 -translate-y-1/2 z-10 bg-white/10 hover:bg-white/20 backdrop-blur-sm rounded-full p-2 transition-all duration-200 hover:scale-110"
         aria-label="Previous slide"
       >
         <ChevronLeft className="h-5 w-5 text-white" />
       </button>
 
-      {/* Right Arrow */}
+      {/* Right Arrow - moved inside the block */}
       <button
         onClick={goToNext}
-        className="absolute right-0 top-1/2 -translate-y-1/2 z-10 bg-white/10 hover:bg-white/20 backdrop-blur-sm rounded-full p-2 transition-all duration-200 hover:scale-110"
+        className="absolute right-4 top-1/2 -translate-y-1/2 z-10 bg-white/10 hover:bg-white/20 backdrop-blur-sm rounded-full p-2 transition-all duration-200 hover:scale-110"
         aria-label="Next slide"
       >
         <ChevronRight className="h-5 w-5 text-white" />
