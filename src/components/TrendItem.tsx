@@ -1,4 +1,3 @@
-
 import React from "react";
 import { Link } from "react-router-dom";
 import { Card } from "@/components/ui/card";
@@ -60,10 +59,18 @@ const TrendItem = ({
     <div className="block mb-4">
       <TrendVisibilityWrapper>
         {(isVisible, isMostVisible) => (
-          <Card className={cn(
-            "rounded-lg bg-card shadow-md overflow-hidden min-h-[280px]",
-            borderColor
-          )}>
+          <Card 
+            className={cn(
+              "rounded-lg bg-card shadow-md overflow-hidden min-h-[280px]",
+              borderColor,
+              isMostVisible && "animate-pulse-heartbeat"
+            )}
+            style={isMostVisible ? {
+              boxShadow: isTailRecommendation 
+                ? "0 0 10px rgba(16, 185, 129, 0.7)" 
+                : "0 0 10px rgba(239, 68, 68, 0.7)"
+            } : undefined}
+          >
             <div className="flex flex-col p-4">
               <TrendHeader 
                 name={name}
