@@ -76,6 +76,24 @@ const BetOfTheDay = ({ currentIndex, onIndexChange }: BetOfTheDayProps) => {
 
   return (
     <div className="w-full mx-auto px-2 relative">
+      {/* Left Arrow */}
+      <button
+        onClick={goToPrevious}
+        className="absolute left-0 top-1/2 -translate-y-1/2 z-10 bg-white/10 hover:bg-white/20 backdrop-blur-sm rounded-full p-2 transition-all duration-200 hover:scale-110"
+        aria-label="Previous slide"
+      >
+        <ChevronLeft className="h-5 w-5 text-white" />
+      </button>
+
+      {/* Right Arrow */}
+      <button
+        onClick={goToNext}
+        className="absolute right-0 top-1/2 -translate-y-1/2 z-10 bg-white/10 hover:bg-white/20 backdrop-blur-sm rounded-full p-2 transition-all duration-200 hover:scale-110"
+        aria-label="Next slide"
+      >
+        <ChevronRight className="h-5 w-5 text-white" />
+      </button>
+
       <Carousel 
         className="w-full"
         opts={{
@@ -88,38 +106,7 @@ const BetOfTheDay = ({ currentIndex, onIndexChange }: BetOfTheDayProps) => {
         }}
         setApi={setApi}
       >
-        <CarouselContent className="w-full relative">
-          {/* Cool Navigation Arrows Inside */}
-          <button
-            onClick={goToPrevious}
-            className="absolute left-4 top-1/2 -translate-y-1/2 z-20 
-                     bg-gradient-to-r from-purple-600 to-purple-500 hover:from-purple-700 hover:to-purple-600
-                     backdrop-blur-md rounded-full p-3 
-                     transition-all duration-300 ease-out
-                     hover:scale-110 hover:shadow-2xl hover:shadow-purple-500/50
-                     border border-white/20 hover:border-white/40
-                     group active:scale-95"
-            aria-label="Previous slide"
-          >
-            <ChevronLeft className="h-6 w-6 text-white drop-shadow-lg group-hover:drop-shadow-xl transition-all duration-300" />
-            <div className="absolute inset-0 rounded-full bg-white/10 opacity-0 group-hover:opacity-100 transition-opacity duration-300"></div>
-          </button>
-
-          <button
-            onClick={goToNext}
-            className="absolute right-4 top-1/2 -translate-y-1/2 z-20 
-                     bg-gradient-to-r from-purple-600 to-purple-500 hover:from-purple-700 hover:to-purple-600
-                     backdrop-blur-md rounded-full p-3 
-                     transition-all duration-300 ease-out
-                     hover:scale-110 hover:shadow-2xl hover:shadow-purple-500/50
-                     border border-white/20 hover:border-white/40
-                     group active:scale-95"
-            aria-label="Next slide"
-          >
-            <ChevronRight className="h-6 w-6 text-white drop-shadow-lg group-hover:drop-shadow-xl transition-all duration-300" />
-            <div className="absolute inset-0 rounded-full bg-white/10 opacity-0 group-hover:opacity-100 transition-opacity duration-300"></div>
-          </button>
-
+        <CarouselContent className="w-full">
           {playsOfTheDay.map((play, idx) => (
             <CarouselItem key={idx} className="w-full">
               <PlayCard 
