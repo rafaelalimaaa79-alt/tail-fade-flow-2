@@ -72,7 +72,10 @@ const BetOfTheDay = ({ currentIndex, onIndexChange }: BetOfTheDayProps) => {
           loop: true,
           skipSnaps: false,
           startIndex: currentIndex % playsOfTheDay.length,
-          duration: 35, // Slower swipe transition (default is around 25)
+          duration: 50, // Slower and smoother swipe transition for mobile
+          dragFree: false, // Prevents free drag for more controlled swiping
+          containScroll: "trimSnaps", // Helps with smooth scrolling
+          slidesToScroll: 1, // Only scroll one slide at a time
         }}
         setApi={setApi}
       >

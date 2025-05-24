@@ -1,7 +1,5 @@
 
 import React from "react";
-import { Link } from "react-router-dom";
-import { ArrowRight } from "lucide-react";
 import ActionButton from "./ActionButton";
 import { BetterPlay } from "@/types/betTypes";
 import { showTailNotification, showFadeNotification } from "@/utils/betting-notifications";
@@ -57,12 +55,6 @@ const PlayCard: React.FC<PlayCardProps> = ({ play, renderWaveText, onActionClick
           {`${actionText}\n${play.bet}`}
         </ActionButton>
       </div>
-      
-      {/* Secondary action link */}
-      <Link to="/trends" className="mt-5 flex items-center justify-center text-sm font-medium text-primary">
-        👀 View All Top Trends
-        <ArrowRight className="ml-1 h-4 w-4" />
-      </Link>
     </div>
   );
 };
