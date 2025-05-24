@@ -1,5 +1,6 @@
 
 import React, { useRef, useEffect } from "react";
+import { ChevronLeft, ChevronRight } from "lucide-react";
 import WaveText from "./WaveText";
 import PlayCard from "./PlayCard";
 import PaginationIndicator from "./PaginationIndicator";
@@ -19,9 +20,9 @@ interface BetOfTheDayProps {
 
 const BetOfTheDay = ({ currentIndex, onIndexChange }: BetOfTheDayProps) => {
   const { animationPosition, activeLine } = useWaveAnimation({
-    totalDuration: 2000, // Updated to 2 seconds to fit well within the 5-second rotation
+    totalDuration: 2000,
     lineChangePoint: 0.5,
-    pauseDuration: 200  // Maintained shorter pause for smooth transitions
+    pauseDuration: 200
   });
   
   // Track carousel API
@@ -36,18 +37,28 @@ const BetOfTheDay = ({ currentIndex, onIndexChange }: BetOfTheDayProps) => {
       onIndexChange(selectedIndex);
     };
     
-    // Subscribe to carousel events
     api.on("select", handleSelect);
     
-    // Cleanup
     return () => {
       api.off("select", handleSelect);
     };
   }, [api, onIndexChange]);
   
+  // Navigation functions
+  const goToPrevious = () => {
+    if (api) {
+      api.scrollPrev();
+    }
+  };
+  
+  const goToNext = () => {
+    if (api) {
+      api.scrollNext();
+    }
+  };
+  
   const isFade = playsOfTheDay[currentIndex % playsOfTheDay.length].suggestionType === "fade";
   
-  // Render the wave text with improved component
   const renderWaveText = (text: string, lineIndex: number) => {
     return (
       <WaveText
@@ -64,7 +75,25 @@ const BetOfTheDay = ({ currentIndex, onIndexChange }: BetOfTheDayProps) => {
   };
 
   return (
-    <div className="w-full mx-auto px-2">
+    <div className="w-full mx-auto px-2 relative">
+      {/* Left Arrow */}
+      <button
+        onClick={goToPrevious}
+        className="absolute left-0 top-1/2 -translate-y-1/2 z-10 bg-white/10 hover:bg-white/20 backdrop-blur-sm rounded-full p-2 transition-all duration-200 hover:scale-110"
+        aria-label="Previous slide"
+      >
+        <ChevronLeft className="h-5 w-5 text-white" />
+      </button>
+
+      {/* Right Arrow */}
+      <button
+        onClick={goToNext}
+        className="absolute right-0 top-1/2 -translate-y-1/2 z-10 bg-white/10 hover:bg-white/20 backdrop-blur-sm rounded-full p-2 transition-all duration-200 hover:scale-110"
+        aria-label="Next slide"
+      >
+        <ChevronRight className="h-5 w-5 text-white" />
+      </button>
+
       <Carousel 
         className="w-full"
         opts={{
@@ -72,10 +101,8 @@ const BetOfTheDay = ({ currentIndex, onIndexChange }: BetOfTheDayProps) => {
           loop: true,
           skipSnaps: false,
           startIndex: currentIndex % playsOfTheDay.length,
-          duration: 50, // Slower and smoother swipe transition for mobile
-          dragFree: false, // Prevents free drag for more controlled swiping
-          containScroll: "trimSnaps", // Helps with smooth scrolling
-          slidesToScroll: 1, // Only scroll one slide at a time
+          watchDrag: false, // Disable dragging/swiping
+          duration: 25, // Reset to default smooth transition
         }}
         setApi={setApi}
       >
@@ -90,6 +117,7 @@ const BetOfTheDay = ({ currentIndex, onIndexChange }: BetOfTheDayProps) => {
           ))}
         </CarouselContent>
       </Carousel>
+      
       <PaginationIndicator 
         currentIndex={currentIndex % playsOfTheDay.length} 
         totalItems={playsOfTheDay.length} 
