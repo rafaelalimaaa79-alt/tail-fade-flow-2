@@ -32,22 +32,7 @@ const FullscreenNotification = ({
       // Start animation sequence
       setTimeout(() => setTextAppeared(true), 300);
       
-      // Display for a moderate amount of time then close
-      const timer = setTimeout(() => {
-        console.log("Closing notification");
-        setTextAppeared(false);
-        
-        // Fade out effect before completely closing
-        setTimeout(() => {
-          setIsVisible(false);
-          console.log("Notification closed");
-          onClose();
-        }, 400);
-      }, 2500); // Show for 2.5 seconds
-      
-      return () => {
-        clearTimeout(timer);
-      };
+      // Remove the automatic timeout - notification will stay until user clicks
     }
   }, [isOpen, onClose]);
 
@@ -78,13 +63,13 @@ const FullscreenNotification = ({
       className={`fixed inset-0 flex items-center justify-center z-50 p-4 transition-all duration-500 ${
         isVisible ? "opacity-100" : "opacity-0"
       }`}
+      onClick={handleBackdropClick}
     >
       {/* Background overlay with blur effect */}
       <div 
         className={`absolute inset-0 backdrop-blur-md transition-all duration-700 ${
           isVisible ? "bg-black/80" : "bg-black/0"
         }`}
-        onClick={handleBackdropClick}
       ></div>
       
       {/* Notification card with animations */}
@@ -99,6 +84,7 @@ const FullscreenNotification = ({
             `0 0 30px ${variant === "tail" ? "rgba(16, 185, 129, 0.7)" : "rgba(239, 68, 68, 0.7)"}` : 
             "none"
         }}
+        onClick={(e) => e.stopPropagation()} // Prevent clicks on the card from closing the notification
       >
         {/* App logo positioned at top left */}
         <div className="absolute top-4 left-4">
