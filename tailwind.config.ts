@@ -137,7 +137,7 @@ export default {
 			animation: {
 				'accordion-down': 'accordion-down 0.2s ease-out',
 				'accordion-up': 'accordion-up 0.2s ease-out',
-        'pulse-heartbeat': 'pulse-heartbeat 1s ease-in-out infinite', // Changed to 1s from 1.5s
+        'pulse-heartbeat': 'pulse-heartbeat 2.5s ease-in-out infinite',
         'fingerprint-scan': 'fingerprint-scan 2s ease-in-out infinite',
         'glow-pulse': 'glow-pulse 2s ease-in-out infinite',
         'glow-pulse-purple': 'glow-pulse-purple 2s infinite ease-in-out',
