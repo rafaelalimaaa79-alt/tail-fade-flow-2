@@ -95,15 +95,18 @@ const TrendItem = ({
               {/* Spacer to push action button and bet history to bottom */}
               <div className="flex-grow"></div>
               
-              <TrendAction 
-                isTailRecommendation={isTailRecommendation}
-                betDescription={betDescription}
-                bettorName={name}
-                isMostVisible={isMostVisible}
-                wins={wins}
-                losses={losses}
-                betType={betType}
-              />
+              {/* Add more spacing above the action button to move it lower */}
+              <div className="mt-6">
+                <TrendAction 
+                  isTailRecommendation={isTailRecommendation}
+                  betDescription={betDescription}
+                  bettorName={name}
+                  isMostVisible={isMostVisible}
+                  wins={wins}
+                  losses={losses}
+                  betType={betType}
+                />
+              </div>
               
               {/* Bet history directly below action button with small spacing */}
               <div className="mt-3">
