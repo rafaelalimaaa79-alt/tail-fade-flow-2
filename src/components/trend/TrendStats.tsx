@@ -80,8 +80,8 @@ const TrendStats = ({
         {wins}-{losses} record with {betType} bets
       </p>
       
-      {/* Dynamic status line */}
-      <p className="text-white/80 text-sm italic text-center px-2">
+      {/* Dynamic status line - now using same styling as first line */}
+      <p className="text-white font-extrabold text-base text-center px-2">
         @{bettorName} — {statusLine}
       </p>
     </div>
