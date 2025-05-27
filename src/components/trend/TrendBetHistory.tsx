@@ -7,13 +7,15 @@ type TrendBetHistoryProps = {
   betType: string;
   categoryBets?: number[]; // Optional property for category-specific bets
   categoryName?: string; // Optional name of the specific category
+  isMostVisible: boolean;
 };
 
 const TrendBetHistory = ({
   recentBets,
   betType,
   categoryBets,
-  categoryName
+  categoryName,
+  isMostVisible
 }: TrendBetHistoryProps) => {
   // Use category-specific bets if available, otherwise fall back to general recentBets
   const betsToShow = categoryBets || recentBets;
@@ -27,7 +29,10 @@ const TrendBetHistory = ({
   return (
     <div>
       {/* Dynamic label above the bet history */}
-      <p className="text-xs text-white/40 uppercase font-medium text-center tracking-wide mb-1">
+      <p className={cn(
+        "text-xs uppercase font-medium text-center tracking-wide mb-1 transition-colors duration-300",
+        isMostVisible ? "text-white/40" : "text-gray-500"
+      )}>
         {labelText}
       </p>
       
@@ -37,8 +42,10 @@ const TrendBetHistory = ({
             <div 
               key={index} 
               className={cn(
-                "h-6 w-6 rounded-sm flex items-center justify-center font-bold text-xs text-white",
-                bet ? "bg-onetime-green" : "bg-onetime-red"
+                "h-6 w-6 rounded-sm flex items-center justify-center font-bold text-xs transition-all duration-300",
+                isMostVisible 
+                  ? (bet ? "bg-onetime-green text-white" : "bg-onetime-red text-white")
+                  : (bet ? "bg-gray-600 text-gray-300" : "bg-gray-700 text-gray-400")
               )}
             >
               {bet ? 'W' : 'L'}
@@ -47,7 +54,10 @@ const TrendBetHistory = ({
         </div>
       ) : (
         // Show message when not enough data is available
-        <p className="text-xs text-white/50 text-center py-1">
+        <p className={cn(
+          "text-xs text-center py-1 transition-colors duration-300",
+          isMostVisible ? "text-white/50" : "text-gray-500"
+        )}>
           Not enough data for this category — check back later
         </p>
       )}

@@ -62,9 +62,10 @@ const TrendItem = ({
         {(isVisible, isMostVisible) => (
           <Card 
             className={cn(
-              "rounded-lg bg-card shadow-md overflow-hidden min-h-[280px] flex flex-col",
-              borderColor,
-              isMostVisible && "animate-pulse-heartbeat"
+              "rounded-lg bg-card shadow-md overflow-hidden min-h-[280px] flex flex-col transition-all duration-300",
+              isMostVisible ? borderColor : "border-gray-500",
+              isMostVisible && "animate-pulse-heartbeat",
+              !isMostVisible && "grayscale"
             )}
             style={isMostVisible ? {
               boxShadow: isTailRecommendation 
@@ -90,6 +91,7 @@ const TrendItem = ({
                 userCount={userCount}
                 userAction={userAction}
                 bettorName={name}
+                isMostVisible={isMostVisible}
               />
               
               {/* Spacer to push action button and bet history to bottom */}
@@ -115,6 +117,7 @@ const TrendItem = ({
                   betType={betType}
                   categoryBets={categoryBets}
                   categoryName={categoryName}
+                  isMostVisible={isMostVisible}
                 />
               </div>
             </div>

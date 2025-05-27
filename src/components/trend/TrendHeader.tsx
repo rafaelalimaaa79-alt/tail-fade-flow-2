@@ -27,23 +27,28 @@ const TrendHeader = ({
       <div className="flex items-center justify-between">
         {/* Score percentage - left side */}
         <div className={cn(
-          "rounded-full bg-black/50 px-2 py-1 text-xs font-medium backdrop-blur-sm border border-white/20",
-          isTailRecommendation ? "text-emerald-300" : "text-rose-300",
+          "rounded-full bg-black/50 px-2 py-1 text-xs font-medium backdrop-blur-sm border border-white/20 transition-colors duration-300",
+          isMostVisible 
+            ? (isTailRecommendation ? "text-emerald-300" : "text-rose-300")
+            : "text-gray-400",
           pulseClass
         )}
         style={{
           boxShadow: isMostVisible ? glowColor : "none",
-          textShadow: "0 0 5px rgba(255, 255, 255, 0.3)",
+          textShadow: isMostVisible ? "0 0 5px rgba(255, 255, 255, 0.3)" : "none",
         }}>
-          <span className="text-white">{score}%</span>
+          <span className={cn(
+            "transition-colors duration-300",
+            isMostVisible ? "text-white" : "text-gray-400"
+          )}>{score}%</span>
         </div>
         
         {/* Recommendation Label - centered */}
         <span className={cn(
-          "text-3xl font-bold",
-          isTailRecommendation 
-            ? "text-emerald-300" 
-            : "text-rose-300",
+          "text-3xl font-bold transition-colors duration-300",
+          isMostVisible 
+            ? (isTailRecommendation ? "text-emerald-300" : "text-rose-300")
+            : "text-gray-400",
           pulseClass
         )}>
           {isTailRecommendation ? "TAIL" : "FADE"}

@@ -9,13 +9,15 @@ type TrendStatsProps = {
   userCount: number;
   userAction: string;
   bettorName: string;
+  isMostVisible: boolean;
 };
 
 const TrendStats = ({
   wins,
   losses,
   betType,
-  bettorName
+  bettorName,
+  isMostVisible
 }: TrendStatsProps) => {
   // Generate dynamic status line based on performance and bet type
   const generateStatusLine = () => {
@@ -76,12 +78,18 @@ const TrendStats = ({
   return (
     <div className="flex flex-col justify-center items-center space-y-2 mb-2">
       {/* Record info (in bold) - always display in the same format */}
-      <p className="text-white font-extrabold text-base">
+      <p className={cn(
+        "font-extrabold text-base transition-colors duration-300",
+        isMostVisible ? "text-white" : "text-gray-400"
+      )}>
         {wins}-{losses} record with {betType} bets
       </p>
       
       {/* Dynamic status line - now using same styling as first line */}
-      <p className="text-white font-extrabold text-base text-center px-2">
+      <p className={cn(
+        "font-extrabold text-base text-center px-2 transition-colors duration-300",
+        isMostVisible ? "text-white" : "text-gray-400"
+      )}>
         @{bettorName} — {statusLine}
       </p>
     </div>
