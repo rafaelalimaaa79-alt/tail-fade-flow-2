@@ -1,6 +1,7 @@
 
 import React, { useState, useEffect } from "react";
 import { ZapIcon } from "lucide-react";
+import { useNavigate } from "react-router-dom";
 
 type FullscreenNotificationProps = {
   message: string;
@@ -20,6 +21,7 @@ const FullscreenNotification = ({
 }: FullscreenNotificationProps) => {
   const [isVisible, setIsVisible] = useState(false);
   const [textAppeared, setTextAppeared] = useState(false);
+  const navigate = useNavigate();
 
   useEffect(() => {
     if (isOpen) {
@@ -56,6 +58,12 @@ const FullscreenNotification = ({
       setIsVisible(false);
       onClose();
     }, 400);
+  };
+
+  const handleViewAllBets = () => {
+    console.log("Navigating to profile page");
+    onClose();
+    navigate("/profile");
   };
 
   if (!isOpen) return null;
@@ -123,6 +131,18 @@ const FullscreenNotification = ({
             >
               {betDescription}
             </h3>
+          </div>
+          
+          {/* View all bets link at the bottom */}
+          <div className="overflow-hidden mt-6">
+            <button
+              onClick={handleViewAllBets}
+              className={`text-lg font-medium underline transition-all duration-700 transform hover:opacity-80 ${
+                textAppeared ? "translate-y-0 opacity-100" : "translate-y-full opacity-0"
+              }`}
+            >
+              Click here to view all bets
+            </button>
           </div>
         </div>
       </div>
