@@ -92,6 +92,9 @@ const TrendItem = ({
                 bettorName={name}
               />
               
+              {/* Spacer to push action button and bet history to bottom */}
+              <div className="flex-grow"></div>
+              
               <TrendAction 
                 isTailRecommendation={isTailRecommendation}
                 betDescription={betDescription}
@@ -102,11 +105,8 @@ const TrendItem = ({
                 betType={betType}
               />
               
-              {/* Spacer to push bet history to bottom */}
-              <div className="flex-grow"></div>
-              
-              {/* Bet history at the very bottom with minimal padding */}
-              <div className="mt-auto pb-1">
+              {/* Bet history directly below action button with small spacing */}
+              <div className="mt-3">
                 <TrendBetHistory 
                   recentBets={recentBets}
                   betType={betType}
