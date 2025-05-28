@@ -1,3 +1,4 @@
+
 import React, { useState, useEffect } from 'react';
 import { Clock } from 'lucide-react';
 import { cn } from '@/lib/utils';
@@ -81,7 +82,7 @@ const CountdownTimer: React.FC<CountdownTimerProps> = ({ onCountdownEnd }) => {
 
   const DigitalNumber = ({ value, label }: { value: number; label: string }) => (
     <div className="flex flex-col items-center">
-      <span className="text-red-500 text-4xl font-mono font-bold tracking-wider digital-display">
+      <span className="text-red-500 text-4xl font-bold tracking-wider digital-display seven-segment-font">
         {value.toString().padStart(2, '0')}
       </span>
       <span className="text-red-400 text-xs font-mono mt-1 tracking-wider">
@@ -91,7 +92,7 @@ const CountdownTimer: React.FC<CountdownTimerProps> = ({ onCountdownEnd }) => {
   );
 
   const Separator = () => (
-    <div className="text-red-500 text-4xl font-mono font-bold px-2">
+    <div className="text-red-500 text-4xl font-bold px-2 seven-segment-font">
       :
     </div>
   );
