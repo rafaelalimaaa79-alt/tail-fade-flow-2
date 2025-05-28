@@ -1,3 +1,4 @@
+
 import type { Config } from "tailwindcss";
 
 export default {
@@ -101,9 +102,9 @@ export default {
 					}
 				},
         'pulse-heartbeat': {
-          '0%': { transform: 'scale(1)', opacity: '1' },
-          '50%': { transform: 'scale(1.015)', opacity: '0.95' },
-          '100%': { transform: 'scale(1)', opacity: '1' },
+          '0%': { transform: 'scale(1)' },
+          '50%': { transform: 'scale(1.015)' },
+          '100%': { transform: 'scale(1)' },
         },
         'fingerprint-scan': {
           '0%': { opacity: '0.5', transform: 'scale(0.95)' },
