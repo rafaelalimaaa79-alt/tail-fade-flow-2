@@ -25,9 +25,9 @@ const TrendHeader = ({
   return (
     <div className="mb-2 border-b border-white/10 pb-2">
       <div className="flex items-center justify-between">
-        {/* Score percentage - left side */}
+        {/* Score percentage - left side with larger styling */}
         <div className={cn(
-          "rounded-full bg-black/50 px-2 py-1 text-xs font-medium backdrop-blur-sm border border-white/20 transition-colors duration-300",
+          "rounded-full bg-black/50 px-3 py-2 text-base font-bold backdrop-blur-sm border border-white/20 transition-colors duration-300",
           isMostVisible 
             ? (isTailRecommendation ? "text-emerald-300" : "text-rose-300")
             : "text-gray-400",
