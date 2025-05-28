@@ -1,8 +1,6 @@
 
 import React from "react";
 import BettorStreakItem from "./BettorStreakItem";
-import ActionButton from "./ActionButton";
-import { useNavigate } from "react-router-dom";
 
 // Mock data - this would come from an API in a real app
 const coldestBettors = [
@@ -11,11 +9,14 @@ const coldestBettors = [
   { id: "8", name: "Ryan", profit: -1250, streak: [1, 0, 0, 0, 0] },
   { id: "9", name: "Emily", profit: -1100, streak: [0, 1, 0, 0, 0] },
   { id: "10", name: "Alex", profit: -970, streak: [0, 0, 1, 0, 0] },
+  { id: "11", name: "Sam", profit: -890, streak: [0, 0, 0, 1, 1] },
+  { id: "12", name: "Jordan", profit: -750, streak: [1, 0, 0, 0, 1] },
+  { id: "13", name: "Casey", profit: -680, streak: [0, 1, 0, 1, 0] },
+  { id: "14", name: "Morgan", profit: -550, streak: [0, 0, 1, 0, 1] },
+  { id: "15", name: "Blake", profit: -420, streak: [1, 0, 1, 0, 0] },
 ];
 
 const ColdestBettors = () => {
-  const navigate = useNavigate();
-  
   return (
     <div className="rounded-xl bg-card p-5 shadow-lg border border-white/10">
       <div className="mb-4 flex items-center justify-center">
@@ -33,14 +34,6 @@ const ColdestBettors = () => {
           />
         ))}
       </div>
-      
-      <ActionButton 
-        variant="fade" 
-        className="mt-4 h-10 text-sm"
-        onClick={() => navigate("/leaders?type=cold")}
-      >
-        View Coldest Bettors
-      </ActionButton>
     </div>
   );
 };
