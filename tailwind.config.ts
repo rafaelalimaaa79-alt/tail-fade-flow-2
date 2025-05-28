@@ -101,12 +101,11 @@ export default {
 					}
 				},
         'pulse-heartbeat': {
-          '0%': { transform: 'scale(1)' },
-          '5%': { transform: 'scale(1.05)' },
-          '10%': { transform: 'scale(1)' },
-          '15%': { transform: 'scale(1.05)' },
-          '20%': { transform: 'scale(1)' },
-          '100%': { transform: 'scale(1)' },
+          '0%': { transform: 'scale(1)', opacity: '1' },
+          '25%': { transform: 'scale(1.02)', opacity: '0.9' },
+          '50%': { transform: 'scale(1.04)', opacity: '0.8' },
+          '75%': { transform: 'scale(1.02)', opacity: '0.9' },
+          '100%': { transform: 'scale(1)', opacity: '1' },
         },
         'fingerprint-scan': {
           '0%': { opacity: '0.5', transform: 'scale(0.95)' },
@@ -141,7 +140,7 @@ export default {
 			animation: {
 				'accordion-down': 'accordion-down 0.2s ease-out',
 				'accordion-up': 'accordion-up 0.2s ease-out',
-        'pulse-heartbeat': 'pulse-heartbeat 2.5s ease-out infinite',
+        'pulse-heartbeat': 'pulse-heartbeat 4s ease-in-out infinite',
         'fingerprint-scan': 'fingerprint-scan 2s ease-in-out infinite',
         'glow-pulse': 'glow-pulse 2s ease-in-out infinite',
         'glow-pulse-purple': 'glow-pulse-purple 2s infinite ease-in-out',
