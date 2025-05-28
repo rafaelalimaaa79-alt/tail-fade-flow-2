@@ -23,8 +23,6 @@ interface TabsContainerProps {
 const TabsContainer: React.FC<TabsContainerProps> = ({
   activeTab,
   onTabChange,
-  showAll,
-  setShowAll,
   hottestBettors,
   coldestBettors,
 }) => {
@@ -32,20 +30,20 @@ const TabsContainer: React.FC<TabsContainerProps> = ({
   const hotTabContent = useMemo(() => (
     <LeaderboardTable 
       bettors={hottestBettors}
-      showAll={showAll}
-      setShowAll={setShowAll}
+      showAll={false}
+      setShowAll={() => {}}
       variant="tail"
     />
-  ), [hottestBettors, showAll, setShowAll]);
+  ), [hottestBettors]);
 
   const coldTabContent = useMemo(() => (
     <LeaderboardTable 
       bettors={coldestBettors}
-      showAll={showAll}
-      setShowAll={setShowAll}
+      showAll={false}
+      setShowAll={() => {}}
       variant="fade"
     />
-  ), [coldestBettors, showAll, setShowAll]);
+  ), [coldestBettors]);
 
   return (
     <Tabs value={activeTab} onValueChange={onTabChange} className="w-full">
@@ -83,7 +81,6 @@ const TabsContainer: React.FC<TabsContainerProps> = ({
 export default memo(TabsContainer, (prevProps, nextProps) => {
   // Only re-render if these specific props change
   return prevProps.activeTab === nextProps.activeTab &&
-         prevProps.showAll === nextProps.showAll &&
          prevProps.hottestBettors === nextProps.hottestBettors &&
          prevProps.coldestBettors === nextProps.coldestBettors;
 });

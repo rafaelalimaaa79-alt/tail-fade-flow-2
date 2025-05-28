@@ -11,7 +11,6 @@ const Leaders = () => {
   const [searchParams, setSearchParams] = useSearchParams();
   const defaultTab = searchParams.get("type") === "fade" ? "cold" : "hot";
   const [activeTab, setActiveTab] = useState<"hot" | "cold">(defaultTab);
-  const [showAll, setShowAll] = useState(false);
   const isMobile = useIsMobile();
 
   // Fix the infinite loop by using a ref to track first render
@@ -32,12 +31,6 @@ const Leaders = () => {
   // Memoize the tab change handler to prevent recreating on each render
   const handleTabChange = useCallback((value: string) => {
     setActiveTab(value as "hot" | "cold");
-    setShowAll(false);
-  }, []);
-
-  // Memoize the setter for showAll to prevent recreating on each render
-  const handleSetShowAll = useCallback((show: boolean) => {
-    setShowAll(show);
   }, []);
 
   // Memoize the data to prevent unnecessary recalculations
@@ -53,15 +46,15 @@ const Leaders = () => {
         <TabsContainer
           activeTab={activeTab}
           onTabChange={handleTabChange}
-          showAll={showAll}
-          setShowAll={handleSetShowAll}
+          showAll={false}
+          setShowAll={() => {}}
           hottestBettors={memoizedHottestBettors}
           coldestBettors={memoizedColdestBettors}
         />
       </div>
       <BottomNav />
     </div>
-  ), [activeTab, showAll, isMobile, handleTabChange, handleSetShowAll, memoizedHottestBettors, memoizedColdestBettors]);
+  ), [activeTab, isMobile, handleTabChange, memoizedHottestBettors, memoizedColdestBettors]);
 };
 
 export default Leaders;
