@@ -47,30 +47,30 @@ const TabsContainer: React.FC<TabsContainerProps> = ({
 
   return (
     <Tabs value={activeTab} onValueChange={onTabChange} className="w-full">
-      <TabsList className="w-full flex rounded-xl overflow-hidden bg-black/30 mb-6 p-0 border border-white/20 shadow-lg">
+      <TabsList className="w-full flex rounded-xl overflow-hidden bg-black/30 mb-6 p-0 border border-white/20 shadow-lg hover:shadow-2xl transition-all duration-300">
         <TabsTrigger 
           value="hot" 
-          className="flex-1 rounded-none py-3 border-r border-white/10 data-[state=active]:bg-onetime-green/20 data-[state=active]:shadow-[0_0_10px_rgba(16,185,129,0.5)]"
+          className="flex-1 rounded-none py-3 border-r border-white/10 data-[state=active]:bg-onetime-green/20 data-[state=active]:shadow-[0_0_10px_rgba(16,185,129,0.5)] hover:bg-onetime-green/10 transition-all duration-300 group"
         >
-          <span className="text-onetime-green font-bold font-rajdhani text-lg uppercase tracking-wide truncate px-1">
+          <span className="text-onetime-green font-bold font-rajdhani text-lg uppercase tracking-wide truncate px-1 group-hover:scale-105 transition-transform duration-200">
             CANT MISS
           </span>
         </TabsTrigger>
         <TabsTrigger 
           value="cold" 
-          className="flex-1 rounded-none py-3 data-[state=active]:bg-onetime-red/20 data-[state=active]:shadow-[0_0_10px_rgba(239,68,68,0.5)]"
+          className="flex-1 rounded-none py-3 data-[state=active]:bg-onetime-red/20 data-[state=active]:shadow-[0_0_10px_rgba(239,68,68,0.5)] hover:bg-onetime-red/10 transition-all duration-300 group"
         >
-          <span className="text-onetime-red font-bold font-rajdhani text-lg uppercase tracking-wide truncate px-1">
+          <span className="text-onetime-red font-bold font-rajdhani text-lg uppercase tracking-wide truncate px-1 group-hover:scale-105 transition-transform duration-200">
             Walking L's
           </span>
         </TabsTrigger>
       </TabsList>
       
-      <TabsContent value="hot" className="space-y-2">
+      <TabsContent value="hot" className="space-y-2 animate-fade-in">
         {hotTabContent}
       </TabsContent>
       
-      <TabsContent value="cold" className="space-y-2">
+      <TabsContent value="cold" className="space-y-2 animate-fade-in">
         {coldTabContent}
       </TabsContent>
     </Tabs>
