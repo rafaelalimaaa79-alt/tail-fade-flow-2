@@ -12,9 +12,8 @@ const CountdownTimer: React.FC<CountdownTimerProps> = ({ onCountdownEnd }) => {
     hours: number;
     minutes: number;
     seconds: number;
-    milliseconds: number;
     hasEnded: boolean;
-  }>({ hours: 0, minutes: 0, seconds: 0, milliseconds: 0, hasEnded: false });
+  }>({ hours: 0, minutes: 0, seconds: 0, hasEnded: false });
 
   const getNextEndTime = () => {
     const now = new Date();
@@ -59,7 +58,7 @@ const CountdownTimer: React.FC<CountdownTimerProps> = ({ onCountdownEnd }) => {
       const difference = endTime.getTime() - now.getTime();
       
       if (difference <= 0) {
-        setTimeLeft({ hours: 0, minutes: 0, seconds: 0, milliseconds: 0, hasEnded: true });
+        setTimeLeft({ hours: 0, minutes: 0, seconds: 0, hasEnded: true });
         onCountdownEnd();
         return;
       }
@@ -67,13 +66,12 @@ const CountdownTimer: React.FC<CountdownTimerProps> = ({ onCountdownEnd }) => {
       const hours = Math.floor(difference / (1000 * 60 * 60));
       const minutes = Math.floor((difference % (1000 * 60 * 60)) / (1000 * 60));
       const seconds = Math.floor((difference % (1000 * 60)) / 1000);
-      const milliseconds = Math.floor((difference % 1000) / 10); // Two digit milliseconds
       
-      setTimeLeft({ hours, minutes, seconds, milliseconds, hasEnded: false });
+      setTimeLeft({ hours, minutes, seconds, hasEnded: false });
     };
 
     updateCountdown();
-    const interval = setInterval(updateCountdown, 10); // Update every 10ms for smooth milliseconds
+    const interval = setInterval(updateCountdown, 1000);
 
     return () => clearInterval(interval);
   }, [onCountdownEnd]);
@@ -102,7 +100,7 @@ const CountdownTimer: React.FC<CountdownTimerProps> = ({ onCountdownEnd }) => {
   );
 
   return (
-    <div className="bg-gradient-to-r from-gray-900 to-black p-6 rounded-lg mb-6 border border-red-900/30">
+    <div className="bg-background p-6 rounded-lg mb-6 border border-red-900/30">
       <div className="flex items-center justify-center space-x-2 mb-4">
         <Clock className="h-6 w-6 text-red-500" />
         <h2 className="text-xl font-bold text-red-400">Next Top 10 Reveal</h2>
@@ -114,8 +112,6 @@ const CountdownTimer: React.FC<CountdownTimerProps> = ({ onCountdownEnd }) => {
         <DigitalNumber value={timeLeft.minutes} label="MIN" />
         <Separator />
         <DigitalNumber value={timeLeft.seconds} label="SEC" />
-        <Separator />
-        <DigitalNumber value={timeLeft.milliseconds} label="MS" />
       </div>
     </div>
   );
