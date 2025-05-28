@@ -101,8 +101,12 @@ export default {
 					}
 				},
         'pulse-heartbeat': {
-          '0%, 100%': { transform: 'scale(1)' },
-          '50%': { transform: 'scale(1.01)' },
+          '0%': { transform: 'scale(1)' },
+          '5%': { transform: 'scale(1.05)' },
+          '10%': { transform: 'scale(1)' },
+          '15%': { transform: 'scale(1.05)' },
+          '20%': { transform: 'scale(1)' },
+          '100%': { transform: 'scale(1)' },
         },
         'fingerprint-scan': {
           '0%': { opacity: '0.5', transform: 'scale(0.95)' },
