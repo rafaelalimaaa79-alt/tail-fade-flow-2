@@ -67,12 +67,12 @@ const LeaderboardTable: React.FC<LeaderboardTableProps> = ({
             <div className="absolute -top-1 -right-1 w-2 h-2 bg-yellow-400 rounded-full animate-pulse opacity-0 group-hover:opacity-100 transition-opacity duration-300" />
           )}
         </TableCell>
-        <TableCell className="relative p-3 flex-1">
-          <span className="group-hover:text-white transition-colors duration-200 text-sm font-medium truncate block max-w-full">
+        <TableCell className="relative p-3">
+          <span className="group-hover:text-white transition-colors duration-200 text-sm font-medium">
             @{bettor.name}
           </span>
         </TableCell>
-        <TableCell className={`${isProfitPositive ? "text-onetime-green" : "text-onetime-red"} relative p-3 w-20 text-right`}>
+        <TableCell className={`${isProfitPositive ? "text-onetime-green" : "text-onetime-red"} relative p-3 w-24 text-right`}>
           <span className="group-hover:font-bold transition-all duration-200 transform group-hover:scale-110 text-sm font-semibold">
             {isProfitPositive ? `+${bettor.profit}u` : `${bettor.profit}u`}
           </span>
@@ -90,12 +90,12 @@ const LeaderboardTable: React.FC<LeaderboardTableProps> = ({
     <div className="rounded-xl bg-card border border-white/10 p-3 transition-all duration-300 hover:border-white/20 hover:shadow-2xl backdrop-blur-sm overflow-hidden">
       <ScrollArea className="h-[600px] w-full overflow-x-hidden">
         <div className="w-full overflow-x-hidden">
-          <Table className="w-full table-fixed">
+          <Table className="w-full">
             <TableHeader className="sticky top-0 bg-card/95 backdrop-blur-sm border-b border-white/20">
               <TableRow className="hover:bg-transparent">
                 <TableHead className="w-16 text-muted-foreground p-3 text-xs font-bold uppercase tracking-wider">Rank</TableHead>
                 <TableHead className="text-muted-foreground p-3 text-xs font-bold uppercase tracking-wider">Bettor</TableHead>
-                <TableHead className="w-20 text-muted-foreground p-3 text-xs font-bold uppercase tracking-wider text-right">
+                <TableHead className="w-24 text-muted-foreground p-3 text-xs font-bold uppercase tracking-wider text-right">
                   {isProfitPositive ? "Units" : "Down"}
                 </TableHead>
                 <TableHead className="w-20 text-muted-foreground p-3 text-xs font-bold uppercase tracking-wider text-right">Win %</TableHead>
