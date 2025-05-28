@@ -1,8 +1,6 @@
-
 import React, { memo, useMemo } from "react";
 import { useNavigate } from "react-router-dom";
 import { Table, TableHeader, TableRow, TableHead, TableBody, TableCell } from "@/components/ui/table";
-import { ScrollArea } from "@/components/ui/scroll-area";
 import { Award, TrendingUp, TrendingDown, Crown, Star, Zap } from "lucide-react";
 
 interface BettorData {
@@ -27,9 +25,9 @@ const LeaderboardTable: React.FC<LeaderboardTableProps> = ({
   const navigate = useNavigate();
   const isProfitPositive = variant === "tail";
   
-  // Show 20 bettors instead of 10 for a longer table
+  // Show 10 bettors
   const displayBettors = useMemo(() => 
-    bettors.slice(0, 20),
+    bettors.slice(0, 10),
   [bettors]);
 
   // Function to get rank icon based on position
@@ -88,25 +86,23 @@ const LeaderboardTable: React.FC<LeaderboardTableProps> = ({
 
   return (
     <div className="rounded-xl bg-card border border-white/10 p-3 transition-all duration-300 hover:border-white/20 hover:shadow-2xl backdrop-blur-sm overflow-hidden">
-      <ScrollArea className="h-[600px] w-full overflow-x-hidden">
-        <div className="w-full overflow-x-hidden">
-          <Table className="w-full">
-            <TableHeader className="sticky top-0 bg-card/95 backdrop-blur-sm border-b border-white/20">
-              <TableRow className="hover:bg-transparent">
-                <TableHead className="w-16 text-muted-foreground p-3 text-xs font-bold uppercase tracking-wider">Rank</TableHead>
-                <TableHead className="text-muted-foreground p-3 text-xs font-bold uppercase tracking-wider">Bettor</TableHead>
-                <TableHead className="w-24 text-muted-foreground p-3 text-xs font-bold uppercase tracking-wider text-right">
-                  {isProfitPositive ? "Units" : "Down"}
-                </TableHead>
-                <TableHead className="w-20 text-muted-foreground p-3 text-xs font-bold uppercase tracking-wider text-right">Win %</TableHead>
-              </TableRow>
-            </TableHeader>
-            <TableBody>
-              {tableRows}
-            </TableBody>
-          </Table>
-        </div>
-      </ScrollArea>
+      <div className="w-full overflow-x-hidden">
+        <Table className="w-full">
+          <TableHeader className="bg-card/95 backdrop-blur-sm border-b border-white/20">
+            <TableRow className="hover:bg-transparent">
+              <TableHead className="w-16 text-muted-foreground p-3 text-xs font-bold uppercase tracking-wider">Rank</TableHead>
+              <TableHead className="text-muted-foreground p-3 text-xs font-bold uppercase tracking-wider">Bettor</TableHead>
+              <TableHead className="w-24 text-muted-foreground p-3 text-xs font-bold uppercase tracking-wider text-right">
+                {isProfitPositive ? "Units" : "Down"}
+              </TableHead>
+              <TableHead className="w-20 text-muted-foreground p-3 text-xs font-bold uppercase tracking-wider text-right">Win %</TableHead>
+            </TableRow>
+          </TableHeader>
+          <TableBody>
+            {tableRows}
+          </TableBody>
+        </Table>
+      </div>
     </div>
   );
 };
