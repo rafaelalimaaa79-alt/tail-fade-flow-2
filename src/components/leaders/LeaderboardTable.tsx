@@ -51,16 +51,18 @@ const LeaderboardTable: React.FC<LeaderboardTableProps> = ({
             <div className="absolute -top-1 -right-1 w-2 h-2 bg-yellow-400 rounded-full animate-pulse opacity-0 group-hover:opacity-100 transition-opacity duration-300" />
           )}
         </TableCell>
-        <TableCell className="relative p-2 min-w-0">
-          <div className="flex items-center gap-1">
-            <span className="group-hover:text-white transition-colors duration-200 text-sm truncate">
+        <TableCell className="relative p-2 overflow-hidden">
+          <div className="flex items-center justify-between w-full">
+            <span className="group-hover:text-white transition-colors duration-200 text-sm truncate flex-1 min-w-0 pr-1">
               @{bettor.name}
             </span>
-            {isProfitPositive ? (
-              <TrendingUp className="w-3 h-3 text-onetime-green opacity-0 group-hover:opacity-100 transition-all duration-300 transform translate-x-2 group-hover:translate-x-0 flex-shrink-0" />
-            ) : (
-              <TrendingDown className="w-3 h-3 text-onetime-red opacity-0 group-hover:opacity-100 transition-all duration-300 transform translate-x-2 group-hover:translate-x-0 flex-shrink-0" />
-            )}
+            <div className="flex-shrink-0 w-3 flex justify-center">
+              {isProfitPositive ? (
+                <TrendingUp className="w-3 h-3 text-onetime-green opacity-0 group-hover:opacity-100 transition-all duration-300" />
+              ) : (
+                <TrendingDown className="w-3 h-3 text-onetime-red opacity-0 group-hover:opacity-100 transition-all duration-300" />
+              )}
+            </div>
           </div>
         </TableCell>
         <TableCell className={`${isProfitPositive ? "text-onetime-green" : "text-onetime-red"} relative p-2 w-16`}>
@@ -90,7 +92,7 @@ const LeaderboardTable: React.FC<LeaderboardTableProps> = ({
           <TableHeader>
             <TableRow className="hover:bg-transparent">
               <TableHead className="w-12 text-muted-foreground p-2 text-xs">Rank</TableHead>
-              <TableHead className="text-muted-foreground p-2 text-xs min-w-0">Bettor</TableHead>
+              <TableHead className="text-muted-foreground p-2 text-xs">Bettor</TableHead>
               <TableHead className="w-16 text-muted-foreground p-2 text-xs">
                 {isProfitPositive ? "Units" : "Down"}
               </TableHead>
