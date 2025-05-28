@@ -1,3 +1,4 @@
+
 @tailwind base;
 @tailwind components;
 @tailwind utilities;
@@ -133,6 +134,15 @@
   /* Base word styling */
   .wave-text-container .word {
     @apply inline-block transition-all duration-200 ease-in-out origin-center;
+  }
+
+  /* Digital display styling for countdown timer */
+  .digital-display {
+    text-shadow: 
+      0 0 5px #ef4444,
+      0 0 10px #ef4444,
+      0 0 15px #ef4444;
+    filter: brightness(1.2);
   }
 
   /* Notification animations */

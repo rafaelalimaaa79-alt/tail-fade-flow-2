@@ -12,8 +12,9 @@ const CountdownTimer: React.FC<CountdownTimerProps> = ({ onCountdownEnd }) => {
     hours: number;
     minutes: number;
     seconds: number;
+    milliseconds: number;
     hasEnded: boolean;
-  }>({ hours: 0, minutes: 0, seconds: 0, hasEnded: false });
+  }>({ hours: 0, minutes: 0, seconds: 0, milliseconds: 0, hasEnded: false });
 
   const getNextEndTime = () => {
     const now = new Date();
@@ -58,7 +59,7 @@ const CountdownTimer: React.FC<CountdownTimerProps> = ({ onCountdownEnd }) => {
       const difference = endTime.getTime() - now.getTime();
       
       if (difference <= 0) {
-        setTimeLeft({ hours: 0, minutes: 0, seconds: 0, hasEnded: true });
+        setTimeLeft({ hours: 0, minutes: 0, seconds: 0, milliseconds: 0, hasEnded: true });
         onCountdownEnd();
         return;
       }
@@ -66,12 +67,13 @@ const CountdownTimer: React.FC<CountdownTimerProps> = ({ onCountdownEnd }) => {
       const hours = Math.floor(difference / (1000 * 60 * 60));
       const minutes = Math.floor((difference % (1000 * 60 * 60)) / (1000 * 60));
       const seconds = Math.floor((difference % (1000 * 60)) / 1000);
+      const milliseconds = Math.floor((difference % 1000) / 10); // Two digit milliseconds
       
-      setTimeLeft({ hours, minutes, seconds, hasEnded: false });
+      setTimeLeft({ hours, minutes, seconds, milliseconds, hasEnded: false });
     };
 
     updateCountdown();
-    const interval = setInterval(updateCountdown, 1000);
+    const interval = setInterval(updateCountdown, 10); // Update every 10ms for smooth milliseconds
 
     return () => clearInterval(interval);
   }, [onCountdownEnd]);
@@ -80,27 +82,40 @@ const CountdownTimer: React.FC<CountdownTimerProps> = ({ onCountdownEnd }) => {
     return null;
   }
 
+  const DigitalNumber = ({ value, label }: { value: number; label: string }) => (
+    <div className="flex flex-col items-center">
+      <div className="bg-black px-3 py-2 rounded border border-red-800">
+        <span className="text-red-500 text-2xl font-mono font-bold tracking-wider digital-display">
+          {value.toString().padStart(2, '0')}
+        </span>
+      </div>
+      <span className="text-red-400 text-xs font-mono mt-1 tracking-wider">
+        {label}
+      </span>
+    </div>
+  );
+
+  const Separator = () => (
+    <div className="text-red-500 text-2xl font-mono font-bold px-1">
+      :
+    </div>
+  );
+
   return (
-    <div className="bg-gradient-to-r from-onetime-purple to-onetime-orange p-6 rounded-lg mb-6 text-white">
-      <div className="flex items-center justify-center space-x-4">
-        <Clock className="h-8 w-8 animate-pulse" />
-        <div className="text-center">
-          <h2 className="text-2xl font-bold mb-2">Next Top 10 Reveal</h2>
-          <div className="flex space-x-4 text-3xl font-mono">
-            <div className="bg-black/30 px-4 py-2 rounded">
-              <span className="block text-sm opacity-75">Hours</span>
-              <span>{timeLeft.hours.toString().padStart(2, '0')}</span>
-            </div>
-            <div className="bg-black/30 px-4 py-2 rounded">
-              <span className="block text-sm opacity-75">Minutes</span>
-              <span>{timeLeft.minutes.toString().padStart(2, '0')}</span>
-            </div>
-            <div className="bg-black/30 px-4 py-2 rounded">
-              <span className="block text-sm opacity-75">Seconds</span>
-              <span>{timeLeft.seconds.toString().padStart(2, '0')}</span>
-            </div>
-          </div>
-        </div>
+    <div className="bg-gradient-to-r from-gray-900 to-black p-6 rounded-lg mb-6 border border-red-900/30">
+      <div className="flex items-center justify-center space-x-2 mb-4">
+        <Clock className="h-6 w-6 text-red-500" />
+        <h2 className="text-xl font-bold text-red-400">Next Top 10 Reveal</h2>
+      </div>
+      
+      <div className="flex items-center justify-center space-x-1">
+        <DigitalNumber value={timeLeft.hours} label="HR" />
+        <Separator />
+        <DigitalNumber value={timeLeft.minutes} label="MIN" />
+        <Separator />
+        <DigitalNumber value={timeLeft.seconds} label="SEC" />
+        <Separator />
+        <DigitalNumber value={timeLeft.milliseconds} label="MS" />
       </div>
     </div>
   );
