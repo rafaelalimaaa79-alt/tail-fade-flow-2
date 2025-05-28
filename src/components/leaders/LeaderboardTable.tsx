@@ -58,7 +58,7 @@ const LeaderboardTable: React.FC<LeaderboardTableProps> = ({
         className={`cursor-pointer hover:bg-muted/50 transition-all duration-300 group hover:scale-[1.01] hover:shadow-lg hover:border-white/30 border ${getRankStyling(index)}`}
         onClick={() => navigate(`/bettor/${bettor.id}`)}
       >
-        <TableCell className="font-medium relative w-14 p-3">
+        <TableCell className="font-medium relative w-16 p-3">
           {getRankIcon(index)}
           <span className="group-hover:text-white transition-colors duration-200 text-sm font-semibold">
             {index + 1}
@@ -67,58 +67,45 @@ const LeaderboardTable: React.FC<LeaderboardTableProps> = ({
             <div className="absolute -top-1 -right-1 w-2 h-2 bg-yellow-400 rounded-full animate-pulse opacity-0 group-hover:opacity-100 transition-opacity duration-300" />
           )}
         </TableCell>
-        <TableCell className="relative p-3 min-w-0">
-          <div className="flex items-center justify-between w-full overflow-hidden">
-            <span className="group-hover:text-white transition-colors duration-200 text-sm truncate flex-1 min-w-0 pr-2 font-medium">
-              @{bettor.name}
-            </span>
-            <div className="flex-shrink-0 w-4 h-4 flex items-center justify-center">
-              {isProfitPositive ? (
-                <TrendingUp className="w-4 h-4 text-onetime-green opacity-0 group-hover:opacity-100 transition-all duration-300 group-hover:scale-110" />
-              ) : (
-                <TrendingDown className="w-4 h-4 text-onetime-red opacity-0 group-hover:opacity-100 transition-all duration-300 group-hover:scale-110" />
-              )}
-            </div>
-          </div>
+        <TableCell className="relative p-3 flex-1">
+          <span className="group-hover:text-white transition-colors duration-200 text-sm font-medium truncate block max-w-full">
+            @{bettor.name}
+          </span>
         </TableCell>
-        <TableCell className={`${isProfitPositive ? "text-onetime-green" : "text-onetime-red"} relative p-3 w-20`}>
-          <div className="flex items-center gap-1">
-            <span className="group-hover:font-bold transition-all duration-200 transform group-hover:scale-110 text-sm font-semibold">
-              {isProfitPositive ? `+${bettor.profit}u` : `${bettor.profit}u`}
-            </span>
-            <div className={`absolute -right-1 w-0.5 h-5 ${isProfitPositive ? "bg-onetime-green" : "bg-onetime-red"} opacity-0 group-hover:opacity-100 transition-all duration-300 transform scale-y-0 group-hover:scale-y-100 rounded-full`} />
-          </div>
+        <TableCell className={`${isProfitPositive ? "text-onetime-green" : "text-onetime-red"} relative p-3 w-20 text-right`}>
+          <span className="group-hover:font-bold transition-all duration-200 transform group-hover:scale-110 text-sm font-semibold">
+            {isProfitPositive ? `+${bettor.profit}u` : `${bettor.profit}u`}
+          </span>
         </TableCell>
-        <TableCell className="relative p-3 w-20">
-          <div className="flex items-center gap-1">
-            <span className="group-hover:text-white group-hover:font-semibold transition-all duration-200 text-sm font-medium">
-              {bettor.winRate}%
-            </span>
-            <div className={`w-8 h-0.5 bg-gradient-to-r ${bettor.winRate >= 60 ? 'from-onetime-green to-onetime-green/50' : bettor.winRate >= 50 ? 'from-yellow-400 to-yellow-400/50' : 'from-onetime-red to-onetime-red/50'} opacity-0 group-hover:opacity-100 transition-all duration-300 transform scale-x-0 group-hover:scale-x-100 rounded-full`} />
-          </div>
+        <TableCell className="relative p-3 w-20 text-right">
+          <span className="group-hover:text-white group-hover:font-semibold transition-all duration-200 text-sm font-medium">
+            {bettor.winRate}%
+          </span>
         </TableCell>
       </TableRow>
     ))
   ), [displayBettors, navigate, isProfitPositive]);
 
   return (
-    <div className="rounded-xl bg-card border border-white/10 p-3 transition-all duration-300 hover:border-white/20 hover:shadow-2xl overflow-hidden backdrop-blur-sm">
-      <ScrollArea className="h-[600px] w-full">
-        <Table className="w-full">
-          <TableHeader className="sticky top-0 bg-card/95 backdrop-blur-sm border-b border-white/20">
-            <TableRow className="hover:bg-transparent">
-              <TableHead className="w-14 text-muted-foreground p-3 text-xs font-bold uppercase tracking-wider">Rank</TableHead>
-              <TableHead className="text-muted-foreground p-3 text-xs font-bold uppercase tracking-wider min-w-0">Bettor</TableHead>
-              <TableHead className="w-20 text-muted-foreground p-3 text-xs font-bold uppercase tracking-wider">
-                {isProfitPositive ? "Units" : "Down"}
-              </TableHead>
-              <TableHead className="w-20 text-muted-foreground p-3 text-xs font-bold uppercase tracking-wider">Win %</TableHead>
-            </TableRow>
-          </TableHeader>
-          <TableBody>
-            {tableRows}
-          </TableBody>
-        </Table>
+    <div className="rounded-xl bg-card border border-white/10 p-3 transition-all duration-300 hover:border-white/20 hover:shadow-2xl backdrop-blur-sm overflow-hidden">
+      <ScrollArea className="h-[600px] w-full overflow-x-hidden">
+        <div className="w-full overflow-x-hidden">
+          <Table className="w-full table-fixed">
+            <TableHeader className="sticky top-0 bg-card/95 backdrop-blur-sm border-b border-white/20">
+              <TableRow className="hover:bg-transparent">
+                <TableHead className="w-16 text-muted-foreground p-3 text-xs font-bold uppercase tracking-wider">Rank</TableHead>
+                <TableHead className="text-muted-foreground p-3 text-xs font-bold uppercase tracking-wider">Bettor</TableHead>
+                <TableHead className="w-20 text-muted-foreground p-3 text-xs font-bold uppercase tracking-wider text-right">
+                  {isProfitPositive ? "Units" : "Down"}
+                </TableHead>
+                <TableHead className="w-20 text-muted-foreground p-3 text-xs font-bold uppercase tracking-wider text-right">Win %</TableHead>
+              </TableRow>
+            </TableHeader>
+            <TableBody>
+              {tableRows}
+            </TableBody>
+          </Table>
+        </div>
       </ScrollArea>
     </div>
   );
