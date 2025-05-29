@@ -1,4 +1,3 @@
-
 import React from "react";
 import { Link } from "react-router-dom";
 import { Card } from "@/components/ui/card";
@@ -64,7 +63,6 @@ const TrendItem = ({
             className={cn(
               "rounded-lg bg-card shadow-md overflow-hidden min-h-[280px] flex flex-col transition-all duration-300",
               isMostVisible ? borderColor : "border-gray-500",
-              isMostVisible && "animate-pulse-heartbeat",
               !isMostVisible && "grayscale"
             )}
             style={isMostVisible ? {

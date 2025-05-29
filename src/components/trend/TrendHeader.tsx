@@ -18,9 +18,6 @@ const TrendHeader = ({
   const glowColor = isTailRecommendation 
     ? "0 0 10px rgba(16, 185, 129, 0.7)" 
     : "0 0 10px rgba(239, 68, 68, 0.7)";
-  
-  // Create a shared pulse class to sync animations
-  const pulseClass = isMostVisible ? "animate-pulse-heartbeat" : "";
     
   return (
     <div className="mb-2 border-b border-white/10 pb-2">
@@ -30,8 +27,7 @@ const TrendHeader = ({
           "rounded-full bg-black/50 px-3 py-2 text-base font-bold backdrop-blur-sm border border-white/20 transition-colors duration-300",
           isMostVisible 
             ? (isTailRecommendation ? "text-emerald-300" : "text-rose-300")
-            : "text-gray-400",
-          pulseClass
+            : "text-gray-400"
         )}
         style={{
           boxShadow: isMostVisible ? glowColor : "none",
@@ -48,8 +44,7 @@ const TrendHeader = ({
           "text-3xl font-bold transition-colors duration-300",
           isMostVisible 
             ? (isTailRecommendation ? "text-emerald-300" : "text-rose-300")
-            : "text-gray-400",
-          pulseClass
+            : "text-gray-400"
         )}>
           {isTailRecommendation ? "TAIL" : "FADE"}
         </span>

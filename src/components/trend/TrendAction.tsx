@@ -31,8 +31,7 @@ const TrendAction = ({
         className={cn(
           "w-full font-bold py-3 px-2 rounded-md transition-all flex flex-col items-center justify-center h-auto max-w-[95%] mx-auto duration-300", 
           buttonClass,
-          isMostVisible ? "text-white" : "text-gray-300",
-          isMostVisible && "animate-pulse-heartbeat"
+          isMostVisible ? "text-white" : "text-gray-300"
         )}
       >
         <div className="text-center">
