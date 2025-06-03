@@ -84,11 +84,11 @@ const Compete = () => {
   return (
     <div className="flex min-h-screen flex-col bg-background">
       <div className={`onetime-container ${isMobile ? "pb-24" : ""}`}>
-        <div className="flex justify-between items-center pt-2 mb-2">
+        <div className="flex justify-between items-center pt-2 mb-4">
           <img 
-            src="/lovable-uploads/c77c9dc5-a7dd-4c1c-9428-804d5d7a4a79.png" 
+            src="/lovable-uploads/57cb1fb4-7471-451e-bf49-d4d5fa12bdcb.png" 
             alt="ONE TIME logo" 
-            className="h-10"
+            className="h-24"
           />
           <ProfileIcon />
         </div>
