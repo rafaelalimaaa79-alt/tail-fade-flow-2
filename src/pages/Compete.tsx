@@ -7,6 +7,7 @@ import PageHeader from "@/components/compete/PageHeader";
 import TournamentList from "@/components/compete/TournamentList";
 import FixedMatchesList from "@/components/compete/FixedMatchesList";
 import CustomMatchesList from "@/components/compete/custom-matches/CustomMatchesList";
+import ProfileIcon from "@/components/common/ProfileIcon";
 import { supabase } from "@/integrations/supabase/client";
 import { toast } from "sonner";
 import { Card } from "@/components/ui/card";
@@ -83,6 +84,10 @@ const Compete = () => {
   return (
     <div className="flex min-h-screen flex-col bg-background">
       <div className={`onetime-container ${isMobile ? "pb-24" : ""}`}>
+        <div className="flex justify-end pt-4 mb-4">
+          <ProfileIcon />
+        </div>
+        
         <PageHeader />
 
         {!user && !bypassAuth ? (

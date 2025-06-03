@@ -6,6 +6,7 @@ import { useBettorProfile } from "@/hooks/useBettorProfile";
 import { useNotificationStore } from "@/utils/betting-notifications";
 import FullscreenNotification from "@/components/FullscreenNotification";
 import BriefcaseButton from "@/components/common/BriefcaseButton";
+import ProfileIcon from "@/components/common/ProfileIcon";
 
 // Imported components
 import BettorHeader from "@/components/bettor/BettorHeader";
@@ -78,7 +79,10 @@ const BettorDetail = () => {
             />
           </div>
           <div className="flex-grow" />
-          <BriefcaseButton className="mr-4" />
+          <div className="flex items-center gap-2">
+            <BriefcaseButton className="mr-4" />
+            <ProfileIcon />
+          </div>
         </header>
         
         {/* Bettor header with improved styling and organization */}

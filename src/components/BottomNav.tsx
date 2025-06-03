@@ -1,7 +1,7 @@
 
 import React from "react";
 import { Link, useLocation } from "react-router-dom";
-import { Home, Award, User, ArrowUp, ArrowDown } from "lucide-react";
+import { Home, Award, ArrowUp, ArrowDown } from "lucide-react";
 import { cn } from "@/lib/utils";
 import { useAuth } from "@/contexts/AuthContext";
 
@@ -23,7 +23,6 @@ const BottomNav = () => {
   const homeStyle = "text-cyan-400 drop-shadow-[0_0_8px_rgba(34,211,238,0.7)]";
   const trendsStyle = "text-purple-400 drop-shadow-[0_0_8px_rgba(168,85,247,0.7)]";
   const leadersStyle = "text-green-400 drop-shadow-[0_0_8px_rgba(74,222,128,0.7)]";
-  const profileStyle = "text-pink-400 drop-shadow-[0_0_8px_rgba(244,114,182,0.7)]";
 
   return (
     <nav className="bottom-nav">
@@ -67,13 +66,14 @@ const BottomNav = () => {
         <Award className="h-6 w-6 mb-1" />
         <span>Streakers</span>
       </Link>
-      <Link
-        to="/profile"
-        className={cn("nav-item", isActive("/profile") ? profileStyle : "text-white/70")}
-      >
-        <User className="h-6 w-6 mb-1" />
-        <span>Profile</span>
-      </Link>
+      <div className="nav-item flex flex-col items-center">
+        <img 
+          src="/lovable-uploads/57cb1fb4-7471-451e-bf49-d4d5fa12bdcb.png" 
+          alt="ONE TIME logo" 
+          className="h-6 w-6 mb-1"
+        />
+        <span className="text-white/70">Public</span>
+      </div>
     </nav>
   );
 };

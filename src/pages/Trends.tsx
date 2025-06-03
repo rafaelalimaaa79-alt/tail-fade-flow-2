@@ -8,6 +8,7 @@ import TrendsList from "@/components/trends/TrendsList";
 import TrendsNotificationHandler from "@/components/trends/TrendsNotificationHandler";
 import BadgeAnimationHandler from "@/components/dashboard/BadgeAnimationHandler";
 import TopTenReveal from "@/components/trends/TopTenReveal";
+import ProfileIcon from "@/components/common/ProfileIcon";
 import { trendData } from "@/data/trendData";
 
 const Trends = () => {
@@ -17,6 +18,10 @@ const Trends = () => {
   return (
     <div className="flex min-h-screen flex-col bg-background font-rajdhani">
       <div className={`onetime-container ${isMobile ? "pb-24" : ""}`}>
+        <div className="flex justify-end pt-4 mb-4">
+          <ProfileIcon />
+        </div>
+        
         <TrendsHeader />
         <TrendsTitle />
         

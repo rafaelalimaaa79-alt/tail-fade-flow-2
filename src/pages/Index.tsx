@@ -8,6 +8,7 @@ import { playsOfTheDay } from "@/types/betTypes";
 import DashboardHeader from "@/components/dashboard/DashboardHeader";
 import NotificationHandler from "@/components/dashboard/NotificationHandler";
 import BadgeAnimationHandler from "@/components/dashboard/BadgeAnimationHandler";
+import ProfileIcon from "@/components/common/ProfileIcon";
 import { useCarouselRotation } from "@/hooks/useCarouselRotation";
 import { usePortfolioStore } from "@/utils/portfolio-state";
 import { showTailNotification } from "@/utils/betting-notifications";
@@ -55,6 +56,10 @@ const Dashboard = () => {
   return (
     <div className="flex min-h-screen flex-col bg-background">
       <div className={`max-w-md mx-auto w-full px-2 ${isMobile ? "pb-24" : ""}`}>
+        <div className="flex justify-end pt-4 mb-4">
+          <ProfileIcon />
+        </div>
+        
         <DashboardHeader getPortfolioRect={getPortfolioRect} />
 
         <div className="w-full mb-4">

@@ -5,6 +5,7 @@ import ColdestBettors from "@/components/ColdestBettors";
 import { useIsMobile } from "@/hooks/use-mobile";
 import { useNavigate } from "react-router-dom";
 import BriefcaseButton from "@/components/common/BriefcaseButton";
+import ProfileIcon from "@/components/common/ProfileIcon";
 
 const ColdPage = () => {
   const isMobile = useIsMobile();
@@ -22,7 +23,10 @@ const ColdPage = () => {
             />
           </div>
           <div className="flex-grow" />
-          <BriefcaseButton className="mr-4" />
+          <div className="flex items-center gap-2">
+            <BriefcaseButton className="mr-4" />
+            <ProfileIcon />
+          </div>
         </header>
 
         <div className="mt-4">

@@ -5,6 +5,7 @@ import { useIsMobile } from "@/hooks/use-mobile";
 import { useSearchParams } from "react-router-dom";
 import PageHeader from "@/components/leaders/PageHeader";
 import TabsContainer from "@/components/leaders/TabsContainer";
+import ProfileIcon from "@/components/common/ProfileIcon";
 import { hottestBettors, coldestBettors } from "@/components/leaders/mockData";
 
 const Leaders = () => {
@@ -41,6 +42,10 @@ const Leaders = () => {
   return useMemo(() => (
     <div className="flex min-h-screen flex-col bg-background">
       <div className={`onetime-container ${isMobile ? "pb-24" : ""}`}>
+        <div className="flex justify-end pt-4 mb-4">
+          <ProfileIcon />
+        </div>
+        
         <PageHeader logoSrc="/lovable-uploads/57cb1fb4-7471-451e-bf49-d4d5fa12bdcb.png" />
         
         <TabsContainer

@@ -1,4 +1,3 @@
-
 import React, { useState } from "react";
 import BottomNav from "@/components/BottomNav";
 import { useNavigate } from "react-router-dom";
@@ -6,6 +5,7 @@ import UserHeader from "@/components/profile/UserHeader";
 import PendingBetsSection from "@/components/profile/PendingBetsSection";
 import PerformanceSection from "@/components/profile/PerformanceSection";
 import BiggestWinsSection from "@/components/profile/BiggestWinsSection";
+import ProfileIcon from "@/components/common/ProfileIcon";
 
 // Mock data
 const userProfile = {
@@ -97,6 +97,7 @@ const ProfilePage = () => {
             />
           </div>
           <div className="flex-grow" />
+          <ProfileIcon />
         </header>
 
         <UserHeader 
