@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from "react";
 import PublicGameItem from "./PublicGameItem";
 import { Badge } from "@/components/ui/badge";
-import { Activity, Zap } from "lucide-react";
+import { Activity, Zap, TrendingUp } from "lucide-react";
 
 interface PublicGame {
   id: string;
@@ -121,32 +121,40 @@ const PublicGamesList = () => {
     return () => clearInterval(interval);
   }, []);
 
+  const heavyPublicCount = games.filter(game => game.publicPercentage >= 80).length;
+
   return (
-    <div className="space-y-4">
-      {/* Futuristic Header */}
-      <div className="bg-gradient-to-r from-purple-500/20 to-cyan-500/20 rounded-xl p-4 border border-white/20">
-        <div className="flex items-center justify-between mb-2">
-          <div className="flex items-center gap-3">
-            <div className="flex items-center gap-2">
-              <div className="w-2 h-2 bg-green-400 rounded-full animate-pulse shadow-[0_0_10px_rgba(74,222,128,0.8)]"></div>
-              <span className="text-sm text-white font-bold tracking-wide">
-                LIVE PULSE
-              </span>
-              <Activity className="h-4 w-4 text-cyan-400" />
-            </div>
+    <div className="space-y-3">
+      {/* Compact Header */}
+      <div className="bg-gradient-to-r from-purple-500/20 to-cyan-500/20 rounded-lg p-3 border border-white/20">
+        <div className="flex items-center justify-between mb-1">
+          <div className="flex items-center gap-2">
+            <div className="w-1.5 h-1.5 bg-green-400 rounded-full animate-pulse"></div>
+            <span className="text-sm text-white font-bold">
+              LIVE PULSE
+            </span>
+            <Activity className="h-3.5 w-3.5 text-cyan-400" />
           </div>
-          <Badge variant="outline" className="text-cyan-400 border-cyan-400/50 bg-cyan-400/10 text-xs font-bold">
-            <Zap className="h-3 w-3 mr-1" />
-            {games.length} GAMES
-          </Badge>
+          <div className="flex items-center gap-2">
+            <Badge variant="outline" className="text-cyan-400 border-cyan-400/50 bg-cyan-400/10 text-[10px] font-bold px-2 py-0.5">
+              <Zap className="h-2.5 w-2.5 mr-1" />
+              {games.length} GAMES
+            </Badge>
+            {heavyPublicCount > 0 && (
+              <Badge className="bg-orange-500 text-white text-[10px] px-2 py-0.5 font-bold">
+                <TrendingUp className="h-2.5 w-2.5 mr-1" />
+                {heavyPublicCount} HEAVY
+              </Badge>
+            )}
+          </div>
         </div>
-        <div className="text-xs text-white/60 text-center">
+        <div className="text-[10px] text-white/60 text-center">
           Updated {lastUpdated.toLocaleTimeString()} • Real-time public betting data
         </div>
       </div>
 
       {/* Compact Grid Layout */}
-      <div className="grid grid-cols-1 gap-3">
+      <div className="space-y-2">
         {games.map((game, index) => (
           <PublicGameItem 
             key={game.id} 
@@ -156,10 +164,10 @@ const PublicGamesList = () => {
         ))}
       </div>
       
-      {/* Futuristic Footer */}
-      <div className="mt-6 p-3 bg-gradient-to-r from-white/5 to-white/10 rounded-xl border border-white/10 backdrop-blur-sm">
-        <p className="text-xs text-white/60 text-center">
-          <span className="text-cyan-400 font-bold">80%+</span> = Heavy Public • 
+      {/* Compact Footer */}
+      <div className="mt-4 p-2 bg-gradient-to-r from-white/5 to-white/10 rounded-lg border border-white/10">
+        <p className="text-[10px] text-white/60 text-center">
+          <span className="text-yellow-400 font-bold">80%+</span> = Heavy Public • 
           Data refreshes every 30s • 
           <span className="text-orange-400 font-bold">Fade responsibly</span>
         </p>
