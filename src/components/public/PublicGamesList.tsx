@@ -1,7 +1,5 @@
-
 import React, { useState, useEffect } from "react";
 import PublicGameItem from "./PublicGameItem";
-import { Activity, Zap, TrendingUp } from "lucide-react";
 
 interface PublicGame {
   id: string;
@@ -98,7 +96,6 @@ const mockPublicGames: PublicGame[] = [
 
 const PublicGamesList = () => {
   const [games, setGames] = useState<PublicGame[]>([]);
-  const [lastUpdated, setLastUpdated] = useState<Date>(new Date());
 
   useEffect(() => {
     // Sort games by public percentage (highest first)
@@ -115,44 +112,13 @@ const PublicGamesList = () => {
         }));
         return updatedGames.sort((a, b) => b.publicPercentage - a.publicPercentage);
       });
-      setLastUpdated(new Date());
     }, 30000);
 
     return () => clearInterval(interval);
   }, []);
 
-  const heavyPublicCount = games.filter(game => game.publicPercentage >= 80).length;
-
   return (
     <div className="space-y-4">
-      {/* Compact Header */}
-      <div className="bg-gradient-to-r from-purple-500/20 to-cyan-500/20 rounded-lg p-4 border border-white/20">
-        <div className="flex items-center justify-between mb-2">
-          <div className="flex items-center gap-2">
-            <div className="w-2 h-2 bg-green-400 rounded-full animate-pulse"></div>
-            <span className="text-lg text-white font-bold">
-              LIVE PULSE
-            </span>
-            <Activity className="h-5 w-5 text-cyan-400" />
-          </div>
-          <div className="flex items-center gap-3">
-            <div className="flex items-center gap-1 text-cyan-400 border border-cyan-400/50 bg-cyan-400/10 px-3 py-1 rounded-full">
-              <Zap className="h-3 w-3" />
-              <span className="text-sm font-bold">{games.length} GAMES</span>
-            </div>
-            {heavyPublicCount > 0 && (
-              <div className="flex items-center gap-1 bg-orange-500 text-white px-3 py-1 rounded-full">
-                <TrendingUp className="h-3 w-3" />
-                <span className="text-sm font-bold">{heavyPublicCount} HEAVY</span>
-              </div>
-            )}
-          </div>
-        </div>
-        <div className="text-sm text-white/60 text-center">
-          Updated {lastUpdated.toLocaleTimeString()} • Real-time public betting data
-        </div>
-      </div>
-
       {/* Games Grid */}
       <div className="space-y-3">
         {games.map((game, index) => (
