@@ -1,7 +1,6 @@
-
 import React from "react";
 import { Link, useLocation } from "react-router-dom";
-import { Home, Award, ArrowUp, ArrowDown, TrendingUp } from "lucide-react";
+import { Home, Award, ArrowUp, ArrowDown, Users } from "lucide-react";
 import { cn } from "@/lib/utils";
 import { useAuth } from "@/contexts/AuthContext";
 
@@ -64,7 +63,10 @@ const BottomNav = () => {
         to="/public"
         className={cn("nav-item", isActive("/public") ? publicStyle : "text-white/70")}
       >
-        <TrendingUp className="h-6 w-6 mb-1" />
+        <div className="relative h-6 w-6 mb-1">
+          <Users className="h-6 w-6" />
+          <ArrowUp className="absolute -top-0.5 -right-0.5 h-2.5 w-2.5 text-green-400" />
+        </div>
         <span>Public</span>
       </Link>
       <Link
