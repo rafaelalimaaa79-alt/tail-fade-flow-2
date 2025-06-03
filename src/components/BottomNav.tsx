@@ -1,7 +1,7 @@
 
 import React from "react";
 import { Link, useLocation } from "react-router-dom";
-import { Home, Award, ArrowUp, ArrowDown } from "lucide-react";
+import { Home, Award, ArrowUp, ArrowDown, TrendingUp } from "lucide-react";
 import { cn } from "@/lib/utils";
 import { useAuth } from "@/contexts/AuthContext";
 
@@ -64,11 +64,7 @@ const BottomNav = () => {
         to="/public"
         className={cn("nav-item", isActive("/public") ? publicStyle : "text-white/70")}
       >
-        <img 
-          src="/lovable-uploads/57cb1fb4-7471-451e-bf49-d4d5fa12bdcb.png" 
-          alt="ONE TIME logo" 
-          className="h-6 w-6 mb-1"
-        />
+        <TrendingUp className="h-6 w-6 mb-1" />
         <span>Public</span>
       </Link>
       <Link
