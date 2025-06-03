@@ -122,20 +122,27 @@ const PublicGamesList = () => {
   }, []);
 
   return (
-    <div className="space-y-4">
-      <div className="flex items-center justify-between mb-4">
-        <div className="flex items-center gap-2">
-          <div className="w-2 h-2 bg-green-400 rounded-full animate-pulse"></div>
-          <span className="text-sm text-white/70">
-            Live • Updated {lastUpdated.toLocaleTimeString()}
-          </span>
+    <div className="space-y-6">
+      {/* Header with live indicator and stats */}
+      <div className="flex items-center justify-between mb-6">
+        <div className="flex items-center gap-3">
+          <div className="flex items-center gap-2">
+            <div className="w-2 h-2 bg-green-400 rounded-full animate-pulse"></div>
+            <span className="text-sm text-white/70 font-medium">
+              LIVE DATA
+            </span>
+          </div>
+          <div className="text-xs text-white/50">
+            Updated {lastUpdated.toLocaleTimeString()}
+          </div>
         </div>
-        <Badge variant="outline" className="text-white/70 border-white/20">
-          {games.length} Games
+        <Badge variant="outline" className="text-white/70 border-white/20 bg-white/5">
+          {games.length} Teams
         </Badge>
       </div>
 
-      <div className="space-y-3">
+      {/* Leaderboard Cards */}
+      <div className="space-y-4">
         {games.map((game, index) => (
           <PublicGameItem 
             key={game.id} 
@@ -143,6 +150,13 @@ const PublicGamesList = () => {
             rank={index + 1}
           />
         ))}
+      </div>
+      
+      {/* Footer info */}
+      <div className="mt-8 p-4 bg-white/5 rounded-lg border border-white/10">
+        <p className="text-xs text-white/60 text-center">
+          Data updates every 30 seconds • Percentages show public betting volume
+        </p>
       </div>
     </div>
   );

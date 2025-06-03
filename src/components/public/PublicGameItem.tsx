@@ -1,7 +1,7 @@
 
 import React from "react";
 import { Badge } from "@/components/ui/badge";
-import { Clock, Users } from "lucide-react";
+import { Clock, Flame, TrendingUp } from "lucide-react";
 
 interface PublicGame {
   id: string;
@@ -22,11 +22,12 @@ interface PublicGameItemProps {
 
 const PublicGameItem = ({ game, rank }: PublicGameItemProps) => {
   const isHeavyPublic = game.publicPercentage >= 75;
+  const isFastMoving = game.publicPercentage >= 80; // For flame/trending icon
   
   const getTimeDisplay = () => {
     if (game.isLive) {
       return (
-        <Badge variant="destructive" className="bg-red-500 text-white">
+        <Badge className="bg-red-500 text-white animate-pulse">
           LIVE
         </Badge>
       );
@@ -58,7 +59,7 @@ const PublicGameItem = ({ game, rank }: PublicGameItemProps) => {
     }
     
     return (
-      <div className="text-white/50 text-sm">
+      <div className="text-white/60 text-sm">
         {gameTime.toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' })}
       </div>
     );
@@ -74,58 +75,91 @@ const PublicGameItem = ({ game, rank }: PublicGameItemProps) => {
     }
   };
 
+  const getPercentageBarColor = () => {
+    if (game.publicPercentage >= 85) return 'bg-red-400';
+    if (game.publicPercentage >= 75) return 'bg-orange-400';
+    return 'bg-blue-400';
+  };
+
   return (
-    <div className="bg-white/5 border border-white/10 rounded-lg p-4 hover:bg-white/10 transition-colors">
-      <div className="flex items-center justify-between">
-        <div className="flex items-center gap-3">
+    <div className="bg-white/5 border border-white/10 rounded-xl p-5 hover:bg-white/8 transition-all duration-200 hover:shadow-lg hover:border-white/20">
+      {/* Top Section - Main Visual Stack */}
+      <div className="flex items-start justify-between mb-4">
+        <div className="flex items-center gap-4">
+          {/* Rank */}
           <div className="flex items-center justify-center w-8 h-8 bg-white/10 rounded-full text-white/70 text-sm font-bold">
             {rank}
           </div>
           
-          <div className="flex-1">
-            <div className="flex items-center gap-2 mb-1">
-              <Badge className={`${getSportColor(game.sport)} text-white text-xs px-2 py-1`}>
-                {game.sport}
-              </Badge>
-              {isHeavyPublic && (
-                <Badge variant="outline" className="border-orange-400 text-orange-400 text-xs">
-                  HEAVY PUBLIC
-                </Badge>
-              )}
+          {/* Big Bold Percentage with Vertical Bar */}
+          <div className="flex items-center gap-3">
+            <div className="text-4xl font-bold text-white">
+              {game.publicPercentage}%
             </div>
             
-            <div className="text-white font-semibold">
-              {game.team} {game.spread}
-            </div>
-            <div className="text-white/70 text-sm">
-              vs {game.opponent}
+            {/* Vertical percentage bar */}
+            <div className="w-1 h-12 bg-white/10 rounded-full overflow-hidden">
+              <div 
+                className={`w-full rounded-full transition-all duration-500 ${getPercentageBarColor()}`}
+                style={{ height: `${game.publicPercentage}%` }}
+              />
             </div>
           </div>
         </div>
         
-        <div className="text-right space-y-1">
-          <div className="text-2xl font-bold text-white">
-            {game.publicPercentage}%
-          </div>
-          <div className="flex items-center gap-1 text-white/60 text-sm">
-            <Users className="h-3 w-3" />
-            <span>{game.totalBets.toLocaleString()}</span>
-          </div>
-          {getTimeDisplay()}
+        {/* Sport tag and trending icon */}
+        <div className="flex items-center gap-2">
+          <Badge className={`${getSportColor(game.sport)} text-white text-xs px-3 py-1`}>
+            {game.sport}
+          </Badge>
+          {isFastMoving && (
+            <div className="text-orange-400">
+              <Flame className="h-4 w-4" />
+            </div>
+          )}
         </div>
       </div>
       
-      {/* Progress bar showing public percentage */}
-      <div className="mt-3">
-        <div className="w-full bg-white/10 rounded-full h-2">
-          <div 
-            className={`h-2 rounded-full transition-all duration-300 ${
-              isHeavyPublic ? 'bg-orange-400' : 'bg-blue-400'
-            }`}
-            style={{ width: `${game.publicPercentage}%` }}
-          />
+      {/* Middle Section - Team and Line */}
+      <div className="mb-3">
+        <div className="text-xl font-bold text-white mb-1">
+          {game.team} {game.spread}
+        </div>
+        <div className="text-white/70 text-sm">
+          vs {game.opponent}
         </div>
       </div>
+      
+      {/* Game Status */}
+      <div className="mb-4">
+        {getTimeDisplay()}
+      </div>
+      
+      {/* Bottom Section - Additional Info */}
+      <div className="flex items-center justify-between">
+        <div className="flex items-center gap-2">
+          {isHeavyPublic && (
+            <Badge variant="outline" className="border-orange-400 text-orange-400 text-xs">
+              HEAVY PUBLIC
+            </Badge>
+          )}
+        </div>
+        
+        {/* Bet count */}
+        <div className="text-white/50 text-xs">
+          {game.totalBets.toLocaleString()} bets
+        </div>
+      </div>
+      
+      {/* Optional: Mini sparkline placeholder */}
+      {isFastMoving && (
+        <div className="mt-3 pt-3 border-t border-white/10">
+          <div className="flex items-center gap-2 text-xs text-white/60">
+            <TrendingUp className="h-3 w-3" />
+            <span>Trending up today</span>
+          </div>
+        </div>
+      )}
     </div>
   );
 };
