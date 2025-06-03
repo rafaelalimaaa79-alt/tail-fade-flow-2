@@ -122,9 +122,9 @@ const PublicGamesList = () => {
   }, []);
 
   return (
-    <div className="space-y-6">
+    <div className="space-y-4">
       {/* Header with live indicator and stats */}
-      <div className="flex items-center justify-between mb-6">
+      <div className="flex items-center justify-between mb-4">
         <div className="flex items-center gap-3">
           <div className="flex items-center gap-2">
             <div className="w-2 h-2 bg-green-400 rounded-full animate-pulse"></div>
@@ -136,13 +136,13 @@ const PublicGamesList = () => {
             Updated {lastUpdated.toLocaleTimeString()}
           </div>
         </div>
-        <Badge variant="outline" className="text-white/70 border-white/20 bg-white/5">
+        <Badge variant="outline" className="text-white/70 border-white/20 bg-white/5 text-xs">
           {games.length} Teams
         </Badge>
       </div>
 
-      {/* Leaderboard Cards */}
-      <div className="space-y-4">
+      {/* Compact Leaderboard Cards */}
+      <div className="space-y-2">
         {games.map((game, index) => (
           <PublicGameItem 
             key={game.id} 
@@ -153,7 +153,7 @@ const PublicGamesList = () => {
       </div>
       
       {/* Footer info */}
-      <div className="mt-8 p-4 bg-white/5 rounded-lg border border-white/10">
+      <div className="mt-6 p-3 bg-white/5 rounded-lg border border-white/10">
         <p className="text-xs text-white/60 text-center">
           Data updates every 30 seconds • Percentages show public betting volume
         </p>
