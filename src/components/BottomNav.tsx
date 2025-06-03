@@ -61,13 +61,6 @@ const BottomNav = () => {
         <span>Trends</span>
       </Link>
       <Link
-        to="/leaders"
-        className={cn("nav-item", isActive("/leaders") ? leadersStyle : "text-white/70")}
-      >
-        <Award className="h-6 w-6 mb-1" />
-        <span>Streakers</span>
-      </Link>
-      <Link
         to="/public"
         className={cn("nav-item", isActive("/public") ? publicStyle : "text-white/70")}
       >
@@ -77,6 +70,13 @@ const BottomNav = () => {
           className="h-6 w-6 mb-1"
         />
         <span>Public</span>
+      </Link>
+      <Link
+        to="/leaders"
+        className={cn("nav-item", isActive("/leaders") ? leadersStyle : "text-white/70")}
+      >
+        <Award className="h-6 w-6 mb-1" />
+        <span>Streakers</span>
       </Link>
     </nav>
   );
