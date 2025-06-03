@@ -1,3 +1,4 @@
+
 import React, { useState } from "react";
 import BottomNav from "@/components/BottomNav";
 import { useNavigate } from "react-router-dom";
@@ -88,9 +89,9 @@ const ProfilePage = () => {
   return (
     <div className="bg-black min-h-screen pb-20">
       <div className="onetime-container">
-        <div className="flex justify-between items-center pt-4 mb-4">
+        <div className="flex justify-between items-center pt-2 mb-2">
           <img 
-            src="/lovable-uploads/57cb1fb4-7471-451e-bf49-d4d5fa12bdcb.png" 
+            src="/lovable-uploads/c77c9dc5-a7dd-4c1c-9428-804d5d7a4a79.png" 
             alt="ONE TIME logo" 
             className="h-10"
           />
