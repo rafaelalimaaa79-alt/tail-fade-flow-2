@@ -110,7 +110,7 @@ const PublicGamesList = () => {
       setGames(prevGames => {
         const updatedGames = prevGames.map(game => ({
           ...game,
-          publicPercentage: Math.max(50, Math.min(95, game.publicPercentage + (Math.random() - 0.5) * 4)),
+          publicPercentage: Math.round(Math.max(50, Math.min(95, game.publicPercentage + (Math.random() - 0.5) * 4))),
           totalBets: game.totalBets + Math.floor(Math.random() * 20)
         }));
         return updatedGames.sort((a, b) => b.publicPercentage - a.publicPercentage);
