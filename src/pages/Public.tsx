@@ -21,7 +21,7 @@ const Public = () => {
         </div>
         
         <div className="mb-6 text-center">
-          <h1 className="text-3xl font-bold text-white mb-2">Public Money</h1>
+          <h1 className="text-3xl font-bold text-white mb-2">Fade the Public?</h1>
           <p className="text-white/70 text-sm">
             Real-time view of the most heavily bet teams across all sports
           </p>
