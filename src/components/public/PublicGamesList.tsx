@@ -1,0 +1,151 @@
+
+import React, { useState, useEffect } from "react";
+import PublicGameItem from "./PublicGameItem";
+import { Badge } from "@/components/ui/badge";
+
+interface PublicGame {
+  id: string;
+  team: string;
+  opponent: string;
+  publicPercentage: number;
+  totalBets: number;
+  gameTime: string;
+  isLive: boolean;
+  spread: string;
+  sport: string;
+}
+
+// Mock data - in production this would come from your API
+const mockPublicGames: PublicGame[] = [
+  {
+    id: "1",
+    team: "Lakers",
+    opponent: "Warriors",
+    publicPercentage: 87,
+    totalBets: 1247,
+    gameTime: "2024-06-03T20:00:00Z",
+    isLive: false,
+    spread: "-5",
+    sport: "NBA"
+  },
+  {
+    id: "2",
+    team: "Chiefs",
+    opponent: "Broncos",
+    publicPercentage: 82,
+    totalBets: 2156,
+    gameTime: "2024-06-03T18:30:00Z",
+    isLive: true,
+    spread: "-7.5",
+    sport: "NFL"
+  },
+  {
+    id: "3",
+    team: "Celtics",
+    opponent: "Heat",
+    publicPercentage: 79,
+    totalBets: 934,
+    gameTime: "2024-06-03T21:30:00Z",
+    isLive: false,
+    spread: "-3",
+    sport: "NBA"
+  },
+  {
+    id: "4",
+    team: "Yankees",
+    opponent: "Red Sox",
+    publicPercentage: 76,
+    totalBets: 567,
+    gameTime: "2024-06-03T19:00:00Z",
+    isLive: false,
+    spread: "-1.5",
+    sport: "MLB"
+  },
+  {
+    id: "5",
+    team: "Rangers",
+    opponent: "Islanders",
+    publicPercentage: 74,
+    totalBets: 423,
+    gameTime: "2024-06-03T20:30:00Z",
+    isLive: false,
+    spread: "-1",
+    sport: "NHL"
+  },
+  {
+    id: "6",
+    team: "Cowboys",
+    opponent: "Eagles",
+    publicPercentage: 71,
+    totalBets: 1834,
+    gameTime: "2024-06-03T22:00:00Z",
+    isLive: false,
+    spread: "-3.5",
+    sport: "NFL"
+  },
+  {
+    id: "7",
+    team: "Dodgers",
+    opponent: "Padres",
+    publicPercentage: 68,
+    totalBets: 789,
+    gameTime: "2024-06-03T17:00:00Z",
+    isLive: true,
+    spread: "-2",
+    sport: "MLB"
+  }
+];
+
+const PublicGamesList = () => {
+  const [games, setGames] = useState<PublicGame[]>([]);
+  const [lastUpdated, setLastUpdated] = useState<Date>(new Date());
+
+  useEffect(() => {
+    // Sort games by public percentage (highest first)
+    const sortedGames = [...mockPublicGames].sort((a, b) => b.publicPercentage - a.publicPercentage);
+    setGames(sortedGames);
+
+    // Simulate real-time updates every 30 seconds
+    const interval = setInterval(() => {
+      setGames(prevGames => {
+        const updatedGames = prevGames.map(game => ({
+          ...game,
+          publicPercentage: Math.max(50, Math.min(95, game.publicPercentage + (Math.random() - 0.5) * 4)),
+          totalBets: game.totalBets + Math.floor(Math.random() * 20)
+        }));
+        return updatedGames.sort((a, b) => b.publicPercentage - a.publicPercentage);
+      });
+      setLastUpdated(new Date());
+    }, 30000);
+
+    return () => clearInterval(interval);
+  }, []);
+
+  return (
+    <div className="space-y-4">
+      <div className="flex items-center justify-between mb-4">
+        <div className="flex items-center gap-2">
+          <div className="w-2 h-2 bg-green-400 rounded-full animate-pulse"></div>
+          <span className="text-sm text-white/70">
+            Live • Updated {lastUpdated.toLocaleTimeString()}
+          </span>
+        </div>
+        <Badge variant="outline" className="text-white/70 border-white/20">
+          {games.length} Games
+        </Badge>
+      </div>
+
+      <div className="space-y-3">
+        {games.map((game, index) => (
+          <PublicGameItem 
+            key={game.id} 
+            game={game} 
+            rank={index + 1}
+          />
+        ))}
+      </div>
+    </div>
+  );
+};
+
+export default PublicGamesList;

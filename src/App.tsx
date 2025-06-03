@@ -12,6 +12,7 @@ import Trends from "./pages/Trends";
 import Profile from "./pages/Profile";
 import BettorDetail from "./pages/BettorDetail";
 import Leaders from "./pages/Leaders";
+import Public from "./pages/Public";
 import NotFound from "./pages/NotFound";
 import SignIn from "./pages/SignIn";
 import SignUp from "./pages/SignUp";
@@ -40,6 +41,7 @@ const App = () => (
             <Route path="/profile" element={<ProtectedRoute><Profile /></ProtectedRoute>} />
             <Route path="/bettor/:id" element={<ProtectedRoute><BettorDetail /></ProtectedRoute>} />
             <Route path="/leaders" element={<ProtectedRoute><Leaders /></ProtectedRoute>} />
+            <Route path="/public" element={<ProtectedRoute><Public /></ProtectedRoute>} />
             
             {/* Catch-all Route */}
             <Route path="*" element={<NotFound />} />
