@@ -11,7 +11,12 @@ const Public = () => {
   return (
     <div className="flex min-h-screen flex-col bg-background font-rajdhani">
       <div className={`onetime-container ${isMobile ? "pb-24" : ""}`}>
-        <div className="flex justify-end pt-4 mb-4">
+        <div className="flex justify-between items-center pt-4 mb-4">
+          <img 
+            src="/lovable-uploads/57cb1fb4-7471-451e-bf49-d4d5fa12bdcb.png" 
+            alt="ONE TIME logo" 
+            className="h-10"
+          />
           <ProfileIcon />
         </div>
         

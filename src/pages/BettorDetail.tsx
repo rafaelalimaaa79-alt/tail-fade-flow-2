@@ -70,20 +70,17 @@ const BettorDetail = () => {
   return (
     <div className="bg-black min-h-screen pb-20">
       <div className="onetime-container">
-        <header className="mb-4 flex items-center">
-          <div className="flex items-center gap-3">
-            <img 
-              src="/lovable-uploads/57cb1fb4-7471-451e-bf49-d4d5fa12bdcb.png" 
-              alt="ONE TIME logo" 
-              className="h-24"
-            />
-          </div>
-          <div className="flex-grow" />
+        <div className="flex justify-between items-center pt-4 mb-4">
+          <img 
+            src="/lovable-uploads/57cb1fb4-7471-451e-bf49-d4d5fa12bdcb.png" 
+            alt="ONE TIME logo" 
+            className="h-10"
+          />
           <div className="flex items-center gap-2">
-            <BriefcaseButton className="mr-4" />
+            <BriefcaseButton className="mr-2" />
             <ProfileIcon />
           </div>
-        </header>
+        </div>
         
         {/* Bettor header with improved styling and organization */}
         <BettorHeader profile={summary.profile} />

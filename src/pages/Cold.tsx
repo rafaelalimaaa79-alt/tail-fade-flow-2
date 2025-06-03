@@ -14,20 +14,17 @@ const ColdPage = () => {
   return (
     <div className="flex min-h-screen flex-col bg-background">
       <div className={`onetime-container ${isMobile ? "pb-24" : ""}`}>
-        <header className="mb-8 flex items-center">
-          <div className="flex items-center gap-3">
-            <img 
-              src="/lovable-uploads/57cb1fb4-7471-451e-bf49-d4d5fa12bdcb.png" 
-              alt="ONE TIME logo" 
-              className="h-24"
-            />
-          </div>
-          <div className="flex-grow" />
+        <div className="flex justify-between items-center pt-4 mb-4">
+          <img 
+            src="/lovable-uploads/57cb1fb4-7471-451e-bf49-d4d5fa12bdcb.png" 
+            alt="ONE TIME logo" 
+            className="h-10"
+          />
           <div className="flex items-center gap-2">
-            <BriefcaseButton className="mr-4" />
+            <BriefcaseButton className="mr-2" />
             <ProfileIcon />
           </div>
-        </header>
+        </div>
 
         <div className="mt-4">
           <h2 className="text-xl font-bold text-white/90">Ice Cold Bettors</h2>

@@ -88,17 +88,14 @@ const ProfilePage = () => {
   return (
     <div className="bg-black min-h-screen pb-20">
       <div className="onetime-container">
-        <header className="mb-8 flex items-center">
-          <div className="flex items-center gap-3">
-            <img 
-              src="/lovable-uploads/57cb1fb4-7471-451e-bf49-d4d5fa12bdcb.png" 
-              alt="ONE TIME logo" 
-              className="h-24"
-            />
-          </div>
-          <div className="flex-grow" />
+        <div className="flex justify-between items-center pt-4 mb-4">
+          <img 
+            src="/lovable-uploads/57cb1fb4-7471-451e-bf49-d4d5fa12bdcb.png" 
+            alt="ONE TIME logo" 
+            className="h-10"
+          />
           <ProfileIcon />
-        </header>
+        </div>
 
         <UserHeader 
           username={userProfile.username} 
