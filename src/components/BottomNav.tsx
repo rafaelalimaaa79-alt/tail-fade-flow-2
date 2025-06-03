@@ -1,3 +1,4 @@
+
 import React from "react";
 import { Link, useLocation } from "react-router-dom";
 import { Home, Award, ArrowUp, ArrowDown, Users } from "lucide-react";
@@ -63,10 +64,7 @@ const BottomNav = () => {
         to="/public"
         className={cn("nav-item", isActive("/public") ? publicStyle : "text-white/70")}
       >
-        <div className="relative h-6 w-6 mb-1">
-          <Users className="h-6 w-6" />
-          <ArrowUp className="absolute -top-0.5 -right-0.5 h-2.5 w-2.5 text-green-400" />
-        </div>
+        <Users className="h-6 w-6 mb-1" />
         <span>Public</span>
       </Link>
       <Link
