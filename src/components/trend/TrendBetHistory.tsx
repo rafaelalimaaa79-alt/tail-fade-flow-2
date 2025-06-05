@@ -44,7 +44,7 @@ const TrendBetHistory = ({
               className={cn(
                 "h-6 w-6 rounded-sm flex items-center justify-center font-bold text-xs transition-all duration-300",
                 isMostVisible 
-                  ? (bet ? "bg-onetime-green text-white" : "bg-onetime-red text-white")
+                  ? (bet ? "bg-[#8FA3B0] text-white" : "bg-[#AEE3F5] text-black")
                   : (bet ? "bg-gray-600 text-gray-300" : "bg-gray-700 text-gray-400")
               )}
             >

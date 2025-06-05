@@ -21,8 +21,8 @@ const TodaysBets: React.FC<TodaysBetsProps> = ({ todayBets, className }) => {
                 <span className="font-medium text-white">{bet.teams}</span>
                 <span className={cn(
                   "inline-flex items-center justify-center rounded-full px-2 py-1 text-xs font-medium",
-                  bet.result === 'W' ? 'bg-green-900/60 text-green-400 border border-green-500/30' : 
-                  bet.result === 'L' ? 'bg-red-900/60 text-red-400 border border-red-500/30' : 
+                  bet.result === 'W' ? 'bg-[#8FA3B0]/20 text-[#8FA3B0] border border-[#8FA3B0]/30' : 
+                  bet.result === 'L' ? 'bg-[#AEE3F5]/20 text-[#AEE3F5] border border-[#AEE3F5]/30' : 
                   'bg-yellow-900/60 text-yellow-400 border border-yellow-500/30'
                 )}>
                   {bet.result === 'W' ? 'Won' : bet.result === 'L' ? 'Lost' : 'Pending'}

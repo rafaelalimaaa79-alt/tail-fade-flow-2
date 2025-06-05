@@ -17,7 +17,7 @@ const BettorStats: React.FC<BettorStatsProps> = ({ profile }) => {
         <p className="text-xs text-gray-400">ROI</p>
         <p
           className={`text-lg font-bold ${
-            profile.stats.roi >= 0 ? "text-onetime-green" : "text-onetime-red"
+            profile.stats.roi >= 0 ? "text-[#8FA3B0]" : "text-[#AEE3F5]"
           }`}
         >
           {profile.stats.roi > 0 && "+"}
@@ -28,7 +28,7 @@ const BettorStats: React.FC<BettorStatsProps> = ({ profile }) => {
         <p className="text-xs text-gray-400">Profit</p>
         <p
           className={`text-lg font-bold ${
-            profile.stats.unitsGained >= 0 ? "text-onetime-green" : "text-onetime-red"
+            profile.stats.unitsGained >= 0 ? "text-[#8FA3B0]" : "text-[#AEE3F5]"
           }`}
         >
           {profile.stats.unitsGained > 0 && "+"}
