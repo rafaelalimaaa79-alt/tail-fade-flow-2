@@ -1,6 +1,5 @@
 
 import React, { memo, useMemo } from "react";
-import { Tabs, TabsList, TabsTrigger, TabsContent } from "@/components/ui/tabs";
 import LeaderboardTable from "./LeaderboardTable";
 
 interface BettorData {
@@ -21,21 +20,9 @@ interface TabsContainerProps {
 }
 
 const TabsContainer: React.FC<TabsContainerProps> = ({
-  activeTab,
-  onTabChange,
-  hottestBettors,
   coldestBettors,
 }) => {
-  // Memoize the content of each tab to prevent unnecessary renders
-  const hotTabContent = useMemo(() => (
-    <LeaderboardTable 
-      bettors={hottestBettors}
-      showAll={false}
-      setShowAll={() => {}}
-      variant="fade"
-    />
-  ), [hottestBettors]);
-
+  // Memoize the content to prevent unnecessary renders
   const coldTabContent = useMemo(() => (
     <LeaderboardTable 
       bettors={coldestBettors}
@@ -46,41 +33,22 @@ const TabsContainer: React.FC<TabsContainerProps> = ({
   ), [coldestBettors]);
 
   return (
-    <Tabs value={activeTab} onValueChange={onTabChange} className="w-full">
-      <TabsList className="w-full flex rounded-xl overflow-hidden bg-black/30 mb-6 p-0 border border-white/20 shadow-lg hover:shadow-2xl transition-all duration-300">
-        <TabsTrigger 
-          value="hot" 
-          className="flex-1 rounded-none py-3 border-r border-white/10 data-[state=active]:bg-[#AEE3F5]/20 data-[state=active]:shadow-[0_0_10px_rgba(174,227,245,0.5)] hover:bg-[#AEE3F5]/10 transition-all duration-300 group"
-        >
-          <span className="text-[#AEE3F5] font-bold font-rajdhani text-lg uppercase tracking-wide truncate px-1 group-hover:scale-105 transition-transform duration-200">
-            Fade Bait
-          </span>
-        </TabsTrigger>
-        <TabsTrigger 
-          value="cold" 
-          className="flex-1 rounded-none py-3 data-[state=active]:bg-[#AEE3F5]/20 data-[state=active]:shadow-[0_0_10px_rgba(174,227,245,0.5)] hover:bg-[#AEE3F5]/10 transition-all duration-300 group"
-        >
-          <span className="text-[#AEE3F5] font-bold font-rajdhani text-lg uppercase tracking-wide truncate px-1 group-hover:scale-105 transition-transform duration-200">
-            Walking L's
-          </span>
-        </TabsTrigger>
-      </TabsList>
+    <div className="w-full">
+      <div className="mb-6 text-center">
+        <h2 className="text-2xl font-bold font-rajdhani text-[#AEE3F5] uppercase tracking-wide">
+          Walking L's
+        </h2>
+      </div>
       
-      <TabsContent value="hot" className="space-y-2 animate-fade-in">
-        {hotTabContent}
-      </TabsContent>
-      
-      <TabsContent value="cold" className="space-y-2 animate-fade-in">
+      <div className="space-y-2 animate-fade-in">
         {coldTabContent}
-      </TabsContent>
-    </Tabs>
+      </div>
+    </div>
   );
 };
 
 // Use React.memo with a custom comparison function for optimal performance
 export default memo(TabsContainer, (prevProps, nextProps) => {
-  // Only re-render if these specific props change
-  return prevProps.activeTab === nextProps.activeTab &&
-         prevProps.hottestBettors === nextProps.hottestBettors &&
-         prevProps.coldestBettors === nextProps.coldestBettors;
+  // Only re-render if coldestBettors changes
+  return prevProps.coldestBettors === nextProps.coldestBettors;
 });

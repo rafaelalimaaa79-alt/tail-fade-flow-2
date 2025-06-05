@@ -1,41 +1,15 @@
 
-import React, { useState, useEffect, useCallback, useMemo } from "react";
+import React, { useMemo } from "react";
 import BottomNav from "@/components/BottomNav";
 import { useIsMobile } from "@/hooks/use-mobile";
-import { useSearchParams } from "react-router-dom";
-import PageHeader from "@/components/leaders/PageHeader";
 import TabsContainer from "@/components/leaders/TabsContainer";
 import ProfileIcon from "@/components/common/ProfileIcon";
-import { hottestBettors, coldestBettors } from "@/components/leaders/mockData";
+import { coldestBettors } from "@/components/leaders/mockData";
 
 const Leaders = () => {
-  const [searchParams, setSearchParams] = useSearchParams();
-  const defaultTab = searchParams.get("type") === "fade" ? "cold" : "hot";
-  const [activeTab, setActiveTab] = useState<"hot" | "cold">(defaultTab);
   const isMobile = useIsMobile();
 
-  // Fix the infinite loop by using a ref to track first render
-  const isFirstRender = React.useRef(true);
-  
-  useEffect(() => {
-    // Skip URL update on the first render since we already set activeTab from URL
-    if (isFirstRender.current) {
-      isFirstRender.current = false;
-      return;
-    }
-    
-    // Only update URL params when tab changes after the first render
-    const newType = activeTab === "hot" ? "tail" : "fade";
-    setSearchParams({ type: newType });
-  }, [activeTab, setSearchParams]);
-
-  // Memoize the tab change handler to prevent recreating on each render
-  const handleTabChange = useCallback((value: string) => {
-    setActiveTab(value as "hot" | "cold");
-  }, []);
-
   // Memoize the data to prevent unnecessary recalculations
-  const memoizedHottestBettors = useMemo(() => hottestBettors, []);
   const memoizedColdestBettors = useMemo(() => coldestBettors, []);
 
   // Memoize the entire component output for optimal performance
@@ -52,17 +26,17 @@ const Leaders = () => {
         </div>
         
         <TabsContainer
-          activeTab={activeTab}
-          onTabChange={handleTabChange}
+          activeTab="cold"
+          onTabChange={() => {}}
           showAll={false}
           setShowAll={() => {}}
-          hottestBettors={memoizedHottestBettors}
+          hottestBettors={[]}
           coldestBettors={memoizedColdestBettors}
         />
       </div>
       <BottomNav />
     </div>
-  ), [activeTab, isMobile, handleTabChange, memoizedHottestBettors, memoizedColdestBettors]);
+  ), [isMobile, memoizedColdestBettors]);
 };
 
 export default Leaders;
