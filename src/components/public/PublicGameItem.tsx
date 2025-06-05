@@ -1,7 +1,6 @@
 
 import React from "react";
 import { Users, Clock, Zap, TrendingUp } from "lucide-react";
-import { Progress } from "@/components/ui/progress";
 
 interface PublicGame {
   id: string;
@@ -67,20 +66,6 @@ const PublicGameItem = ({ game, rank }: PublicGameItemProps) => {
     );
   };
 
-  const getPercentageColor = () => {
-    if (game.publicPercentage >= 90) return 'text-red-400';
-    if (game.publicPercentage >= 85) return 'text-orange-400';
-    if (game.publicPercentage >= 80) return 'text-[#AEE3F5]';
-    return 'text-[#AEE3F5]';
-  };
-
-  const getProgressColor = () => {
-    if (game.publicPercentage >= 90) return 'bg-gradient-to-r from-red-500 to-red-600';
-    if (game.publicPercentage >= 85) return 'bg-gradient-to-r from-orange-500 to-orange-600';
-    if (game.publicPercentage >= 80) return 'bg-gradient-to-r from-[#AEE3F5] to-[#AEE3F5]/80';
-    return 'bg-gradient-to-r from-[#AEE3F5]/60 to-[#AEE3F5]/40';
-  };
-
   return (
     <div className="relative bg-gradient-to-r from-white/5 to-white/10 border border-white/20 rounded-lg p-4 hover:from-white/10 hover:to-white/15 transition-all duration-200 hover:border-white/30">
       {/* Rank Badge */}
@@ -89,99 +74,76 @@ const PublicGameItem = ({ game, rank }: PublicGameItemProps) => {
       </div>
       
       {/* Game Header */}
-      <div className="flex items-center justify-between mb-4">
-        <div className="flex-1">
-          <div className="flex items-center gap-2 mb-1">
-            <h3 className="text-lg font-bold text-white">
-              {game.team} vs {game.opponent}
-            </h3>
-            {game.isLive && (
-              <div className="px-2 py-1 bg-red-500/20 border border-red-500/40 rounded text-red-400 text-xs font-bold">
-                LIVE
-              </div>
-            )}
-          </div>
-          <div className="flex items-center gap-3 text-sm">
-            <span className="px-2 py-1 bg-white/10 rounded text-white/70 text-xs font-medium">
-              {game.sport}
-            </span>
-            {!game.isLive && getTimeDisplay()}
-          </div>
-        </div>
-      </div>
-      
-      {/* Main Content - Two Column Layout */}
-      <div className="grid grid-cols-2 gap-6 mb-4">
-        {/* Left Column - Public Betting */}
-        <div className="space-y-3">
-          <div className="text-center">
-            <div className={`text-3xl font-black mb-1 ${getPercentageColor()}`}>
-              {game.publicPercentage}%
-            </div>
-            <div className="text-white/50 text-xs font-medium uppercase tracking-wide">Public on {game.team}</div>
-          </div>
-          
-          {/* Progress Bar */}
-          <div className="space-y-2">
-            <div className="relative">
-              <Progress 
-                value={game.publicPercentage} 
-                className="h-2 bg-white/10"
-              />
-              <div 
-                className={`absolute top-0 left-0 h-2 rounded-full transition-all duration-500 ${getProgressColor()}`}
-                style={{ width: `${game.publicPercentage}%` }}
-              />
-            </div>
-            <div className="flex justify-between text-xs text-white/40">
-              <span>50%</span>
-              <span>100%</span>
-            </div>
-          </div>
-        </div>
-        
-        {/* Right Column - Betting Info */}
-        <div className="space-y-3">
-          <div className="text-center">
-            <div className="text-2xl font-bold text-[#AEE3F5] mb-1">
-              {game.spread}
-            </div>
-            <div className="text-white/50 text-xs font-medium uppercase tracking-wide">Spread</div>
-          </div>
-          
-          <div className="text-center">
-            <div className="text-lg font-bold text-white mb-1">
-              {game.totalBets.toLocaleString()}
-            </div>
-            <div className="text-white/50 text-xs font-medium uppercase tracking-wide">Total Bets</div>
-          </div>
-        </div>
-      </div>
-      
-      {/* Bottom Alert Bar */}
-      <div className="flex items-center justify-between pt-3 border-t border-white/10">
-        <div className="flex items-center gap-2">
-          {isExtremePublic ? (
-            <div className="flex items-center gap-1 px-3 py-1 bg-red-500/20 border border-red-500/30 rounded-full">
-              <Zap className="w-3 h-3 text-red-400" />
-              <span className="text-red-400 text-xs font-bold">EXTREME PUBLIC</span>
-            </div>
-          ) : isHeavyPublic ? (
-            <div className="flex items-center gap-1 px-3 py-1 bg-orange-500/20 border border-orange-500/30 rounded-full">
-              <TrendingUp className="w-3 h-3 text-orange-400" />
-              <span className="text-orange-400 text-xs font-bold">HEAVY PUBLIC</span>
-            </div>
-          ) : (
-            <div className="flex items-center gap-1 px-3 py-1 bg-[#AEE3F5]/20 border border-[#AEE3F5]/30 rounded-full">
-              <Users className="w-3 h-3 text-[#AEE3F5]" />
-              <span className="text-[#AEE3F5] text-xs font-bold">PUBLIC FAVORITE</span>
+      <div className="text-center mb-4 pb-3 border-b border-white/10">
+        <div className="flex items-center justify-center gap-2 mb-2">
+          <h3 className="text-xl font-bold text-white">
+            {game.team} vs {game.opponent}
+          </h3>
+          {game.isLive && (
+            <div className="px-2 py-1 bg-red-500/20 border border-red-500/40 rounded text-red-400 text-xs font-bold">
+              LIVE
             </div>
           )}
         </div>
-        
-        <div className="flex items-center gap-1 text-[#AEE3F5]/60 text-xs">
-          <span className="font-medium">FADE OPPORTUNITY</span>
+        <div className="flex items-center justify-center gap-3 text-sm">
+          <span className="px-2 py-1 bg-white/10 rounded text-white/70 text-xs font-medium">
+            {game.sport}
+          </span>
+          {getTimeDisplay()}
         </div>
+      </div>
+      
+      {/* Main Content - Pulsing Percentage */}
+      <div className="text-center mb-6">
+        <div 
+          className="text-6xl font-black text-red-400 mb-3 animate-pulse"
+          style={{
+            textShadow: '0 0 10px #f87171, 0 0 20px #f87171, 0 0 30px #f87171',
+            filter: 'brightness(1.2)'
+          }}
+        >
+          {game.publicPercentage}%
+        </div>
+        
+        {/* Betting Description */}
+        <div className="text-white/80 text-base leading-relaxed">
+          <span className="text-white/60">{game.publicPercentage}% of bettors on</span>
+          <div className="mt-1">
+            <span className="text-[#AEE3F5] text-2xl font-black">
+              {game.team} {game.spread}
+            </span>
+          </div>
+        </div>
+      </div>
+      
+      {/* Stats Row */}
+      <div className="flex justify-center items-center gap-6 mb-4 text-center">
+        <div>
+          <div className="text-[#AEE3F5] text-lg font-bold">
+            {game.totalBets.toLocaleString()}
+          </div>
+          <div className="text-white/50 text-xs font-medium uppercase tracking-wide">Total Bets</div>
+        </div>
+      </div>
+      
+      {/* Bottom Alert */}
+      <div className="text-center pt-3 border-t border-white/10">
+        {isExtremePublic ? (
+          <div className="flex items-center justify-center gap-2 px-4 py-2 bg-red-500/20 border border-red-500/30 rounded-full">
+            <Zap className="w-4 h-4 text-red-400" />
+            <span className="text-red-400 text-sm font-bold">EXTREME PUBLIC - FADE ALERT</span>
+          </div>
+        ) : isHeavyPublic ? (
+          <div className="flex items-center justify-center gap-2 px-4 py-2 bg-orange-500/20 border border-orange-500/30 rounded-full">
+            <TrendingUp className="w-4 h-4 text-orange-400" />
+            <span className="text-orange-400 text-sm font-bold">HEAVY PUBLIC - FADE OPPORTUNITY</span>
+          </div>
+        ) : (
+          <div className="flex items-center justify-center gap-2 px-4 py-2 bg-[#AEE3F5]/20 border border-[#AEE3F5]/30 rounded-full">
+            <Users className="w-4 h-4 text-[#AEE3F5]" />
+            <span className="text-[#AEE3F5] text-sm font-bold">PUBLIC FAVORITE - MONITOR</span>
+          </div>
+        )}
       </div>
     </div>
   );
