@@ -19,8 +19,8 @@ const BottomNav = () => {
     return false;
   };
 
-  // Consistent blue glow style for all active icons
-  const activeStyle = "text-blue-400 drop-shadow-[0_0_8px_rgba(59,130,246,0.7)]";
+  // Icy blue glow style to match home page color
+  const activeStyle = "text-[#AEE3F5] drop-shadow-[0_0_8px_rgba(174,227,245,0.7)]";
 
   return (
     <nav className="bottom-nav">
@@ -41,7 +41,7 @@ const BottomNav = () => {
               className={cn(
                 "h-4 w-4 -mb-1", 
                 isActive("/trends") 
-                  ? "text-blue-400 drop-shadow-[0_0_6px_rgba(59,130,246,0.9)]" 
+                  ? "text-[#AEE3F5] drop-shadow-[0_0_6px_rgba(174,227,245,0.9)]" 
                   : "text-white/70"
               )} 
             />
@@ -49,7 +49,7 @@ const BottomNav = () => {
               className={cn(
                 "h-4 w-4", 
                 isActive("/trends") 
-                  ? "text-blue-400 drop-shadow-[0_0_6px_rgba(59,130,246,0.9)]" 
+                  ? "text-[#AEE3F5] drop-shadow-[0_0_6px_rgba(174,227,245,0.9)]" 
                   : "text-white/70"
               )} 
             />
