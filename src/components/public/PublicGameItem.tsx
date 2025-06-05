@@ -66,7 +66,7 @@ const PublicGameItem = ({ game, rank }: PublicGameItemProps) => {
   };
 
   return (
-    <div className="relative bg-gradient-to-r from-white/5 to-white/10 border border-white/20 rounded-xl p-4 hover:from-white/10 hover:to-white/15 transition-all duration-300 hover:border-white/30 hover:shadow-lg hover:shadow-white/5 max-w-md mx-auto">
+    <div className="relative bg-gradient-to-r from-white/5 to-white/10 border border-white/20 rounded-xl p-4 hover:from-white/10 hover:to-white/15 transition-all duration-300 hover:border-white/30 hover:shadow-lg hover:shadow-white/5 max-w-xs mx-auto">
       {/* Rank Badge */}
       <div className="absolute -top-2 -left-2 w-6 h-6 bg-gradient-to-br from-[#AEE3F5] to-[#AEE3F5]/80 text-black text-xs font-bold rounded-full flex items-center justify-center shadow-lg">
         #{rank}
@@ -74,9 +74,8 @@ const PublicGameItem = ({ game, rank }: PublicGameItemProps) => {
       
       {/* Header with Game and Time */}
       <div className="flex justify-between items-center mb-4 pb-2 border-b border-white/10">
-        <div>
+        <div className="text-center flex-1">
           <div className="text-white font-bold text-sm">{game.team} vs {game.opponent}</div>
-          <div className="text-white/60 text-xs">{game.sport}</div>
         </div>
         <div>
           {getTimeDisplay()}
