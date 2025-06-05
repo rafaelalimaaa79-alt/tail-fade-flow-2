@@ -41,7 +41,7 @@ const BettorBetList: React.FC<BettorBetListProps> = ({
             
             <div className={cn(
               "font-bold",
-              bet.unitsWonLost > 0 ? "text-[#8FA3B0]" : "text-[#AEE3F5]"
+              bet.unitsWonLost > 0 ? "text-[#C4D7DC]" : "text-[#AEE3F5]"
             )}>
               {bet.unitsWonLost > 0 ? '+' : ''}{bet.unitsWonLost}U
             </div>
@@ -61,7 +61,7 @@ const BettorBetList: React.FC<BettorBetListProps> = ({
             <span>Top Bet: </span>
             <span className={cn(
               "font-medium",
-              topBet.unitsWonLost > 0 ? "text-[#8FA3B0]" : "text-[#AEE3F5]"
+              topBet.unitsWonLost > 0 ? "text-[#C4D7DC]" : "text-[#AEE3F5]"
             )}>
               {topBet.unitsWonLost > 0 ? '+' : ''}{topBet.unitsWonLost}U {topBet.betType}
             </span>

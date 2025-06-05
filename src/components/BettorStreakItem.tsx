@@ -21,7 +21,7 @@ const BettorStreakItem = ({ id, name, profit, streak }: BettorStreakItemProps) =
       <div className="mb-3 flex items-center justify-between rounded-lg py-2 px-1 hover:bg-muted transition-colors">
         <div>
           <div className="font-medium text-white">@{name}</div>
-          <div className={`text-sm ${profit > 0 ? 'text-[#8FA3B0]' : 'text-[#AEE3F5]'}`}>
+          <div className={`text-sm ${profit > 0 ? 'text-[#C4D7DC]' : 'text-[#AEE3F5]'}`}>
             {profit > 0 ? '+' : '-'}{formattedProfit}
           </div>
         </div>
@@ -30,7 +30,7 @@ const BettorStreakItem = ({ id, name, profit, streak }: BettorStreakItemProps) =
           {streak.map((result, index) => (
             <div 
               key={index} 
-              className={`h-5 w-5 rounded-sm ${result ? 'bg-[#8FA3B0]' : 'bg-[#AEE3F5]'} flex items-center justify-center text-[9px] font-bold ${result ? 'text-white' : 'text-black'}`}
+              className={`h-5 w-5 rounded-sm ${result ? 'bg-[#C4D7DC]' : 'bg-[#AEE3F5]'} flex items-center justify-center text-[9px] font-bold text-black`}
             >
               {result ? 'W' : 'L'}
             </div>

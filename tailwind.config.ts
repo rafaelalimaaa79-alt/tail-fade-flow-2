@@ -72,7 +72,7 @@ export default {
         onetime: {
           purple: '#6C5CE7',
           orange: '#F97316',
-          green: '#8FA3B0', // Changed from #10B981 to neutral ice gray
+          green: '#C4D7DC', // Changed from #8FA3B0 to a lighter, more distinguishable gray
           red: '#AEE3F5', // Icy blue for losses/fades
           darkBlue: '#1E293B',
           lightGray: '#F1F5F9',
