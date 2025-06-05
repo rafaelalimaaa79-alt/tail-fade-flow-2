@@ -1,4 +1,3 @@
-
 import React from "react";
 import { Separator } from "@/components/ui/separator";
 
@@ -45,8 +44,10 @@ const PublicGameItem = ({ game, rank }: PublicGameItemProps) => {
     );
   };
 
-  // Mock FadeZone percentage - in production this would come from your API
-  const fadeZonePercentage = Math.max(30, 100 - game.publicPercentage + (Math.random() - 0.5) * 20);
+  // FadeZone percentage - keeping it within 70-95% range
+  const fadeZonePercentage = Math.max(70, Math.min(95, 
+    100 - game.publicPercentage + (Math.random() - 0.5) * 10
+  ));
 
   return (
     <div className="relative bg-gradient-to-r from-white/5 to-white/10 border border-white/20 rounded-xl overflow-hidden hover:from-white/10 hover:to-white/15 transition-all duration-300 hover:border-white/30 hover:shadow-lg hover:shadow-white/5 max-w-xs mx-auto">

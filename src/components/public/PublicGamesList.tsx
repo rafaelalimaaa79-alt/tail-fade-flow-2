@@ -1,3 +1,4 @@
+
 import React, { useState, useEffect } from "react";
 import PublicGameItem from "./PublicGameItem";
 
@@ -85,7 +86,7 @@ const mockPublicGames: PublicGame[] = [
     id: "7",
     team: "Dodgers",
     opponent: "Padres",
-    publicPercentage: 68,
+    publicPercentage: 83,
     totalBets: 789,
     gameTime: "2024-06-03T17:00:00Z",
     isLive: true,
@@ -107,7 +108,7 @@ const PublicGamesList = () => {
       setGames(prevGames => {
         const updatedGames = prevGames.map(game => ({
           ...game,
-          publicPercentage: Math.round(Math.max(50, Math.min(95, game.publicPercentage + (Math.random() - 0.5) * 4))),
+          publicPercentage: Math.round(Math.max(70, Math.min(95, game.publicPercentage + (Math.random() - 0.5) * 4))),
           totalBets: game.totalBets + Math.floor(Math.random() * 20)
         }));
         return updatedGames.sort((a, b) => b.publicPercentage - a.publicPercentage);
