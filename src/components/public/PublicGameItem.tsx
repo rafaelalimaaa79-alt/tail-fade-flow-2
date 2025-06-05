@@ -1,6 +1,7 @@
 
 import React from "react";
-import { Users, Clock, Zap } from "lucide-react";
+import { Users, Clock, Zap, TrendingUp } from "lucide-react";
+import { Progress } from "@/components/ui/progress";
 
 interface PublicGame {
   id: string;
@@ -20,6 +21,7 @@ interface PublicGameItemProps {
 }
 
 const PublicGameItem = ({ game, rank }: PublicGameItemProps) => {
+  const isExtremePublic = game.publicPercentage >= 90;
   const isHeavyPublic = game.publicPercentage >= 80;
   
   const getTimeDisplay = () => {
@@ -72,11 +74,11 @@ const PublicGameItem = ({ game, rank }: PublicGameItemProps) => {
     return 'text-[#AEE3F5]';
   };
 
-  const getPercentageGlow = () => {
-    if (game.publicPercentage >= 90) return 'drop-shadow-[0_0_8px_rgba(239,68,68,0.7)]';
-    if (game.publicPercentage >= 85) return 'drop-shadow-[0_0_8px_rgba(251,146,60,0.7)]';
-    if (game.publicPercentage >= 80) return 'drop-shadow-[0_0_8px_rgba(174,227,245,0.7)]';
-    return 'drop-shadow-[0_0_8px_rgba(174,227,245,0.5)]';
+  const getProgressColor = () => {
+    if (game.publicPercentage >= 90) return 'bg-gradient-to-r from-red-500 to-red-600';
+    if (game.publicPercentage >= 85) return 'bg-gradient-to-r from-orange-500 to-orange-600';
+    if (game.publicPercentage >= 80) return 'bg-gradient-to-r from-[#AEE3F5] to-[#AEE3F5]/80';
+    return 'bg-gradient-to-r from-[#AEE3F5]/60 to-[#AEE3F5]/40';
   };
 
   return (
@@ -86,64 +88,99 @@ const PublicGameItem = ({ game, rank }: PublicGameItemProps) => {
         #{rank}
       </div>
       
-      {/* Header */}
-      <div className="flex items-center justify-between mb-3">
+      {/* Game Header */}
+      <div className="flex items-center justify-between mb-4">
         <div className="flex-1">
-          <div className="text-lg font-bold text-white mb-1">
-            {game.team} vs {game.opponent}
+          <div className="flex items-center gap-2 mb-1">
+            <h3 className="text-lg font-bold text-white">
+              {game.team} vs {game.opponent}
+            </h3>
+            {game.isLive && (
+              <div className="px-2 py-1 bg-red-500/20 border border-red-500/40 rounded text-red-400 text-xs font-bold">
+                LIVE
+              </div>
+            )}
           </div>
           <div className="flex items-center gap-3 text-sm">
             <span className="px-2 py-1 bg-white/10 rounded text-white/70 text-xs font-medium">
               {game.sport}
             </span>
-            {getTimeDisplay()}
+            {!game.isLive && getTimeDisplay()}
           </div>
         </div>
       </div>
       
-      {/* Main Stats Row */}
-      <div className="flex items-center justify-between mb-3">
-        {/* Public Percentage - Left */}
-        <div className="text-center">
-          <div className={`text-2xl font-black ${getPercentageColor()} ${getPercentageGlow()}`}>
-            {game.publicPercentage}%
+      {/* Main Content - Two Column Layout */}
+      <div className="grid grid-cols-2 gap-6 mb-4">
+        {/* Left Column - Public Betting */}
+        <div className="space-y-3">
+          <div className="text-center">
+            <div className={`text-3xl font-black mb-1 ${getPercentageColor()}`}>
+              {game.publicPercentage}%
+            </div>
+            <div className="text-white/50 text-xs font-medium uppercase tracking-wide">Public on {game.team}</div>
           </div>
-          <div className="text-white/50 text-xs font-medium">PUBLIC ON</div>
+          
+          {/* Progress Bar */}
+          <div className="space-y-2">
+            <div className="relative">
+              <Progress 
+                value={game.publicPercentage} 
+                className="h-2 bg-white/10"
+              />
+              <div 
+                className={`absolute top-0 left-0 h-2 rounded-full transition-all duration-500 ${getProgressColor()}`}
+                style={{ width: `${game.publicPercentage}%` }}
+              />
+            </div>
+            <div className="flex justify-between text-xs text-white/40">
+              <span>50%</span>
+              <span>100%</span>
+            </div>
+          </div>
         </div>
         
-        {/* Team + Spread - Center */}
-        <div className="flex-1 text-center mx-4">
-          <div className="text-lg font-bold text-white">
-            {game.team}
+        {/* Right Column - Betting Info */}
+        <div className="space-y-3">
+          <div className="text-center">
+            <div className="text-2xl font-bold text-[#AEE3F5] mb-1">
+              {game.spread}
+            </div>
+            <div className="text-white/50 text-xs font-medium uppercase tracking-wide">Spread</div>
           </div>
-          <div className="text-[#AEE3F5] font-bold text-sm">
-            {game.spread}
+          
+          <div className="text-center">
+            <div className="text-lg font-bold text-white mb-1">
+              {game.totalBets.toLocaleString()}
+            </div>
+            <div className="text-white/50 text-xs font-medium uppercase tracking-wide">Total Bets</div>
           </div>
-        </div>
-        
-        {/* Bet Count - Right */}
-        <div className="text-center">
-          <div className="text-white text-lg font-bold">
-            {game.totalBets.toLocaleString()}
-          </div>
-          <div className="text-white/50 text-xs font-medium">BETS</div>
         </div>
       </div>
       
-      {/* Bottom Row */}
-      <div className="flex items-center justify-between">
+      {/* Bottom Alert Bar */}
+      <div className="flex items-center justify-between pt-3 border-t border-white/10">
         <div className="flex items-center gap-2">
-          {isHeavyPublic && (
-            <div className="flex items-center gap-1 px-2 py-1 bg-[#AEE3F5]/20 border border-[#AEE3F5]/30 rounded-full">
-              <Zap className="w-3 h-3 text-[#AEE3F5]" />
-              <span className="text-[#AEE3F5] text-xs font-bold">HEAVY PUBLIC</span>
+          {isExtremePublic ? (
+            <div className="flex items-center gap-1 px-3 py-1 bg-red-500/20 border border-red-500/30 rounded-full">
+              <Zap className="w-3 h-3 text-red-400" />
+              <span className="text-red-400 text-xs font-bold">EXTREME PUBLIC</span>
+            </div>
+          ) : isHeavyPublic ? (
+            <div className="flex items-center gap-1 px-3 py-1 bg-orange-500/20 border border-orange-500/30 rounded-full">
+              <TrendingUp className="w-3 h-3 text-orange-400" />
+              <span className="text-orange-400 text-xs font-bold">HEAVY PUBLIC</span>
+            </div>
+          ) : (
+            <div className="flex items-center gap-1 px-3 py-1 bg-[#AEE3F5]/20 border border-[#AEE3F5]/30 rounded-full">
+              <Users className="w-3 h-3 text-[#AEE3F5]" />
+              <span className="text-[#AEE3F5] text-xs font-bold">PUBLIC FAVORITE</span>
             </div>
           )}
         </div>
         
-        <div className="flex items-center gap-1 text-white/40 text-xs">
-          <Users className="w-3 h-3" />
-          <span>Fade Alert</span>
+        <div className="flex items-center gap-1 text-[#AEE3F5]/60 text-xs">
+          <span className="font-medium">FADE OPPORTUNITY</span>
         </div>
       </div>
     </div>
