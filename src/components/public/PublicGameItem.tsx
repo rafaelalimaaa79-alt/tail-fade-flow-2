@@ -35,7 +35,7 @@ const PublicGameItem = ({ game, rank }: PublicGameItemProps) => {
     const estTime = new Date(gameTime.toLocaleString("en-US", {timeZone: "America/New_York"}));
     
     return (
-      <div className="text-white/60 text-sm">
+      <div className="text-white/60 text-sm font-medium">
         {estTime.toLocaleTimeString([], { 
           hour: '2-digit', 
           minute: '2-digit',
@@ -49,11 +49,11 @@ const PublicGameItem = ({ game, rank }: PublicGameItemProps) => {
   const fadeZonePercentage = Math.max(30, 100 - game.publicPercentage + (Math.random() - 0.5) * 20);
 
   return (
-    <div className="relative bg-gradient-to-r from-white/5 to-white/10 border border-white/20 rounded-xl p-4 hover:from-white/10 hover:to-white/15 transition-all duration-300 hover:border-white/30 hover:shadow-lg hover:shadow-white/5 max-w-xs mx-auto">
+    <div className="relative bg-gradient-to-r from-white/5 to-white/10 border border-white/20 rounded-xl overflow-hidden hover:from-white/10 hover:to-white/15 transition-all duration-300 hover:border-white/30 hover:shadow-lg hover:shadow-white/5 max-w-xs mx-auto">
       {/* Header with Game and Time */}
-      <div className="flex justify-between items-center mb-4 pb-2 border-b border-white/10">
-        <div className="text-center flex-1">
-          <div className="text-white font-bold text-lg">{game.team} vs {game.opponent}</div>
+      <div className="flex justify-between items-center px-4 py-3 bg-black/20 border-b border-white/10">
+        <div className="text-white font-bold text-lg">
+          {game.team} vs {game.opponent}
         </div>
         <div>
           {getTimeInEST()}
@@ -61,35 +61,35 @@ const PublicGameItem = ({ game, rank }: PublicGameItemProps) => {
       </div>
       
       {/* Split Content with Separator */}
-      <div className="flex items-stretch h-28">
+      <div className="flex items-stretch">
         {/* FadeZone Side */}
-        <div className="flex-1 flex flex-col pr-3">
-          <div className="text-[#AEE3F5] text-xl font-black text-center mb-2">
+        <div className="flex-1 flex flex-col items-center justify-center px-4 py-6 space-y-2">
+          <div className="text-[#AEE3F5] text-lg font-black uppercase tracking-wide">
             FadeZone
           </div>
-          <div className="text-[#AEE3F5] text-2xl font-bold text-center mb-1">
+          <div className="text-[#AEE3F5] text-3xl font-bold">
             {Math.round(fadeZonePercentage)}%
           </div>
-          <div className="text-white/80 text-sm text-center font-medium">
-            are on {game.team} {game.spread}
+          <div className="text-white/80 text-xs text-center font-medium leading-relaxed">
+            are on <span className="text-white font-semibold">{game.team} {game.spread}</span>
           </div>
         </div>
         
         {/* Vertical Separator */}
-        <div className="relative">
-          <Separator orientation="vertical" className="h-full bg-white/20" />
+        <div className="flex items-center">
+          <Separator orientation="vertical" className="h-20 bg-white/30" />
         </div>
         
         {/* Public Side */}
-        <div className="flex-1 flex flex-col pl-3">
-          <div className="text-red-400 text-xl font-black text-center mb-2">
+        <div className="flex-1 flex flex-col items-center justify-center px-4 py-6 space-y-2">
+          <div className="text-red-400 text-lg font-black uppercase tracking-wide">
             Public
           </div>
-          <div className="text-red-400 text-2xl font-bold text-center mb-1">
+          <div className="text-red-400 text-3xl font-bold">
             {game.publicPercentage}%
           </div>
-          <div className="text-white/80 text-sm text-center font-medium">
-            is on {game.team} {game.spread}
+          <div className="text-white/80 text-xs text-center font-medium leading-relaxed">
+            is on <span className="text-white font-semibold">{game.team} {game.spread}</span>
           </div>
         </div>
       </div>
