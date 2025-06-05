@@ -56,7 +56,7 @@ const FullscreenNotification = ({
   const IconComponent = variant === "tail" ? ZapIcon : ZapIcon;
   const bgGradient = variant === "tail" 
     ? "bg-gradient-to-br from-onetime-green/95 to-onetime-green/80" 
-    : "bg-gradient-to-br from-onetime-red/95 to-onetime-red/80";
+    : "bg-gradient-to-br from-[#AEE3F5]/95 to-[#AEE3F5]/80";
 
   return (
     <div
@@ -76,12 +76,12 @@ const FullscreenNotification = ({
       <div
         className={`relative max-w-md w-full rounded-xl p-8 shadow-2xl text-center transform transition-all ${
           isVisible ? "duration-500 scale-100 translate-y-0" : "duration-300 scale-95 translate-y-8"
-        } ${bgGradient} text-white overflow-hidden ${
+        } ${bgGradient} text-black overflow-hidden ${
           isVisible ? "shadow-glow" : ""
         }`}
         style={{
           boxShadow: isVisible ? 
-            `0 0 30px ${variant === "tail" ? "rgba(16, 185, 129, 0.7)" : "rgba(239, 68, 68, 0.7)"}` : 
+            `0 0 30px ${variant === "tail" ? "rgba(16, 185, 129, 0.7)" : "rgba(174, 227, 245, 0.7)"}` : 
             "none"
         }}
         onClick={(e) => e.stopPropagation()} // Prevent clicks on the card from closing the notification

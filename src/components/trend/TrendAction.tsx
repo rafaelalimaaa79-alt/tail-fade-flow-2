@@ -21,7 +21,7 @@ const TrendAction = ({
   // Always fade since we're fade-only now
   const actionText = "FADE";
   const buttonClass = isMostVisible 
-    ? "bg-[#FF5C5C] hover:bg-[#FF5C5C]/90"
+    ? "bg-[#AEE3F5] hover:bg-[#AEE3F5]/90 text-black"
     : "bg-gray-600 hover:bg-gray-500";
   
   return (
@@ -30,7 +30,7 @@ const TrendAction = ({
         className={cn(
           "w-full font-bold py-3 px-2 rounded-md transition-all flex flex-col items-center justify-center h-auto max-w-[95%] mx-auto duration-300", 
           buttonClass,
-          isMostVisible ? "text-white" : "text-gray-300"
+          isMostVisible ? "text-black" : "text-gray-300"
         )}
       >
         <div className="text-center">

@@ -23,7 +23,7 @@ const badgeVariants = cva(
         orange: 
           "border-transparent bg-onetime-orange text-white hover:bg-onetime-orange/80",
         red: 
-          "border-transparent bg-onetime-red text-white hover:bg-onetime-red/80",
+          "border-transparent bg-[#AEE3F5] text-black hover:bg-[#AEE3F5]/80",
       },
     },
     defaultVariants: {

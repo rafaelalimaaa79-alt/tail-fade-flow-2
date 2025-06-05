@@ -82,26 +82,26 @@ const CountdownTimer: React.FC<CountdownTimerProps> = ({ onCountdownEnd }) => {
 
   const DigitalNumber = ({ value, label }: { value: number; label: string }) => (
     <div className="flex flex-col items-center">
-      <span className="text-red-500 text-4xl font-bold tracking-wider digital-display seven-segment-font">
+      <span className="text-[#AEE3F5] text-4xl font-bold tracking-wider digital-display seven-segment-font">
         {value.toString().padStart(2, '0')}
       </span>
-      <span className="text-red-400 text-xs font-mono mt-1 tracking-wider">
+      <span className="text-[#AEE3F5]/80 text-xs font-mono mt-1 tracking-wider">
         {label}
       </span>
     </div>
   );
 
   const Separator = () => (
-    <div className="text-red-500 text-4xl font-bold px-2 seven-segment-font">
+    <div className="text-[#AEE3F5] text-4xl font-bold px-2 seven-segment-font">
       :
     </div>
   );
 
   return (
-    <div className="bg-background p-6 rounded-lg mb-6 border border-red-900/30">
+    <div className="bg-background p-6 rounded-lg mb-6 border border-[#AEE3F5]/30">
       <div className="flex items-center justify-center space-x-2 mb-4">
-        <Clock className="h-6 w-6 text-red-500" />
-        <h2 className="text-xl font-bold text-red-400">Next Top 10 Reveal</h2>
+        <Clock className="h-6 w-6 text-[#AEE3F5]" />
+        <h2 className="text-xl font-bold text-[#AEE3F5]/80">Next Top 10 Reveal</h2>
       </div>
       
       <div className="flex items-center justify-center space-x-1">

@@ -73,7 +73,7 @@ export default {
           purple: '#6C5CE7',
           orange: '#F97316',
           green: '#10B981',
-          red: '#EF4444',
+          red: '#AEE3F5', // Changed from #EF4444 to icy blue
           darkBlue: '#1E293B',
           lightGray: '#F1F5F9',
           dark: '#0F172A',

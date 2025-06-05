@@ -15,9 +15,8 @@ const TrendHeader = ({
   isTailRecommendation,
   isMostVisible
 }: TrendHeaderProps) => {
-  const glowColor = isTailRecommendation 
-    ? "0 0 10px rgba(16, 185, 129, 0.7)" 
-    : "0 0 10px rgba(239, 68, 68, 0.7)";
+  // Always use icy blue since we're fade-only now
+  const glowColor = "0 0 10px rgba(174, 227, 245, 0.7)";
     
   return (
     <div className="mb-2 border-b border-white/10 pb-2">
@@ -26,7 +25,7 @@ const TrendHeader = ({
         <div className={cn(
           "rounded-full bg-black/50 px-3 py-2 text-base font-bold backdrop-blur-sm border border-white/20 transition-colors duration-300",
           isMostVisible 
-            ? (isTailRecommendation ? "text-emerald-300" : "text-rose-300")
+            ? "text-[#AEE3F5]"
             : "text-gray-400"
         )}
         style={{
@@ -43,10 +42,10 @@ const TrendHeader = ({
         <span className={cn(
           "text-3xl font-bold transition-colors duration-300",
           isMostVisible 
-            ? (isTailRecommendation ? "text-emerald-300" : "text-rose-300")
+            ? "text-[#AEE3F5]"
             : "text-gray-400"
         )}>
-          {isTailRecommendation ? "TAIL" : "FADE"}
+          FADE
         </span>
         
         {/* Right side - empty space for balance */}
