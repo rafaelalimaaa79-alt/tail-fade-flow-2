@@ -67,8 +67,9 @@ const PublicGameItem = ({ game, rank }: PublicGameItemProps) => {
           <div className="text-[#AEE3F5] text-xl font-black text-center">
             FadeZone
           </div>
-          <div className="text-white/70 text-xs text-center leading-tight">
-            {Math.round(fadeZonePercentage)}% of FadeZone users are on {game.team} {game.spread}
+          <div className="text-white/80 text-sm text-center leading-tight font-medium">
+            <span className="text-[#AEE3F5] font-bold">{Math.round(fadeZonePercentage)}%</span> on<br />
+            <span className="text-white font-semibold">{game.team} {game.spread}</span>
           </div>
         </div>
         
@@ -82,8 +83,9 @@ const PublicGameItem = ({ game, rank }: PublicGameItemProps) => {
           <div className="text-red-400 text-xl font-black text-center">
             Public
           </div>
-          <div className="text-white/70 text-xs text-center leading-tight">
-            {game.publicPercentage}% of the public is on {game.team} {game.spread}
+          <div className="text-white/80 text-sm text-center leading-tight font-medium">
+            <span className="text-red-400 font-bold">{game.publicPercentage}%</span> on<br />
+            <span className="text-white font-semibold">{game.team} {game.spread}</span>
           </div>
         </div>
       </div>
