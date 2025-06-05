@@ -1,3 +1,4 @@
+
 import React, { useState, useEffect } from "react";
 import PublicGameItem from "./PublicGameItem";
 
@@ -118,8 +119,30 @@ const PublicGamesList = () => {
   }, []);
 
   return (
-    <div className="space-y-4">
-      {/* Games Grid */}
+    <div className="space-y-3">
+      {/* Header Stats */}
+      <div className="grid grid-cols-3 gap-3 mb-6">
+        <div className="bg-gradient-to-br from-red-500/20 to-red-600/10 border border-red-500/30 rounded-lg p-3 text-center">
+          <div className="text-red-400 text-lg font-bold">
+            {games.filter(g => g.publicPercentage >= 90).length}
+          </div>
+          <div className="text-red-300 text-xs font-medium">90%+ Games</div>
+        </div>
+        <div className="bg-gradient-to-br from-orange-500/20 to-orange-600/10 border border-orange-500/30 rounded-lg p-3 text-center">
+          <div className="text-orange-400 text-lg font-bold">
+            {games.filter(g => g.publicPercentage >= 80).length}
+          </div>
+          <div className="text-orange-300 text-xs font-medium">80%+ Games</div>
+        </div>
+        <div className="bg-gradient-to-br from-[#AEE3F5]/20 to-[#AEE3F5]/10 border border-[#AEE3F5]/30 rounded-lg p-3 text-center">
+          <div className="text-[#AEE3F5] text-lg font-bold">
+            {games.reduce((sum, game) => sum + game.totalBets, 0).toLocaleString()}
+          </div>
+          <div className="text-[#AEE3F5]/70 text-xs font-medium">Total Bets</div>
+        </div>
+      </div>
+      
+      {/* Games List */}
       <div className="space-y-3">
         {games.map((game, index) => (
           <PublicGameItem 
@@ -131,12 +154,17 @@ const PublicGamesList = () => {
       </div>
       
       {/* Footer */}
-      <div className="mt-6 p-3 bg-gradient-to-r from-white/5 to-white/10 rounded-lg border border-white/10">
-        <p className="text-sm text-white/60 text-center">
-          <span className="text-yellow-400 font-bold">80%+</span> = Heavy Public • 
-          Data refreshes every 30s • 
-          <span className="text-orange-400 font-bold">Fade responsibly</span>
-        </p>
+      <div className="mt-6 p-4 bg-gradient-to-r from-[#AEE3F5]/10 to-[#AEE3F5]/5 rounded-lg border border-[#AEE3F5]/20">
+        <div className="text-center">
+          <div className="text-[#AEE3F5] font-bold text-sm mb-1">
+            🔥 Fade Strategy Alert 🔥
+          </div>
+          <p className="text-sm text-white/70">
+            <span className="text-red-400 font-bold">90%+</span> = Extreme Public • 
+            <span className="text-orange-400 font-bold"> 80%+</span> = Heavy Public • 
+            Updates every 30s
+          </p>
+        </div>
       </div>
     </div>
   );
