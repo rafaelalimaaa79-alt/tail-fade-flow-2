@@ -1,6 +1,7 @@
 
 import React from "react";
 import { Users, Clock, Zap, TrendingUp } from "lucide-react";
+import { Progress } from "@/components/ui/progress";
 
 interface PublicGame {
   id: string;
@@ -27,7 +28,7 @@ const PublicGameItem = ({ game, rank }: PublicGameItemProps) => {
     if (game.isLive) {
       return (
         <div className="flex items-center gap-1 text-red-400 text-xs font-bold">
-          <div className="w-2 h-2 bg-red-400 rounded-full animate-pulse"></div>
+          <div className="w-1.5 h-1.5 bg-red-400 rounded-full animate-pulse"></div>
           LIVE
         </div>
       );
@@ -66,85 +67,107 @@ const PublicGameItem = ({ game, rank }: PublicGameItemProps) => {
     );
   };
 
+  const getAlertColor = () => {
+    if (isExtremePublic) return "text-red-400 bg-red-500/10 border-red-500/30";
+    if (isHeavyPublic) return "text-orange-400 bg-orange-500/10 border-orange-500/30";
+    return "text-[#AEE3F5] bg-[#AEE3F5]/10 border-[#AEE3F5]/30";
+  };
+
+  const getProgressColor = () => {
+    if (isExtremePublic) return "bg-red-500";
+    if (isHeavyPublic) return "bg-orange-500";
+    return "bg-[#AEE3F5]";
+  };
+
   return (
-    <div className="relative bg-gradient-to-r from-white/5 to-white/10 border border-white/20 rounded-lg p-3 hover:from-white/10 hover:to-white/15 transition-all duration-200 hover:border-white/30 max-w-xs mx-auto">
+    <div className="relative bg-gradient-to-r from-white/5 to-white/10 border border-white/20 rounded-xl p-4 hover:from-white/10 hover:to-white/15 transition-all duration-300 hover:border-white/30 hover:shadow-lg hover:shadow-white/5 w-full">
       {/* Rank Badge */}
-      <div className="absolute -top-2 -left-2 w-6 h-6 bg-[#AEE3F5] text-black text-xs font-bold rounded-full flex items-center justify-center">
+      <div className="absolute -top-2 -left-2 w-6 h-6 bg-gradient-to-br from-[#AEE3F5] to-[#AEE3F5]/80 text-black text-xs font-bold rounded-full flex items-center justify-center shadow-lg">
         #{rank}
       </div>
       
-      {/* Game Header */}
-      <div className="text-center mb-3 pb-2 border-b border-white/10">
-        <div className="flex items-center justify-center gap-2 mb-2">
-          <h3 className="text-lg font-bold text-white">
-            {game.team} vs {game.opponent}
-          </h3>
-          {game.isLive && (
-            <div className="px-2 py-1 bg-red-500/20 border border-red-500/40 rounded text-red-400 text-xs font-bold">
-              LIVE
-            </div>
-          )}
-        </div>
-        <div className="flex items-center justify-center gap-3 text-sm">
-          <span className="px-2 py-1 bg-white/10 rounded text-white/70 text-xs font-medium">
-            {game.sport}
-          </span>
-          {getTimeDisplay()}
-        </div>
-      </div>
-      
-      {/* Main Content - Pulsing Percentage */}
-      <div className="text-center mb-4">
-        <div 
-          className="text-4xl font-black text-red-400 mb-2 animate-pulse"
-          style={{
-            textShadow: '0 0 10px #f87171, 0 0 20px #f87171, 0 0 30px #f87171',
-            filter: 'brightness(1.2)'
-          }}
-        >
-          {game.publicPercentage}%
+      {/* Main Grid Layout */}
+      <div className="grid grid-cols-12 gap-4 items-center">
+        {/* Team Info - Left Side */}
+        <div className="col-span-4">
+          <div className="flex items-center gap-2 mb-1">
+            <span className="text-white font-bold text-sm">{game.team}</span>
+            {game.isLive && (
+              <div className="px-1.5 py-0.5 bg-red-500/20 border border-red-500/40 rounded text-red-400 text-xs font-bold">
+                LIVE
+              </div>
+            )}
+          </div>
+          <div className="text-white/60 text-xs">vs {game.opponent}</div>
+          <div className="flex items-center gap-2 mt-1">
+            <span className="px-1.5 py-0.5 bg-white/10 rounded text-white/70 text-xs">
+              {game.sport}
+            </span>
+            {getTimeDisplay()}
+          </div>
         </div>
         
-        {/* Betting Description */}
-        <div className="text-white/80 text-sm leading-relaxed">
-          <span className="text-white/60">{game.publicPercentage}% of bettors on</span>
-          <div className="mt-1">
-            <span className="text-[#AEE3F5] text-xl font-black">
-              {game.team} {game.spread}
-            </span>
+        {/* Percentage Display - Center */}
+        <div className="col-span-4 text-center">
+          <div 
+            className="text-3xl font-black text-red-400 mb-2 animate-pulse"
+            style={{
+              textShadow: '0 0 10px #f87171, 0 0 20px #f87171, 0 0 30px #f87171',
+              filter: 'brightness(1.2)'
+            }}
+          >
+            {game.publicPercentage}%
+          </div>
+          
+          {/* Progress Bar */}
+          <div className="relative mb-2">
+            <div className="w-full bg-white/10 rounded-full h-2">
+              <div 
+                className={`h-2 rounded-full transition-all duration-500 ${getProgressColor()}`}
+                style={{ width: `${game.publicPercentage}%` }}
+              ></div>
+            </div>
+          </div>
+          
+          <div className="text-white/60 text-xs mb-1">of bettors on</div>
+          <div className="text-[#AEE3F5] text-lg font-black">
+            {game.team} {game.spread}
+          </div>
+        </div>
+        
+        {/* Stats & Alert - Right Side */}
+        <div className="col-span-4 text-right">
+          <div className="mb-3">
+            <div className="text-[#AEE3F5] text-lg font-bold">
+              {game.totalBets.toLocaleString()}
+            </div>
+            <div className="text-white/50 text-xs font-medium uppercase tracking-wide">Bets</div>
+          </div>
+          
+          {/* Alert Badge */}
+          <div className={`inline-flex items-center gap-1 px-2 py-1 border rounded-full text-xs font-bold ${getAlertColor()}`}>
+            {isExtremePublic ? (
+              <>
+                <Zap className="w-3 h-3" />
+                FADE
+              </>
+            ) : isHeavyPublic ? (
+              <>
+                <TrendingUp className="w-3 h-3" />
+                HEAVY
+              </>
+            ) : (
+              <>
+                <Users className="w-3 h-3" />
+                MONITOR
+              </>
+            )}
           </div>
         </div>
       </div>
       
-      {/* Stats Row */}
-      <div className="flex justify-center items-center gap-4 mb-3 text-center">
-        <div>
-          <div className="text-[#AEE3F5] text-base font-bold">
-            {game.totalBets.toLocaleString()}
-          </div>
-          <div className="text-white/50 text-xs font-medium uppercase tracking-wide">Total Bets</div>
-        </div>
-      </div>
-      
-      {/* Bottom Alert */}
-      <div className="text-center pt-2 border-t border-white/10">
-        {isExtremePublic ? (
-          <div className="flex items-center justify-center gap-2 px-3 py-1 bg-red-500/20 border border-red-500/30 rounded-full">
-            <Zap className="w-3 h-3 text-red-400" />
-            <span className="text-red-400 text-xs font-bold">EXTREME PUBLIC - FADE ALERT</span>
-          </div>
-        ) : isHeavyPublic ? (
-          <div className="flex items-center justify-center gap-2 px-3 py-1 bg-orange-500/20 border border-orange-500/30 rounded-full">
-            <TrendingUp className="w-3 h-3 text-orange-400" />
-            <span className="text-orange-400 text-xs font-bold">HEAVY PUBLIC - FADE OPPORTUNITY</span>
-          </div>
-        ) : (
-          <div className="flex items-center justify-center gap-2 px-3 py-1 bg-[#AEE3F5]/20 border border-[#AEE3F5]/30 rounded-full">
-            <Users className="w-3 h-3 text-[#AEE3F5]" />
-            <span className="text-[#AEE3F5] text-xs font-bold">PUBLIC FAVORITE - MONITOR</span>
-          </div>
-        )}
-      </div>
+      {/* Bottom Glow Effect */}
+      <div className="absolute bottom-0 left-0 right-0 h-px bg-gradient-to-r from-transparent via-[#AEE3F5]/50 to-transparent"></div>
     </div>
   );
 };
