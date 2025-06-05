@@ -98,11 +98,11 @@ const PendingBetsList = () => {
               <span>{confidenceData.score}%</span>
             </div>
             
-            {/* Middle row: Bettor info with nice styling - REMOVED confidence score */}
+            {/* Middle row: Bettor info with nice styling - fade only */}
             <div className="flex flex-col items-center justify-center mb-4 relative z-10">
               <div className="flex items-center justify-center mb-1.5 gap-2">
                 <span className="text-sm font-medium text-white inline-flex items-center gap-1">
-                  {bet.variant === "tail" ? "Tailing" : "Fading"}
+                  Fading
                   <span className="text-onetime-purple">@{bet.bettorName}</span>
                 </span>
               </div>

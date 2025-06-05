@@ -11,7 +11,6 @@ import BadgeAnimationHandler from "@/components/dashboard/BadgeAnimationHandler"
 import ProfileIcon from "@/components/common/ProfileIcon";
 import { useCarouselRotation } from "@/hooks/useCarouselRotation";
 import { usePortfolioStore } from "@/utils/portfolio-state";
-import { showTailNotification } from "@/utils/betting-notifications";
 
 const Dashboard = () => {
   const isMobile = useIsMobile();

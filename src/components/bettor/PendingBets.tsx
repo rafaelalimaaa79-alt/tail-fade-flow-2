@@ -4,7 +4,7 @@ import { BettorBet } from "@/types/bettor";
 import { cn } from "@/lib/utils";
 import { format } from "date-fns";
 import { Badge } from "@/components/ui/badge";
-import { showTailNotification, showFadeNotification } from "@/utils/betting-notifications";
+import { showFadeNotification } from "@/utils/betting-notifications";
 import ActionButton from "@/components/ActionButton";
 import { ThumbsUp, ThumbsDown, Clock, Star } from "lucide-react";
 
@@ -40,10 +40,6 @@ const PendingBets: React.FC<PendingBetsProps> = ({ pendingBets, className }) => 
       score,
       colorClass
     };
-  };
-
-  const handleTail = (bet: BettorBet) => {
-    showTailNotification("Bettor", bet.betType);
   };
 
   const handleFade = (bet: BettorBet) => {
@@ -92,17 +88,8 @@ const PendingBets: React.FC<PendingBetsProps> = ({ pendingBets, className }) => 
                   </div>
                 </div>
                 
-                {/* Bottom row: Action buttons with enhanced styling */}
+                {/* Bottom row: Action button with enhanced styling - fade only */}
                 <div className="flex gap-2 mt-3 justify-center relative z-10">
-                  <ActionButton 
-                    variant="tail" 
-                    className="h-10 py-0 text-sm shadow-lg shadow-onetime-purple/10 group relative overflow-hidden"
-                    onClick={() => handleTail(bet)}
-                  >
-                    <div className="absolute inset-0 bg-gradient-to-r from-transparent to-white/10 opacity-0 group-hover:opacity-100 transition-opacity"></div>
-                    <ThumbsUp className="h-4 w-4 mr-1.5 group-hover:scale-110 transition-transform" /> Tail
-                  </ActionButton>
-                  
                   <ActionButton 
                     variant="fade" 
                     className="h-10 py-0 text-sm shadow-lg shadow-onetime-purple/10 group relative overflow-hidden"

@@ -35,7 +35,7 @@ const HottestBettors = () => {
       </div>
       
       <ActionButton 
-        variant="tail" 
+        variant="fade" 
         className="mt-4 h-10 text-sm"
         onClick={() => navigate("/leaders?type=hot")}
       >
