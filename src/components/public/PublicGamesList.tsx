@@ -1,4 +1,3 @@
-
 import React, { useState, useEffect } from "react";
 import PublicGameItem from "./PublicGameItem";
 
@@ -120,28 +119,6 @@ const PublicGamesList = () => {
 
   return (
     <div className="space-y-3">
-      {/* Header Stats */}
-      <div className="grid grid-cols-3 gap-3 mb-6">
-        <div className="bg-gradient-to-br from-red-500/20 to-red-600/10 border border-red-500/30 rounded-lg p-3 text-center">
-          <div className="text-red-400 text-lg font-bold">
-            {games.filter(g => g.publicPercentage >= 90).length}
-          </div>
-          <div className="text-red-300 text-xs font-medium">90%+ Games</div>
-        </div>
-        <div className="bg-gradient-to-br from-orange-500/20 to-orange-600/10 border border-orange-500/30 rounded-lg p-3 text-center">
-          <div className="text-orange-400 text-lg font-bold">
-            {games.filter(g => g.publicPercentage >= 80).length}
-          </div>
-          <div className="text-orange-300 text-xs font-medium">80%+ Games</div>
-        </div>
-        <div className="bg-gradient-to-br from-[#AEE3F5]/20 to-[#AEE3F5]/10 border border-[#AEE3F5]/30 rounded-lg p-3 text-center">
-          <div className="text-[#AEE3F5] text-lg font-bold">
-            {games.reduce((sum, game) => sum + game.totalBets, 0).toLocaleString()}
-          </div>
-          <div className="text-[#AEE3F5]/70 text-xs font-medium">Total Bets</div>
-        </div>
-      </div>
-      
       {/* Games List */}
       <div className="space-y-3">
         {games.map((game, index) => (
