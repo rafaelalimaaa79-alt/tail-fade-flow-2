@@ -30,7 +30,7 @@ const BettorStreakItem = ({ id, name, profit, streak }: BettorStreakItemProps) =
           {streak.map((result, index) => (
             <div 
               key={index} 
-              className={`h-5 w-5 rounded-sm ${result ? 'bg-black text-white' : 'bg-[#AEE3F5] text-black'} flex items-center justify-center text-[9px] font-bold`}
+              className={`h-5 w-5 rounded-sm ${result ? 'bg-black text-white border border-white' : 'bg-[#AEE3F5] text-black'} flex items-center justify-center text-[9px] font-bold`}
             >
               {result ? 'W' : 'L'}
             </div>
