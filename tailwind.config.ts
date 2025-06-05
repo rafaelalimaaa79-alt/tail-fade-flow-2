@@ -72,11 +72,13 @@ export default {
         onetime: {
           purple: '#6C5CE7',
           orange: '#F97316',
-          green: '#C4D7DC', // Changed from #8FA3B0 to a lighter, more distinguishable gray
+          green: '#C4D7DC', // For legacy green references (now neutral)
           red: '#AEE3F5', // Icy blue for losses/fades
           darkBlue: '#1E293B',
           lightGray: '#F1F5F9',
           dark: '#0F172A',
+          // New neutral color for "W" indicators
+          neutral: '#000000', // Black background for W indicators
         }
 			},
 			borderRadius: {

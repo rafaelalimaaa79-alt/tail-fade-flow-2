@@ -49,7 +49,7 @@ const BettorPerformanceSection: React.FC<BettorPerformanceSectionProps> = ({
           <p className="text-xs text-gray-400">ROI</p>
           <p
             className={`text-lg font-bold ${
-              profile.stats.roi >= 0 ? "text-[#C4D7DC]" : "text-[#AEE3F5]"
+              profile.stats.roi >= 0 ? "text-white" : "text-[#AEE3F5]"
             }`}
           >
             {profile.stats.roi > 0 && "+"}
@@ -60,7 +60,7 @@ const BettorPerformanceSection: React.FC<BettorPerformanceSectionProps> = ({
           <p className="text-xs text-gray-400">Profit</p>
           <p
             className={`text-lg font-bold ${
-              profile.stats.unitsGained >= 0 ? "text-[#C4D7DC]" : "text-[#AEE3F5]"
+              profile.stats.unitsGained >= 0 ? "text-white" : "text-[#AEE3F5]"
             }`}
           >
             {profile.stats.unitsGained > 0 && "+"}
