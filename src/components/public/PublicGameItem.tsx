@@ -1,7 +1,6 @@
 
 import React from "react";
-import { Users, Clock, Zap, TrendingUp } from "lucide-react";
-import { Progress } from "@/components/ui/progress";
+import { Clock, Zap } from "lucide-react";
 
 interface PublicGame {
   id: string;
@@ -22,7 +21,6 @@ interface PublicGameItemProps {
 
 const PublicGameItem = ({ game, rank }: PublicGameItemProps) => {
   const isExtremePublic = game.publicPercentage >= 90;
-  const isHeavyPublic = game.publicPercentage >= 80;
   
   const getTimeDisplay = () => {
     if (game.isLive) {
@@ -67,104 +65,51 @@ const PublicGameItem = ({ game, rank }: PublicGameItemProps) => {
     );
   };
 
-  const getAlertColor = () => {
-    if (isExtremePublic) return "text-red-400 bg-red-500/10 border-red-500/30";
-    if (isHeavyPublic) return "text-orange-400 bg-orange-500/10 border-orange-500/30";
-    return "text-[#AEE3F5] bg-[#AEE3F5]/10 border-[#AEE3F5]/30";
-  };
-
-  const getProgressColor = () => {
-    if (isExtremePublic) return "bg-red-500";
-    if (isHeavyPublic) return "bg-orange-500";
-    return "bg-[#AEE3F5]";
-  };
-
   return (
-    <div className="relative bg-gradient-to-r from-white/5 to-white/10 border border-white/20 rounded-xl p-4 hover:from-white/10 hover:to-white/15 transition-all duration-300 hover:border-white/30 hover:shadow-lg hover:shadow-white/5 w-full">
+    <div className="relative bg-gradient-to-r from-white/5 to-white/10 border border-white/20 rounded-xl p-4 hover:from-white/10 hover:to-white/15 transition-all duration-300 hover:border-white/30 hover:shadow-lg hover:shadow-white/5 max-w-md mx-auto">
       {/* Rank Badge */}
       <div className="absolute -top-2 -left-2 w-6 h-6 bg-gradient-to-br from-[#AEE3F5] to-[#AEE3F5]/80 text-black text-xs font-bold rounded-full flex items-center justify-center shadow-lg">
         #{rank}
       </div>
       
-      {/* Main Grid Layout */}
-      <div className="grid grid-cols-12 gap-4 items-center">
-        {/* Team Info - Left Side */}
-        <div className="col-span-4">
-          <div className="flex items-center gap-2 mb-1">
-            <span className="text-white font-bold text-sm">{game.team}</span>
-            {game.isLive && (
-              <div className="px-1.5 py-0.5 bg-red-500/20 border border-red-500/40 rounded text-red-400 text-xs font-bold">
-                LIVE
-              </div>
-            )}
-          </div>
-          <div className="text-white/60 text-xs">vs {game.opponent}</div>
-          <div className="flex items-center gap-2 mt-1">
-            <span className="px-1.5 py-0.5 bg-white/10 rounded text-white/70 text-xs">
-              {game.sport}
-            </span>
-            {getTimeDisplay()}
-          </div>
+      {/* Header with Game and Time */}
+      <div className="flex justify-between items-center mb-4 pb-2 border-b border-white/10">
+        <div>
+          <div className="text-white font-bold text-sm">{game.team} vs {game.opponent}</div>
+          <div className="text-white/60 text-xs">{game.sport}</div>
         </div>
-        
-        {/* Percentage Display - Center */}
-        <div className="col-span-4 text-center">
-          <div 
-            className="text-3xl font-black text-red-400 mb-2 animate-pulse"
-            style={{
-              textShadow: '0 0 10px #f87171, 0 0 20px #f87171, 0 0 30px #f87171',
-              filter: 'brightness(1.2)'
-            }}
-          >
-            {game.publicPercentage}%
-          </div>
-          
-          {/* Progress Bar */}
-          <div className="relative mb-2">
-            <div className="w-full bg-white/10 rounded-full h-2">
-              <div 
-                className={`h-2 rounded-full transition-all duration-500 ${getProgressColor()}`}
-                style={{ width: `${game.publicPercentage}%` }}
-              ></div>
-            </div>
-          </div>
-          
-          <div className="text-white/60 text-xs mb-1">of bettors on</div>
-          <div className="text-[#AEE3F5] text-lg font-black">
-            {game.team} {game.spread}
-          </div>
-        </div>
-        
-        {/* Stats & Alert - Right Side */}
-        <div className="col-span-4 text-right">
-          <div className="mb-3">
-            <div className="text-[#AEE3F5] text-lg font-bold">
-              {game.totalBets.toLocaleString()}
-            </div>
-            <div className="text-white/50 text-xs font-medium uppercase tracking-wide">Bets</div>
-          </div>
-          
-          {/* Alert Badge */}
-          <div className={`inline-flex items-center gap-1 px-2 py-1 border rounded-full text-xs font-bold ${getAlertColor()}`}>
-            {isExtremePublic ? (
-              <>
-                <Zap className="w-3 h-3" />
-                FADE
-              </>
-            ) : isHeavyPublic ? (
-              <>
-                <TrendingUp className="w-3 h-3" />
-                HEAVY
-              </>
-            ) : (
-              <>
-                <Users className="w-3 h-3" />
-                MONITOR
-              </>
-            )}
-          </div>
+        <div>
+          {getTimeDisplay()}
         </div>
       </div>
+      
+      {/* Main Content - Percentage */}
+      <div className="text-center mb-4">
+        <div 
+          className="text-4xl font-black text-red-400 mb-2 animate-pulse"
+          style={{
+            textShadow: '0 0 10px #f87171, 0 0 20px #f87171, 0 0 30px #f87171',
+            filter: 'brightness(1.2)'
+          }}
+        >
+          {game.publicPercentage}%
+        </div>
+        
+        <div className="text-white/60 text-sm mb-1">of bettors on</div>
+        <div className="text-[#AEE3F5] text-xl font-black">
+          {game.team} {game.spread}
+        </div>
+      </div>
+      
+      {/* Alert Badge - Only for extreme public */}
+      {isExtremePublic && (
+        <div className="flex justify-center">
+          <div className="inline-flex items-center gap-1 px-3 py-1 border border-red-500/30 rounded-full text-xs font-bold text-red-400 bg-red-500/10">
+            <Zap className="w-3 h-3" />
+            FADE
+          </div>
+        </div>
+      )}
       
       {/* Bottom Glow Effect */}
       <div className="absolute bottom-0 left-0 right-0 h-px bg-gradient-to-r from-transparent via-[#AEE3F5]/50 to-transparent"></div>
