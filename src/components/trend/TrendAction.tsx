@@ -14,15 +14,14 @@ type TrendActionProps = {
 };
 
 const TrendAction = ({
-  isTailRecommendation,
   betDescription,
   bettorName,
   isMostVisible
 }: TrendActionProps) => {
-  // Determine text and style based on recommendation type
-  const actionText = isTailRecommendation ? "TAIL" : "FADE";
+  // Always fade since we're fade-only now
+  const actionText = "FADE";
   const buttonClass = isMostVisible 
-    ? (isTailRecommendation ? "bg-onetime-green hover:bg-onetime-green/90" : "bg-onetime-red hover:bg-onetime-red/90")
+    ? "bg-[#FF5C5C] hover:bg-[#FF5C5C]/90"
     : "bg-gray-600 hover:bg-gray-500";
   
   return (

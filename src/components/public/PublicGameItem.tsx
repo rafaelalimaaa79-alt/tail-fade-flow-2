@@ -1,6 +1,6 @@
 
 import React from "react";
-import { Flame, TrendingUp } from "lucide-react";
+import { Users } from "lucide-react";
 
 interface PublicGame {
   id: string;
@@ -21,7 +21,6 @@ interface PublicGameItemProps {
 
 const PublicGameItem = ({ game, rank }: PublicGameItemProps) => {
   const isHeavyPublic = game.publicPercentage >= 80;
-  const isTrending = game.publicPercentage >= 85;
   
   const getTimeDisplay = () => {
     if (game.isLive) {
@@ -65,7 +64,7 @@ const PublicGameItem = ({ game, rank }: PublicGameItemProps) => {
   const getPercentageColor = () => {
     if (game.publicPercentage >= 90) return 'text-red-400';
     if (game.publicPercentage >= 85) return 'text-orange-400';
-    if (game.publicPercentage >= 80) return 'text-yellow-400';
+    if (game.publicPercentage >= 80) return 'text-blue-400'; // Updated to cooler tone
     return 'text-blue-400';
   };
 
@@ -101,12 +100,9 @@ const PublicGameItem = ({ game, rank }: PublicGameItemProps) => {
           {game.totalBets.toLocaleString()} bets
         </div>
         <div className="flex items-center gap-1">
-          {isTrending && (
-            <Flame className="h-3 w-3 text-orange-400 animate-pulse" />
-          )}
           {isHeavyPublic && (
-            <div className="flex items-center gap-1 text-orange-400">
-              <TrendingUp className="h-3 w-3" />
+            <div className="flex items-center gap-1 text-blue-400">
+              <Users className="h-3 w-3" />
               <span className="font-bold">HEAVY PUBLIC</span>
             </div>
           )}

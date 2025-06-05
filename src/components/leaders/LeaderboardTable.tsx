@@ -16,7 +16,7 @@ interface LeaderboardTableProps {
   bettors: BettorData[];
   showAll: boolean;
   setShowAll: (show: boolean) => void;
-  variant: "tail" | "fade";
+  variant: "fade";
 }
 
 const LeaderboardTable: React.FC<LeaderboardTableProps> = ({
@@ -24,7 +24,6 @@ const LeaderboardTable: React.FC<LeaderboardTableProps> = ({
   variant,
 }) => {
   const navigate = useNavigate();
-  const isProfitPositive = variant === "tail";
   
   // Show 10 bettors
   const displayBettors = useMemo(() => 
@@ -59,9 +58,9 @@ const LeaderboardTable: React.FC<LeaderboardTableProps> = ({
             @{bettor.name}
           </span>
         </TableCell>
-        <TableCell className={`${isProfitPositive ? "text-onetime-green" : "text-onetime-red"} w-20 text-right py-3 px-3`}>
+        <TableCell className="text-[#FF5C5C] w-20 text-right py-3 px-3">
           <span className="group-hover:font-bold transition-all duration-200 text-sm font-bold">
-            {isProfitPositive ? `+${bettor.profit}u` : `${bettor.profit}u`}
+            {bettor.profit}u
           </span>
         </TableCell>
         <TableCell className="w-16 text-right py-3 px-3">
@@ -71,7 +70,7 @@ const LeaderboardTable: React.FC<LeaderboardTableProps> = ({
         </TableCell>
       </TableRow>
     ))
-  ), [displayBettors, navigate, isProfitPositive]);
+  ), [displayBettors, navigate]);
 
   return (
     <div className="rounded-xl bg-card border border-white/10 p-3 transition-all duration-300 hover:border-white/20 hover:shadow-2xl backdrop-blur-sm overflow-hidden">
@@ -82,7 +81,7 @@ const LeaderboardTable: React.FC<LeaderboardTableProps> = ({
               <TableHead className="w-16 text-muted-foreground py-3 px-3 text-xs font-bold uppercase tracking-wider">Rank</TableHead>
               <TableHead className="text-muted-foreground py-3 px-3 text-xs font-bold uppercase tracking-wider">Bettor</TableHead>
               <TableHead className="w-20 text-muted-foreground py-3 px-3 text-xs font-bold uppercase tracking-wider text-right">
-                {isProfitPositive ? "Units" : "Down"}
+                Down
               </TableHead>
               <TableHead className="w-16 text-muted-foreground py-3 px-3 text-xs font-bold uppercase tracking-wider text-right">Win %</TableHead>
             </TableRow>

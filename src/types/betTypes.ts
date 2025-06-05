@@ -2,7 +2,7 @@
 export interface BetterPlay {
   bettorName: string;
   bet: string;
-  suggestionType: "fade" | "tail";
+  suggestionType: "fade";
   stats: string;
   percentage: number;
 }
@@ -12,35 +12,35 @@ export const playsOfTheDay: BetterPlay[] = [
     bettorName: "NoCoverKev",
     bet: "Celtics -6.5",
     suggestionType: "fade",
-    stats: "2–12 in his last 14 bets",
+    stats: "@NoCoverKev is getting hammered — consider fading.",
     percentage: 89
   },
   {
-    bettorName: "MoneyMaker22",
-    bet: "Rangers ML",
-    suggestionType: "tail",
-    stats: "+11.4u this week",
-    percentage: 84
-  },
-  {
     bettorName: "ColdHands88",
-    bet: "Yankees ML",
+    bet: "Yankees ML", 
     suggestionType: "fade",
-    stats: "Lost 6 straight MLB bets",
+    stats: "@ColdHands88 is ice cold — perfect fade opportunity.",
     percentage: 78
-  },
-  {
-    bettorName: "SharpSniper17",
-    bet: "Nuggets -4.5",
-    suggestionType: "tail",
-    stats: "On a 9–1 heater",
-    percentage: 75
   },
   {
     bettorName: "SlumpCityJack",
     bet: "Dodgers -1.5",
     suggestionType: "fade",
-    stats: "0–7 on last run line picks",
+    stats: "@SlumpCityJack can't buy a win — easy fade.",
     percentage: 72
+  },
+  {
+    bettorName: "IcyColdTakes",
+    bet: "Lakers +3",
+    suggestionType: "fade",
+    stats: "@IcyColdTakes is struggling badly — fade with confidence.",
+    percentage: 85
+  },
+  {
+    bettorName: "FrozenPicks",
+    bet: "Warriors ML",
+    suggestionType: "fade",
+    stats: "@FrozenPicks is on a cold streak — time to fade.",
+    percentage: 76
   }
 ];

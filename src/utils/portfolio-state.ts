@@ -6,7 +6,7 @@ interface Bet {
   id: string;
   bettorName: string;
   betDescription: string;
-  variant: "tail" | "fade";
+  variant: "fade";
   timestamp: string;
   isPlaced: boolean;
   sportsbook?: string;
@@ -14,7 +14,7 @@ interface Bet {
 
 interface BetState {
   pendingBets: Bet[];
-  addBet: (bettorName: string, betDescription: string, variant: "tail" | "fade") => void;
+  addBet: (bettorName: string, betDescription: string, variant: "fade") => void;
   markBetAsPlaced: (id: string, sportsbook?: string) => void;
   clearBets: () => void;
   // Add these properties to fix the build errors
@@ -27,7 +27,7 @@ export const useBetStore = create<BetState>()(
   persist(
     (set) => ({
       pendingBets: [],
-      addBet: (bettorName: string, betDescription: string, variant: "tail" | "fade") => set((state) => {
+      addBet: (bettorName: string, betDescription: string, variant: "fade") => set((state) => {
         const newBet = {
           id: Date.now().toString(),
           bettorName,

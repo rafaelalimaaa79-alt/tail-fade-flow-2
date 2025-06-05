@@ -5,12 +5,12 @@ import { useBetStore } from "./portfolio-state";
 type NotificationStore = {
   isOpen: boolean;
   message: string;
-  variant: "tail" | "fade" | null;
+  variant: "fade" | null;
   bettorName: string;
   betDescription: string;
   sourceRect: DOMRect | null;
   showFlyAnimation: boolean;
-  openNotification: (params: { variant: "tail" | "fade", bettorName: string, betDescription: string }) => void;
+  openNotification: (params: { variant: "fade", bettorName: string, betDescription: string }) => void;
   closeNotification: () => void;
   completeFlyAnimation: () => void;
 };
@@ -56,17 +56,6 @@ export const useNotificationStore = create<NotificationStore>((set) => ({
     set({ showFlyAnimation: false });
   }
 }));
-
-/**
- * Show a notification for tailing a bet
- */
-export const showTailNotification = (bettorName: string, betDescription: string) => {
-  useNotificationStore.getState().openNotification({ 
-    variant: "tail", 
-    bettorName, 
-    betDescription
-  });
-};
 
 /**
  * Show a notification for fading a bet

@@ -14,26 +14,26 @@ interface LeaderboardCarouselProps {
   onIndexChange: (index: number) => void;
 }
 
-// Limit to 4 bettors for each category
-const hottestBettors = [
-  { id: "1", name: "Mike", profit: 1840, streak: [1, 1, 1, 1, 0] }, // 1=win, 0=loss
-  { id: "2", name: "Sarah", profit: 1570, streak: [1, 1, 1, 0, 1] },
-  { id: "3", name: "Chris", profit: 1320, streak: [1, 1, 0, 1, 1] },
-  { id: "4", name: "Taylor", profit: 1180, streak: [0, 1, 1, 1, 1] },
-];
-
-const coldestBettors = [
+// Updated to show cold bettors as fade bait
+const fadeBaitBettors = [
   { id: "6", name: "Kevin", profit: -1650, streak: [0, 0, 0, 0, 1] }, // 1=win, 0=loss
   { id: "7", name: "Lisa", profit: -1490, streak: [0, 0, 0, 1, 0] },
   { id: "8", name: "Ryan", profit: -1250, streak: [1, 0, 0, 0, 0] },
   { id: "9", name: "Emily", profit: -1100, streak: [0, 1, 0, 0, 0] },
 ];
 
+const coldestBettors = [
+  { id: "10", name: "Alex", profit: -2100, streak: [0, 0, 0, 0, 0] },
+  { id: "11", name: "Sam", profit: -1890, streak: [0, 0, 0, 1, 0] },
+  { id: "12", name: "Jordan", profit: -1750, streak: [1, 0, 0, 0, 0] },
+  { id: "13", name: "Casey", profit: -1680, streak: [0, 1, 0, 0, 0] },
+];
+
 const LeaderboardCarousel = ({ currentIndex, onIndexChange }: LeaderboardCarouselProps) => {
   const navigate = useNavigate();
   
   // Function to handle navigation to leaders page
-  const navigateToLeaders = (type: 'tail' | 'fade') => {
+  const navigateToLeaders = (type: 'fade') => {
     navigate(`/leaders?type=${type}`);
   };
   
@@ -73,15 +73,15 @@ const LeaderboardCarousel = ({ currentIndex, onIndexChange }: LeaderboardCarouse
         }}
       >
         <CarouselContent>
-          {/* Hot Bettors */}
+          {/* Fade Bait Bettors */}
           <CarouselItem>
             <div className="rounded-xl bg-card p-5 shadow-lg border border-white/10">
               <div className="mb-4 flex items-center justify-center">
-                <h3 className="text-lg font-bold text-white/90">These guys can't miss</h3>
+                <h3 className="text-lg font-bold text-white/90">Perfect fade bait</h3>
               </div>
               
               <div className="space-y-1">
-                {hottestBettors.map((bettor) => (
+                {fadeBaitBettors.map((bettor) => (
                   <BettorStreakItem
                     key={bettor.id}
                     id={bettor.id}
@@ -93,20 +93,20 @@ const LeaderboardCarousel = ({ currentIndex, onIndexChange }: LeaderboardCarouse
               </div>
               
               <ActionButton 
-                variant="tail" 
+                variant="fade" 
                 className="mt-4 h-10 text-sm"
-                onClick={() => navigateToLeaders('tail')}
+                onClick={() => navigateToLeaders('fade')}
               >
-                View Tail Leaders
+                View Fade Leaders
               </ActionButton>
             </div>
           </CarouselItem>
 
-          {/* Cold Bettors */}
+          {/* Coldest Bettors */}
           <CarouselItem>
             <div className="rounded-xl bg-card p-5 shadow-lg border border-white/10">
               <div className="mb-4 flex items-center justify-center">
-                <h3 className="text-lg font-bold text-white/90">Can't buy a win right now</h3>
+                <h3 className="text-lg font-bold text-white/90">Ice cold right now</h3>
               </div>
               
               <div className="space-y-1">
@@ -126,7 +126,7 @@ const LeaderboardCarousel = ({ currentIndex, onIndexChange }: LeaderboardCarouse
                 className="mt-4 h-10 text-sm"
                 onClick={() => navigateToLeaders('fade')}
               >
-                View Fade Leaders
+                View Coldest Picks
               </ActionButton>
             </div>
           </CarouselItem>

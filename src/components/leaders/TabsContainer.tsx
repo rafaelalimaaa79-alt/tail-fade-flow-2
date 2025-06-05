@@ -32,7 +32,7 @@ const TabsContainer: React.FC<TabsContainerProps> = ({
       bettors={hottestBettors}
       showAll={false}
       setShowAll={() => {}}
-      variant="tail"
+      variant="fade"
     />
   ), [hottestBettors]);
 
@@ -50,10 +50,10 @@ const TabsContainer: React.FC<TabsContainerProps> = ({
       <TabsList className="w-full flex rounded-xl overflow-hidden bg-black/30 mb-6 p-0 border border-white/20 shadow-lg hover:shadow-2xl transition-all duration-300">
         <TabsTrigger 
           value="hot" 
-          className="flex-1 rounded-none py-3 border-r border-white/10 data-[state=active]:bg-onetime-green/20 data-[state=active]:shadow-[0_0_10px_rgba(16,185,129,0.5)] hover:bg-onetime-green/10 transition-all duration-300 group"
+          className="flex-1 rounded-none py-3 border-r border-white/10 data-[state=active]:bg-[#FF5C5C]/20 data-[state=active]:shadow-[0_0_10px_rgba(255,92,92,0.5)] hover:bg-[#FF5C5C]/10 transition-all duration-300 group"
         >
-          <span className="text-onetime-green font-bold font-rajdhani text-lg uppercase tracking-wide truncate px-1 group-hover:scale-105 transition-transform duration-200">
-            CANT MISS
+          <span className="text-[#FF5C5C] font-bold font-rajdhani text-lg uppercase tracking-wide truncate px-1 group-hover:scale-105 transition-transform duration-200">
+            Fade Bait
           </span>
         </TabsTrigger>
         <TabsTrigger 
