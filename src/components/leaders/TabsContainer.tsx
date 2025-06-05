@@ -34,10 +34,13 @@ const TabsContainer: React.FC<TabsContainerProps> = ({
 
   return (
     <div className="w-full">
-      <div className="mb-6 text-center">
-        <h2 className="text-2xl font-bold font-rajdhani text-[#AEE3F5] uppercase tracking-wide">
-          Walking L's
+      <div className="mb-6 text-center bg-gradient-to-r from-[#AEE3F5]/10 to-[#AEE3F5]/5 rounded-xl border border-[#AEE3F5]/20 p-6">
+        <h2 className="text-3xl font-bold font-rajdhani text-[#AEE3F5] uppercase tracking-wide mb-2">
+          Fade Leaderboard
         </h2>
+        <p className="text-sm text-white/70 font-medium">
+          Worst Betters this past week
+        </p>
       </div>
       
       <div className="space-y-2 animate-fade-in">
