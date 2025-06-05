@@ -39,7 +39,7 @@ const TabsContainer: React.FC<TabsContainerProps> = ({
           Fade Leaderboard
         </h2>
         <p className="text-sm text-white/70 font-medium">
-          Worst Betters this past week
+          This Week's Worst Bettors
         </p>
       </div>
       
