@@ -61,15 +61,17 @@ const PublicGameItem = ({ game, rank }: PublicGameItemProps) => {
       </div>
       
       {/* Split Content with Separator */}
-      <div className="flex items-stretch h-24">
+      <div className="flex items-stretch h-28">
         {/* FadeZone Side */}
-        <div className="flex-1 flex flex-col justify-between pr-3">
-          <div className="text-[#AEE3F5] text-xl font-black text-center">
+        <div className="flex-1 flex flex-col pr-3">
+          <div className="text-[#AEE3F5] text-xl font-black text-center mb-2">
             FadeZone
           </div>
-          <div className="text-white/80 text-sm text-center leading-tight font-medium">
-            <span className="text-[#AEE3F5] font-bold">{Math.round(fadeZonePercentage)}%</span> on<br />
-            <span className="text-white font-semibold">{game.team} {game.spread}</span>
+          <div className="text-[#AEE3F5] text-2xl font-bold text-center mb-1">
+            {Math.round(fadeZonePercentage)}%
+          </div>
+          <div className="text-white/80 text-sm text-center font-medium">
+            are on {game.team} {game.spread}
           </div>
         </div>
         
@@ -79,13 +81,15 @@ const PublicGameItem = ({ game, rank }: PublicGameItemProps) => {
         </div>
         
         {/* Public Side */}
-        <div className="flex-1 flex flex-col justify-between pl-3">
-          <div className="text-red-400 text-xl font-black text-center">
+        <div className="flex-1 flex flex-col pl-3">
+          <div className="text-red-400 text-xl font-black text-center mb-2">
             Public
           </div>
-          <div className="text-white/80 text-sm text-center leading-tight font-medium">
-            <span className="text-red-400 font-bold">{game.publicPercentage}%</span> on<br />
-            <span className="text-white font-semibold">{game.team} {game.spread}</span>
+          <div className="text-red-400 text-2xl font-bold text-center mb-1">
+            {game.publicPercentage}%
+          </div>
+          <div className="text-white/80 text-sm text-center font-medium">
+            is on {game.team} {game.spread}
           </div>
         </div>
       </div>
