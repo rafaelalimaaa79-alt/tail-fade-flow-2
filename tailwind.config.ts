@@ -1,4 +1,3 @@
-
 import type { Config } from "tailwindcss";
 
 export default {
@@ -109,9 +108,9 @@ export default {
           '100%': { transform: 'scale(1)' },
         },
         'pulse-slow': {
-          '0%': { transform: 'scale(1)', fontSize: '1.875rem' },
-          '50%': { transform: 'scale(1.05)', fontSize: '2rem' },
-          '100%': { transform: 'scale(1)', fontSize: '1.875rem' },
+          '0%': { transform: 'scale(1)' },
+          '50%': { transform: 'scale(1.08)' },
+          '100%': { transform: 'scale(1)' },
         },
         'fingerprint-scan': {
           '0%': { opacity: '0.5', transform: 'scale(0.95)' },
