@@ -19,7 +19,7 @@ interface BetOfTheDayProps {
 
 const BetOfTheDay = ({ currentIndex, onIndexChange }: BetOfTheDayProps) => {
   const { animationPosition, activeLine } = useWaveAnimation({
-    totalDuration: 2000,
+    totalDuration: 4000,
     lineChangePoint: 0.5,
     pauseDuration: 200
   });
