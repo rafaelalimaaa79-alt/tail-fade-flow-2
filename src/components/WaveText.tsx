@@ -25,11 +25,22 @@ const WaveText: React.FC<WaveTextProps> = ({
   // Memorize the words to avoid re-splitting on every render
   const words = useMemo(() => text.split(' '), [text]);
   
-  // Calculate all word styles at once to improve performance
-  const wordStyles = useMemo(() => {
-    return words.map((word, index) => {
-      // Calculate position of this word in the text (as percentage of total width)
-      const wordPosition = words.length > 1 ? index / (words.length - 1) : 0;
+  // Calculate character positions for smooth animation
+  const { wordStyles, totalTextLength } = useMemo(() => {
+    let currentPosition = 0;
+    const textLength = text.length;
+    
+    const styles = words.map((word, index) => {
+      // Calculate the start and end character positions for this word
+      const wordStart = currentPosition;
+      const wordEnd = currentPosition + word.length;
+      const wordCenter = (wordStart + wordEnd) / 2;
+      
+      // Update position for next word (including space)
+      currentPosition = wordEnd + (index < words.length - 1 ? 1 : 0);
+      
+      // Calculate position of this word's center in the text (as percentage of total width)
+      const wordPosition = wordCenter / textLength;
       
       // Calculate distance from the wave position
       const distance = Math.abs(wordPosition - animationPosition);
@@ -69,7 +80,9 @@ const WaveText: React.FC<WaveTextProps> = ({
         zIndex: Math.round(influence * 10)
       };
     });
-  }, [words, lineIndex, activeLine, animationPosition, isFade, waveWidth, maxScale, maxGlow]);
+
+    return { wordStyles: styles, totalTextLength: textLength };
+  }, [words, text, lineIndex, activeLine, animationPosition, isFade, waveWidth, maxScale, maxGlow]);
 
   return (
     <>
