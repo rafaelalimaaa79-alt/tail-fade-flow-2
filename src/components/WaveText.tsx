@@ -24,10 +24,10 @@ const WaveText: React.FC<WaveTextProps> = ({
   
   return (
     <span 
-      className={`inline-block ${isPulsing ? 'animate-pulse' : ''}`}
+      className={`inline-block transition-all duration-500 ${isPulsing ? 'animate-pulse-neon' : ''}`}
       style={{
         color: '#AEE3F5', // Neon icy blue color
-        textShadow: '0 0 5px #AEE3F5', // Much lighter glow
+        textShadow: isPulsing ? '0 0 15px #AEE3F5, 0 0 25px #AEE3F5' : 'none',
         fontWeight: 'bold'
       }}
     >

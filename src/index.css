@@ -179,6 +179,11 @@
     animation: text-reveal 0.8s ease-out forwards;
   }
 
+  /* Custom neon pulse animation */
+  .animate-pulse-neon {
+    animation: pulse-neon 2s ease-in-out infinite;
+  }
+
   /* Seven-segment display font styling - updated to use icy blue */
   .seven-segment-font {
     font-family: 'Courier New', 'Lucida Console', 'Monaco', monospace;
@@ -258,6 +263,19 @@
   }
   100% {
     clip-path: inset(0 0 0 0);
+  }
+}
+
+/* Custom neon pulse animation */
+@keyframes pulse-neon {
+  0%, 100% {
+    text-shadow: none;
+  }
+  50% {
+    text-shadow: 
+      0 0 15px #AEE3F5,
+      0 0 25px #AEE3F5,
+      0 0 35px #AEE3F5;
   }
 }
 
