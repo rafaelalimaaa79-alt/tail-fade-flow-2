@@ -27,7 +27,7 @@ const WaveText: React.FC<WaveTextProps> = ({
       className={`inline-block ${isPulsing ? 'animate-pulse' : ''}`}
       style={{
         color: '#AEE3F5', // Neon icy blue color
-        textShadow: '0 0 10px #AEE3F5, 0 0 20px #AEE3F5, 0 0 30px #AEE3F5',
+        textShadow: '0 0 5px #AEE3F5', // Much lighter glow
         fontWeight: 'bold'
       }}
     >
