@@ -21,7 +21,7 @@ const Public = () => {
         </div>
         
         <div className="mb-6 text-center">
-          <h1 className="text-3xl font-bold text-[#AEE3F5] mb-2 drop-shadow-[0_0_8px_rgba(174,227,245,0.7)]">
+          <h1 className="text-3xl font-bold text-[#AEE3F5] mb-2 drop-shadow-[0_0_8px_rgba(174,227,245,0.7)] font-rajdhani">
             Fade the Public
           </h1>
           <p className="text-white/70 text-sm leading-relaxed">
