@@ -66,7 +66,7 @@ const BetOfTheDay = ({ currentIndex, onIndexChange }: BetOfTheDayProps) => {
         activeLine={activeLine}
         animationPosition={animationPosition}
         isFade={isFade}
-        waveWidth={0.4}
+        waveWidth={0.5} // Updated to use the new wider wave width
         maxScale={0.25}
         maxGlow={10}
       />

@@ -18,7 +18,7 @@ const WaveText: React.FC<WaveTextProps> = ({
   activeLine,
   animationPosition,
   isFade,
-  waveWidth = 0.35,
+  waveWidth = 0.5,  // Increased from 0.35 to 0.5 for wider wave spread
   maxScale = 0.3,
   maxGlow = 12,
 }) => {
@@ -60,7 +60,7 @@ const WaveText: React.FC<WaveTextProps> = ({
         display: 'inline-block',
         marginRight: '4px',
         transform: `scale(${scale})`,
-        transition: 'all 0.2s ease-out',
+        transition: 'all 0.05s ease-out', // Reduced from 0.2s to 0.05s for smoother animation
         color: isHighlighted ? baseColor : 'inherit',
         opacity: opacity,
         fontWeight: isHighlighted ? 'bold' : 'normal',
