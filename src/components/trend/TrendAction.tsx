@@ -34,7 +34,10 @@ const TrendAction = ({
         )}
       >
         <div className="text-center">
-          <div className="text-lg">{betDescription}</div>
+          <div className={cn(
+            "text-lg",
+            isMostVisible && "animate-pulse-slow" // Add pulsing to bet description
+          )}>{betDescription}</div>
         </div>
       </Button>
     </div>
