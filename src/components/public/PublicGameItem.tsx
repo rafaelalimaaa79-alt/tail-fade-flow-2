@@ -61,7 +61,7 @@ const PublicGameItem = ({ game, rank }: PublicGameItemProps) => {
     <div className="relative bg-gradient-to-r from-white/5 to-white/10 border border-white/20 rounded-xl overflow-hidden hover:from-white/10 hover:to-white/15 transition-all duration-300 hover:border-white/30 hover:shadow-lg hover:shadow-white/5 max-w-xs mx-auto">
       {/* Header with Game - Centered */}
       <div className="flex justify-center items-center px-4 py-3 bg-black/20 border-b border-white/10">
-        <div className="text-white font-bold text-lg text-center">
+        <div className="text-white font-black text-xl text-center uppercase tracking-widest font-mono drop-shadow-[0_0_8px_rgba(255,255,255,0.3)] bg-gradient-to-r from-white via-white/90 to-white bg-clip-text">
           {game.team} vs {game.opponent}
         </div>
       </div>
