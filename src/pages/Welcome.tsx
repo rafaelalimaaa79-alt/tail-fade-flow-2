@@ -1,7 +1,7 @@
 
 import React from "react";
 import { useNavigate } from "react-router-dom";
-import { Eye, Snowflake, ThumbsDown } from "lucide-react";
+import { Eye, Snowflake, ThumbsDown, ArrowRight } from "lucide-react";
 import { Button } from "@/components/ui/button";
 
 const Welcome = () => {
@@ -23,9 +23,10 @@ const Welcome = () => {
         </p>
       </div>
 
-      {/* 3-Step Explanation - Compact */}
-      <div className="grid grid-cols-1 gap-6 max-w-sm mx-auto">
-        <div className="text-center">
+      {/* 3-Step Explanation - Horizontal Flow */}
+      <div className="flex items-center justify-center max-w-4xl mx-auto">
+        {/* Step 1 */}
+        <div className="text-center flex-1 max-w-xs">
           <div className="w-12 h-12 mx-auto mb-3 rounded-full bg-blue-50 flex items-center justify-center">
             <Eye className="w-6 h-6 text-blue-600" />
           </div>
@@ -35,7 +36,13 @@ const Welcome = () => {
           </p>
         </div>
 
-        <div className="text-center">
+        {/* Arrow 1 */}
+        <div className="mx-4 text-gray-400">
+          <ArrowRight className="w-6 h-6" />
+        </div>
+
+        {/* Step 2 */}
+        <div className="text-center flex-1 max-w-xs">
           <div className="w-12 h-12 mx-auto mb-3 rounded-full bg-blue-50 flex items-center justify-center">
             <Snowflake className="w-6 h-6 text-blue-600" />
           </div>
@@ -45,7 +52,13 @@ const Welcome = () => {
           </p>
         </div>
 
-        <div className="text-center">
+        {/* Arrow 2 */}
+        <div className="mx-4 text-gray-400">
+          <ArrowRight className="w-6 h-6" />
+        </div>
+
+        {/* Step 3 */}
+        <div className="text-center flex-1 max-w-xs">
           <div className="w-12 h-12 mx-auto mb-3 rounded-full bg-blue-50 flex items-center justify-center">
             <ThumbsDown className="w-6 h-6 text-blue-600" />
           </div>
