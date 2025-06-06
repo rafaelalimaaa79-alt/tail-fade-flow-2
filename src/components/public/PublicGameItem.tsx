@@ -107,7 +107,7 @@ const PublicGameItem = ({ game, rank }: PublicGameItemProps) => {
           onClick={handleFade}
           className="h-10 text-base"
         >
-          Fade the Public
+          Fade {game.team} {game.spread}
         </ActionButton>
       </div>
       
