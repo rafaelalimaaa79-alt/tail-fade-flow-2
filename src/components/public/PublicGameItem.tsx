@@ -1,3 +1,4 @@
+
 import React from "react";
 import { Separator } from "@/components/ui/separator";
 
@@ -46,7 +47,7 @@ const PublicGameItem = ({ game, rank }: PublicGameItemProps) => {
 
   // FadeZone percentage - keeping it within 70-95% range
   const fadeZonePercentage = Math.max(70, Math.min(95, 
-    100 - game.publicPercentage + (Math.random() - 0.5) * 10
+    100 - game.publicPercentage + (Math.random() - 0.5) * 8
   ));
 
   return (
@@ -64,7 +65,7 @@ const PublicGameItem = ({ game, rank }: PublicGameItemProps) => {
       {/* Split Content with Separator */}
       <div className="flex items-stretch">
         {/* FadeZone Side */}
-        <div className="flex-1 flex flex-col items-center justify-center px-4 py-6 space-y-2">
+        <div className="flex-1 flex flex-col items-center justify-center px-4 py-3 space-y-2">
           <div className="text-[#AEE3F5] text-lg font-black uppercase tracking-wide">
             FadeZone
           </div>
@@ -82,7 +83,7 @@ const PublicGameItem = ({ game, rank }: PublicGameItemProps) => {
         </div>
         
         {/* Public Side */}
-        <div className="flex-1 flex flex-col items-center justify-center px-4 py-6 space-y-2">
+        <div className="flex-1 flex flex-col items-center justify-center px-4 py-3 space-y-2">
           <div className="text-red-400 text-lg font-black uppercase tracking-wide">
             Public
           </div>
