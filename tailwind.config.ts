@@ -109,9 +109,9 @@ export default {
           '100%': { transform: 'scale(1)' },
         },
         'pulse-slow': {
-          '0%': { transform: 'scale(1)' },
-          '50%': { transform: 'scale(1.02)' },
-          '100%': { transform: 'scale(1)' },
+          '0%': { transform: 'scale(1)', fontSize: '1.875rem' },
+          '50%': { transform: 'scale(1.05)', fontSize: '2rem' },
+          '100%': { transform: 'scale(1)', fontSize: '1.875rem' },
         },
         'fingerprint-scan': {
           '0%': { opacity: '0.5', transform: 'scale(0.95)' },
@@ -155,7 +155,7 @@ export default {
 				'accordion-down': 'accordion-down 0.2s ease-out',
 				'accordion-up': 'accordion-up 0.2s ease-out',
         'pulse-heartbeat': 'pulse-heartbeat 8s ease-in-out infinite',
-        'pulse-slow': 'pulse-slow 3s ease-in-out infinite',
+        'pulse-slow': 'pulse-slow 1.5s ease-in-out infinite',
         'fingerprint-scan': 'fingerprint-scan 2s ease-in-out infinite',
         'glow-pulse': 'glow-pulse 2s ease-in-out infinite',
         'glow-pulse-purple': 'glow-pulse-purple 2s infinite ease-in-out',
