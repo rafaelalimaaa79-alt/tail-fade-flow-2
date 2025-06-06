@@ -3,7 +3,6 @@ import React from "react";
 import { useNavigate } from "react-router-dom";
 import { Eye, Snowflake, ThumbsDown } from "lucide-react";
 import { Button } from "@/components/ui/button";
-import { Card } from "@/components/ui/card";
 
 const Welcome = () => {
   const navigate = useNavigate();
@@ -13,77 +12,62 @@ const Welcome = () => {
   };
 
   return (
-    <div className="min-h-screen bg-background text-foreground overflow-hidden relative">
-      {/* Animated iceberg background */}
-      <div className="absolute inset-0 bg-gradient-to-br from-slate-900 via-blue-900/20 to-slate-900">
-        <div className="absolute inset-0 opacity-10">
-          <div className="absolute top-20 left-1/2 transform -translate-x-1/2 w-96 h-96 bg-gradient-to-br from-blue-400/30 to-cyan-300/20 rounded-full blur-3xl animate-pulse-slow"></div>
-          <div className="absolute bottom-20 left-1/4 w-64 h-64 bg-gradient-to-tr from-teal-400/20 to-blue-400/30 rounded-full blur-2xl animate-pulse-slow" style={{ animationDelay: '1s' }}></div>
-          <div className="absolute top-1/2 right-1/4 w-48 h-48 bg-gradient-to-bl from-cyan-400/25 to-blue-500/20 rounded-full blur-xl animate-pulse-slow" style={{ animationDelay: '2s' }}></div>
-        </div>
-      </div>
-
-      <div className="relative z-10 flex flex-col items-center justify-center min-h-screen px-6 py-12">
+    <div className="min-h-screen bg-white text-gray-900 overflow-hidden">
+      <div className="max-w-4xl mx-auto px-8 py-16">
         {/* Hero Section */}
-        <div className="text-center mb-16 animate-fade-in">
-          <h1 className="text-6xl md:text-7xl font-bold mb-6 bg-gradient-to-r from-blue-400 via-cyan-300 to-blue-400 bg-clip-text text-transparent animate-shimmer bg-[length:200%_auto]">
+        <div className="text-center mb-32">
+          <h1 className="text-6xl md:text-7xl font-bold mb-8 tracking-tight text-gray-900">
             Welcome to Fadezone
           </h1>
-          <p className="text-xl md:text-2xl text-gray-300 max-w-2xl mx-auto leading-relaxed">
+          <p className="text-xl md:text-2xl text-gray-600 max-w-2xl mx-auto leading-relaxed font-medium">
             Profit by fading the coldest bettors on the planet.
           </p>
         </div>
 
         {/* 3-Step Explanation */}
-        <div className="grid grid-cols-1 md:grid-cols-3 gap-8 mb-16 max-w-4xl mx-auto">
-          <Card className="p-8 bg-card/50 backdrop-blur-sm border-white/10 hover:border-blue-400/50 transition-all duration-300 hover:scale-105 hover:shadow-xl hover:shadow-blue-400/20 animate-fade-in" style={{ animationDelay: '0.2s' }}>
-            <div className="text-center">
-              <div className="w-16 h-16 mx-auto mb-4 rounded-full bg-blue-500/20 flex items-center justify-center">
-                <Eye className="w-8 h-8 text-blue-400" />
-              </div>
-              <h3 className="text-xl font-bold mb-3 text-white">We Track Bettors</h3>
-              <p className="text-gray-400 leading-relaxed">
-                We monitor anonymous bettors across the app and their betting patterns
-              </p>
+        <div className="grid grid-cols-1 md:grid-cols-3 gap-16 mb-32">
+          <div className="text-center group">
+            <div className="w-16 h-16 mx-auto mb-6 rounded-full bg-blue-50 flex items-center justify-center group-hover:bg-blue-100 transition-colors duration-300">
+              <Eye className="w-8 h-8 text-blue-600" />
             </div>
-          </Card>
+            <h3 className="text-xl font-semibold mb-4 text-gray-900">Track anonymous bettors</h3>
+            <p className="text-gray-600 leading-relaxed">
+              We monitor betting patterns across the platform
+            </p>
+          </div>
 
-          <Card className="p-8 bg-card/50 backdrop-blur-sm border-white/10 hover:border-cyan-400/50 transition-all duration-300 hover:scale-105 hover:shadow-xl hover:shadow-cyan-400/20 animate-fade-in" style={{ animationDelay: '0.4s' }}>
-            <div className="text-center">
-              <div className="w-16 h-16 mx-auto mb-4 rounded-full bg-cyan-500/20 flex items-center justify-center">
-                <Snowflake className="w-8 h-8 text-cyan-400" />
-              </div>
-              <h3 className="text-xl font-bold mb-3 text-white">Identify Ice Cold</h3>
-              <p className="text-gray-400 leading-relaxed">
-                We identify who's ice cold - the bettors losing the most units consistently
-              </p>
+          <div className="text-center group">
+            <div className="w-16 h-16 mx-auto mb-6 rounded-full bg-blue-50 flex items-center justify-center group-hover:bg-blue-100 transition-colors duration-300">
+              <Snowflake className="w-8 h-8 text-blue-600" />
             </div>
-          </Card>
+            <h3 className="text-xl font-semibold mb-4 text-gray-900">Identify the coldest</h3>
+            <p className="text-gray-600 leading-relaxed">
+              Find bettors consistently losing the most units
+            </p>
+          </div>
 
-          <Card className="p-8 bg-card/50 backdrop-blur-sm border-white/10 hover:border-red-400/50 transition-all duration-300 hover:scale-105 hover:shadow-xl hover:shadow-red-400/20 animate-fade-in" style={{ animationDelay: '0.6s' }}>
-            <div className="text-center">
-              <div className="w-16 h-16 mx-auto mb-4 rounded-full bg-red-500/20 flex items-center justify-center">
-                <ThumbsDown className="w-8 h-8 text-red-400" />
-              </div>
-              <h3 className="text-xl font-bold mb-3 text-white">You Fade Them</h3>
-              <p className="text-gray-400 leading-relaxed">
-                You fade their bets. That's it. Simple, data-driven contrarian betting.
-              </p>
+          <div className="text-center group">
+            <div className="w-16 h-16 mx-auto mb-6 rounded-full bg-blue-50 flex items-center justify-center group-hover:bg-blue-100 transition-colors duration-300">
+              <ThumbsDown className="w-8 h-8 text-blue-600" />
             </div>
-          </Card>
+            <h3 className="text-xl font-semibold mb-4 text-gray-900">Fade their bets</h3>
+            <p className="text-gray-600 leading-relaxed">
+              Simple, data-driven contrarian betting
+            </p>
+          </div>
         </div>
 
-        {/* Value Prop */}
-        <div className="text-center mb-12 animate-fade-in" style={{ animationDelay: '0.8s' }}>
-          <p className="text-2xl font-bold text-white mb-2">No picks. No touts. Just data.</p>
-          <p className="text-lg text-gray-400">Cold bettors make the market. You ride the other side.</p>
+        {/* Value Proposition */}
+        <div className="text-center mb-20">
+          <p className="text-2xl font-medium text-gray-900 mb-4">No picks. No touts. Just data.</p>
+          <p className="text-lg text-gray-500">Cold bettors make the market. You ride the other side.</p>
         </div>
 
         {/* CTA Button */}
-        <div className="animate-fade-in" style={{ animationDelay: '1s' }}>
+        <div className="text-center">
           <Button
             onClick={handleStartFading}
-            className="px-12 py-6 text-xl font-bold bg-gradient-to-r from-blue-600 to-cyan-600 hover:from-blue-500 hover:to-cyan-500 text-white border-0 rounded-xl shadow-2xl hover:shadow-blue-500/50 transition-all duration-300 hover:scale-105 animate-glow-pulse"
+            className="px-12 py-6 text-lg font-semibold bg-blue-600 hover:bg-blue-700 text-white rounded-lg shadow-sm hover:shadow-md transition-all duration-200 hover:scale-[1.02]"
           >
             Start Fading
           </Button>
