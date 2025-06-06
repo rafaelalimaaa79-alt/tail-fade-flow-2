@@ -12,66 +12,61 @@ const Welcome = () => {
   };
 
   return (
-    <div className="min-h-screen bg-white text-gray-900 overflow-hidden">
-      <div className="max-w-4xl mx-auto px-8 py-16">
-        {/* Hero Section */}
-        <div className="text-center mb-32">
-          <h1 className="text-6xl md:text-7xl font-bold mb-8 tracking-tight text-gray-900">
-            Welcome to Fadezone
-          </h1>
-          <p className="text-xl md:text-2xl text-gray-600 max-w-2xl mx-auto leading-relaxed font-medium">
-            Profit by fading the coldest bettors on the planet.
+    <div className="min-h-screen bg-white text-gray-900 overflow-hidden flex flex-col justify-between px-6 py-8">
+      {/* Hero Section - Compact */}
+      <div className="text-center">
+        <h1 className="text-4xl md:text-6xl font-bold mb-4 tracking-tight text-gray-900">
+          Welcome to Fadezone
+        </h1>
+        <p className="text-lg md:text-xl text-gray-600 max-w-lg mx-auto leading-relaxed font-medium">
+          Profit by fading the coldest bettors on the planet.
+        </p>
+      </div>
+
+      {/* 3-Step Explanation - Compact */}
+      <div className="grid grid-cols-1 gap-6 max-w-sm mx-auto">
+        <div className="text-center">
+          <div className="w-12 h-12 mx-auto mb-3 rounded-full bg-blue-50 flex items-center justify-center">
+            <Eye className="w-6 h-6 text-blue-600" />
+          </div>
+          <h3 className="text-base font-semibold mb-2 text-gray-900">Track anonymous bettors</h3>
+          <p className="text-sm text-gray-600">
+            We monitor betting patterns across the platform
           </p>
         </div>
 
-        {/* 3-Step Explanation */}
-        <div className="grid grid-cols-1 md:grid-cols-3 gap-16 mb-32">
-          <div className="text-center group">
-            <div className="w-16 h-16 mx-auto mb-6 rounded-full bg-blue-50 flex items-center justify-center group-hover:bg-blue-100 transition-colors duration-300">
-              <Eye className="w-8 h-8 text-blue-600" />
-            </div>
-            <h3 className="text-xl font-semibold mb-4 text-gray-900">Track anonymous bettors</h3>
-            <p className="text-gray-600 leading-relaxed">
-              We monitor betting patterns across the platform
-            </p>
-          </div>
-
-          <div className="text-center group">
-            <div className="w-16 h-16 mx-auto mb-6 rounded-full bg-blue-50 flex items-center justify-center group-hover:bg-blue-100 transition-colors duration-300">
-              <Snowflake className="w-8 h-8 text-blue-600" />
-            </div>
-            <h3 className="text-xl font-semibold mb-4 text-gray-900">Identify the coldest</h3>
-            <p className="text-gray-600 leading-relaxed">
-              Find bettors consistently losing the most units
-            </p>
-          </div>
-
-          <div className="text-center group">
-            <div className="w-16 h-16 mx-auto mb-6 rounded-full bg-blue-50 flex items-center justify-center group-hover:bg-blue-100 transition-colors duration-300">
-              <ThumbsDown className="w-8 h-8 text-blue-600" />
-            </div>
-            <h3 className="text-xl font-semibold mb-4 text-gray-900">Fade their bets</h3>
-            <p className="text-gray-600 leading-relaxed">
-              Simple, data-driven contrarian betting
-            </p>
-          </div>
-        </div>
-
-        {/* Value Proposition */}
-        <div className="text-center mb-20">
-          <p className="text-2xl font-medium text-gray-900 mb-4">No picks. No touts. Just data.</p>
-          <p className="text-lg text-gray-500">Cold bettors make the market. You ride the other side.</p>
-        </div>
-
-        {/* CTA Button */}
         <div className="text-center">
-          <Button
-            onClick={handleStartFading}
-            className="px-12 py-6 text-lg font-semibold bg-blue-600 hover:bg-blue-700 text-white rounded-lg shadow-sm hover:shadow-md transition-all duration-200 hover:scale-[1.02]"
-          >
-            Start Fading
-          </Button>
+          <div className="w-12 h-12 mx-auto mb-3 rounded-full bg-blue-50 flex items-center justify-center">
+            <Snowflake className="w-6 h-6 text-blue-600" />
+          </div>
+          <h3 className="text-base font-semibold mb-2 text-gray-900">Identify the coldest</h3>
+          <p className="text-sm text-gray-600">
+            Find bettors consistently losing the most units
+          </p>
         </div>
+
+        <div className="text-center">
+          <div className="w-12 h-12 mx-auto mb-3 rounded-full bg-blue-50 flex items-center justify-center">
+            <ThumbsDown className="w-6 h-6 text-blue-600" />
+          </div>
+          <h3 className="text-base font-semibold mb-2 text-gray-900">Fade their bets</h3>
+          <p className="text-sm text-gray-600">
+            Simple, data-driven contrarian betting
+          </p>
+        </div>
+      </div>
+
+      {/* Value Proposition & CTA - Compact */}
+      <div className="text-center">
+        <p className="text-lg font-medium text-gray-900 mb-2">No picks. No touts. Just data.</p>
+        <p className="text-sm text-gray-500 mb-6">Cold bettors make the market. You ride the other side.</p>
+        
+        <Button
+          onClick={handleStartFading}
+          className="px-8 py-3 text-base font-semibold bg-blue-600 hover:bg-blue-700 text-white rounded-lg shadow-sm hover:shadow-md transition-all duration-200"
+        >
+          Start Fading
+        </Button>
       </div>
     </div>
   );
