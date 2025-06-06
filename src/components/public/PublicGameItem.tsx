@@ -1,5 +1,8 @@
+
 import React from "react";
 import { Separator } from "@/components/ui/separator";
+import ActionButton from "@/components/ActionButton";
+import { showFadeNotification } from "@/utils/betting-notifications";
 
 interface PublicGame {
   id: string;
@@ -49,6 +52,11 @@ const PublicGameItem = ({ game, rank }: PublicGameItemProps) => {
     100 - game.publicPercentage + (Math.random() - 0.5) * 8
   ));
 
+  const handleFade = () => {
+    const betDescription = `${game.team} ${game.spread}`;
+    showFadeNotification("Public Fade", betDescription);
+  };
+
   return (
     <div className="relative bg-gradient-to-r from-white/5 to-white/10 border border-white/20 rounded-xl overflow-hidden hover:from-white/10 hover:to-white/15 transition-all duration-300 hover:border-white/30 hover:shadow-lg hover:shadow-white/5 max-w-xs mx-auto">
       {/* Header with Game - Centered */}
@@ -61,7 +69,7 @@ const PublicGameItem = ({ game, rank }: PublicGameItemProps) => {
       {/* Split Content with Separator */}
       <div className="flex items-stretch">
         {/* FadeZone Side */}
-        <div className="flex-1 flex flex-col items-center justify-center px-4 py-3 space-y-2">
+        <div className="flex-1 flex flex-col items-center justify-center px-4 py-2 space-y-2">
           <div className="text-[#AEE3F5] text-lg font-black uppercase tracking-wide">
             FadeZone
           </div>
@@ -79,7 +87,7 @@ const PublicGameItem = ({ game, rank }: PublicGameItemProps) => {
         </div>
         
         {/* Public Side */}
-        <div className="flex-1 flex flex-col items-center justify-center px-4 py-3 space-y-2">
+        <div className="flex-1 flex flex-col items-center justify-center px-4 py-2 space-y-2">
           <div className="text-red-400 text-lg font-black uppercase tracking-wide">
             Public
           </div>
@@ -90,6 +98,17 @@ const PublicGameItem = ({ game, rank }: PublicGameItemProps) => {
             of Public bettors are on <span className="text-white font-semibold">{game.team} {game.spread}</span>
           </div>
         </div>
+      </div>
+      
+      {/* Fade Button */}
+      <div className="px-4 py-3 border-t border-white/10">
+        <ActionButton 
+          variant="fade" 
+          onClick={handleFade}
+          className="h-10 text-base"
+        >
+          Fade the Public
+        </ActionButton>
       </div>
       
       {/* Bottom Glow Effect */}
