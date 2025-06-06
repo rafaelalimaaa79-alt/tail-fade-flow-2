@@ -18,45 +18,34 @@ const WaveText: React.FC<WaveTextProps> = ({
   activeLine,
   animationPosition,
   isFade,
-  waveWidth = 0.5,  // Increased from 0.35 to 0.5 for wider wave spread
+  waveWidth = 0.3,  // Wave width for smooth transition
   maxScale = 0.3,
   maxGlow = 12,
 }) => {
   // Memorize the words to avoid re-splitting on every render
   const words = useMemo(() => text.split(' '), [text]);
   
-  // Calculate character positions for smooth animation
-  const { wordStyles, totalTextLength } = useMemo(() => {
-    let currentPosition = 0;
-    const textLength = text.length;
-    
-    const styles = words.map((word, index) => {
-      // Calculate the start and end character positions for this word
-      const wordStart = currentPosition;
-      const wordEnd = currentPosition + word.length;
-      const wordCenter = (wordStart + wordEnd) / 2;
+  // Calculate word styles based on simple position sweep
+  const wordStyles = useMemo(() => {
+    return words.map((word, wordIndex) => {
+      // Calculate this word's position as a percentage across the line (0 to 1)
+      const wordPosition = words.length > 1 ? wordIndex / (words.length - 1) : 0;
       
-      // Update position for next word (including space)
-      currentPosition = wordEnd + (index < words.length - 1 ? 1 : 0);
-      
-      // Calculate position of this word's center in the text (as percentage of total width)
-      const wordPosition = wordCenter / textLength;
-      
-      // Calculate distance from the wave position
+      // Calculate distance from the current animation position
       const distance = Math.abs(wordPosition - animationPosition);
       
-      // Calculate influence factor (0 to 1) based on distance from wave center
+      // Calculate influence factor based on distance from wave center
       let influence = Math.max(0, 1 - (distance / waveWidth));
       
-      // Apply a smoother curve for a more natural wave
+      // Apply smooth curve for natural wave effect
       influence = Math.pow(influence, 1.5);
       
-      // Only apply effect to current line
+      // Only apply effect to current active line
       if (lineIndex !== activeLine) {
         influence = 0;
       }
       
-      // Scale and glow effects based on influence
+      // Calculate effects based on influence
       const scale = 1 + (influence * maxScale);
       const glow = Math.round(influence * maxGlow);
       const opacity = 0.7 + (influence * 0.3);
@@ -71,7 +60,7 @@ const WaveText: React.FC<WaveTextProps> = ({
         display: 'inline-block',
         marginRight: '4px',
         transform: `scale(${scale})`,
-        transition: 'all 0.05s ease-out', // Reduced from 0.2s to 0.05s for smoother animation
+        transition: 'transform 0.1s ease-out', // Fast transition for smooth movement
         color: isHighlighted ? baseColor : 'inherit',
         opacity: opacity,
         fontWeight: isHighlighted ? 'bold' : 'normal',
@@ -80,9 +69,7 @@ const WaveText: React.FC<WaveTextProps> = ({
         zIndex: Math.round(influence * 10)
       };
     });
-
-    return { wordStyles: styles, totalTextLength: textLength };
-  }, [words, text, lineIndex, activeLine, animationPosition, isFade, waveWidth, maxScale, maxGlow]);
+  }, [words, lineIndex, activeLine, animationPosition, isFade, waveWidth, maxScale, maxGlow]);
 
   return (
     <>

@@ -8,7 +8,7 @@ interface WaveAnimationOptions {
 }
 
 const useWaveAnimation = ({
-  totalDuration = 4000, // Keep the current 4 second duration
+  totalDuration = 4000, // 2 seconds per line = 4 seconds total
   lineChangePoint = 0.5,
   pauseDuration = 200
 }: WaveAnimationOptions = {}) => {
@@ -22,7 +22,7 @@ const useWaveAnimation = ({
   const animate = useCallback((timestamp: number) => {
     if (!startTimeRef.current) startTimeRef.current = timestamp;
     
-    // Throttle updates to ~60fps for smoother performance
+    // Throttle updates for smoother performance
     if (timestamp - lastUpdateRef.current < 16) {
       animationRef.current = requestAnimationFrame(animate);
       return;
@@ -31,25 +31,20 @@ const useWaveAnimation = ({
     
     const elapsed = timestamp - startTimeRef.current;
     
-    // Calculate total progress (0 to 1) with smoother easing
+    // Calculate total progress (0 to 1)
     const totalProgress = Math.min(elapsed / totalDuration, 1);
     
-    // Apply smooth easing function for more natural movement
-    const easeInOutQuart = (t: number) => {
-      return t < 0.5 ? 8 * t * t * t * t : 1 - Math.pow(-2 * t + 2, 4) / 2;
-    };
-    
-    // Calculate wave position (0 to 1, then 0 to 1 again)
+    // Linear movement for constant speed across each line
     if (totalProgress < lineChangePoint) {
-      // First line animation
+      // First line: 2 seconds (0 to 0.5 of total time)
       setActiveLine(0);
-      const lineProgress = totalProgress / lineChangePoint;
-      setAnimationPosition(easeInOutQuart(lineProgress));
+      const lineProgress = totalProgress / lineChangePoint; // 0 to 1
+      setAnimationPosition(lineProgress); // Linear sweep from 0 to 1
     } else {
-      // Second line animation
+      // Second line: 2 seconds (0.5 to 1.0 of total time)
       setActiveLine(1);
-      const lineProgress = (totalProgress - lineChangePoint) / (1 - lineChangePoint);
-      setAnimationPosition(easeInOutQuart(lineProgress));
+      const lineProgress = (totalProgress - lineChangePoint) / (1 - lineChangePoint); // 0 to 1
+      setAnimationPosition(lineProgress); // Linear sweep from 0 to 1
     }
     
     // Continue animation if not complete
