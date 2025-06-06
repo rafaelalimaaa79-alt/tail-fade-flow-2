@@ -63,7 +63,7 @@ const PublicGameItem = ({ game, rank }: PublicGameItemProps) => {
     <PublicGameVisibilityWrapper>
       {(isVisible, isMostVisible) => (
         <div className={cn(
-          "relative bg-gradient-to-r from-white/5 to-white/10 border border-white/20 rounded-xl overflow-hidden hover:from-white/10 hover:to-white/15 transition-all duration-300 hover:border-white/30 hover:shadow-lg hover:shadow-white/5 max-w-xs mx-auto",
+          "relative bg-gradient-to-r from-white/5 to-white/10 border-2 border-[#AEE3F5]/30 rounded-xl overflow-hidden hover:from-white/10 hover:to-white/15 transition-all duration-300 hover:border-[#AEE3F5]/50 hover:shadow-lg hover:shadow-[#AEE3F5]/10 max-w-xs mx-auto",
           !isMostVisible && "grayscale opacity-50"
         )}>
           {/* Header with Game - Centered */}
