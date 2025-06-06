@@ -1,4 +1,3 @@
-
 @tailwind base;
 @tailwind components;
 @tailwind utilities;
@@ -179,9 +178,9 @@
     animation: text-reveal 0.8s ease-out forwards;
   }
 
-  /* Custom neon pulse animation */
-  .animate-pulse-neon {
-    animation: pulse-neon 2s ease-in-out infinite;
+  /* Custom neon pulse animation - clean version without glow */
+  .animate-pulse-neon-clean {
+    animation: pulse-neon-clean 2s ease-in-out infinite;
   }
 
   /* Seven-segment display font styling - updated to use icy blue */
@@ -266,16 +265,13 @@
   }
 }
 
-/* Custom neon pulse animation */
-@keyframes pulse-neon {
+/* Clean neon pulse animation - no glow, just color intensity */
+@keyframes pulse-neon-clean {
   0%, 100% {
-    text-shadow: none;
+    color: #AEE3F5;
   }
   50% {
-    text-shadow: 
-      0 0 15px #AEE3F5,
-      0 0 25px #AEE3F5,
-      0 0 35px #AEE3F5;
+    color: #FFFFFF;
   }
 }
 
