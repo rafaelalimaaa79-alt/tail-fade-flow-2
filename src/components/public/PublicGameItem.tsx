@@ -1,4 +1,3 @@
-
 import React from "react";
 import { Separator } from "@/components/ui/separator";
 
@@ -52,13 +51,10 @@ const PublicGameItem = ({ game, rank }: PublicGameItemProps) => {
 
   return (
     <div className="relative bg-gradient-to-r from-white/5 to-white/10 border border-white/20 rounded-xl overflow-hidden hover:from-white/10 hover:to-white/15 transition-all duration-300 hover:border-white/30 hover:shadow-lg hover:shadow-white/5 max-w-xs mx-auto">
-      {/* Header with Game and Time */}
-      <div className="flex justify-between items-center px-4 py-3 bg-black/20 border-b border-white/10">
-        <div className="text-white font-bold text-lg">
+      {/* Header with Game - Centered */}
+      <div className="flex justify-center items-center px-4 py-3 bg-black/20 border-b border-white/10">
+        <div className="text-white font-bold text-lg text-center">
           {game.team} vs {game.opponent}
-        </div>
-        <div>
-          {getTimeInEST()}
         </div>
       </div>
       
