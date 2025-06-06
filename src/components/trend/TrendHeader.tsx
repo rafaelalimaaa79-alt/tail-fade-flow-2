@@ -21,11 +21,11 @@ const TrendHeader = ({
   return (
     <div className="mb-2 border-b border-white/10 pb-2">
       <div className="flex items-center justify-between">
-        {/* Score percentage - left side with larger styling and pulsing */}
+        {/* Score percentage - left side with larger styling */}
         <div className={cn(
           "rounded-full bg-black/50 px-3 py-2 text-base font-bold backdrop-blur-sm border border-white/20 transition-colors duration-300",
           isMostVisible 
-            ? "text-[#AEE3F5] animate-pulse-slow"
+            ? "text-[#AEE3F5]"
             : "text-gray-400"
         )}
         style={{

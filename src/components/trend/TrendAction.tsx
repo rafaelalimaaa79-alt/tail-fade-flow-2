@@ -1,4 +1,3 @@
-
 import React from "react";
 import { Button } from "@/components/ui/button";
 import { cn } from "@/lib/utils";
@@ -34,10 +33,7 @@ const TrendAction = ({
         )}
       >
         <div className="text-center">
-          <div className={cn(
-            "text-lg",
-            isMostVisible && "animate-pulse-slow" // Add pulsing to bet description
-          )}>{betDescription}</div>
+          <div className="text-lg">{betDescription}</div>
         </div>
       </Button>
     </div>
