@@ -1,4 +1,3 @@
-
 import React from "react";
 import { cn } from "@/lib/utils";
 
@@ -77,17 +76,17 @@ const TrendStats = ({
   
   return (
     <div className="flex flex-col justify-center items-center space-y-2 mb-2">
-      {/* Record info (in bold) - always display in the same format */}
+      {/* Record info (in bold) - increased font size */}
       <p className={cn(
-        "font-extrabold text-base transition-colors duration-300",
+        "font-extrabold text-lg transition-colors duration-300",
         isMostVisible ? "text-white" : "text-gray-400"
       )}>
         {wins}-{losses} record with {betType} bets
       </p>
       
-      {/* Dynamic status line - now using same styling as first line */}
+      {/* Dynamic status line - made smaller and italic */}
       <p className={cn(
-        "font-extrabold text-base text-center px-2 transition-colors duration-300",
+        "font-medium text-sm italic text-center px-2 transition-colors duration-300",
         isMostVisible ? "text-white" : "text-gray-400"
       )}>
         @{bettorName} — {statusLine}
