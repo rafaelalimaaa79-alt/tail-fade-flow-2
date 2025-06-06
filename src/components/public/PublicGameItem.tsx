@@ -68,7 +68,7 @@ const PublicGameItem = ({ game, rank }: PublicGameItemProps) => {
         )}>
           {/* Header with Game - Centered */}
           <div className="flex justify-center items-center px-4 py-3 bg-black/20 border-b border-white/10">
-            <div className="text-white font-black text-base text-center uppercase tracking-widest font-mono drop-shadow-[0_0_8px_rgba(255,255,255,0.3)] bg-gradient-to-r from-white via-white/90 to-white bg-clip-text">
+            <div className="text-white font-bold text-sm text-center uppercase tracking-wide font-mono drop-shadow-[0_0_8px_rgba(255,255,255,0.3)] bg-gradient-to-r from-white via-white/90 to-white bg-clip-text">
               {game.team} vs {game.opponent}
             </div>
           </div>
@@ -80,7 +80,7 @@ const PublicGameItem = ({ game, rank }: PublicGameItemProps) => {
               <div className="text-[#AEE3F5] text-lg font-black uppercase tracking-wide">
                 FadeZone
               </div>
-              <div className="text-[#AEE3F5] text-3xl font-bold">
+              <div className="text-[#AEE3F5] text-3xl font-bold animate-pulse-slow">
                 {Math.round(fadeZonePercentage)}%
               </div>
               <div className="text-white/80 text-sm text-center font-medium leading-relaxed">
@@ -98,7 +98,7 @@ const PublicGameItem = ({ game, rank }: PublicGameItemProps) => {
               <div className="text-red-400 text-lg font-black uppercase tracking-wide">
                 Public
               </div>
-              <div className="text-red-400 text-3xl font-bold">
+              <div className="text-red-400 text-3xl font-bold animate-pulse-slow">
                 {game.publicPercentage}%
               </div>
               <div className="text-white/80 text-sm text-center font-medium leading-relaxed">
