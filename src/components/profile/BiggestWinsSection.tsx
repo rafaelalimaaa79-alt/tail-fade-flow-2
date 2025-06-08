@@ -58,9 +58,9 @@ const BiggestWinsSection: React.FC<BiggestWinsSectionProps> = ({ wins }) => {
       
       {wins.length > 0 ? (
         <Tabs defaultValue="losses" className="mt-2">
-          <TabsList className="grid w-full grid-cols-2 bg-black/50">
-            <TabsTrigger value="losses">Largest Losses this Month</TabsTrigger>
-            <TabsTrigger value="bets">Biggest Bets</TabsTrigger>
+          <TabsList className="grid w-full grid-cols-2 bg-gray-800/50 rounded-full p-1 border border-white/10">
+            <TabsTrigger value="losses" className="rounded-full">Largest Losses this Month</TabsTrigger>
+            <TabsTrigger value="bets" className="rounded-full">Biggest Bets</TabsTrigger>
           </TabsList>
           <TabsContent value="losses">
             {renderBetList(wins)}
