@@ -1,3 +1,4 @@
+
 @tailwind base;
 @tailwind components;
 @tailwind utilities;
@@ -265,13 +266,13 @@
   }
 }
 
-/* Clean neon pulse animation - no glow, just color intensity */
+/* Clean neon pulse animation - stays icy blue, only changes opacity */
 @keyframes pulse-neon-clean {
   0%, 100% {
-    color: #AEE3F5;
+    opacity: 1;
   }
   50% {
-    color: #FFFFFF;
+    opacity: 0.7;
   }
 }
 
