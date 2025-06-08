@@ -53,7 +53,7 @@ const BiggestWinsSection: React.FC<BiggestWinsSectionProps> = ({ wins }) => {
   return (
     <div className="my-6 rounded-xl bg-black border border-white/10 p-4 shadow-md">
       <div className="flex justify-between items-center">
-        <h3 className="text-lg font-bold text-white text-center w-full">Biggest Losses this Month</h3>
+        <h3 className="text-lg font-bold text-white text-center w-full">Biggest Bets</h3>
         
         {topBet && (
           <div className="text-xs text-gray-400">
