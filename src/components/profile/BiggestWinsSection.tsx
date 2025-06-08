@@ -37,7 +37,7 @@ const BiggestWinsSection: React.FC<BiggestWinsSectionProps> = ({ wins }) => {
               </div>
               <div>
                 <p className="font-medium text-white">{bet.bet}</p>
-                <p className="text-xs text-gray-400">@{bet.bettorName}</p>
+                <p className="text-xs text-gray-400">+{Math.floor(Math.random() * 150 + 200)}</p>
               </div>
             </div>
             
