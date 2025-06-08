@@ -38,13 +38,18 @@ const TrendHeader = ({
           )}>{score}%</span>
         </div>
         
-        {/* Recommendation Label - centered with neon pulse */}
+        {/* Recommendation Label - centered with neon glow */}
         <span className={cn(
-          "text-3xl font-bold transition-colors duration-300",
+          "text-3xl font-bold transition-all duration-300",
           isMostVisible 
-            ? "text-[#AEE3F5] animate-pulse-neon-clean"
+            ? "text-[#AEE3F5]"
             : "text-gray-400"
-        )}>
+        )}
+        style={{
+          textShadow: isMostVisible 
+            ? "0 0 10px #AEE3F5, 0 0 20px #AEE3F5, 0 0 30px #AEE3F5" 
+            : "none"
+        }}>
           FADE
         </span>
         
