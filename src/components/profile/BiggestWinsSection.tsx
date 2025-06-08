@@ -1,3 +1,4 @@
+
 import React from "react";
 
 interface Win {
@@ -16,7 +17,7 @@ interface BiggestWinsSectionProps {
 const BiggestWinsSection: React.FC<BiggestWinsSectionProps> = ({ wins }) => {
   return (
     <div className="my-6 rounded-xl bg-black p-4 shadow-md border border-white/10">
-      <h3 className="mb-4 text-xl font-bold text-white">Biggest Wins from Tailing or Fading</h3>
+      <h3 className="mb-4 text-xl font-bold text-white">Biggest Wins from Fading</h3>
       
       {wins.length > 0 ? (
         <div className="space-y-3">
