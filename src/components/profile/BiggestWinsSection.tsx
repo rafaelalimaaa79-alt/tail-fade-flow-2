@@ -52,17 +52,8 @@ const BiggestWinsSection: React.FC<BiggestWinsSectionProps> = ({ wins }) => {
   
   return (
     <div className="my-6 rounded-xl bg-black border border-white/10 p-4 shadow-md">
-      <div className="flex justify-between items-center">
-        <h3 className="text-lg font-bold text-white text-center w-full">Biggest Bets</h3>
-        
-        {topBet && (
-          <div className="text-xs text-gray-400">
-            <span>Top Loss: </span>
-            <span className="font-medium text-onetime-green">
-              +{topBet.unitsGained}U {topBet.bet}
-            </span>
-          </div>
-        )}
+      <div className="flex justify-center items-center">
+        <h3 className="text-lg font-bold text-white">Biggest Bets</h3>
       </div>
       
       {wins.length > 0 ? (
