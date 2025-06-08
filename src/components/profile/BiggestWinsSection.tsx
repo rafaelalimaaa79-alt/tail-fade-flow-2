@@ -1,5 +1,7 @@
 
 import React from "react";
+import { cn } from "@/lib/utils";
+import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 
 interface Win {
   id: string;
@@ -15,32 +17,70 @@ interface BiggestWinsSectionProps {
 }
 
 const BiggestWinsSection: React.FC<BiggestWinsSectionProps> = ({ wins }) => {
-  return (
-    <div className="my-6 rounded-xl bg-black p-4 shadow-md border border-white/10">
-      <h3 className="mb-4 text-xl font-bold text-white text-center">Biggest Losses this Month</h3>
-      
-      {wins.length > 0 ? (
-        <div className="space-y-3">
-          {wins.map((win) => (
-            <div key={win.id} className="rounded-lg bg-black/30 border border-white/10 p-3 flex items-center justify-between">
-              <div className="flex flex-col">
-                <span className="font-medium text-white">{win.bet}</span>
-                <span className="text-sm text-white/60">
-                  {win.action === "tailed" ? "Tailed" : "Faded"} @{win.bettorName}
-                </span>
+  // Find top bet all-time (by units lost - since these are losses, we want the highest negative impact)
+  const topBet = [...wins].sort((a, b) => b.unitsGained - a.unitsGained)[0];
+  
+  const renderBetList = (bets: Win[], limit = 5) => {
+    // Limit to top bets
+    const topBets = bets.slice(0, limit);
+    
+    return (
+      <div className="space-y-3 mt-4">
+        {topBets.map((bet, index) => (
+          <div 
+            key={bet.id}
+            className="flex items-center justify-between border-b border-gray-700 pb-2 last:border-0"
+          >
+            <div className="flex items-center gap-3">
+              <div className="flex h-6 w-6 items-center justify-center rounded-full bg-gray-800 text-xs font-bold text-white">
+                {index + 1}
               </div>
-              <div className="flex items-center gap-3">
-                <span className="text-onetime-green font-bold">+{win.unitsGained}U</span>
-                <span className="rounded-full bg-onetime-green px-2 py-0.5 text-xs font-medium text-onetime-dark">
-                  L
-                </span>
+              <div>
+                <p className="font-medium text-white">{bet.bet}</p>
+                <p className="text-xs text-gray-400">@{bet.bettorName}</p>
               </div>
             </div>
-          ))}
-        </div>
+            
+            <div className="text-onetime-green font-bold">
+              +{bet.unitsGained}U
+            </div>
+          </div>
+        ))}
+      </div>
+    );
+  };
+  
+  return (
+    <div className="my-6 rounded-xl bg-black border border-white/10 p-4 shadow-md">
+      <div className="flex justify-between items-center">
+        <h3 className="text-lg font-bold text-white">Biggest Losses this Month</h3>
+        
+        {topBet && (
+          <div className="text-xs text-gray-400">
+            <span>Top Loss: </span>
+            <span className="font-medium text-onetime-green">
+              +{topBet.unitsGained}U {topBet.bet}
+            </span>
+          </div>
+        )}
+      </div>
+      
+      {wins.length > 0 ? (
+        <Tabs defaultValue="fading" className="mt-2">
+          <TabsList className="grid w-full grid-cols-2 bg-black/50">
+            <TabsTrigger value="fading">Fading Losses</TabsTrigger>
+            <TabsTrigger value="tailing">Tailing Losses</TabsTrigger>
+          </TabsList>
+          <TabsContent value="fading">
+            {renderBetList(wins.filter(win => win.action === "faded"))}
+          </TabsContent>
+          <TabsContent value="tailing">
+            {renderBetList(wins.filter(win => win.action === "tailed"))}
+          </TabsContent>
+        </Tabs>
       ) : (
-        <div className="rounded-lg bg-black/30 border border-white/10 p-6 text-center">
-          <p className="text-white/70">No tailing or fading wins yet</p>
+        <div className="rounded-lg bg-black/30 border border-white/10 p-6 text-center mt-4">
+          <p className="text-white/70">No losses yet</p>
         </div>
       )}
     </div>
