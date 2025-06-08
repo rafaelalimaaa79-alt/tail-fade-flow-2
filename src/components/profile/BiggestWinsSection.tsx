@@ -53,7 +53,7 @@ const BiggestWinsSection: React.FC<BiggestWinsSectionProps> = ({ wins }) => {
   return (
     <div className="my-6 rounded-xl bg-black border border-white/10 p-4 shadow-md">
       <div className="flex justify-between items-center">
-        <h3 className="text-lg font-bold text-white">Biggest Losses this Month</h3>
+        <h3 className="text-lg font-bold text-white text-center w-full">Biggest Losses this Month</h3>
         
         {topBet && (
           <div className="text-xs text-gray-400">
@@ -66,16 +66,16 @@ const BiggestWinsSection: React.FC<BiggestWinsSectionProps> = ({ wins }) => {
       </div>
       
       {wins.length > 0 ? (
-        <Tabs defaultValue="fading" className="mt-2">
+        <Tabs defaultValue="losses" className="mt-2">
           <TabsList className="grid w-full grid-cols-2 bg-black/50">
-            <TabsTrigger value="fading">Fading Losses</TabsTrigger>
-            <TabsTrigger value="tailing">Tailing Losses</TabsTrigger>
+            <TabsTrigger value="losses">Biggest Losses this Month</TabsTrigger>
+            <TabsTrigger value="bets">Biggest Bets</TabsTrigger>
           </TabsList>
-          <TabsContent value="fading">
-            {renderBetList(wins.filter(win => win.action === "faded"))}
+          <TabsContent value="losses">
+            {renderBetList(wins)}
           </TabsContent>
-          <TabsContent value="tailing">
-            {renderBetList(wins.filter(win => win.action === "tailed"))}
+          <TabsContent value="bets">
+            {renderBetList(wins)}
           </TabsContent>
         </Tabs>
       ) : (
