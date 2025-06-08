@@ -38,11 +38,11 @@ const TrendHeader = ({
           )}>{score}%</span>
         </div>
         
-        {/* Recommendation Label - centered */}
+        {/* Recommendation Label - centered with neon pulse */}
         <span className={cn(
           "text-3xl font-bold transition-colors duration-300",
           isMostVisible 
-            ? "text-[#AEE3F5]"
+            ? "text-[#AEE3F5] animate-pulse-neon-clean"
             : "text-gray-400"
         )}>
           FADE
