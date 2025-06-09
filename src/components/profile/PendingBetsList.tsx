@@ -126,8 +126,7 @@ const PendingBetsList = () => {
             <div className="flex flex-col items-center justify-center mb-1.5 relative z-10">
               <div className="flex items-center justify-center mb-1 gap-2">
                 <span className="text-sm font-medium text-white inline-flex items-center gap-1">
-                  Fading {fadedBet} by
-                  <span className="text-onetime-purple">@{bet.bettorName}</span>
+                  Fading <span className="text-onetime-purple">@{bet.bettorName}</span>'s {fadedBet} pick
                 </span>
               </div>
             </div>
