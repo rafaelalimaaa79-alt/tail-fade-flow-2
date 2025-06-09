@@ -1,4 +1,3 @@
-
 import React from "react";
 import { format } from "date-fns";
 import { Badge } from "@/components/ui/badge";
@@ -141,7 +140,7 @@ const PendingBetsList = () => {
                     className="w-full border-0 text-white bg-transparent py-1.5 text-sm"
                     disabled
                   >
-                    Bet Placed on {bet.sportsbook || "Sportsbook"}
+                    Bet Placed on {SPORTSBOOKS[bet.sportsbook as keyof typeof SPORTSBOOKS]?.name || "Hard Rock"}
                   </Button>
                 </div>
               ) : (
@@ -151,7 +150,7 @@ const PendingBetsList = () => {
                   onClick={() => handleBetNow(bet.id)}
                 >
                   <span className="relative z-10 flex items-center">
-                    Bet Now 
+                    Bet Now on Hard Rock
                     <ArrowRight className="ml-1 w-3 h-3 transition-transform group-hover:translate-x-1" />
                   </span>
                   <span className="absolute inset-0 bg-gradient-to-r from-transparent to-white/10 opacity-0 group-hover:opacity-100 transition-opacity"></span>
