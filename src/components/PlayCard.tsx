@@ -31,7 +31,7 @@ const PlayCard: React.FC<PlayCardProps> = ({ play, renderWaveText, onActionClick
             <div className="block mb-2">
               {renderWaveText(play.stats, 0)}
             </div>
-            <div className="block text-sm font-bold tracking-wide">
+            <div className="block text-base font-normal italic text-white/70 font-serif tracking-wide">
               {renderWaveText(`Fading Users: ${play.userCount}`, 1)}
             </div>
           </div>
