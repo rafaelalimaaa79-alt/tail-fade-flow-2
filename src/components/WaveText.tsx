@@ -1,4 +1,3 @@
-
 import React from "react";
 
 interface WaveTextProps {
@@ -19,11 +18,14 @@ const WaveText: React.FC<WaveTextProps> = ({
   animationPosition,
   isFade,
 }) => {
+  // Use grey color for fading percentage (line 1), keep icy blue for stats (line 0)
+  const textColor = lineIndex === 1 ? '#ffffff70' : '#AEE3F5'; // Grey for "89% fading", icy blue for stats
+  
   return (
     <span 
       className="inline-block transition-all duration-500"
       style={{
-        color: '#AEE3F5', // Neon icy blue color
+        color: textColor,
         fontWeight: 'bold'
       }}
     >
