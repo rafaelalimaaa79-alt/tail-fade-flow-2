@@ -32,7 +32,7 @@ const PlayCard: React.FC<PlayCardProps> = ({ play, renderWaveText, onActionClick
               {renderWaveText(play.stats, 0)}
             </div>
             <div className="block">
-              {renderWaveText(`${play.percentage}% fading`, 1)}
+              {renderWaveText(`${play.userCount} Users fading this pick`, 1)}
             </div>
           </div>
         </div>
