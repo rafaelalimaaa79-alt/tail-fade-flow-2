@@ -122,9 +122,9 @@ const PendingBetsList = () => {
             <div className="absolute -top-8 -right-8 h-20 w-20 rounded-full bg-onetime-purple/20 blur-xl"></div>
             <div className="absolute bottom-0 left-4 h-14 w-14 rounded-full bg-onetime-orange/10 blur-xl"></div>
             
-            {/* Bet Description as prominent header with responsive font size */}
-            <div className="mb-1.5 text-center pr-16">
-              <h4 className={`${textSize} font-extrabold text-white tracking-tight relative z-10 font-rajdhani`}>
+            {/* Bet Description as prominent header with responsive font size - properly centered */}
+            <div className="mb-1.5 text-center px-16">
+              <h4 className={`${textSize} font-extrabold text-white tracking-tight relative z-10 font-rajdhani mx-auto`}>
                 {bet.betDescription}
                 <div className="h-0.5 w-12 bg-gradient-to-r from-onetime-purple via-onetime-purple/80 to-transparent rounded-full mx-auto mt-0.5"></div>
               </h4>
@@ -135,7 +135,7 @@ const PendingBetsList = () => {
               <span>{confidenceData.score}%</span>
             </div>
             
-            {/* Middle row: Bettor info with nice styling - showing what we're fading */}
+            {/* Middle row: Bettor info with nice styling - showing what we're fading - centered */}
             <div className="flex flex-col items-center justify-center mb-1.5 relative z-10">
               <div className="flex items-center justify-center mb-1 gap-2">
                 <span className="text-sm font-medium text-white inline-flex items-center gap-1">
@@ -144,10 +144,10 @@ const PendingBetsList = () => {
               </div>
             </div>
             
-            {/* Bottom row: Action button with enhanced styling */}
-            <div className="relative z-10">
+            {/* Bottom row: Action button with enhanced styling - centered */}
+            <div className="relative z-10 flex justify-center">
               {bet.isPlaced ? (
-                <div className="relative overflow-hidden rounded-lg border border-white/20 bg-black/50 backdrop-blur-sm">
+                <div className="relative overflow-hidden rounded-lg border border-white/20 bg-black/50 backdrop-blur-sm w-full">
                   <div className="absolute inset-0 bg-gradient-to-r from-onetime-green/20 to-transparent"></div>
                   <Button 
                     variant="outline"
