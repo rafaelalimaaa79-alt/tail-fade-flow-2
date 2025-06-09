@@ -28,12 +28,6 @@ const PerformanceSection: React.FC<PerformanceSectionProps> = ({
       <div className="my-2">
         <div className="flex items-center justify-between mb-2">
           <h3 className="text-sm font-semibold">Performance</h3>
-          <BettorTimeFilter
-            activeFilter={timeframe}
-            onChange={setTimeframe}
-            performanceByTimeframe={performanceByTimeframe}
-            className="scale-90 origin-right"
-          />
         </div>
 
         <div className="grid grid-cols-3 gap-2 mb-3">
@@ -71,6 +65,14 @@ const PerformanceSection: React.FC<PerformanceSectionProps> = ({
             timeframe={timeframe}
             isPositive={profit >= 0}
             className="h-44" 
+          />
+        </div>
+
+        <div className="flex justify-center mt-3">
+          <BettorTimeFilter
+            activeFilter={timeframe}
+            onChange={setTimeframe}
+            performanceByTimeframe={performanceByTimeframe}
           />
         </div>
       </div>
