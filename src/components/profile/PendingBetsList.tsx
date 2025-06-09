@@ -70,24 +70,48 @@ const PendingBetsList = () => {
       colorClass
     };
   };
+
+  // Function to get the opposite bet that we're fading
+  const getFadedBet = (betDescription: string) => {
+    // Simple logic to show what bet we're fading
+    // This would be more sophisticated in a real app
+    if (betDescription.includes("Yankees ML")) {
+      return "Red Sox ML"; // Assuming Yankees vs Red Sox
+    } else if (betDescription.includes("Lakers -5.5")) {
+      return "Celtics +5.5"; // Assuming Lakers vs Celtics
+    } else if (betDescription.includes("Over 220")) {
+      return "Under 220";
+    } else if (betDescription.includes("Dodgers -1.5")) {
+      return "Giants +1.5"; // Assuming Dodgers vs Giants
+    } else if (betDescription.includes("-")) {
+      // Generic handling for spread bets - flip the sign
+      return betDescription.replace("-", "+");
+    } else if (betDescription.includes("+")) {
+      // Generic handling for spread bets - flip the sign
+      return betDescription.replace("+", "-");
+    }
+    
+    return "Opposite bet"; // Fallback
+  };
   
   return (
     <div className="space-y-2">
       {pendingBets.map((bet) => {
         const confidenceData = getConfidenceData(bet.id);
+        const fadedBet = getFadedBet(bet.betDescription);
         
         return (
           <div 
             key={bet.id} 
-            className="relative overflow-hidden rounded-xl bg-gradient-to-br from-black via-black/80 to-black/60 p-3 shadow-lg border border-white/10 transition-all duration-300 hover:border-onetime-purple/50"
+            className="relative overflow-hidden rounded-xl bg-gradient-to-br from-black via-black/80 to-black/60 p-2.5 shadow-lg border border-white/10 transition-all duration-300 hover:border-onetime-purple/50"
           >
             {/* Interactive blob effect in background */}
             <div className="absolute -top-8 -right-8 h-20 w-20 rounded-full bg-onetime-purple/20 blur-xl"></div>
             <div className="absolute bottom-0 left-4 h-14 w-14 rounded-full bg-onetime-orange/10 blur-xl"></div>
             
-            {/* Bet Description as prominent header with cooler font */}
-            <div className="mb-2 text-center">
-              <h4 className="text-lg font-extrabold text-white tracking-tight relative z-10 font-rajdhani">
+            {/* Bet Description as prominent header with cooler font - LARGER SIZE */}
+            <div className="mb-1.5 text-center">
+              <h4 className="text-2xl font-extrabold text-white tracking-tight relative z-10 font-rajdhani">
                 {bet.betDescription}
                 <div className="h-0.5 w-12 bg-gradient-to-r from-onetime-purple via-onetime-purple/80 to-transparent rounded-full mx-auto mt-0.5"></div>
               </h4>
@@ -98,11 +122,11 @@ const PendingBetsList = () => {
               <span>{confidenceData.score}%</span>
             </div>
             
-            {/* Middle row: Bettor info with nice styling - fade only */}
-            <div className="flex flex-col items-center justify-center mb-2 relative z-10">
+            {/* Middle row: Bettor info with nice styling - showing what we're fading */}
+            <div className="flex flex-col items-center justify-center mb-1.5 relative z-10">
               <div className="flex items-center justify-center mb-1 gap-2">
                 <span className="text-sm font-medium text-white inline-flex items-center gap-1">
-                  Fading
+                  Fading {fadedBet} by
                   <span className="text-onetime-purple">@{bet.bettorName}</span>
                 </span>
               </div>
