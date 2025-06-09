@@ -1,4 +1,3 @@
-
 import React from "react";
 import BettorTimeFilter from "@/components/BettorTimeFilter";
 import BettorPerformanceGraph from "@/components/BettorPerformanceGraph";
@@ -26,8 +25,8 @@ const PerformanceSection: React.FC<PerformanceSectionProps> = ({
   return (
     <div className="my-4 rounded-xl bg-black p-4 shadow-md border border-white/10">
       <div className="my-2">
-        <div className="flex items-center justify-between mb-2">
-          <h3 className="text-sm font-semibold">Performance</h3>
+        <div className="flex items-center justify-center mb-2">
+          <h3 className="text-sm font-semibold">How You've Done Fading Other Users</h3>
         </div>
 
         <div className="grid grid-cols-3 gap-2 mb-3">
