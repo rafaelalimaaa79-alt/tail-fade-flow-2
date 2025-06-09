@@ -48,28 +48,6 @@ const PendingBetsList = () => {
     // Open the sportsbook in a new tab
     window.open(SPORTSBOOKS[sportsbook as keyof typeof SPORTSBOOKS]?.appUrl || SPORTSBOOKS[DEFAULT_SPORTSBOOK].appUrl, '_blank');
   };
-  
-  // Function to generate user count and its styling
-  const getUserCountData = (id: string) => {
-    // Using a deterministic approach based on the bet ID to get consistent results
-    // In a real app, this would come from actual user counts stored in your state
-    const numValue = parseInt(id, 10) % 300 + 50; // Range: 50-349 users
-    const userCount = numValue > 0 ? numValue : 150;
-    
-    let colorClass = "";
-    if (userCount >= 200) {
-      colorClass = "text-onetime-red";
-    } else if (userCount >= 100) {
-      colorClass = "text-onetime-orange";
-    } else {
-      colorClass = "text-onetime-green";
-    }
-    
-    return {
-      userCount,
-      colorClass
-    };
-  };
 
   // Function to get the opposite bet that we're fading
   const getFadedBet = (betDescription: string) => {
@@ -109,7 +87,6 @@ const PendingBetsList = () => {
   return (
     <div className="space-y-2">
       {pendingBets.map((bet) => {
-        const userCountData = getUserCountData(bet.id);
         const fadedBet = getFadedBet(bet.betDescription);
         const textSize = getBetTextSize(bet.betDescription);
         
@@ -123,16 +100,11 @@ const PendingBetsList = () => {
             <div className="absolute bottom-0 left-4 h-14 w-14 rounded-full bg-onetime-orange/10 blur-xl"></div>
             
             {/* Bet Description as prominent header with responsive font size - properly centered */}
-            <div className="mb-1.5 text-center px-20">
+            <div className="mb-1.5 text-center">
               <h4 className={`${textSize} font-extrabold text-white tracking-tight relative z-10 font-rajdhani mx-auto`}>
                 {bet.betDescription}
                 <div className="h-0.5 w-12 bg-gradient-to-r from-onetime-purple via-onetime-purple/80 to-transparent rounded-full mx-auto mt-0.5"></div>
               </h4>
-            </div>
-            
-            {/* User count in top right with same style as time was, with smaller responsive text */}
-            <div className={`absolute top-2 right-2 flex items-center gap-1 rounded-full bg-black/50 px-2 py-1 text-xs font-bold backdrop-blur-sm border border-white/10 ${userCountData.colorClass}`}>
-              <span>{userCountData.userCount} users</span>
             </div>
             
             {/* Middle row: Bettor info with nice styling - showing what we're fading - centered */}
