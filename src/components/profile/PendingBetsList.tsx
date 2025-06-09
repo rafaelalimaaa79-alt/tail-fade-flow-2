@@ -1,3 +1,4 @@
+
 import React from "react";
 import { format } from "date-fns";
 import { Badge } from "@/components/ui/badge";
@@ -92,12 +93,25 @@ const PendingBetsList = () => {
     
     return "Opposite bet"; // Fallback
   };
+
+  // Function to get responsive text size based on bet description length
+  const getBetTextSize = (betDescription: string) => {
+    const length = betDescription.length;
+    if (length > 25) {
+      return "text-lg"; // Smaller for very long text
+    } else if (length > 18) {
+      return "text-xl"; // Medium for moderately long text
+    } else {
+      return "text-2xl"; // Original size for shorter text
+    }
+  };
   
   return (
     <div className="space-y-2">
       {pendingBets.map((bet) => {
         const confidenceData = getConfidenceData(bet.id);
         const fadedBet = getFadedBet(bet.betDescription);
+        const textSize = getBetTextSize(bet.betDescription);
         
         return (
           <div 
@@ -108,9 +122,9 @@ const PendingBetsList = () => {
             <div className="absolute -top-8 -right-8 h-20 w-20 rounded-full bg-onetime-purple/20 blur-xl"></div>
             <div className="absolute bottom-0 left-4 h-14 w-14 rounded-full bg-onetime-orange/10 blur-xl"></div>
             
-            {/* Bet Description as prominent header with cooler font - LARGER SIZE */}
-            <div className="mb-1.5 text-center">
-              <h4 className="text-2xl font-extrabold text-white tracking-tight relative z-10 font-rajdhani">
+            {/* Bet Description as prominent header with responsive font size */}
+            <div className="mb-1.5 text-center pr-16">
+              <h4 className={`${textSize} font-extrabold text-white tracking-tight relative z-10 font-rajdhani`}>
                 {bet.betDescription}
                 <div className="h-0.5 w-12 bg-gradient-to-r from-onetime-purple via-onetime-purple/80 to-transparent rounded-full mx-auto mt-0.5"></div>
               </h4>
