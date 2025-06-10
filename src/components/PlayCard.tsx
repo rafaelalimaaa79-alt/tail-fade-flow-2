@@ -25,18 +25,18 @@ const PlayCard: React.FC<PlayCardProps> = ({ play, renderWaveText, onActionClick
         </h2>
       </div>
       
-      {/* Bettor Name - Larger and highlighted */}
+      {/* Bettor Name - Smaller font size */}
       <div className="mb-4 text-center">
-        <h3 className="font-rajdhani text-2xl font-bold text-white">
+        <h3 className="font-rajdhani text-xl font-bold text-white">
           @{play.bettorName}
         </h3>
       </div>
       
-      {/* Cold Streak Stats - Clean display without blocks */}
+      {/* Cold Streak Stats - Larger font size for record */}
       <div className="mb-4 text-center">
         <div className="flex items-center justify-center gap-3 mb-3">
           <span className="text-2xl">📉</span>
-          <span className="font-rajdhani text-xl font-black" style={{ color: '#AEE3F5' }}>
+          <span className="font-rajdhani text-2xl font-black" style={{ color: '#AEE3F5' }}>
             {play.record}
           </span>
         </div>
