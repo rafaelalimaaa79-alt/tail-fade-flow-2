@@ -1,3 +1,4 @@
+
 import React from "react";
 import { Link } from "react-router-dom";
 import ActionButton from "./ActionButton";
@@ -54,7 +55,7 @@ const PlayCard: React.FC<PlayCardProps> = ({ play, renderWaveText, onActionClick
       {/* Header */}
       <div className="mb-6 border-b border-white/10 pb-3">
         <h2 className="font-rajdhani text-2xl font-bold text-white text-center tracking-wider uppercase">
-          TODAY'S EDGE
+          FADE WATCH
         </h2>
       </div>
       
