@@ -1,4 +1,3 @@
-
 import React from "react";
 import { format } from "date-fns";
 import { Badge } from "@/components/ui/badge";
@@ -132,7 +131,7 @@ const PendingBetsList = () => {
               ) : (
                 <Button 
                   variant="default"
-                  className="w-full bg-gradient-to-r from-onetime-red to-onetime-red/80 hover:from-onetime-red/90 hover:to-onetime-red/70 shadow-lg shadow-onetime-red/20 text-black font-bold flex items-center justify-center group relative overflow-hidden py-1.5 text-sm"
+                  className="w-full bg-gradient-to-r from-onetime-purple to-onetime-purple/80 hover:from-onetime-purple/90 hover:to-onetime-purple/70 shadow-lg shadow-onetime-purple/20 text-white font-bold flex items-center justify-center group relative overflow-hidden py-1.5 text-sm"
                   onClick={() => handleBetNow(bet.id)}
                 >
                   <span className="relative z-10 flex items-center">
