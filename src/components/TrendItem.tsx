@@ -1,4 +1,3 @@
-
 import React from "react";
 import { Link } from "react-router-dom";
 import { Card } from "@/components/ui/card";
@@ -11,6 +10,7 @@ import TrendAction from "./trend/TrendAction";
 import TrendBetHistory from "./trend/TrendBetHistory";
 import TrendVisibilityWrapper from "./trend/TrendVisibilityWrapper";
 import { Button } from "@/components/ui/button";
+import { getOppositeBet } from "@/utils/bet-conversion";
 
 type TrendItemProps = {
   id: string;
@@ -113,6 +113,10 @@ const TrendItem = ({
   const betLine = getBetLine(matchup.teams);
   const sportStatline = getSportStatline(matchup.sport);
   
+  // Get the opponent team for the bet conversion
+  const opponentTeam = matchup.teams.find(team => !betLine.includes(team));
+  const oppositeBet = getOppositeBet(betLine, opponentTeam);
+  
   return (
     <div className="block mb-4">
       <TrendVisibilityWrapper>
@@ -171,7 +175,7 @@ const TrendItem = ({
               {/* Spacer to push button to bottom */}
               <div className="flex-grow"></div>
               
-              {/* Fade button with neon glow */}
+              {/* Bet button with opposite bet */}
               <div className="w-full pt-1">
                 <Button 
                   className={cn(
@@ -184,7 +188,7 @@ const TrendItem = ({
                     boxShadow: "0 0 20px rgba(174, 227, 245, 0.8), 0 0 40px rgba(174, 227, 245, 0.4)"
                   } : undefined}
                 >
-                  Fade {betLine}
+                  Bet {oppositeBet}
                 </Button>
               </div>
             </div>

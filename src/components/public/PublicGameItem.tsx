@@ -1,10 +1,10 @@
-
 import React from "react";
 import { Separator } from "@/components/ui/separator";
 import ActionButton from "@/components/ActionButton";
 import { showFadeNotification } from "@/utils/betting-notifications";
 import PublicGameVisibilityWrapper from "./PublicGameVisibilityWrapper";
 import { cn } from "@/lib/utils";
+import { getOppositeBet } from "@/utils/bet-conversion";
 
 interface PublicGame {
   id: string;
@@ -54,8 +54,11 @@ const PublicGameItem = ({ game, rank }: PublicGameItemProps) => {
     100 - game.publicPercentage + (Math.random() - 0.5) * 8
   ));
 
+  // Get the opposite bet for the button
+  const oppositeBet = getOppositeBet(`${game.team} ${game.spread}`, game.opponent);
+
   const handleFade = () => {
-    const betDescription = `${game.team} ${game.spread}`;
+    const betDescription = oppositeBet;
     showFadeNotification("Public Fade", betDescription);
   };
 
@@ -115,7 +118,7 @@ const PublicGameItem = ({ game, rank }: PublicGameItemProps) => {
               className="h-10 text-base"
               glowEffect={isMostVisible}
             >
-              Fade {game.team} {game.spread}
+              Bet {oppositeBet}
             </ActionButton>
           </div>
           

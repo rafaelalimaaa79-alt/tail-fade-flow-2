@@ -3,6 +3,7 @@ import { Link } from "react-router-dom";
 import ActionButton from "./ActionButton";
 import { BetterPlay } from "@/types/betTypes";
 import { showFadeNotification } from "@/utils/betting-notifications";
+import { getOppositeBet } from "@/utils/bet-conversion";
 
 interface PlayCardProps {
   play: BetterPlay;
@@ -11,41 +12,11 @@ interface PlayCardProps {
 }
 
 const PlayCard: React.FC<PlayCardProps> = ({ play, renderWaveText, onActionClick }) => {
-  // Function to get the opposite bet for fading
-  const getOppositeBet = (originalBet: string) => {
-    // Handle point spreads
-    if (originalBet.includes('-') && (originalBet.includes('.5') || /[+-]\d+/.test(originalBet))) {
-      const team = originalBet.split(' ')[0];
-      const spread = originalBet.split(' ')[1];
-      if (spread.startsWith('-')) {
-        return `${team} +${spread.substring(1)}`;
-      } else if (spread.startsWith('+')) {
-        return `${team} -${spread.substring(1)}`;
-      }
-    }
-    
-    // Handle moneylines (ML)
-    if (originalBet.includes('ML')) {
-      const team = originalBet.replace(' ML', '');
-      // For ML, the opposite would be the other team, but we'll just say "Opposite ML"
-      return `Fade ${team} ML`;
-    }
-    
-    // Handle over/under totals
-    if (originalBet.toLowerCase().includes('over')) {
-      return originalBet.replace(/over/i, 'Under');
-    }
-    if (originalBet.toLowerCase().includes('under')) {
-      return originalBet.replace(/under/i, 'Over');
-    }
-    
-    // Default case - just add "Fade" prefix
-    return `Fade ${originalBet}`;
-  };
+  // Use the new utility function to get the opposite bet
+  const oppositeBet = getOppositeBet(play.bet);
 
   // Handle the bet action with notification only
   const handleBetClick = () => {
-    const oppositeBet = getOppositeBet(play.bet);
     showFadeNotification(play.bettorName, oppositeBet);
   };
   
@@ -97,7 +68,7 @@ const PlayCard: React.FC<PlayCardProps> = ({ play, renderWaveText, onActionClick
           className="h-12 text-lg font-bold"
           onClick={handleBetClick}
         >
-          {getOppositeBet(play.bet)}
+          Bet {oppositeBet}
         </ActionButton>
       </div>
     </div>
