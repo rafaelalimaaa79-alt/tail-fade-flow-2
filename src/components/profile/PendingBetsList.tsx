@@ -31,7 +31,7 @@ const PendingBetsList = () => {
   
   if (pendingBets.length === 0) {
     return (
-      <div className="rounded-lg bg-gray-900/50 p-6 text-center border border-gray-700/50">
+      <div className="rounded-lg bg-black p-6 text-center border border-white/10">
         <p className="text-gray-400">You don't have any pending bets yet</p>
       </div>
     );
@@ -66,27 +66,27 @@ const PendingBetsList = () => {
   };
   
   return (
-    <div className="space-y-3">
+    <div className="space-y-4">
       {pendingBets.map((bet) => {
         const fadedBet = getFadedBet(bet.betDescription);
         
         return (
           <div 
             key={bet.id} 
-            className="bg-gray-800/90 rounded-2xl p-4 border border-gray-700/30"
+            className="bg-black rounded-xl p-6 border border-white/10"
           >
             {/* Bet title */}
             <div className="text-center mb-4">
-              <h3 className="text-xl font-bold text-white mb-2">
+              <h3 className="text-xl font-bold text-white mb-3">
                 {bet.betDescription}
               </h3>
-              <div className="w-12 h-0.5 bg-cyan-400 mx-auto"></div>
+              <div className="w-12 h-0.5 bg-[#AEE3F5] mx-auto"></div>
             </div>
             
             {/* Fading info */}
-            <div className="text-center mb-4">
+            <div className="text-center mb-6">
               <p className="text-sm text-gray-400">
-                Fading <span className="text-cyan-400">@{bet.bettorName}</span>'s {fadedBet} pick
+                Fading <span className="text-[#AEE3F5]">@{bet.bettorName}</span>'s {fadedBet} pick
               </p>
             </div>
             
@@ -102,7 +102,7 @@ const PendingBetsList = () => {
                 </Button>
               ) : (
                 <Button 
-                  className="w-full bg-gradient-to-r from-purple-600 to-blue-600 hover:from-purple-700 hover:to-blue-700 text-white font-medium py-3 rounded-xl flex items-center justify-center gap-2"
+                  className="w-full bg-[#6C5CE7] hover:bg-[#5B4BD6] text-white font-medium py-3 rounded-xl flex items-center justify-center gap-2"
                   onClick={() => handleBetNow(bet.id)}
                 >
                   Bet Now on Hard Rock
