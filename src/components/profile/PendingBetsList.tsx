@@ -56,7 +56,7 @@ const PendingBetsList = () => {
     } else if (betDescription.includes("Dodgers -1.5")) {
       return "Dodgers vs Giants";
     }
-    return "Team A vs Team B";
+    return "Lakers vs Warriors";
   };
 
   // Function to get fade confidence (mock data for now)
@@ -78,28 +78,32 @@ const PendingBetsList = () => {
               boxShadow: '0 0 15px rgba(174, 227, 245, 0.3)',
             }}
           >
-            {/* Game matchup */}
+            {/* Game matchup header */}
             <div className="text-center mb-4">
               <h4 className="text-lg font-semibold text-white">
                 {gameMatchup}
               </h4>
             </div>
             
-            {/* Bet title */}
+            {/* Username centered */}
+            <div className="text-center mb-4">
+              <p className="text-lg font-medium text-[#AEE3F5]">
+                @{bet.bettorName}
+              </p>
+            </div>
+            
+            {/* Bet description with username */}
             <div className="text-center mb-4">
               <h3 className="text-xl font-bold text-white mb-3">
-                {bet.betDescription}
+                @{bet.bettorName} {bet.betDescription}
               </h3>
               <div className="w-12 h-0.5 bg-[#AEE3F5] mx-auto"></div>
             </div>
             
-            {/* Username and fade confidence */}
+            {/* Fade confidence - larger font */}
             <div className="text-center mb-4">
-              <p className="text-sm text-gray-400 mb-2">
-                <span className="text-[#AEE3F5]">@{bet.bettorName}</span>'s bet
-              </p>
-              <p className="text-sm text-gray-400">
-                Fade Confidence: <span className="text-[#AEE3F5] font-semibold">{fadeConfidence}%</span>
+              <p className="text-lg font-semibold text-gray-300">
+                Fade Confidence: <span className="text-[#AEE3F5] font-bold text-xl">{fadeConfidence}%</span>
               </p>
             </div>
             
