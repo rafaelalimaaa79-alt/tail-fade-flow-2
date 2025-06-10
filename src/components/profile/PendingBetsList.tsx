@@ -119,7 +119,7 @@ const PendingBetsList = () => {
                 <p className="text-lg font-bold">
                   <span className="text-white">Fading </span>
                   <span className="text-[#AEE3F5]">@{bet.bettorName}'s</span>
-                  <span className="text-white"> bet</span>
+                  <span className="text-white"> {betLine}</span>
                 </p>
               </div>
               
