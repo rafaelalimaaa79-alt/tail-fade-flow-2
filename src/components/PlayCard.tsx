@@ -25,31 +25,34 @@ const PlayCard: React.FC<PlayCardProps> = ({ play, renderWaveText, onActionClick
         </h2>
       </div>
       
-      {/* Bettor Name */}
+      {/* Bettor Name - Larger and highlighted */}
       <div className="mb-4 text-center">
-        <h3 className="font-rajdhani text-xl font-bold text-white">
+        <h3 className="font-rajdhani text-2xl font-bold text-primary">
           @{play.bettorName}
         </h3>
       </div>
       
-      {/* Cold Streak Stats */}
+      {/* Cold Streak Stats - Prominent display */}
       <div className="mb-4 text-center">
-        <div className="flex items-center justify-center gap-2 mb-2">
-          <span className="text-lg">📉</span>
-          <span className="font-rajdhani text-lg font-semibold text-white">
+        <div className="flex items-center justify-center gap-3 mb-3">
+          <span className="text-2xl">📉</span>
+          <span className="font-rajdhani text-xl font-black text-red-400 bg-red-400/10 px-3 py-1 rounded-lg border border-red-400/20">
             {play.record}
           </span>
         </div>
-        <p className="text-white/80 font-medium text-base leading-relaxed">
+        <p className="text-white/90 font-medium text-lg leading-relaxed max-w-xs mx-auto">
           {play.stats}
         </p>
       </div>
       
-      {/* Fading Users Count */}
+      {/* Fading Users Count - Styled as badge */}
       <div className="mb-6 text-center">
-        <p className="text-white/70 font-medium text-sm tracking-wide">
-          Fading Users: <span className="text-white font-semibold">{play.userCount}</span>
-        </p>
+        <div className="inline-flex items-center gap-2 bg-white/5 border border-white/20 rounded-full px-4 py-2">
+          <span className="text-white/70 font-medium text-sm">Fading Users:</span>
+          <span className="text-white font-bold text-lg bg-primary/20 text-primary px-2 py-1 rounded-full min-w-[3rem] text-center">
+            {play.userCount}
+          </span>
+        </div>
       </div>
       
       {/* Action Button */}
