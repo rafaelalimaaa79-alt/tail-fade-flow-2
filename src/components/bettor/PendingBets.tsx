@@ -49,7 +49,7 @@ const PendingBets: React.FC<PendingBetsProps> = ({ pendingBets, className }) => 
   return (
     <div className={cn("rounded-xl bg-black p-4 shadow-md relative animate-glow-pulse-icy overflow-hidden border border-onetime-red/30", className)}>
       <div className="absolute inset-0 bg-onetime-red/5 backdrop-blur-sm pointer-events-none"></div>
-      <h3 className="mb-5 text-xl font-bold text-white text-center relative inline-block left-1/2 transform -translate-x-1/2 z-10">
+      <h3 className="mb-5 text-xl font-bold text-onetime-red text-center relative inline-block left-1/2 transform -translate-x-1/2 z-10">
         Pending Bets
         <div className="h-1 w-20 bg-gradient-to-r from-onetime-red/80 to-transparent rounded-full mx-auto mt-1"></div>
       </h3>
