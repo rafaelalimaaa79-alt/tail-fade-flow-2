@@ -102,10 +102,10 @@ const PendingBets: React.FC<PendingBetsProps> = ({ pendingBets, profile, classNa
                   {/* Fade button */}
                   <div className="w-full pt-2">
                     <Button 
-                      className="w-full bg-[#6C5CE7] hover:bg-[#5B4BD6] text-white font-medium py-3 rounded-xl flex items-center justify-center gap-2"
+                      className="w-full bg-[#AEE3F5] hover:bg-[#AEE3F5]/90 text-black font-bold py-3 rounded-xl"
                       onClick={() => handleFade(bet)}
                     >
-                      👎 Fade {betLine}
+                      Fade {betLine}
                     </Button>
                   </div>
                 </div>
