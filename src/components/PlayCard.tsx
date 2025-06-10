@@ -32,9 +32,9 @@ const PlayCard: React.FC<PlayCardProps> = ({ play, renderWaveText, onActionClick
         </h3>
       </div>
       
-      {/* Cold Streak Stats - Larger font size for record */}
-      <div className="mb-4 text-center">
-        <div className="flex items-center justify-center gap-3 mb-3">
+      {/* Cold Streak Stats - Centered in the middle */}
+      <div className="mb-4 flex items-center justify-center">
+        <div className="flex items-center justify-center gap-3">
           <span className="text-2xl">📉</span>
           <span className="font-rajdhani text-2xl font-black" style={{ color: '#AEE3F5' }}>
             {play.record}
