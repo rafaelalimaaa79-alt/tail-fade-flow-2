@@ -4,6 +4,7 @@ export interface BetterPlay {
   bet: string;
   suggestionType: "fade";
   stats: string;
+  record: string;
   percentage: number;
   userCount: number;
 }
@@ -13,7 +14,8 @@ export const playsOfTheDay: BetterPlay[] = [
     bettorName: "NoCoverKev",
     bet: "Celtics -6.5",
     suggestionType: "fade",
-    stats: "@NoCoverKev is getting hammered — consider fading.",
+    stats: "Currently on a cold streak — high-confidence fade.",
+    record: "2-12 in last 14 bets",
     percentage: 89,
     userCount: 182
   },
@@ -21,7 +23,8 @@ export const playsOfTheDay: BetterPlay[] = [
     bettorName: "ColdHands88",
     bet: "Yankees ML", 
     suggestionType: "fade",
-    stats: "@ColdHands88 is ice cold — perfect fade opportunity.",
+    stats: "Ice cold performance — perfect fade opportunity.",
+    record: "1-9 in last 10 bets",
     percentage: 78,
     userCount: 156
   },
@@ -29,7 +32,8 @@ export const playsOfTheDay: BetterPlay[] = [
     bettorName: "SlumpCityJack",
     bet: "Dodgers -1.5",
     suggestionType: "fade",
-    stats: "@SlumpCityJack can't buy a win — easy fade.",
+    stats: "Deep slump continues — easy fade.",
+    record: "3-11 in last 14 bets",
     percentage: 72,
     userCount: 143
   },
@@ -37,7 +41,8 @@ export const playsOfTheDay: BetterPlay[] = [
     bettorName: "IcyColdTakes",
     bet: "Lakers +3",
     suggestionType: "fade",
-    stats: "@IcyColdTakes is struggling badly — fade with confidence.",
+    stats: "Struggling badly — fade with confidence.",
+    record: "2-13 in last 15 bets",
     percentage: 85,
     userCount: 201
   },
@@ -45,7 +50,8 @@ export const playsOfTheDay: BetterPlay[] = [
     bettorName: "FrozenPicks",
     bet: "Warriors ML",
     suggestionType: "fade",
-    stats: "@FrozenPicks is on a cold streak — time to fade.",
+    stats: "Cold streak continues — time to fade.",
+    record: "4-10 in last 14 bets",
     percentage: 76,
     userCount: 167
   }

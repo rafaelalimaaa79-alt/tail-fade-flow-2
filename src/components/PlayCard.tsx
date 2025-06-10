@@ -18,34 +18,61 @@ const PlayCard: React.FC<PlayCardProps> = ({ play, renderWaveText, onActionClick
   
   return (
     <div className="rounded-xl bg-card p-6 shadow-lg border border-white/10 neon-glow">
-      {/* Full-width large title */}
-      <div className="mb-5 border-b border-white/10 pb-2">
-        <h2 className="font-rajdhani text-3xl font-extrabold text-white text-center tracking-wider uppercase">Today's Edge</h2>
+      {/* Header */}
+      <div className="mb-6 border-b border-white/10 pb-3">
+        <h2 className="font-rajdhani text-2xl font-bold text-white text-center tracking-wider uppercase">
+          TODAY'S EDGE
+        </h2>
       </div>
       
-      {/* Bettor info with italic usernames and highlighted stats */}
-      <div className="mb-6 text-lg text-white/80 text-center">
-        <span className="font-normal italic text-white/70 font-serif">@{play.bettorName}</span>
-        <div className="mt-3 text-xl font-medium">
-          <div className="wave-text-container">
-            <div className="block mb-2">
-              {renderWaveText(play.stats, 0)}
-            </div>
-            <div className="block text-base font-normal italic text-white/70 font-serif tracking-wide">
-              {renderWaveText(`Fading Users: ${play.userCount}`, 1)}
-            </div>
-          </div>
+      {/* Bettor Name */}
+      <div className="mb-4 text-center">
+        <h3 className="font-rajdhani text-xl font-bold text-white">
+          @{play.bettorName}
+        </h3>
+      </div>
+      
+      {/* Cold Streak Stats */}
+      <div className="mb-4 text-center">
+        <div className="flex items-center justify-center gap-2 mb-2">
+          <span className="text-lg">📉</span>
+          <span className="font-rajdhani text-lg font-semibold text-white">
+            {play.record}
+          </span>
+        </div>
+        <p className="text-white/80 font-medium text-base leading-relaxed">
+          {play.stats}
+        </p>
+      </div>
+      
+      {/* Fading Users Count */}
+      <div className="mb-6 text-center">
+        <p className="text-white/70 font-medium text-sm tracking-wide">
+          Fading Users: <span className="text-white font-semibold">{play.userCount}</span>
+        </p>
+      </div>
+      
+      {/* Recommended Play Section */}
+      <div className="mb-4">
+        <h4 className="font-rajdhani text-sm font-bold text-white/60 uppercase tracking-wider mb-3 text-center">
+          Recommended Play:
+        </h4>
+        <div className="flex items-center justify-center gap-2 mb-4">
+          <span className="text-white/80">➡</span>
+          <span className="font-rajdhani text-lg font-semibold text-white">
+            Fade {play.bet}
+          </span>
         </div>
       </div>
       
-      {/* Combined suggestion and action in a single card */}
-      <div className="mb-6 rounded-lg bg-muted p-5 text-center border border-white/10 shadow-lg">
+      {/* Action Button */}
+      <div className="rounded-lg bg-muted p-4 text-center border border-white/10 shadow-lg">
         <ActionButton 
           variant="fade"
-          className="h-14 text-xl font-bold"
+          className="h-12 text-lg font-bold"
           onClick={handleBetClick}
         >
-          {`Fade\n${play.bet}`}
+          Fade {play.bet}
         </ActionButton>
       </div>
     </div>
