@@ -37,10 +37,6 @@ const PendingBetsList = () => {
     );
   }
   
-  const formatTime = (isoString: string) => {
-    return format(new Date(isoString), "h:mm a");
-  };
-  
   const handleBetNow = (id: string, sportsbook = DEFAULT_SPORTSBOOK) => {
     // Mark the bet as placed with the selected sportsbook
     markBetAsPlaced(id, sportsbook);
@@ -52,24 +48,21 @@ const PendingBetsList = () => {
   // Function to get the opposite bet that we're fading
   const getFadedBet = (betDescription: string) => {
     // Simple logic to show what bet we're fading
-    // This would be more sophisticated in a real app
     if (betDescription.includes("Yankees ML")) {
-      return "Red Sox ML"; // Assuming Yankees vs Red Sox
+      return "Red Sox ML";
     } else if (betDescription.includes("Lakers -5.5")) {
-      return "Celtics +5.5"; // Assuming Lakers vs Celtics
+      return "Celtics +5.5";
     } else if (betDescription.includes("Over 220")) {
       return "Under 220";
     } else if (betDescription.includes("Dodgers -1.5")) {
-      return "Giants +1.5"; // Assuming Dodgers vs Giants
+      return "Giants +1.5";
     } else if (betDescription.includes("-")) {
-      // Generic handling for spread bets - flip the sign
       return betDescription.replace("-", "+");
     } else if (betDescription.includes("+")) {
-      // Generic handling for spread bets - flip the sign
       return betDescription.replace("+", "-");
     }
     
-    return "Opposite bet"; // Fallback
+    return "Opposite bet";
   };
   
   return (
@@ -100,17 +93,17 @@ const PendingBetsList = () => {
             {/* Action button */}
             <div className="flex justify-center">
               {bet.isPlaced ? (
-                <div className="w-full max-w-sm">
+                <div className="w-full">
                   <Button 
                     variant="outline"
                     className="w-full bg-gray-700 border-gray-600 text-gray-400 py-3 text-lg rounded-xl"
                     disabled
                   >
-                    Bet Placed on {SPORTSBOOKS[bet.sportsbook as keyof typeof SPORTSBOOKS]?.name || "Hard Rock"}
+                    Bet Placed on Hard Rock
                   </Button>
                 </div>
               ) : (
-                <div className="w-full max-w-sm">
+                <div className="w-full">
                   <Button 
                     className="w-full bg-purple-600 hover:bg-purple-700 text-white font-bold py-3 text-lg rounded-xl flex items-center justify-center gap-2"
                     onClick={() => handleBetNow(bet.id)}

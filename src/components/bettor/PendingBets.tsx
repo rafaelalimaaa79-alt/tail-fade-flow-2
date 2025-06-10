@@ -6,7 +6,8 @@ import { format } from "date-fns";
 import { Badge } from "@/components/ui/badge";
 import { showFadeNotification } from "@/utils/betting-notifications";
 import ActionButton from "@/components/ActionButton";
-import { ThumbsUp, ThumbsDown, Clock, Star } from "lucide-react";
+import { ThumbsUp, ThumbsDown, Clock, Star, ArrowRight } from "lucide-react";
+import { Button } from "@/components/ui/button";
 
 type PendingBetsProps = {
   pendingBets: BettorBet[];
@@ -15,36 +16,27 @@ type PendingBetsProps = {
 };
 
 const PendingBets: React.FC<PendingBetsProps> = ({ pendingBets, profile, className }) => {
-  const formatTime = (isoString: string) => {
-    return format(new Date(isoString), "h:mm a");
-  };
-
-  // Function to generate a confidence score and its styling
-  const getConfidenceScore = (bet: BettorBet) => {
-    // In a real app, this would come from actual confidence scores stored in the bet data
-    // For now, we'll use units risked as a proxy for confidence
-    const unitsRisked = bet.unitsRisked;
-    
-    // Calculate a score based on units risked (1-5 -> 0-100%)
-    const score = Math.min(Math.round((unitsRisked / 5) * 100), 100);
-    
-    let colorClass = "";
-    if (score >= 70) {
-      colorClass = "text-onetime-green";
-    } else if (score >= 50) {
-      colorClass = "text-onetime-orange"; 
-    } else {
-      colorClass = "text-onetime-red";
-    }
-    
-    return {
-      score,
-      colorClass
-    };
-  };
-
   const handleFade = (bet: BettorBet) => {
     showFadeNotification("Bettor", bet.betType);
+  };
+
+  // Function to get the opposite bet that we're fading
+  const getFadedBet = (betDescription: string) => {
+    if (betDescription.includes("Yankees ML")) {
+      return "Red Sox ML";
+    } else if (betDescription.includes("Lakers -5.5")) {
+      return "Celtics +5.5";
+    } else if (betDescription.includes("Over 220")) {
+      return "Under 220";
+    } else if (betDescription.includes("Dodgers -1.5")) {
+      return "Giants +1.5";
+    } else if (betDescription.includes("-")) {
+      return betDescription.replace("-", "+");
+    } else if (betDescription.includes("+")) {
+      return betDescription.replace("+", "-");
+    }
+    
+    return "Opposite bet";
   };
 
   return (
@@ -56,44 +48,39 @@ const PendingBets: React.FC<PendingBetsProps> = ({ pendingBets, profile, classNa
       {pendingBets.length > 0 ? (
         <div className="space-y-4 relative z-10">
           {pendingBets.map((bet) => {
-            const confidenceData = getConfidenceScore(bet);
+            const fadedBet = getFadedBet(bet.betType);
             
             return (
               <div 
                 key={bet.id} 
-                className="relative overflow-hidden rounded-xl bg-gradient-to-br from-black via-gray-900/80 to-black/60 p-4 shadow-xl border border-white/10"
+                className="rounded-2xl bg-gray-800 p-6 border border-gray-600"
               >
-                {/* Game information at the top */}
+                {/* Bet Description as main header */}
                 <div className="mb-4 text-center">
-                  <h4 className="text-xl font-bold text-white">
-                    {bet.teams}
-                  </h4>
-                </div>
-                
-                {/* Username's bet */}
-                <div className="mb-4 text-center">
-                  <p className="text-sm text-cyan-400/80 mb-1">@{profile.username}'s Bet:</p>
-                  <p className="text-lg font-bold text-white">
+                  <h3 className="text-3xl font-bold text-white mb-2">
                     {bet.betType}
-                  </p>
+                  </h3>
+                  <div className="h-0.5 w-16 bg-cyan-400 mx-auto"></div>
                 </div>
                 
-                {/* Fade Confidence line */}
-                <div className="mb-4 text-center">
-                  <p className="text-base text-white/80">
-                    Fade Confidence: <span className={`font-bold ${confidenceData.colorClass}`}>{confidenceData.score}%</span>
+                {/* Fading info */}
+                <div className="mb-6 text-center">
+                  <p className="text-lg text-gray-300">
+                    Fading <span className="text-cyan-400">@{profile.username}</span>'s {fadedBet} pick
                   </p>
                 </div>
                 
                 {/* Action button */}
-                <div className="flex gap-2 mt-4 justify-center">
-                  <ActionButton 
-                    variant="fade" 
-                    className="h-10 py-0 text-sm"
-                    onClick={() => handleFade(bet)}
-                  >
-                    <span className="text-center font-bold">Fade {bet.betType}</span>
-                  </ActionButton>
+                <div className="flex justify-center">
+                  <div className="w-full">
+                    <Button 
+                      className="w-full bg-purple-600 hover:bg-purple-700 text-white font-bold py-3 text-lg rounded-xl flex items-center justify-center gap-2"
+                      onClick={() => handleFade(bet)}
+                    >
+                      Bet Now on Hard Rock
+                      <ArrowRight className="w-5 h-5" />
+                    </Button>
+                  </div>
                 </div>
               </div>
             );
