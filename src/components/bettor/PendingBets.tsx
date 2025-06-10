@@ -47,11 +47,11 @@ const PendingBets: React.FC<PendingBetsProps> = ({ pendingBets, className }) => 
   };
 
   return (
-    <div className={cn("rounded-xl bg-black p-4 shadow-md relative animate-glow-pulse-purple overflow-hidden border border-onetime-purple/30", className)}>
-      <div className="absolute inset-0 bg-onetime-purple/5 backdrop-blur-sm pointer-events-none"></div>
+    <div className={cn("rounded-xl bg-black p-4 shadow-md relative animate-glow-pulse-icy overflow-hidden border border-onetime-red/30", className)}>
+      <div className="absolute inset-0 bg-onetime-red/5 backdrop-blur-sm pointer-events-none"></div>
       <h3 className="mb-5 text-xl font-bold text-white text-center relative inline-block left-1/2 transform -translate-x-1/2 z-10">
         Pending Bets
-        <div className="h-1 w-20 bg-gradient-to-r from-onetime-purple/80 to-transparent rounded-full mx-auto mt-1"></div>
+        <div className="h-1 w-20 bg-gradient-to-r from-onetime-red/80 to-transparent rounded-full mx-auto mt-1"></div>
       </h3>
       
       {pendingBets.length > 0 ? (
@@ -62,17 +62,17 @@ const PendingBets: React.FC<PendingBetsProps> = ({ pendingBets, className }) => 
             return (
               <div 
                 key={bet.id} 
-                className="relative overflow-hidden rounded-xl bg-gradient-to-br from-black via-black/80 to-black/60 p-4 shadow-lg border border-white/10 transition-all duration-300 hover:border-onetime-purple/50"
+                className="relative overflow-hidden rounded-xl bg-gradient-to-br from-black via-black/80 to-black/60 p-4 shadow-lg border border-white/10 transition-all duration-300 hover:border-onetime-red/50"
               >
                 {/* Interactive blob effects in background */}
-                <div className="absolute -top-12 -right-12 h-28 w-28 rounded-full bg-onetime-purple/20 blur-xl"></div>
+                <div className="absolute -top-12 -right-12 h-28 w-28 rounded-full bg-onetime-red/20 blur-xl"></div>
                 <div className="absolute bottom-0 left-6 h-20 w-20 rounded-full bg-onetime-orange/10 blur-xl"></div>
                 
                 {/* Bet Type as prominent header */}
                 <div className="mb-4 text-center">
                   <h4 className="text-xl font-extrabold text-white tracking-tight relative z-10 font-rajdhani">
                     {bet.betType}
-                    <div className="h-1 w-16 bg-gradient-to-r from-onetime-purple via-onetime-purple/80 to-transparent rounded-full mx-auto mt-1"></div>
+                    <div className="h-1 w-16 bg-gradient-to-r from-onetime-red via-onetime-red/80 to-transparent rounded-full mx-auto mt-1"></div>
                   </h4>
                 </div>
                 
@@ -92,7 +92,7 @@ const PendingBets: React.FC<PendingBetsProps> = ({ pendingBets, className }) => 
                 <div className="flex gap-2 mt-3 justify-center relative z-10">
                   <ActionButton 
                     variant="fade" 
-                    className="h-10 py-0 text-sm shadow-lg shadow-onetime-purple/10 group relative overflow-hidden"
+                    className="h-10 py-0 text-sm shadow-lg shadow-onetime-red/10 group relative overflow-hidden"
                     onClick={() => handleFade(bet)}
                   >
                     <div className="absolute inset-0 bg-gradient-to-r from-transparent to-white/10 opacity-0 group-hover:opacity-100 transition-opacity"></div>
