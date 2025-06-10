@@ -1,3 +1,4 @@
+
 import React from "react";
 import { Link } from "react-router-dom";
 import { Card } from "@/components/ui/card";
@@ -170,11 +171,11 @@ const TrendItem = ({
               {/* Spacer to push button to bottom */}
               <div className="flex-grow"></div>
               
-              {/* Fade button with bigger, bolder text */}
+              {/* Fade button with better sizing */}
               <div className="w-full pt-1">
                 <Button 
                   className={cn(
-                    "w-full py-4 rounded-xl transition-all duration-300 text-2xl font-black",
+                    "w-full py-4 rounded-xl transition-all duration-300 text-lg font-bold",
                     isMostVisible 
                       ? "bg-[#AEE3F5] hover:bg-[#AEE3F5]/90 text-black"
                       : "bg-gray-600 hover:bg-gray-500 text-gray-300"
