@@ -21,12 +21,8 @@ const PlayCard: React.FC<PlayCardProps> = ({ play, renderWaveText, onActionClick
     showFadeNotification(play.bettorName, oppositeBet);
   };
 
-  // Function to get fade confidence (mock data for now)
-  const getFadeConfidence = () => {
-    return Math.floor(Math.random() * 30) + 70; // Random between 70-99%
-  };
-
-  const fadeConfidence = getFadeConfidence();
+  // Use the percentage from the play data instead of random generation
+  const fadeConfidence = play.percentage;
   
   return (
     <div className="rounded-xl bg-card p-6 shadow-lg border border-white/10 neon-glow">
