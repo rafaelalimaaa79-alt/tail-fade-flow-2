@@ -53,11 +53,11 @@ const PendingBets: React.FC<PendingBetsProps> = ({ pendingBets, profile, classNa
             return (
               <div 
                 key={bet.id} 
-                className="rounded-2xl bg-gray-800 p-6 border border-gray-600"
+                className="rounded-2xl bg-gray-900/80 p-6 border border-gray-700/50"
               >
                 {/* Bet Description as main header */}
                 <div className="mb-4 text-center">
-                  <h3 className="text-3xl font-bold text-white mb-2">
+                  <h3 className="text-2xl font-bold text-white mb-2">
                     {bet.betType}
                   </h3>
                   <div className="h-0.5 w-16 bg-cyan-400 mx-auto"></div>
@@ -65,7 +65,7 @@ const PendingBets: React.FC<PendingBetsProps> = ({ pendingBets, profile, classNa
                 
                 {/* Fading info */}
                 <div className="mb-6 text-center">
-                  <p className="text-lg text-gray-300">
+                  <p className="text-base text-gray-300">
                     Fading <span className="text-cyan-400">@{profile.username}</span>'s {fadedBet} pick
                   </p>
                 </div>
@@ -74,11 +74,11 @@ const PendingBets: React.FC<PendingBetsProps> = ({ pendingBets, profile, classNa
                 <div className="flex justify-center">
                   <div className="w-full">
                     <Button 
-                      className="w-full bg-purple-600 hover:bg-purple-700 text-white font-bold py-3 text-lg rounded-xl flex items-center justify-center gap-2"
+                      className="w-full bg-gradient-to-r from-purple-600 to-blue-600 hover:from-purple-700 hover:to-blue-700 text-white font-semibold py-3 text-base rounded-xl flex items-center justify-center gap-2 shadow-lg"
                       onClick={() => handleFade(bet)}
                     >
                       Bet Now on Hard Rock
-                      <ArrowRight className="w-5 h-5" />
+                      <ArrowRight className="w-4 h-4" />
                     </Button>
                   </div>
                 </div>
@@ -87,8 +87,8 @@ const PendingBets: React.FC<PendingBetsProps> = ({ pendingBets, profile, classNa
           })}
         </div>
       ) : (
-        <div className="rounded-lg bg-black/30 p-6 text-center border border-white/10">
-          <p className="text-white/70">@{profile.username} has no active bets right now</p>
+        <div className="rounded-lg bg-gray-900/50 p-6 text-center border border-gray-700/50">
+          <p className="text-gray-400">@{profile.username} has no active bets right now</p>
         </div>
       )}
     </div>

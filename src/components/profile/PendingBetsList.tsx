@@ -31,8 +31,8 @@ const PendingBetsList = () => {
   
   if (pendingBets.length === 0) {
     return (
-      <div className="rounded-lg bg-black/30 p-6 text-center border border-white/10">
-        <p className="text-white/70">You don't have any pending bets yet</p>
+      <div className="rounded-lg bg-gray-900/50 p-6 text-center border border-gray-700/50">
+        <p className="text-gray-400">You don't have any pending bets yet</p>
       </div>
     );
   }
@@ -73,11 +73,11 @@ const PendingBetsList = () => {
         return (
           <div 
             key={bet.id} 
-            className="rounded-2xl bg-gray-800 p-6 border border-gray-600"
+            className="rounded-2xl bg-gray-900/80 p-6 border border-gray-700/50"
           >
             {/* Bet Description as main header */}
             <div className="mb-4 text-center">
-              <h3 className="text-3xl font-bold text-white mb-2">
+              <h3 className="text-2xl font-bold text-white mb-2">
                 {bet.betDescription}
               </h3>
               <div className="h-0.5 w-16 bg-cyan-400 mx-auto"></div>
@@ -85,7 +85,7 @@ const PendingBetsList = () => {
             
             {/* Fading info */}
             <div className="mb-6 text-center">
-              <p className="text-lg text-gray-300">
+              <p className="text-base text-gray-300">
                 Fading <span className="text-cyan-400">@{bet.bettorName}</span>'s {fadedBet} pick
               </p>
             </div>
@@ -96,7 +96,7 @@ const PendingBetsList = () => {
                 <div className="w-full">
                   <Button 
                     variant="outline"
-                    className="w-full bg-gray-700 border-gray-600 text-gray-400 py-3 text-lg rounded-xl"
+                    className="w-full bg-gray-800 border-gray-600 text-gray-500 py-3 text-base rounded-xl cursor-not-allowed"
                     disabled
                   >
                     Bet Placed on Hard Rock
@@ -105,11 +105,11 @@ const PendingBetsList = () => {
               ) : (
                 <div className="w-full">
                   <Button 
-                    className="w-full bg-purple-600 hover:bg-purple-700 text-white font-bold py-3 text-lg rounded-xl flex items-center justify-center gap-2"
+                    className="w-full bg-gradient-to-r from-purple-600 to-blue-600 hover:from-purple-700 hover:to-blue-700 text-white font-semibold py-3 text-base rounded-xl flex items-center justify-center gap-2 shadow-lg"
                     onClick={() => handleBetNow(bet.id)}
                   >
                     Bet Now on Hard Rock
-                    <ArrowRight className="w-5 h-5" />
+                    <ArrowRight className="w-4 h-4" />
                   </Button>
                 </div>
               )}
