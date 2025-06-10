@@ -52,7 +52,7 @@ const PendingBets: React.FC<PendingBetsProps> = ({ pendingBets, profile, classNa
 
   return (
     <div className={cn("rounded-xl bg-black p-6 shadow-2xl relative overflow-hidden border border-white/10", className)}>
-      <h3 className="mb-6 text-xl font-bold text-cyan-400 text-center relative z-10">
+      <h3 className="mb-6 text-3xl font-bold text-[#AEE3F5] text-center relative z-10 drop-shadow-[0_0_8px_rgba(174,227,245,0.7)] font-rajdhani uppercase tracking-wide">
         Pending Bets
       </h3>
       
