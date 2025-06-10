@@ -8,6 +8,7 @@ import { showFadeNotification } from "@/utils/betting-notifications";
 import ActionButton from "@/components/ActionButton";
 import { ThumbsUp, ThumbsDown, Clock, Star, ArrowRight } from "lucide-react";
 import { Button } from "@/components/ui/button";
+import { Separator } from "@/components/ui/separator";
 
 type PendingBetsProps = {
   pendingBets: BettorBet[];
@@ -56,52 +57,60 @@ const PendingBets: React.FC<PendingBetsProps> = ({ pendingBets, profile, classNa
       </h3>
       
       {pendingBets.length > 0 ? (
-        <div className="space-y-4 relative z-10">
-          {pendingBets.map((bet) => {
+        <div className="space-y-6 relative z-10">
+          {pendingBets.map((bet, index) => {
             const fadeConfidence = getFadeConfidence();
             const matchup = getMatchup();
             const betLine = getBetLine();
             
             return (
-              <div 
-                key={bet.id} 
-                className="bg-black rounded-xl p-4 border border-[#AEE3F5]/30 animate-glow-pulse space-y-3"
-                style={{
-                  boxShadow: '0 0 15px rgba(174, 227, 245, 0.3)',
-                }}
-              >
-                {/* Game header with icy blue underline */}
-                <div className="text-center pb-2">
-                  <h3 className="text-lg font-bold text-white relative inline-block">
-                    {matchup}
-                    <div className="absolute bottom-0 left-0 w-full h-0.5 bg-gradient-to-r from-transparent via-[#AEE3F5] to-transparent opacity-80"></div>
-                  </h3>
+              <div key={bet.id}>
+                <div 
+                  className="bg-black rounded-xl p-4 border border-[#AEE3F5]/30 animate-glow-pulse space-y-3"
+                  style={{
+                    boxShadow: '0 0 15px rgba(174, 227, 245, 0.3)',
+                  }}
+                >
+                  {/* Game header with icy blue underline */}
+                  <div className="text-center pb-2">
+                    <h3 className="text-lg font-bold text-white relative inline-block">
+                      {matchup}
+                      <div className="absolute bottom-0 left-0 w-full h-0.5 bg-gradient-to-r from-transparent via-[#AEE3F5] to-transparent opacity-80"></div>
+                    </h3>
+                  </div>
+                  
+                  {/* Bettor's pick */}
+                  <div className="text-center">
+                    <p className="text-base font-semibold">
+                      <span className="text-[#AEE3F5]">@{profile.username}</span>
+                      <span className="text-white"> is on {betLine}</span>
+                    </p>
+                  </div>
+                  
+                  {/* Fade confidence */}
+                  <div className="text-center">
+                    <p className="text-lg font-semibold text-gray-300">
+                      Fade Confidence: <span className="text-[#AEE3F5] font-bold">{fadeConfidence}%</span>
+                    </p>
+                  </div>
+                  
+                  {/* Fade button */}
+                  <div className="w-full pt-2">
+                    <Button 
+                      className="w-full bg-[#6C5CE7] hover:bg-[#5B4BD6] text-white font-medium py-3 rounded-xl flex items-center justify-center gap-2"
+                      onClick={() => handleFade(bet)}
+                    >
+                      👎 Fade {betLine}
+                    </Button>
+                  </div>
                 </div>
                 
-                {/* Bettor's pick */}
-                <div className="text-center">
-                  <p className="text-base font-semibold">
-                    <span className="text-[#AEE3F5]">@{profile.username}</span>
-                    <span className="text-white"> is on {betLine}</span>
-                  </p>
-                </div>
-                
-                {/* Fade confidence */}
-                <div className="text-center">
-                  <p className="text-lg font-semibold text-gray-300">
-                    Fade Confidence: <span className="text-[#AEE3F5] font-bold">{fadeConfidence}%</span>
-                  </p>
-                </div>
-                
-                {/* Fade button */}
-                <div className="w-full pt-2">
-                  <Button 
-                    className="w-full bg-[#6C5CE7] hover:bg-[#5B4BD6] text-white font-medium py-3 rounded-xl flex items-center justify-center gap-2"
-                    onClick={() => handleFade(bet)}
-                  >
-                    👎 Fade {betLine}
-                  </Button>
-                </div>
+                {/* Separator line between cards (not after the last one) */}
+                {index < pendingBets.length - 1 && (
+                  <div className="flex justify-center py-4">
+                    <div className="w-3/4 h-0.5 bg-gradient-to-r from-transparent via-[#AEE3F5]/50 to-transparent"></div>
+                  </div>
+                )}
               </div>
             );
           })}
