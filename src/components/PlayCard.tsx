@@ -40,9 +40,6 @@ const PlayCard: React.FC<PlayCardProps> = ({ play, renderWaveText, onActionClick
             {play.record}
           </span>
         </div>
-        <p className="text-white/90 font-medium text-lg leading-relaxed max-w-xs mx-auto">
-          {play.stats}
-        </p>
       </div>
       
       {/* Fading Users Count - Clean display without blocks */}
