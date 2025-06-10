@@ -27,19 +27,16 @@ const PlayCard: React.FC<PlayCardProps> = ({ play, renderWaveText, onActionClick
       
       {/* Bettor Name - Smaller font size */}
       <div className="mb-4 text-center">
-        <h3 className="font-rajdhani text-xl font-bold text-white">
+        <h3 className="font-rajdhani text-lg font-bold text-white">
           @{play.bettorName}
         </h3>
       </div>
       
-      {/* Cold Streak Stats - Centered in the middle */}
-      <div className="mb-4 flex items-center justify-center">
-        <div className="flex items-center justify-center gap-3">
-          <span className="text-2xl">📉</span>
-          <span className="font-rajdhani text-2xl font-black" style={{ color: '#AEE3F5' }}>
-            {play.record}
-          </span>
-        </div>
+      {/* Cold Streak Stats - Centered text only */}
+      <div className="mb-4 text-center">
+        <span className="font-rajdhani text-2xl font-black" style={{ color: '#AEE3F5' }}>
+          {play.record}
+        </span>
       </div>
       
       {/* Fading Users Count - Clean display without blocks */}
