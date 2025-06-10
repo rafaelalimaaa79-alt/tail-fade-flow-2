@@ -11,9 +11,42 @@ interface PlayCardProps {
 }
 
 const PlayCard: React.FC<PlayCardProps> = ({ play, renderWaveText, onActionClick }) => {
+  // Function to get the opposite bet for fading
+  const getOppositeBet = (originalBet: string) => {
+    // Handle point spreads
+    if (originalBet.includes('-') && (originalBet.includes('.5') || /[+-]\d+/.test(originalBet))) {
+      const team = originalBet.split(' ')[0];
+      const spread = originalBet.split(' ')[1];
+      if (spread.startsWith('-')) {
+        return `${team} +${spread.substring(1)}`;
+      } else if (spread.startsWith('+')) {
+        return `${team} -${spread.substring(1)}`;
+      }
+    }
+    
+    // Handle moneylines (ML)
+    if (originalBet.includes('ML')) {
+      const team = originalBet.replace(' ML', '');
+      // For ML, the opposite would be the other team, but we'll just say "Opposite ML"
+      return `Fade ${team} ML`;
+    }
+    
+    // Handle over/under totals
+    if (originalBet.toLowerCase().includes('over')) {
+      return originalBet.replace(/over/i, 'Under');
+    }
+    if (originalBet.toLowerCase().includes('under')) {
+      return originalBet.replace(/under/i, 'Over');
+    }
+    
+    // Default case - just add "Fade" prefix
+    return `Fade ${originalBet}`;
+  };
+
   // Handle the bet action with notification only
   const handleBetClick = () => {
-    showFadeNotification(play.bettorName, play.bet);
+    const oppositeBet = getOppositeBet(play.bet);
+    showFadeNotification(play.bettorName, oppositeBet);
   };
   
   return (
@@ -25,10 +58,10 @@ const PlayCard: React.FC<PlayCardProps> = ({ play, renderWaveText, onActionClick
         </h2>
       </div>
       
-      {/* Bettor Name - Smaller font size */}
+      {/* Bettor Name and Bet Description */}
       <div className="mb-4 text-center">
         <h3 className="font-rajdhani text-lg font-bold text-white">
-          @{play.bettorName}
+          @{play.bettorName}'s is on {play.bet}
         </h3>
       </div>
       
@@ -56,7 +89,7 @@ const PlayCard: React.FC<PlayCardProps> = ({ play, renderWaveText, onActionClick
           className="h-12 text-lg font-bold"
           onClick={handleBetClick}
         >
-          Fade {play.bet}
+          {getOppositeBet(play.bet)}
         </ActionButton>
       </div>
     </div>
