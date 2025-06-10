@@ -38,14 +38,16 @@ const PendingBets: React.FC<PendingBetsProps> = ({ pendingBets, profile, classNa
     return teams[Math.floor(Math.random() * teams.length)];
   };
 
-  // Function to generate bet lines
+  // Function to generate realistic NBA bet lines
   const getBetLine = () => {
     const lines = [
-      "Over 220.5",
-      "Under 48.5",
-      "-3.5",
-      "+7.5",
-      "Over 112.5"
+      "Over 230.5", // Total points
+      "Under 225.5", // Total points
+      "-3.5", // Point spread
+      "+5.5", // Point spread
+      "Over 115.5", // Team total
+      "Under 110.5", // Team total
+      "ML" // Moneyline
     ];
     return lines[Math.floor(Math.random() * lines.length)];
   };

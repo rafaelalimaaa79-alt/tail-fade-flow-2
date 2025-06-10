@@ -9,6 +9,19 @@ export const teams = [
   'Yankees', 'Dodgers', 'Red Sox', 'Astros', 'Braves',
   'Maple Leafs', 'Bruins', 'Lightning', 'Avalanche', 'Oilers'
 ];
+
+// NBA-specific bet types that make sense
+export const nbaBetTypes = [
+  'ML', // Moneyline
+  '-1.5', '-2.5', '-3.5', '-4.5', '-5.5', '-6.5', '-7.5', // Point spreads
+  '+1.5', '+2.5', '+3.5', '+4.5', '+5.5', '+6.5', '+7.5', // Point spreads
+  'Over 220.5', 'Over 225.5', 'Over 230.5', 'Over 235.5', // Total points
+  'Under 220.5', 'Under 225.5', 'Under 230.5', 'Under 235.5', // Total points
+  'Over 110.5', 'Over 115.5', 'Over 120.5', // Team totals
+  'Under 110.5', 'Under 115.5', 'Under 120.5' // Team totals
+];
+
+// Original bet types for other sports
 export const betTypes = ['ML', '-1.5', '+2.5', '-3.5', 'Over 220.5', 'Under 48.5'];
 
 // Shared utility to calculate timeframe-specific data points
