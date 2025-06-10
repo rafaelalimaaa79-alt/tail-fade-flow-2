@@ -49,44 +49,56 @@ const PendingBetsList = () => {
   const getFadeConfidence = () => {
     return Math.floor(Math.random() * 30) + 70; // Random between 70-99%
   };
+
+  // Function to generate NBA matchups
+  const getMatchup = () => {
+    const teams = [
+      "Lakers vs Celtics",
+      "Warriors vs Nets", 
+      "Bucks vs Heat",
+      "76ers vs Nuggets",
+      "Suns vs Mavericks"
+    ];
+    return teams[Math.floor(Math.random() * teams.length)];
+  };
   
   return (
     <div className="space-y-4">
       {pendingBets.map((bet) => {
         const fadeConfidence = getFadeConfidence();
+        const matchup = getMatchup();
         
         return (
           <div 
             key={bet.id} 
-            className="bg-black rounded-xl p-6 border border-[#AEE3F5]/30 animate-glow-pulse"
+            className="bg-black rounded-xl p-4 border border-[#AEE3F5]/30 animate-glow-pulse space-y-2"
             style={{
               boxShadow: '0 0 15px rgba(174, 227, 245, 0.3)',
             }}
           >
-            {/* Username */}
-            <div className="text-center mb-4">
-              <p className="text-lg font-medium text-[#AEE3F5]">
-                @{bet.bettorName}
+            {/* Game matchup */}
+            <div className="text-center">
+              <h3 className="text-lg font-bold text-white">
+                {matchup}
+              </h3>
+            </div>
+            
+            {/* Bettor's pick */}
+            <div className="text-center">
+              <p className="text-base text-[#AEE3F5]">
+                @{bet.bettorName} is on {bet.betDescription}
               </p>
             </div>
             
-            {/* Bet line */}
-            <div className="text-center mb-4">
-              <h3 className="text-xl font-bold text-white mb-3">
-                {bet.betDescription}
-              </h3>
-              <div className="w-12 h-0.5 bg-[#AEE3F5] mx-auto"></div>
-            </div>
-            
             {/* Fade confidence */}
-            <div className="text-center mb-4">
+            <div className="text-center">
               <p className="text-lg font-semibold text-gray-300">
-                Fade Confidence: <span className="text-[#AEE3F5] font-bold text-xl">{fadeConfidence}%</span>
+                Fade Confidence: <span className="text-[#AEE3F5] font-bold">{fadeConfidence}%</span>
               </p>
             </div>
             
             {/* Fade button */}
-            <div className="w-full">
+            <div className="w-full pt-2">
               {bet.isPlaced ? (
                 <Button 
                   variant="outline"
@@ -100,7 +112,7 @@ const PendingBetsList = () => {
                   className="w-full bg-[#6C5CE7] hover:bg-[#5B4BD6] text-white font-medium py-3 rounded-xl flex items-center justify-center gap-2"
                   onClick={() => handleBetNow(bet.id)}
                 >
-                  👎 Fade
+                  👎 Fade {bet.betDescription}
                 </Button>
               )}
             </div>
