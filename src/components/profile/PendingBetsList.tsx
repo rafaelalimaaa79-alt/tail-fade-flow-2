@@ -45,36 +45,46 @@ const PendingBetsList = () => {
     window.open(SPORTSBOOKS[sportsbook as keyof typeof SPORTSBOOKS]?.appUrl || SPORTSBOOKS[DEFAULT_SPORTSBOOK].appUrl, '_blank');
   };
 
-  // Function to get the opposite bet that we're fading
-  const getFadedBet = (betDescription: string) => {
-    // Simple logic to show what bet we're fading
+  // Function to get the game matchup
+  const getGameMatchup = (betDescription: string) => {
     if (betDescription.includes("Yankees ML")) {
-      return "Red Sox ML";
+      return "Yankees vs Red Sox";
     } else if (betDescription.includes("Lakers -5.5")) {
-      return "Celtics +5.5";
+      return "Lakers vs Celtics";
     } else if (betDescription.includes("Over 220")) {
-      return "Under 220";
+      return "Lakers vs Celtics";
     } else if (betDescription.includes("Dodgers -1.5")) {
-      return "Giants +1.5";
-    } else if (betDescription.includes("-")) {
-      return betDescription.replace("-", "+");
-    } else if (betDescription.includes("+")) {
-      return betDescription.replace("+", "-");
+      return "Dodgers vs Giants";
     }
-    
-    return "Opposite bet";
+    return "Team A vs Team B";
+  };
+
+  // Function to get fade confidence (mock data for now)
+  const getFadeConfidence = () => {
+    return Math.floor(Math.random() * 30) + 70; // Random between 70-99%
   };
   
   return (
     <div className="space-y-4">
       {pendingBets.map((bet) => {
-        const fadedBet = getFadedBet(bet.betDescription);
+        const gameMatchup = getGameMatchup(bet.betDescription);
+        const fadeConfidence = getFadeConfidence();
         
         return (
           <div 
             key={bet.id} 
-            className="bg-black rounded-xl p-6 border border-white/10"
+            className="bg-black rounded-xl p-6 border border-[#AEE3F5]/30 animate-glow-pulse"
+            style={{
+              boxShadow: '0 0 15px rgba(174, 227, 245, 0.3)',
+            }}
           >
+            {/* Game matchup */}
+            <div className="text-center mb-4">
+              <h4 className="text-lg font-semibold text-white">
+                {gameMatchup}
+              </h4>
+            </div>
+            
             {/* Bet title */}
             <div className="text-center mb-4">
               <h3 className="text-xl font-bold text-white mb-3">
@@ -83,10 +93,13 @@ const PendingBetsList = () => {
               <div className="w-12 h-0.5 bg-[#AEE3F5] mx-auto"></div>
             </div>
             
-            {/* Fading info */}
-            <div className="text-center mb-6">
+            {/* Username and fade confidence */}
+            <div className="text-center mb-4">
+              <p className="text-sm text-gray-400 mb-2">
+                <span className="text-[#AEE3F5]">@{bet.bettorName}</span>'s bet
+              </p>
               <p className="text-sm text-gray-400">
-                Fading <span className="text-[#AEE3F5]">@{bet.bettorName}</span>'s {fadedBet} pick
+                Fade Confidence: <span className="text-[#AEE3F5] font-semibold">{fadeConfidence}%</span>
               </p>
             </div>
             
@@ -105,7 +118,7 @@ const PendingBetsList = () => {
                   className="w-full bg-[#6C5CE7] hover:bg-[#5B4BD6] text-white font-medium py-3 rounded-xl flex items-center justify-center gap-2"
                   onClick={() => handleBetNow(bet.id)}
                 >
-                  Bet Now on Hard Rock
+                  Fade {bet.betDescription}
                   <ArrowRight className="w-4 h-4" />
                 </Button>
               )}
