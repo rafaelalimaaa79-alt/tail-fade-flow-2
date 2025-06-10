@@ -171,7 +171,7 @@ const TrendItem = ({
               {/* Spacer to push button to bottom */}
               <div className="flex-grow"></div>
               
-              {/* Fade button with better sizing */}
+              {/* Fade button with neon glow */}
               <div className="w-full pt-1">
                 <Button 
                   className={cn(
@@ -180,6 +180,9 @@ const TrendItem = ({
                       ? "bg-[#AEE3F5] hover:bg-[#AEE3F5]/90 text-black"
                       : "bg-gray-600 hover:bg-gray-500 text-gray-300"
                   )}
+                  style={isMostVisible ? {
+                    boxShadow: "0 0 20px rgba(174, 227, 245, 0.8), 0 0 40px rgba(174, 227, 245, 0.4)"
+                  } : undefined}
                 >
                   Fade {betLine}
                 </Button>
