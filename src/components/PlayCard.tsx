@@ -1,3 +1,4 @@
+
 import React from "react";
 import { Link } from "react-router-dom";
 import ActionButton from "./ActionButton";
@@ -19,6 +20,13 @@ const PlayCard: React.FC<PlayCardProps> = ({ play, renderWaveText, onActionClick
   const handleBetClick = () => {
     showFadeNotification(play.bettorName, oppositeBet);
   };
+
+  // Function to get fade confidence (mock data for now)
+  const getFadeConfidence = () => {
+    return Math.floor(Math.random() * 30) + 70; // Random between 70-99%
+  };
+
+  const fadeConfidence = getFadeConfidence();
   
   return (
     <div className="rounded-xl bg-card p-6 shadow-lg border border-white/10 neon-glow">
@@ -29,26 +37,26 @@ const PlayCard: React.FC<PlayCardProps> = ({ play, renderWaveText, onActionClick
         </h2>
       </div>
       
-      {/* Bettor Name and Bet Description */}
-      <div className="mb-4 text-center">
-        <h3 className="font-rajdhani text-lg font-bold text-white">
-          <Link 
-            to={`/bettor/${play.bettorName}`} 
-            className="transition-colors"
-            style={{ color: '#AEE3F5' }}
-            onMouseEnter={(e) => (e.target as HTMLElement).style.color = '#AEE3F580'}
-            onMouseLeave={(e) => (e.target as HTMLElement).style.color = '#AEE3F5'}
-          >
-            @{play.bettorName}
-          </Link> is on {play.bet}
-        </h3>
+      {/* Bettor's pick */}
+      <div className="text-center py-1 mb-4">
+        <p className="text-lg font-bold">
+          <span className="text-[#AEE3F5]">@{play.bettorName}</span>
+          <span className="text-white"> is on {play.bet}</span>
+        </p>
       </div>
       
-      {/* Cold Streak Stats - Centered text only */}
-      <div className="mb-4 text-center">
-        <span className="font-rajdhani text-2xl font-black" style={{ color: '#AEE3F5' }}>
-          {play.record}
-        </span>
+      {/* Record statline */}
+      <div className="text-center py-1 mb-4">
+        <p className="text-lg font-medium text-gray-400 italic">
+          He is {play.record}
+        </p>
+      </div>
+      
+      {/* Fade confidence */}
+      <div className="text-center py-1 mb-6">
+        <p className="text-lg font-semibold text-gray-300">
+          Fade Confidence: <span className="text-[#AEE3F5] font-bold">{fadeConfidence}%</span>
+        </p>
       </div>
       
       {/* Fading Users Count - Clean display without blocks */}
