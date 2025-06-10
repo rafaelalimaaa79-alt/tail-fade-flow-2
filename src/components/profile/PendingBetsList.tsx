@@ -147,10 +147,10 @@ const PendingBetsList = () => {
                   </Button>
                 ) : (
                   <Button 
-                    className="w-full bg-[#AEE3F5] hover:bg-[#AEE3F5]/90 text-black font-bold py-3 rounded-xl"
+                    className="w-full bg-primary hover:bg-primary/90 text-white font-bold py-3 rounded-xl"
                     onClick={() => handleBetNow(bet.id)}
                   >
-                    Fade {betLine}
+                    Bet Now on Hard Rock
                   </Button>
                 )}
               </div>
