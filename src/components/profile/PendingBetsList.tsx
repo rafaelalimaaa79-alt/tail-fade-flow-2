@@ -1,3 +1,4 @@
+
 import React from "react";
 import { format } from "date-fns";
 import { Badge } from "@/components/ui/badge";
@@ -70,76 +71,54 @@ const PendingBetsList = () => {
     
     return "Opposite bet"; // Fallback
   };
-
-  // Function to get responsive text size based on bet description length
-  const getBetTextSize = (betDescription: string) => {
-    const length = betDescription.length;
-    if (length > 25) {
-      return "text-lg"; // Smaller for very long text
-    } else if (length > 18) {
-      return "text-xl"; // Medium for moderately long text
-    } else {
-      return "text-2xl"; // Original size for shorter text
-    }
-  };
   
   return (
-    <div className="space-y-2">
+    <div className="space-y-4">
       {pendingBets.map((bet) => {
         const fadedBet = getFadedBet(bet.betDescription);
-        const textSize = getBetTextSize(bet.betDescription);
         
         return (
           <div 
             key={bet.id} 
-            className="relative overflow-hidden rounded-xl bg-gradient-to-br from-black via-black/80 to-black/60 p-2.5 shadow-lg border border-white/10 transition-all duration-300 hover:border-onetime-red/50"
+            className="rounded-2xl bg-gray-800 p-6 border border-gray-600"
           >
-            {/* Interactive blob effect in background */}
-            <div className="absolute -top-8 -right-8 h-20 w-20 rounded-full bg-onetime-red/20 blur-xl"></div>
-            <div className="absolute bottom-0 left-4 h-14 w-14 rounded-full bg-onetime-orange/10 blur-xl"></div>
-            
-            {/* Bet Description as prominent header with responsive font size - properly centered */}
-            <div className="mb-1.5 text-center">
-              <h4 className={`${textSize} font-extrabold text-white tracking-tight relative z-10 font-rajdhani mx-auto`}>
+            {/* Bet Description as main header */}
+            <div className="mb-4 text-center">
+              <h3 className="text-3xl font-bold text-white mb-2">
                 {bet.betDescription}
-                <div className="h-0.5 w-12 bg-gradient-to-r from-onetime-red via-onetime-red/80 to-transparent rounded-full mx-auto mt-0.5"></div>
-              </h4>
+              </h3>
+              <div className="h-0.5 w-16 bg-cyan-400 mx-auto"></div>
             </div>
             
-            {/* Middle row: Bettor info with nice styling - showing what we're fading - centered */}
-            <div className="flex flex-col items-center justify-center mb-1.5 relative z-10">
-              <div className="flex items-center justify-center mb-1 gap-2">
-                <span className="text-sm font-medium text-white inline-flex items-center gap-1">
-                  Fading <span className="text-onetime-red">@{bet.bettorName}</span>'s {fadedBet} pick
-                </span>
-              </div>
+            {/* Fading info */}
+            <div className="mb-6 text-center">
+              <p className="text-lg text-gray-300">
+                Fading <span className="text-cyan-400">@{bet.bettorName}</span>'s {fadedBet} pick
+              </p>
             </div>
             
-            {/* Bottom row: Action button with enhanced styling - centered */}
-            <div className="relative z-10 flex justify-center">
+            {/* Action button */}
+            <div className="flex justify-center">
               {bet.isPlaced ? (
-                <div className="relative overflow-hidden rounded-lg border border-white/20 bg-black/50 w-full">
-                  <div className="absolute inset-0 bg-gradient-to-r from-onetime-green/20 to-transparent"></div>
+                <div className="w-full max-w-sm">
                   <Button 
                     variant="outline"
-                    className="w-full border-0 text-white bg-transparent py-1.5 text-sm"
+                    className="w-full bg-gray-700 border-gray-600 text-gray-400 py-3 text-lg rounded-xl"
                     disabled
                   >
                     Bet Placed on {SPORTSBOOKS[bet.sportsbook as keyof typeof SPORTSBOOKS]?.name || "Hard Rock"}
                   </Button>
                 </div>
               ) : (
-                <Button 
-                  variant="default"
-                  className="w-full bg-gradient-to-r from-onetime-purple to-onetime-purple/80 hover:from-onetime-purple/90 hover:to-onetime-purple/70 shadow-lg shadow-onetime-purple/20 text-white font-bold flex items-center justify-center group relative overflow-hidden py-1.5 text-sm"
-                  onClick={() => handleBetNow(bet.id)}
-                >
-                  <span className="relative z-10 flex items-center">
+                <div className="w-full max-w-sm">
+                  <Button 
+                    className="w-full bg-purple-600 hover:bg-purple-700 text-white font-bold py-3 text-lg rounded-xl flex items-center justify-center gap-2"
+                    onClick={() => handleBetNow(bet.id)}
+                  >
                     Bet Now on Hard Rock
-                    <ArrowRight className="ml-1 w-3 h-3 transition-transform group-hover:translate-x-1" />
-                  </span>
-                  <span className="absolute inset-0 bg-gradient-to-r from-transparent to-white/10 opacity-0 group-hover:opacity-100 transition-opacity"></span>
-                </Button>
+                    <ArrowRight className="w-5 h-5" />
+                  </Button>
+                </div>
               )}
             </div>
           </div>
