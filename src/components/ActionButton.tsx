@@ -9,6 +9,7 @@ type ActionButtonProps = {
   className?: string;
   onClick?: () => void;
   style?: React.CSSProperties;
+  glowEffect?: boolean; // New prop to control glow
 };
 
 const ActionButton = forwardRef<HTMLButtonElement, ActionButtonProps>(({
@@ -17,7 +18,12 @@ const ActionButton = forwardRef<HTMLButtonElement, ActionButtonProps>(({
   className,
   onClick,
   style,
+  glowEffect = false,
 }, ref) => {
+  const glowStyle = glowEffect ? {
+    boxShadow: "0 0 20px rgba(174, 227, 245, 0.8), 0 0 40px rgba(174, 227, 245, 0.4)"
+  } : {};
+
   return (
     <Button
       ref={ref}
@@ -28,7 +34,7 @@ const ActionButton = forwardRef<HTMLButtonElement, ActionButtonProps>(({
         variant === "default" && "bg-primary/90 hover:bg-primary shadow-[0_0_15px_rgba(108,92,231,0.4)]",
         className
       )}
-      style={style}
+      style={{ ...style, ...glowStyle }}
     >
       {children}
     </Button>

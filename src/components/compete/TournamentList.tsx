@@ -72,6 +72,9 @@ const TournamentList: React.FC = () => {
           <Button 
             className="w-full mt-4 bg-primary hover:bg-primary/90"
             onClick={() => handleJoin(tournament.id)}
+            style={{
+              boxShadow: "0 0 20px rgba(108, 92, 231, 0.8), 0 0 40px rgba(108, 92, 231, 0.4)"
+            }}
           >
             Join Tournament
           </Button>

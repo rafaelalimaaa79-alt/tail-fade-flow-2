@@ -113,6 +113,7 @@ const PublicGameItem = ({ game, rank }: PublicGameItemProps) => {
               variant="fade" 
               onClick={handleFade}
               className="h-10 text-base"
+              glowEffect={isMostVisible}
             >
               Fade {game.team} {game.spread}
             </ActionButton>
