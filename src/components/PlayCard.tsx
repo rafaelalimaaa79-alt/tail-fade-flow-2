@@ -30,7 +30,7 @@ const PlayCard: React.FC<PlayCardProps> = ({ play, renderWaveText, onActionClick
       <div className="mb-5 border-b border-white/10 pb-3">
         <h2 className="font-exo text-4xl font-bold text-[#AEE3F5] text-center tracking-wider uppercase neon-text" 
             style={{
-              textShadow: '0 0 10px #AEE3F5, 0 0 20px #AEE3F5, 0 0 30px #AEE3F5, 0 0 40px #AEE3F5'
+              textShadow: '0 0 5px #AEE3F5, 0 0 15px #AEE3F5'
             }}>
           FADE WATCH
         </h2>
