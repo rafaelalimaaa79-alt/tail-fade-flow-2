@@ -98,7 +98,7 @@ const PendingBets: React.FC<PendingBetsProps> = ({ pendingBets, profile, classNa
             return (
               <div key={bet.id}>
                 <div 
-                  className="bg-black rounded-xl p-4 border border-[#AEE3F5]/30 animate-glow-pulse space-y-3"
+                  className="bg-black rounded-xl p-4 border border-[#AEE3F5]/30 animate-glow-pulse space-y-4"
                   style={{
                     boxShadow: '0 0 15px rgba(174, 227, 245, 0.3)',
                   }}
@@ -112,7 +112,7 @@ const PendingBets: React.FC<PendingBetsProps> = ({ pendingBets, profile, classNa
                   </div>
                   
                   {/* Bettor's pick */}
-                  <div className="text-center">
+                  <div className="text-center py-2">
                     <p className="text-lg font-bold">
                       <span className="text-[#AEE3F5]">@{profile.username}</span>
                       <span className="text-white"> is on {betLine}</span>
@@ -120,7 +120,7 @@ const PendingBets: React.FC<PendingBetsProps> = ({ pendingBets, profile, classNa
                   </div>
                   
                   {/* Sport-specific statline */}
-                  <div className="text-center">
+                  <div className="text-center py-2">
                     <p className="text-sm font-medium text-gray-400 italic">
                       {sportStatline}
                     </p>
@@ -132,7 +132,7 @@ const PendingBets: React.FC<PendingBetsProps> = ({ pendingBets, profile, classNa
                   </div>
                   
                   {/* Fade confidence */}
-                  <div className="text-center">
+                  <div className="text-center py-2">
                     <p className="text-lg font-semibold text-gray-300">
                       Fade Confidence: <span className="text-[#AEE3F5] font-bold">{fadeConfidence}%</span>
                     </p>
