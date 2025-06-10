@@ -53,19 +53,20 @@ const PendingBetsList = () => {
 
   // Function to generate NBA matchups
   const getMatchup = () => {
-    const teams = [
-      "Lakers vs Celtics",
-      "Warriors vs Nets", 
-      "Bucks vs Heat",
-      "76ers vs Nuggets",
-      "Suns vs Mavericks"
+    const matchups = [
+      { game: "Lakers vs Celtics", teams: ["Lakers", "Celtics"] },
+      { game: "Warriors vs Nets", teams: ["Warriors", "Nets"] }, 
+      { game: "Bucks vs Heat", teams: ["Bucks", "Heat"] },
+      { game: "76ers vs Nuggets", teams: ["76ers", "Nuggets"] },
+      { game: "Suns vs Mavericks", teams: ["Suns", "Mavericks"] }
     ];
-    return teams[Math.floor(Math.random() * teams.length)];
+    return matchups[Math.floor(Math.random() * matchups.length)];
   };
 
   // Function to generate realistic NBA bet lines
-  const getBetLine = () => {
-    const lines = [
+  const getBetLine = (teams: string[]) => {
+    const team = teams[Math.floor(Math.random() * teams.length)];
+    const betTypes = [
       "Over 230.5", // Total points
       "Under 225.5", // Total points
       "-3.5", // Point spread
@@ -74,7 +75,19 @@ const PendingBetsList = () => {
       "Under 110.5", // Team total
       "ML" // Moneyline
     ];
-    return lines[Math.floor(Math.random() * lines.length)];
+    const betType = betTypes[Math.floor(Math.random() * betTypes.length)];
+    
+    // For totals, don't include team name
+    if (betType.includes("Over") || betType.includes("Under")) {
+      if (betType.includes("230.5") || betType.includes("225.5")) {
+        return betType; // Game total
+      } else {
+        return `${team} ${betType}`; // Team total
+      }
+    }
+    
+    // For spreads and ML, include team name
+    return `${team} ${betType}`;
   };
   
   return (
@@ -82,7 +95,7 @@ const PendingBetsList = () => {
       {pendingBets.map((bet, index) => {
         const fadeConfidence = getFadeConfidence();
         const matchup = getMatchup();
-        const betLine = getBetLine();
+        const betLine = getBetLine(matchup.teams);
         
         return (
           <div key={bet.id}>
@@ -95,7 +108,7 @@ const PendingBetsList = () => {
               {/* Game header with solid icy blue underline */}
               <div className="text-center pb-2">
                 <h3 className="text-lg font-bold text-white relative inline-block">
-                  {matchup}
+                  {matchup.game}
                   <div className="absolute bottom-0 left-0 w-full h-1 bg-[#AEE3F5] opacity-90"></div>
                 </h3>
               </div>
