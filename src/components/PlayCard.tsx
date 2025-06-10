@@ -1,5 +1,4 @@
 
-
 import React from "react";
 import { Link } from "react-router-dom";
 import ActionButton from "./ActionButton";
@@ -30,41 +29,41 @@ const PlayCard: React.FC<PlayCardProps> = ({ play, renderWaveText, onActionClick
   const fadeConfidence = getFadeConfidence();
   
   return (
-    <div className="rounded-xl bg-card p-4 shadow-lg border border-white/10 neon-glow">
+    <div className="rounded-xl bg-card p-5 shadow-lg border border-white/10 neon-glow">
       {/* Header */}
-      <div className="mb-3 border-b border-white/10 pb-2">
+      <div className="mb-4 border-b border-white/10 pb-2">
         <h2 className="font-exo text-2xl font-bold text-[#AEE3F5] text-center tracking-wider uppercase">
           FADE WATCH
         </h2>
       </div>
       
       {/* Bettor's pick */}
-      <div className="text-center mb-2">
-        <p className="text-base font-bold">
+      <div className="text-center mb-3">
+        <p className="text-lg font-bold">
           <span className="text-[#AEE3F5]">@{play.bettorName}</span>
           <span className="text-white"> is on {play.bet}</span>
         </p>
       </div>
       
       {/* Record statline */}
-      <div className="text-center mb-2">
-        <p className="text-sm font-medium text-gray-400 italic">
+      <div className="text-center mb-3">
+        <p className="text-base font-medium text-gray-400 italic">
           He is {play.record}
         </p>
       </div>
       
       {/* Fade confidence */}
-      <div className="text-center mb-3">
-        <p className="text-sm font-semibold text-gray-300">
+      <div className="text-center mb-4">
+        <p className="text-base font-semibold text-gray-300">
           Fade Confidence: <span className="text-[#AEE3F5] font-bold">{fadeConfidence}%</span>
         </p>
       </div>
       
       {/* Fading Users Count - Clean display without blocks */}
-      <div className="mb-3 text-center">
+      <div className="mb-4 text-center">
         <div className="flex items-center justify-center gap-2">
-          <span className="text-white/70 font-medium text-xs">Fading Users:</span>
-          <span className="text-white font-bold text-base text-primary">
+          <span className="text-white/70 font-medium text-sm">Fading Users:</span>
+          <span className="text-white font-bold text-lg text-primary">
             {play.userCount}
           </span>
         </div>
@@ -74,7 +73,7 @@ const PlayCard: React.FC<PlayCardProps> = ({ play, renderWaveText, onActionClick
       <div className="rounded-lg bg-muted p-3 text-center border border-white/10 shadow-lg">
         <ActionButton 
           variant="fade"
-          className="h-10 text-base font-bold"
+          className="h-11 text-base font-bold"
           onClick={handleBetClick}
         >
           Bet {oppositeBet}
@@ -85,4 +84,3 @@ const PlayCard: React.FC<PlayCardProps> = ({ play, renderWaveText, onActionClick
 };
 
 export default PlayCard;
-
