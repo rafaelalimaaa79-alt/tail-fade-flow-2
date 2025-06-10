@@ -54,7 +54,7 @@ const PlayCard: React.FC<PlayCardProps> = ({ play, renderWaveText, onActionClick
     <div className="rounded-xl bg-card p-6 shadow-lg border border-white/10 neon-glow">
       {/* Header */}
       <div className="mb-6 border-b border-white/10 pb-3">
-        <h2 className="font-rajdhani text-2xl font-bold text-white text-center tracking-wider uppercase">
+        <h2 className="font-rajdhani text-3xl font-bold text-white text-center tracking-wider uppercase">
           FADE WATCH
         </h2>
       </div>
@@ -66,8 +66,8 @@ const PlayCard: React.FC<PlayCardProps> = ({ play, renderWaveText, onActionClick
             to={`/bettor/${play.bettorName}`} 
             className="transition-colors"
             style={{ color: '#AEE3F5' }}
-            onMouseEnter={(e) => e.target.style.color = '#AEE3F580'}
-            onMouseLeave={(e) => e.target.style.color = '#AEE3F5'}
+            onMouseEnter={(e) => (e.target as HTMLElement).style.color = '#AEE3F580'}
+            onMouseLeave={(e) => (e.target as HTMLElement).style.color = '#AEE3F5'}
           >
             @{play.bettorName}
           </Link> is on {play.bet}
