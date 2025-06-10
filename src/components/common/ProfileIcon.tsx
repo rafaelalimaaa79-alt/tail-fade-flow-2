@@ -13,8 +13,8 @@ const ProfileIcon = ({ className }: ProfileIconProps) => {
     <Link
       to="/profile"
       className={cn(
-        "flex items-center justify-center w-10 h-10 rounded-full bg-pink-400/20 border border-pink-400/30 hover:bg-pink-400/30 transition-all duration-300",
-        "text-pink-400 hover:text-pink-300",
+        "flex items-center justify-center w-10 h-10 rounded-full bg-[#AEE3F5]/20 border border-[#AEE3F5]/30 hover:bg-[#AEE3F5]/30 transition-all duration-300",
+        "text-[#AEE3F5] hover:text-[#AEE3F5]/80",
         className
       )}
     >
