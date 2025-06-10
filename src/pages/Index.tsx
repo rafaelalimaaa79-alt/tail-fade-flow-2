@@ -1,4 +1,3 @@
-
 import React, { useRef, useEffect } from "react";
 import BottomNav from "@/components/BottomNav";
 import BetOfTheDay from "@/components/BetOfTheDay";
@@ -23,7 +22,8 @@ const Dashboard = () => {
     handleCarouselChange: handleTopCarouselChange 
   } = useCarouselRotation({
     itemsCount: playsOfTheDay.length,
-    rotationInterval: 5000 // Updated to 5 seconds (5000ms)
+    rotationInterval: 3000, // Updated to 3 seconds (3000ms)
+    pauseDuration: 5000 // Updated to 5 seconds (5000ms)
   });
   
   const { 
@@ -31,8 +31,8 @@ const Dashboard = () => {
     handleCarouselChange: handleBottomCarouselChange 
   } = useCarouselRotation({
     itemsCount: 2, // Bottom carousel has 2 items
-    rotationInterval: 5000, // Updated to 5 seconds (5000ms)
-    pauseDuration: 8000 // Longer pause after manual navigation
+    rotationInterval: 3000, // Updated to 3 seconds (3000ms)
+    pauseDuration: 5000 // Updated to 5 seconds (5000ms)
   });
   
   // Calculate target rect for the animation
