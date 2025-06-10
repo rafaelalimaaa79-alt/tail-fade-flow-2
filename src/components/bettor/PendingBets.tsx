@@ -1,3 +1,4 @@
+
 import React from "react";
 import { BettorBet } from "@/types/bettor";
 import { cn } from "@/lib/utils";
@@ -67,12 +68,19 @@ const PendingBets: React.FC<PendingBetsProps> = ({ pendingBets, className }) => 
                 <div className="absolute -top-12 -right-12 h-28 w-28 rounded-full bg-onetime-red/20 blur-xl"></div>
                 <div className="absolute bottom-0 left-6 h-20 w-20 rounded-full bg-onetime-orange/10 blur-xl"></div>
                 
-                {/* Bet Type as prominent header */}
-                <div className="mb-2 text-center">
-                  <h4 className="text-xl font-extrabold text-white tracking-tight relative z-10 font-rajdhani">
+                {/* Game information at the top */}
+                <div className="mb-3 text-center">
+                  <h4 className="text-lg font-bold text-white tracking-tight relative z-10">
+                    {bet.teams}
+                  </h4>
+                </div>
+                
+                {/* Username's bet */}
+                <div className="mb-3 text-center">
+                  <p className="text-xl font-extrabold text-white tracking-tight relative z-10 font-rajdhani">
                     {bet.betType}
                     <div className="h-1 w-16 bg-gradient-to-r from-onetime-red via-onetime-red/80 to-transparent rounded-full mx-auto mt-1"></div>
-                  </h4>
+                  </p>
                 </div>
                 
                 {/* Fade Confidence line with larger font */}
@@ -80,13 +88,6 @@ const PendingBets: React.FC<PendingBetsProps> = ({ pendingBets, className }) => 
                   <p className="text-lg text-white/70">
                     Fade Confidence: <span className={`font-bold ${confidenceData.colorClass}`}>{confidenceData.score}%</span>
                   </p>
-                </div>
-                
-                {/* Middle row with enhanced styling - confidence score removed from top right */}
-                <div className="flex flex-wrap items-center justify-center mb-4 relative z-10">
-                  <div className="flex flex-col items-center">
-                    {/* Removed confidence score display as it's now in the fade confidence line */}
-                  </div>
                 </div>
                 
                 {/* Bottom row: Action button with enhanced styling - fade only */}
