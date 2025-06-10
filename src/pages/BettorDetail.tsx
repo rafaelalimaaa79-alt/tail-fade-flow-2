@@ -10,7 +10,6 @@ import ProfileIcon from "@/components/common/ProfileIcon";
 // Imported components
 import BettorHeader from "@/components/bettor/BettorHeader";
 import BettorPerformanceSection from "@/components/bettor/BettorPerformanceSection";
-import ViewBetHistoryButton from "@/components/bettor/ViewBetHistoryButton";
 import BettorBetList from "@/components/BettorBetList";
 import PendingBets from "@/components/bettor/PendingBets";
 
@@ -101,9 +100,6 @@ const BettorDetail = () => {
           largestBets={summary.largestBets}
           className="my-4"
         />
-        
-        {/* View Bet History Button */}
-        <ViewBetHistoryButton onClick={() => setIsHistoryModalOpen(true)} />
       </div>
       
       {/* Keep existing modal and notification components */}
