@@ -91,7 +91,7 @@ const PendingBetsList = () => {
   };
   
   return (
-    <div className="space-y-6">
+    <div className="space-y-4">
       {pendingBets.map((bet, index) => {
         const fadeConfidence = getFadeConfidence();
         const matchup = getMatchup();
@@ -101,22 +101,22 @@ const PendingBetsList = () => {
         return (
           <div key={bet.id}>
             <div 
-              className="bg-black rounded-xl p-4 border border-[#AEE3F5]/30 animate-glow-pulse space-y-3"
+              className="bg-black rounded-xl p-3 border border-[#AEE3F5]/30 animate-glow-pulse space-y-2"
               style={{
                 boxShadow: '0 0 15px rgba(174, 227, 245, 0.3)',
               }}
             >
               {/* Game header with solid icy blue underline */}
-              <div className="text-center pb-2">
-                <h3 className="text-lg font-bold text-white relative inline-block">
+              <div className="text-center pb-1">
+                <h3 className="text-base font-bold text-white relative inline-block">
                   {matchup.game}
-                  <div className="absolute bottom-0 left-0 w-full h-1 bg-[#AEE3F5] opacity-90"></div>
+                  <div className="absolute bottom-0 left-0 w-full h-0.5 bg-[#AEE3F5] opacity-90"></div>
                 </h3>
               </div>
               
               {/* Fading description for own profile */}
               <div className="text-center">
-                <p className="text-lg font-bold">
+                <p className="text-base font-bold">
                   <span className="text-white">Fading </span>
                   <span className="text-[#AEE3F5]">@{bet.bettorName}'s</span>
                   <span className="text-white"> {betLine}</span>
@@ -124,30 +124,30 @@ const PendingBetsList = () => {
               </div>
               
               {/* Divider line */}
-              <div className="flex justify-center py-2">
+              <div className="flex justify-center py-1">
                 <div className="w-1/2 h-0.5 bg-gradient-to-r from-transparent via-[#AEE3F5]/40 to-transparent"></div>
               </div>
               
               {/* Fade confidence */}
               <div className="text-center">
-                <p className="text-lg font-semibold text-gray-300">
+                <p className="text-base font-semibold text-gray-300">
                   Fade Confidence: <span className="text-[#AEE3F5] font-bold">{fadeConfidence}%</span>
                 </p>
               </div>
               
               {/* Fade button */}
-              <div className="w-full pt-2">
+              <div className="w-full pt-1">
                 {bet.isPlaced ? (
                   <Button 
                     variant="outline"
-                    className="w-full bg-gray-700/50 border-gray-600 text-gray-400 py-3 rounded-xl cursor-not-allowed"
+                    className="w-full bg-gray-700/50 border-gray-600 text-gray-400 py-2 rounded-xl cursor-not-allowed"
                     disabled
                   >
                     Bet Placed on Hard Rock
                   </Button>
                 ) : (
                   <Button 
-                    className="w-full bg-primary hover:bg-primary/90 text-white font-bold py-3 rounded-xl"
+                    className="w-full bg-primary hover:bg-primary/90 text-white font-bold py-2 rounded-xl"
                     onClick={() => handleBetNow(bet.id)}
                   >
                     Bet Now on Hard Rock
@@ -158,7 +158,7 @@ const PendingBetsList = () => {
             
             {/* Separator line between cards (not after the last one) */}
             {index < pendingBets.length - 1 && (
-              <div className="flex justify-center py-4">
+              <div className="flex justify-center py-2">
                 <div className="w-3/4 h-0.5 bg-gradient-to-r from-transparent via-[#AEE3F5]/50 to-transparent"></div>
               </div>
             )}
