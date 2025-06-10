@@ -20,6 +20,7 @@ export default {
 		extend: {
 			fontFamily: {
 				rajdhani: ['Rajdhani', 'sans-serif'],
+				orbitron: ['Orbitron', 'sans-serif'],
 				// Make Rajdhani the default font for all text
 				sans: ['Rajdhani', 'sans-serif'],
 			},

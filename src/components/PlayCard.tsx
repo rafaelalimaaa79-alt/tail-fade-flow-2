@@ -1,4 +1,3 @@
-
 import React from "react";
 import { Link } from "react-router-dom";
 import ActionButton from "./ActionButton";
@@ -54,7 +53,7 @@ const PlayCard: React.FC<PlayCardProps> = ({ play, renderWaveText, onActionClick
     <div className="rounded-xl bg-card p-6 shadow-lg border border-white/10 neon-glow">
       {/* Header */}
       <div className="mb-6 border-b border-white/10 pb-3">
-        <h2 className="font-rajdhani text-3xl font-bold text-white text-center tracking-wider uppercase">
+        <h2 className="font-orbitron text-3xl font-bold text-white text-center tracking-wider uppercase">
           FADE WATCH
         </h2>
       </div>
