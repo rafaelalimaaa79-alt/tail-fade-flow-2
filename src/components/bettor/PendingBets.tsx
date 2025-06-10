@@ -105,7 +105,7 @@ const PendingBets: React.FC<PendingBetsProps> = ({ pendingBets, profile, classNa
                 >
                   {/* Game header with solid icy blue underline */}
                   <div className="text-center pb-2">
-                    <h3 className="text-lg font-bold text-white relative inline-block">
+                    <h3 className="text-xl font-bold text-white relative inline-block">
                       {matchup.game}
                       <div className="absolute bottom-0 left-0 w-full h-1 bg-[#AEE3F5] opacity-90"></div>
                     </h3>
