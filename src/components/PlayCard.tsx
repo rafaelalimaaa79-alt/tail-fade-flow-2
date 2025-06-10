@@ -61,7 +61,7 @@ const PlayCard: React.FC<PlayCardProps> = ({ play, renderWaveText, onActionClick
       {/* Bettor Name and Bet Description */}
       <div className="mb-4 text-center">
         <h3 className="font-rajdhani text-lg font-bold text-white">
-          @{play.bettorName}'s is on {play.bet}
+          <span className="text-primary">@</span>{play.bettorName}'s is on {play.bet}
         </h3>
       </div>
       
