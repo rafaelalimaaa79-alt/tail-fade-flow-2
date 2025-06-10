@@ -75,7 +75,7 @@ const PendingBets: React.FC<PendingBetsProps> = ({ pendingBets, profile, classNa
                   <div className="text-center pb-2">
                     <h3 className="text-lg font-bold text-white relative inline-block">
                       {matchup}
-                      <div className="absolute bottom-0 left-0 w-full h-0.5 bg-gradient-to-r from-transparent via-[#AEE3F5] to-transparent opacity-80"></div>
+                      <div className="absolute bottom-0 left-1/2 transform -translate-x-1/2 w-screen h-0.5 bg-gradient-to-r from-transparent via-[#AEE3F5] to-transparent opacity-80"></div>
                     </h3>
                   </div>
                   
