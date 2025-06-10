@@ -1,7 +1,10 @@
+
 import React from "react";
 import BettorTimeFilter from "@/components/BettorTimeFilter";
 import BettorPerformanceGraph from "@/components/BettorPerformanceGraph";
 import { BetHistoryPoint } from "@/types/bettor";
+import { Button } from "@/components/ui/button";
+import { History } from "lucide-react";
 
 interface PerformanceSectionProps {
   winRate: number;
@@ -22,6 +25,11 @@ const PerformanceSection: React.FC<PerformanceSectionProps> = ({
   setTimeframe,
   performanceByTimeframe
 }) => {
+  const handleViewAllFadedBets = () => {
+    // TODO: Implement navigation to faded bets history page or modal
+    console.log("Navigate to view all faded bets");
+  };
+
   return (
     <div className="my-4 rounded-xl bg-black p-4 shadow-md border border-white/10">
       <div className="my-2">
@@ -73,6 +81,17 @@ const PerformanceSection: React.FC<PerformanceSectionProps> = ({
             onChange={setTimeframe}
             performanceByTimeframe={performanceByTimeframe}
           />
+        </div>
+
+        <div className="flex justify-center mt-4">
+          <Button 
+            variant="outline"
+            onClick={handleViewAllFadedBets}
+            className="bg-black/30 border-white/20 text-white hover:bg-white/10 hover:text-white flex items-center gap-2"
+          >
+            <History className="w-4 h-4" />
+            View All Faded Bets
+          </Button>
         </div>
       </div>
     </div>
