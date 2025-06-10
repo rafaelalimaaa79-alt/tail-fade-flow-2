@@ -93,17 +93,17 @@ const PendingBetsList = () => {
         return (
           <div 
             key={bet.id} 
-            className="relative overflow-hidden rounded-xl bg-gradient-to-br from-black via-black/80 to-black/60 p-2.5 shadow-lg border border-white/10 transition-all duration-300 hover:border-onetime-purple/50"
+            className="relative overflow-hidden rounded-xl bg-gradient-to-br from-black via-black/80 to-black/60 p-2.5 shadow-lg border border-white/10 transition-all duration-300 hover:border-onetime-red/50"
           >
             {/* Interactive blob effect in background */}
-            <div className="absolute -top-8 -right-8 h-20 w-20 rounded-full bg-onetime-purple/20 blur-xl"></div>
+            <div className="absolute -top-8 -right-8 h-20 w-20 rounded-full bg-onetime-red/20 blur-xl"></div>
             <div className="absolute bottom-0 left-4 h-14 w-14 rounded-full bg-onetime-orange/10 blur-xl"></div>
             
             {/* Bet Description as prominent header with responsive font size - properly centered */}
             <div className="mb-1.5 text-center">
               <h4 className={`${textSize} font-extrabold text-white tracking-tight relative z-10 font-rajdhani mx-auto`}>
                 {bet.betDescription}
-                <div className="h-0.5 w-12 bg-gradient-to-r from-onetime-purple via-onetime-purple/80 to-transparent rounded-full mx-auto mt-0.5"></div>
+                <div className="h-0.5 w-12 bg-gradient-to-r from-onetime-red via-onetime-red/80 to-transparent rounded-full mx-auto mt-0.5"></div>
               </h4>
             </div>
             
@@ -111,7 +111,7 @@ const PendingBetsList = () => {
             <div className="flex flex-col items-center justify-center mb-1.5 relative z-10">
               <div className="flex items-center justify-center mb-1 gap-2">
                 <span className="text-sm font-medium text-white inline-flex items-center gap-1">
-                  Fading <span className="text-onetime-purple">@{bet.bettorName}</span>'s {fadedBet} pick
+                  Fading <span className="text-onetime-red">@{bet.bettorName}</span>'s {fadedBet} pick
                 </span>
               </div>
             </div>
@@ -119,7 +119,7 @@ const PendingBetsList = () => {
             {/* Bottom row: Action button with enhanced styling - centered */}
             <div className="relative z-10 flex justify-center">
               {bet.isPlaced ? (
-                <div className="relative overflow-hidden rounded-lg border border-white/20 bg-black/50 backdrop-blur-sm w-full">
+                <div className="relative overflow-hidden rounded-lg border border-white/20 bg-black/50 w-full">
                   <div className="absolute inset-0 bg-gradient-to-r from-onetime-green/20 to-transparent"></div>
                   <Button 
                     variant="outline"
@@ -132,7 +132,7 @@ const PendingBetsList = () => {
               ) : (
                 <Button 
                   variant="default"
-                  className="w-full bg-gradient-to-r from-onetime-purple to-onetime-purple/80 hover:from-onetime-purple/90 hover:to-onetime-purple/70 shadow-lg shadow-onetime-purple/20 text-white font-bold flex items-center justify-center group relative overflow-hidden py-1.5 text-sm"
+                  className="w-full bg-gradient-to-r from-onetime-red to-onetime-red/80 hover:from-onetime-red/90 hover:to-onetime-red/70 shadow-lg shadow-onetime-red/20 text-black font-bold flex items-center justify-center group relative overflow-hidden py-1.5 text-sm"
                   onClick={() => handleBetNow(bet.id)}
                 >
                   <span className="relative z-10 flex items-center">
