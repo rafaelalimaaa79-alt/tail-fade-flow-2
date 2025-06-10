@@ -1,4 +1,3 @@
-
 import React from "react";
 import { Link } from "react-router-dom";
 import ActionButton from "./ActionButton";
@@ -67,7 +66,7 @@ const PlayCard: React.FC<PlayCardProps> = ({ play, renderWaveText, onActionClick
             className="text-primary hover:text-primary/80 transition-colors"
           >
             @{play.bettorName}
-          </Link>'s is on {play.bet}
+          </Link> is on {play.bet}
         </h3>
       </div>
       
