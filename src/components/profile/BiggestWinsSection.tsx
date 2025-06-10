@@ -18,7 +18,7 @@ interface BiggestWinsSectionProps {
 }
 
 const BiggestWinsSection: React.FC<BiggestWinsSectionProps> = ({ wins }) => {
-  // Find top bet all-time (by units lost - since these are losses, we want the highest negative impact)
+  // Find top bet all-time (by units gained)
   const topBet = [...wins].sort((a, b) => b.unitsGained - a.unitsGained)[0];
   
   const renderBetList = (bets: Win[], limit = 5) => {
@@ -59,12 +59,12 @@ const BiggestWinsSection: React.FC<BiggestWinsSectionProps> = ({ wins }) => {
       
       {wins.length > 0 ? (
         <>
-          <Tabs defaultValue="losses" className="mt-2">
+          <Tabs defaultValue="winners" className="mt-2">
             <TabsList className="grid w-full grid-cols-2 bg-gray-800/50 rounded-full p-1 border border-white/10">
-              <TabsTrigger value="losses" className="rounded-full">Largest Losses this Month</TabsTrigger>
+              <TabsTrigger value="winners" className="rounded-full">Biggest Winners this Month</TabsTrigger>
               <TabsTrigger value="bets" className="rounded-full">Biggest Bets</TabsTrigger>
             </TabsList>
-            <TabsContent value="losses">
+            <TabsContent value="winners">
               {renderBetList(wins)}
             </TabsContent>
             <TabsContent value="bets">
@@ -81,7 +81,7 @@ const BiggestWinsSection: React.FC<BiggestWinsSectionProps> = ({ wins }) => {
         </>
       ) : (
         <div className="rounded-lg bg-black/30 border border-white/10 p-6 text-center mt-4">
-          <p className="text-white/70">No losses yet</p>
+          <p className="text-white/70">No wins yet</p>
         </div>
       )}
     </div>
