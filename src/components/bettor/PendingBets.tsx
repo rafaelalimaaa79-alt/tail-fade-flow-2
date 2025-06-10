@@ -68,15 +68,16 @@ const PendingBets: React.FC<PendingBetsProps> = ({ pendingBets, className }) => 
                 <div className="absolute -top-12 -right-12 h-28 w-28 rounded-full bg-onetime-red/20 blur-xl"></div>
                 <div className="absolute bottom-0 left-6 h-20 w-20 rounded-full bg-onetime-orange/10 blur-xl"></div>
                 
-                {/* Game information at the top */}
-                <div className="mb-3 text-center">
-                  <h4 className="text-lg font-bold text-white tracking-tight relative z-10">
+                {/* Game information at the top - larger and different font */}
+                <div className="mb-4 text-center">
+                  <h4 className="text-2xl font-bold text-white tracking-tight relative z-10 font-exo">
                     {bet.teams}
                   </h4>
                 </div>
                 
-                {/* Username's bet */}
+                {/* User's bet with clarification */}
                 <div className="mb-3 text-center">
+                  <p className="text-sm text-white/60 mb-1 relative z-10">User's Bet:</p>
                   <p className="text-xl font-extrabold text-white tracking-tight relative z-10 font-rajdhani">
                     {bet.betType}
                     <div className="h-1 w-16 bg-gradient-to-r from-onetime-red via-onetime-red/80 to-transparent rounded-full mx-auto mt-1"></div>
@@ -98,7 +99,7 @@ const PendingBets: React.FC<PendingBetsProps> = ({ pendingBets, className }) => 
                     onClick={() => handleFade(bet)}
                   >
                     <div className="absolute inset-0 bg-gradient-to-r from-transparent to-white/10 opacity-0 group-hover:opacity-100 transition-opacity"></div>
-                    Fade {bet.betType}
+                    <span className="text-center">Fade {bet.betType}</span>
                   </ActionButton>
                 </div>
               </div>
