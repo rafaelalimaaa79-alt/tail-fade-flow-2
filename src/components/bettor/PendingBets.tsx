@@ -29,11 +29,11 @@ const PendingBets: React.FC<PendingBetsProps> = ({ pendingBets, profile, classNa
   // Function to generate NBA matchups
   const getMatchup = () => {
     const matchups = [
-      { game: "Lakers vs Celtics", teams: ["Lakers", "Celtics"] },
-      { game: "Warriors vs Nets", teams: ["Warriors", "Nets"] }, 
-      { game: "Bucks vs Heat", teams: ["Bucks", "Heat"] },
-      { game: "76ers vs Nuggets", teams: ["76ers", "Nuggets"] },
-      { game: "Suns vs Mavericks", teams: ["Suns", "Mavericks"] }
+      { game: "Lakers vs Celtics", teams: ["Lakers", "Celtics"], sport: "NBA" },
+      { game: "Warriors vs Nets", teams: ["Warriors", "Nets"], sport: "NBA" }, 
+      { game: "Bucks vs Heat", teams: ["Bucks", "Heat"], sport: "NBA" },
+      { game: "76ers vs Nuggets", teams: ["76ers", "Nuggets"], sport: "NBA" },
+      { game: "Suns vs Mavericks", teams: ["Suns", "Mavericks"], sport: "NBA" }
     ];
     return matchups[Math.floor(Math.random() * matchups.length)];
   };
@@ -65,6 +65,22 @@ const PendingBets: React.FC<PendingBetsProps> = ({ pendingBets, profile, classNa
     return `${team} ${betType}`;
   };
 
+  // Function to generate sport-specific statlines
+  const getSportStatline = (sport: string) => {
+    const wins = Math.floor(Math.random() * 10) + 1; // 1-10 wins
+    const totalBets = wins + Math.floor(Math.random() * 15) + 3; // Add 3-17 more bets
+    
+    const sportStatlines = {
+      "NBA": `He is ${wins} for ${totalBets} in his last ${totalBets} NBA bets`,
+      "NFL": `He is ${wins} for ${totalBets} in his last ${totalBets} NFL bets`,
+      "MLB": `He is ${wins} for ${totalBets} in his last ${totalBets} MLB bets`,
+      "NHL": `He is ${wins} for ${totalBets} in his last ${totalBets} NHL bets`,
+      "UFC": `He is ${wins} for ${totalBets} in his last ${totalBets} UFC fights`
+    };
+    
+    return sportStatlines[sport as keyof typeof sportStatlines] || `He is ${wins} for ${totalBets} in his last ${totalBets} bets`;
+  };
+
   return (
     <div className={cn("rounded-xl bg-black p-6 shadow-2xl relative overflow-hidden border border-white/10", className)}>
       <h3 className="mb-6 text-3xl font-bold text-[#AEE3F5] text-center relative z-10 drop-shadow-[0_0_8px_rgba(174,227,245,0.7)] font-rajdhani uppercase tracking-wide">
@@ -77,6 +93,7 @@ const PendingBets: React.FC<PendingBetsProps> = ({ pendingBets, profile, classNa
             const fadeConfidence = getFadeConfidence();
             const matchup = getMatchup();
             const betLine = getBetLine(matchup.teams);
+            const sportStatline = getSportStatline(matchup.sport);
             
             return (
               <div key={bet.id}>
@@ -99,6 +116,13 @@ const PendingBets: React.FC<PendingBetsProps> = ({ pendingBets, profile, classNa
                     <p className="text-lg font-bold">
                       <span className="text-[#AEE3F5]">@{profile.username}</span>
                       <span className="text-white"> is on {betLine}</span>
+                    </p>
+                  </div>
+                  
+                  {/* Sport-specific statline */}
+                  <div className="text-center">
+                    <p className="text-sm font-medium text-gray-400 italic">
+                      {sportStatline}
                     </p>
                   </div>
                   
