@@ -15,8 +15,8 @@ const BettorBetList: React.FC<BettorBetListProps> = ({
   largestBets,
   className
 }) => {
-  // Find top bet all-time (by units won)
-  const topBet = [...biggestWinners].sort((a, b) => b.unitsWonLost - a.unitsWonLost)[0];
+  // Find worst bet (by units lost)
+  const worstBet = [...biggestWinners].sort((a, b) => a.unitsWonLost - b.unitsWonLost)[0];
   
   const renderBetList = (bets: BettorBet[], limit = 5) => {
     // Limit to top bets
@@ -56,28 +56,28 @@ const BettorBetList: React.FC<BettorBetListProps> = ({
       <div className="flex justify-between items-center">
         <h3 className="text-lg font-bold text-white">Best Bets</h3>
         
-        {topBet && (
+        {worstBet && (
           <div className="text-xs text-gray-400">
-            <span>Top Bet: </span>
+            <span>Worst Bet: </span>
             <span className={cn(
               "font-medium",
-              topBet.unitsWonLost > 0 ? "text-white" : "text-[#AEE3F5]"
+              worstBet.unitsWonLost > 0 ? "text-white" : "text-[#AEE3F5]"
             )}>
-              {topBet.unitsWonLost > 0 ? '+' : ''}{topBet.unitsWonLost}U {topBet.betType}
+              {worstBet.unitsWonLost > 0 ? '+' : ''}{worstBet.unitsWonLost}U {worstBet.betType}
             </span>
           </div>
         )}
       </div>
       
-      <Tabs defaultValue="winners" className="mt-2">
+      <Tabs defaultValue="losers" className="mt-2">
         <TabsList className="grid w-full grid-cols-2 bg-black/50">
-          <TabsTrigger value="winners">Biggest Winners</TabsTrigger>
-          <TabsTrigger value="largest">Largest Bets</TabsTrigger>
+          <TabsTrigger value="losers">Biggest Losers</TabsTrigger>
+          <TabsTrigger value="last5">Last 5 Bets</TabsTrigger>
         </TabsList>
-        <TabsContent value="winners">
+        <TabsContent value="losers">
           {renderBetList(biggestWinners)}
         </TabsContent>
-        <TabsContent value="largest">
+        <TabsContent value="last5">
           {renderBetList(largestBets)}
         </TabsContent>
       </Tabs>
