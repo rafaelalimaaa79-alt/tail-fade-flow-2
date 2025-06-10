@@ -1,4 +1,5 @@
 
+
 import React from "react";
 
 interface PageHeaderProps {
@@ -13,7 +14,7 @@ const PageHeader: React.FC<PageHeaderProps> = ({ logoSrc }) => {
           <img 
             src="/lovable-uploads/15b68287-6284-47fd-b7cf-1c67129dec0b.png" 
             alt="Fade Zone logo" 
-            className="h-24"
+            className="h-32"
           />
         </div>
         <div className="flex-grow" />
@@ -28,3 +29,4 @@ const PageHeader: React.FC<PageHeaderProps> = ({ logoSrc }) => {
 };
 
 export default PageHeader;
+

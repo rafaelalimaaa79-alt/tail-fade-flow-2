@@ -1,4 +1,5 @@
 
+
 import React, { useRef, useEffect } from "react";
 import BottomNav from "@/components/BottomNav";
 import BetOfTheDay from "@/components/BetOfTheDay";
@@ -60,7 +61,7 @@ const Dashboard = () => {
           <img 
             src="/lovable-uploads/15b68287-6284-47fd-b7cf-1c67129dec0b.png" 
             alt="Fade Zone logo" 
-            className="h-24"
+            className="h-32"
           />
           <ProfileIcon />
         </div>
@@ -88,3 +89,4 @@ const Dashboard = () => {
 };
 
 export default Dashboard;
+

@@ -1,4 +1,5 @@
 
+
 import React from "react";
 import { useParams, useNavigate } from "react-router-dom";
 import BottomNav from "@/components/BottomNav";
@@ -73,7 +74,7 @@ const BettorDetail = () => {
           <img 
             src="/lovable-uploads/15b68287-6284-47fd-b7cf-1c67129dec0b.png" 
             alt="Fade Zone logo" 
-            className="h-24"
+            className="h-32"
           />
           <div className="flex items-center gap-2">
             <ProfileIcon />
@@ -128,3 +129,4 @@ const BettorDetail = () => {
 };
 
 export default BettorDetail;
+

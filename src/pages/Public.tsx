@@ -13,9 +13,9 @@ const Public = () => {
       <div className={`max-w-md mx-auto w-full px-4 ${isMobile ? "pb-24" : ""}`}>
         <div className="flex justify-between items-center pt-4 mb-6">
           <img 
-            src="/lovable-uploads/57cb1fb4-7471-451e-bf49-d4d5fa12bdcb.png" 
-            alt="ONE TIME logo" 
-            className="h-20"
+            src="/lovable-uploads/15b68287-6284-47fd-b7cf-1c67129dec0b.png" 
+            alt="Fade Zone logo" 
+            className="h-32"
           />
           <ProfileIcon />
         </div>
@@ -35,3 +35,4 @@ const Public = () => {
 };
 
 export default Public;
+
