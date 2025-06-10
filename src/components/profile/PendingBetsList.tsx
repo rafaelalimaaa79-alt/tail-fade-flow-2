@@ -66,52 +66,48 @@ const PendingBetsList = () => {
   };
   
   return (
-    <div className="space-y-4">
+    <div className="space-y-3">
       {pendingBets.map((bet) => {
         const fadedBet = getFadedBet(bet.betDescription);
         
         return (
           <div 
             key={bet.id} 
-            className="rounded-2xl bg-gray-900/80 p-6 border border-gray-700/50"
+            className="bg-gray-800/90 rounded-2xl p-4 border border-gray-700/30"
           >
-            {/* Bet Description as main header */}
-            <div className="mb-4 text-center">
-              <h3 className="text-2xl font-bold text-white mb-2">
+            {/* Bet title */}
+            <div className="text-center mb-4">
+              <h3 className="text-xl font-bold text-white mb-2">
                 {bet.betDescription}
               </h3>
-              <div className="h-0.5 w-16 bg-cyan-400 mx-auto"></div>
+              <div className="w-12 h-0.5 bg-cyan-400 mx-auto"></div>
             </div>
             
             {/* Fading info */}
-            <div className="mb-6 text-center">
-              <p className="text-base text-gray-300">
+            <div className="text-center mb-4">
+              <p className="text-sm text-gray-400">
                 Fading <span className="text-cyan-400">@{bet.bettorName}</span>'s {fadedBet} pick
               </p>
             </div>
             
-            {/* Action button */}
-            <div className="flex justify-center">
+            {/* Button */}
+            <div className="w-full">
               {bet.isPlaced ? (
-                <div className="w-full">
-                  <Button 
-                    variant="outline"
-                    className="w-full bg-gray-800 border-gray-600 text-gray-500 py-3 text-base rounded-xl cursor-not-allowed"
-                    disabled
-                  >
-                    Bet Placed on Hard Rock
-                  </Button>
-                </div>
+                <Button 
+                  variant="outline"
+                  className="w-full bg-gray-700/50 border-gray-600 text-gray-400 py-3 rounded-xl cursor-not-allowed"
+                  disabled
+                >
+                  Bet Placed on Hard Rock
+                </Button>
               ) : (
-                <div className="w-full">
-                  <Button 
-                    className="w-full bg-gradient-to-r from-purple-600 to-blue-600 hover:from-purple-700 hover:to-blue-700 text-white font-semibold py-3 text-base rounded-xl flex items-center justify-center gap-2 shadow-lg"
-                    onClick={() => handleBetNow(bet.id)}
-                  >
-                    Bet Now on Hard Rock
-                    <ArrowRight className="w-4 h-4" />
-                  </Button>
-                </div>
+                <Button 
+                  className="w-full bg-gradient-to-r from-purple-600 to-blue-600 hover:from-purple-700 hover:to-blue-700 text-white font-medium py-3 rounded-xl flex items-center justify-center gap-2"
+                  onClick={() => handleBetNow(bet.id)}
+                >
+                  Bet Now on Hard Rock
+                  <ArrowRight className="w-4 h-4" />
+                </Button>
               )}
             </div>
           </div>

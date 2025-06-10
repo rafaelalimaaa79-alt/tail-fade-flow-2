@@ -46,41 +46,39 @@ const PendingBets: React.FC<PendingBetsProps> = ({ pendingBets, profile, classNa
       </h3>
       
       {pendingBets.length > 0 ? (
-        <div className="space-y-4 relative z-10">
+        <div className="space-y-3 relative z-10">
           {pendingBets.map((bet) => {
             const fadedBet = getFadedBet(bet.betType);
             
             return (
               <div 
                 key={bet.id} 
-                className="rounded-2xl bg-gray-900/80 p-6 border border-gray-700/50"
+                className="bg-gray-800/90 rounded-2xl p-4 border border-gray-700/30"
               >
-                {/* Bet Description as main header */}
-                <div className="mb-4 text-center">
-                  <h3 className="text-2xl font-bold text-white mb-2">
+                {/* Bet title */}
+                <div className="text-center mb-4">
+                  <h3 className="text-xl font-bold text-white mb-2">
                     {bet.betType}
                   </h3>
-                  <div className="h-0.5 w-16 bg-cyan-400 mx-auto"></div>
+                  <div className="w-12 h-0.5 bg-cyan-400 mx-auto"></div>
                 </div>
                 
                 {/* Fading info */}
-                <div className="mb-6 text-center">
-                  <p className="text-base text-gray-300">
+                <div className="text-center mb-4">
+                  <p className="text-sm text-gray-400">
                     Fading <span className="text-cyan-400">@{profile.username}</span>'s {fadedBet} pick
                   </p>
                 </div>
                 
-                {/* Action button */}
-                <div className="flex justify-center">
-                  <div className="w-full">
-                    <Button 
-                      className="w-full bg-gradient-to-r from-purple-600 to-blue-600 hover:from-purple-700 hover:to-blue-700 text-white font-semibold py-3 text-base rounded-xl flex items-center justify-center gap-2 shadow-lg"
-                      onClick={() => handleFade(bet)}
-                    >
-                      Bet Now on Hard Rock
-                      <ArrowRight className="w-4 h-4" />
-                    </Button>
-                  </div>
+                {/* Button */}
+                <div className="w-full">
+                  <Button 
+                    className="w-full bg-gradient-to-r from-purple-600 to-blue-600 hover:from-purple-700 hover:to-blue-700 text-white font-medium py-3 rounded-xl flex items-center justify-center gap-2"
+                    onClick={() => handleFade(bet)}
+                  >
+                    Bet Now on Hard Rock
+                    <ArrowRight className="w-4 h-4" />
+                  </Button>
                 </div>
               </div>
             );
