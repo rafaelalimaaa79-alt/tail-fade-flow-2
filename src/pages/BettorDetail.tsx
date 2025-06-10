@@ -84,7 +84,7 @@ const BettorDetail = () => {
         <BettorHeader profile={summary.profile} />
         
         {/* Pending Bets Section */}
-        <PendingBets pendingBets={pendingBets} className="my-4" />
+        <PendingBets pendingBets={pendingBets} profile={summary.profile} className="my-4" />
         
         <div className="my-4 rounded-xl bg-black border border-white/10 p-4 shadow-md">
           {/* Performance Section */}
