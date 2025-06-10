@@ -77,17 +77,17 @@ const PendingBetsList = () => {
     ];
     const betType = betTypes[Math.floor(Math.random() * betTypes.length)];
     
-    // For totals, don't include team name
+    // For totals, don't include team name for game totals
     if (betType.includes("Over") || betType.includes("Under")) {
       if (betType.includes("230.5") || betType.includes("225.5")) {
-        return betType; // Game total
+        return { team: null, betType }; // Game total
       } else {
-        return `${team} ${betType}`; // Team total
+        return { team, betType }; // Team total
       }
     }
     
     // For spreads and ML, include team name
-    return `${team} ${betType}`;
+    return { team, betType };
   };
   
   return (
@@ -95,7 +95,8 @@ const PendingBetsList = () => {
       {pendingBets.map((bet, index) => {
         const fadeConfidence = getFadeConfidence();
         const matchup = getMatchup();
-        const betLine = getBetLine(matchup.teams);
+        const betData = getBetLine(matchup.teams);
+        const betLine = betData.team ? `${betData.team} ${betData.betType}` : betData.betType;
         
         return (
           <div key={bet.id}>
@@ -113,11 +114,12 @@ const PendingBetsList = () => {
                 </h3>
               </div>
               
-              {/* Bettor's pick */}
+              {/* Fading description for own profile */}
               <div className="text-center">
                 <p className="text-lg font-bold">
-                  <span className="text-[#AEE3F5]">@{bet.bettorName}</span>
-                  <span className="text-white"> is on {betLine}</span>
+                  <span className="text-white">Fading </span>
+                  <span className="text-[#AEE3F5]">@{bet.bettorName}'s</span>
+                  <span className="text-white"> bet</span>
                 </p>
               </div>
               
