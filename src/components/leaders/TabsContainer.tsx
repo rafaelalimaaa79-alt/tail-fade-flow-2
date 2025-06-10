@@ -35,7 +35,7 @@ const TabsContainer: React.FC<TabsContainerProps> = ({
   return (
     <div className="w-full">
       <div className="mb-6 text-center bg-gradient-to-r from-[#AEE3F5]/10 to-[#AEE3F5]/5 rounded-xl border border-[#AEE3F5]/20 p-6">
-        <h2 className="text-3xl font-bold font-rajdhani text-[#AEE3F5] uppercase tracking-wide mb-2 drop-shadow-[0_0_8px_rgba(174,227,245,0.7)]">
+        <h2 className="text-3xl font-bold font-exo text-[#AEE3F5] uppercase tracking-wide mb-2 drop-shadow-[0_0_8px_rgba(174,227,245,0.7)]">
           Fade Leaderboard
         </h2>
         <p className="text-base text-white/70 font-medium">

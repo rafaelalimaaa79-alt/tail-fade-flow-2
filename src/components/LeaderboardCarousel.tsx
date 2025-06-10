@@ -1,4 +1,3 @@
-
 import React from "react";
 import { useNavigate } from "react-router-dom";
 import BettorStreakItem from "./BettorStreakItem";
@@ -29,7 +28,7 @@ const LeaderboardCarousel = ({ currentIndex, onIndexChange }: LeaderboardCarouse
     <div className="w-full px-2"> 
       <div className="rounded-xl bg-card p-5 shadow-lg border border-white/10">
         <div className="mb-4 flex items-center justify-center">
-          <h3 className="text-lg font-bold text-white/90">Can't Buy a Win</h3>
+          <h3 className="text-lg font-bold text-white/90 font-exo">Can't Buy a Win</h3>
         </div>
         
         <div className="space-y-1">
