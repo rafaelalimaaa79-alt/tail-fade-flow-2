@@ -76,22 +76,17 @@ const PendingBets: React.FC<PendingBetsProps> = ({ pendingBets, className }) => 
                   </h4>
                 </div>
                 
-                {/* Fade Confidence line */}
+                {/* Fade Confidence line with larger font */}
                 <div className="mb-4 text-center relative z-10">
-                  <p className="text-sm text-white/70">
+                  <p className="text-lg text-white/70">
                     Fade Confidence: <span className={`font-bold ${confidenceData.colorClass}`}>{confidenceData.score}%</span>
                   </p>
                 </div>
                 
-                {/* Confidence percentage in top right with same style as time was */}
-                <div className={`absolute top-3 right-3 flex items-center gap-1 rounded-full bg-black/50 px-3 py-1.5 text-xl font-bold backdrop-blur-sm border border-white/10 ${confidenceData.colorClass}`}>
-                  <span>{confidenceData.score}%</span>
-                </div>
-                
-                {/* Middle row with enhanced styling - REMOVED confidence score since it's now in top right */}
+                {/* Middle row with enhanced styling - confidence score removed from top right */}
                 <div className="flex flex-wrap items-center justify-center mb-4 relative z-10">
                   <div className="flex flex-col items-center">
-                    {/* Removed confidence score display as it's now in the top right */}
+                    {/* Removed confidence score display as it's now in the fade confidence line */}
                   </div>
                 </div>
                 
