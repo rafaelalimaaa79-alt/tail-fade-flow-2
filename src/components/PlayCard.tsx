@@ -64,7 +64,10 @@ const PlayCard: React.FC<PlayCardProps> = ({ play, renderWaveText, onActionClick
         <h3 className="font-rajdhani text-lg font-bold text-white">
           <Link 
             to={`/bettor/${play.bettorName}`} 
-            className="text-primary hover:text-primary/80 transition-colors"
+            className="transition-colors"
+            style={{ color: '#AEE3F5' }}
+            onMouseEnter={(e) => e.target.style.color = '#AEE3F580'}
+            onMouseLeave={(e) => e.target.style.color = '#AEE3F5'}
           >
             @{play.bettorName}
           </Link> is on {play.bet}
