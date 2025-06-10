@@ -1,3 +1,4 @@
+
 import React from "react";
 import { format } from "date-fns";
 import { Badge } from "@/components/ui/badge";
@@ -99,10 +100,15 @@ const PendingBetsList = () => {
               
               {/* Bettor's pick */}
               <div className="text-center">
-                <p className="text-base font-semibold">
+                <p className="text-lg font-bold">
                   <span className="text-[#AEE3F5]">@{bet.bettorName}</span>
                   <span className="text-white"> is on {betLine}</span>
                 </p>
+              </div>
+              
+              {/* Divider line */}
+              <div className="flex justify-center py-2">
+                <div className="w-1/2 h-0.5 bg-gradient-to-r from-transparent via-[#AEE3F5]/40 to-transparent"></div>
               </div>
               
               {/* Fade confidence */}

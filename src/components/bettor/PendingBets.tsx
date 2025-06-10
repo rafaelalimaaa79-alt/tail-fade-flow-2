@@ -81,10 +81,15 @@ const PendingBets: React.FC<PendingBetsProps> = ({ pendingBets, profile, classNa
                   
                   {/* Bettor's pick */}
                   <div className="text-center">
-                    <p className="text-base font-semibold">
+                    <p className="text-lg font-bold">
                       <span className="text-[#AEE3F5]">@{profile.username}</span>
                       <span className="text-white"> is on {betLine}</span>
                     </p>
+                  </div>
+                  
+                  {/* Divider line */}
+                  <div className="flex justify-center py-2">
+                    <div className="w-1/2 h-0.5 bg-gradient-to-r from-transparent via-[#AEE3F5]/40 to-transparent"></div>
                   </div>
                   
                   {/* Fade confidence */}
