@@ -36,7 +36,7 @@ const PlayCard: React.FC<PlayCardProps> = ({ play, renderWaveText, onActionClick
       <div className="mb-4 text-center">
         <div className="flex items-center justify-center gap-3 mb-3">
           <span className="text-2xl">📉</span>
-          <span className="font-rajdhani text-xl font-black text-red-400 bg-red-400/10 px-3 py-1 rounded-lg border border-red-400/20">
+          <span className="font-rajdhani text-xl font-black text-white bg-muted px-3 py-1 rounded-lg border border-white/20">
             {play.record}
           </span>
         </div>
