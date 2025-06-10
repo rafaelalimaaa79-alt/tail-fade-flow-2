@@ -32,11 +32,11 @@ const PlayCard: React.FC<PlayCardProps> = ({ play, renderWaveText, onActionClick
         </h3>
       </div>
       
-      {/* Cold Streak Stats - Prominent display */}
+      {/* Cold Streak Stats - Clean display without blocks */}
       <div className="mb-4 text-center">
         <div className="flex items-center justify-center gap-3 mb-3">
           <span className="text-2xl">📉</span>
-          <span className="font-rajdhani text-xl font-black text-white bg-muted px-3 py-1 rounded-lg border border-white/20">
+          <span className="font-rajdhani text-xl font-black text-white">
             {play.record}
           </span>
         </div>
@@ -45,11 +45,11 @@ const PlayCard: React.FC<PlayCardProps> = ({ play, renderWaveText, onActionClick
         </p>
       </div>
       
-      {/* Fading Users Count - Styled as badge */}
+      {/* Fading Users Count - Clean display without blocks */}
       <div className="mb-6 text-center">
-        <div className="inline-flex items-center gap-2 bg-white/5 border border-white/20 rounded-full px-4 py-2">
+        <div className="flex items-center justify-center gap-2">
           <span className="text-white/70 font-medium text-sm">Fading Users:</span>
-          <span className="text-white font-bold text-lg bg-primary/20 text-primary px-2 py-1 rounded-full min-w-[3rem] text-center">
+          <span className="text-white font-bold text-lg text-primary">
             {play.userCount}
           </span>
         </div>
