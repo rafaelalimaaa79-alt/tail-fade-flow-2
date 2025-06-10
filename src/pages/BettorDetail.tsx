@@ -5,7 +5,6 @@ import BetHistoryModal from "@/components/BetHistoryModal";
 import { useBettorProfile } from "@/hooks/useBettorProfile";
 import { useNotificationStore } from "@/utils/betting-notifications";
 import FullscreenNotification from "@/components/FullscreenNotification";
-import BriefcaseButton from "@/components/common/BriefcaseButton";
 import ProfileIcon from "@/components/common/ProfileIcon";
 
 // Imported components
@@ -77,7 +76,6 @@ const BettorDetail = () => {
             className="h-24"
           />
           <div className="flex items-center gap-2">
-            <BriefcaseButton className="mr-2" />
             <ProfileIcon />
           </div>
         </div>
