@@ -71,11 +71,11 @@ const PendingBets: React.FC<PendingBetsProps> = ({ pendingBets, profile, classNa
                     boxShadow: '0 0 15px rgba(174, 227, 245, 0.3)',
                   }}
                 >
-                  {/* Game header with icy blue underline */}
+                  {/* Game header with solid icy blue underline */}
                   <div className="text-center pb-2">
                     <h3 className="text-lg font-bold text-white relative inline-block">
                       {matchup}
-                      <div className="absolute bottom-0 left-1/2 transform -translate-x-1/2 w-screen h-0.5 bg-gradient-to-r from-transparent via-[#AEE3F5] to-transparent opacity-80"></div>
+                      <div className="absolute bottom-0 left-0 w-full h-1 bg-[#AEE3F5] opacity-90"></div>
                     </h3>
                   </div>
                   
