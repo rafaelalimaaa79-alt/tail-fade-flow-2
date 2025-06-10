@@ -3,6 +3,7 @@ import React from "react";
 import { useNavigate } from "react-router-dom";
 import BettorStreakItem from "./BettorStreakItem";
 import ActionButton from "./ActionButton";
+import { Separator } from "./ui/separator";
 
 interface LeaderboardCarouselProps {
   currentIndex: number;
@@ -28,10 +29,11 @@ const LeaderboardCarousel = ({ currentIndex, onIndexChange }: LeaderboardCarouse
   return (
     <div className="w-full px-2"> 
       <div className="rounded-xl bg-card p-5 shadow-lg border border-white/10">
-        <div className="mb-4 flex items-center justify-center">
-          <h3 className="text-2xl font-black text-[#AEE3F5] font-exo uppercase tracking-wide">
+        <div className="mb-6">
+          <h3 className="text-2xl font-black text-[#AEE3F5] font-exo uppercase tracking-wide text-center mb-3">
             Can't Buy a Win
           </h3>
+          <Separator className="bg-[#AEE3F5]/30" />
         </div>
         
         <div className="space-y-1">
