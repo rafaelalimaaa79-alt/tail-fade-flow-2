@@ -2,7 +2,6 @@
 import React from "react";
 import { cn } from "@/lib/utils";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
-import { Button } from "@/components/ui/button";
 
 interface Win {
   id: string;
@@ -72,12 +71,9 @@ const BiggestWinsSection: React.FC<BiggestWinsSectionProps> = ({ wins }) => {
             </TabsContent>
           </Tabs>
           
-          <Button 
-            variant="outline" 
-            className="w-full mt-4 bg-transparent border-white/20 text-white hover:bg-white/10"
-          >
-            View All Bets
-          </Button>
+          <div className="text-center mt-4">
+            <p className="text-sm text-gray-400">Updates Weekly</p>
+          </div>
         </>
       ) : (
         <div className="rounded-lg bg-black/30 border border-white/10 p-6 text-center mt-4">
