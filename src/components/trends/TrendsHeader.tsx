@@ -6,8 +6,8 @@ const TrendsHeader = () => {
     <header className="mb-4 flex items-center">
       <div className="flex items-center">
         <img 
-          src="/lovable-uploads/57cb1fb4-7471-451e-bf49-d4d5fa12bdcb.png" 
-          alt="ONE TIME logo" 
+          src="/lovable-uploads/15b68287-6284-47fd-b7cf-1c67129dec0b.png" 
+          alt="Fade Zone logo" 
           className="h-24"
         />
       </div>

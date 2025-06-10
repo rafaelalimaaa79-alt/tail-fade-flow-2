@@ -11,8 +11,8 @@ const PageHeader: React.FC<PageHeaderProps> = ({ logoSrc }) => {
       <header className="mb-4 flex items-center">
         <div className="flex items-center gap-2">
           <img 
-            src={logoSrc} 
-            alt="ONE TIME logo" 
+            src="/lovable-uploads/15b68287-6284-47fd-b7cf-1c67129dec0b.png" 
+            alt="Fade Zone logo" 
             className="h-24"
           />
         </div>
