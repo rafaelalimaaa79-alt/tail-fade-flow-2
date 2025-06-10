@@ -52,19 +52,6 @@ const PlayCard: React.FC<PlayCardProps> = ({ play, renderWaveText, onActionClick
         </p>
       </div>
       
-      {/* Recommended Play Section */}
-      <div className="mb-4">
-        <h4 className="font-rajdhani text-sm font-bold text-white/60 uppercase tracking-wider mb-3 text-center">
-          Recommended Play:
-        </h4>
-        <div className="flex items-center justify-center gap-2 mb-4">
-          <span className="text-white/80">➡</span>
-          <span className="font-rajdhani text-lg font-semibold text-white">
-            Fade {play.bet}
-          </span>
-        </div>
-      </div>
-      
       {/* Action Button */}
       <div className="rounded-lg bg-muted p-4 text-center border border-white/10 shadow-lg">
         <ActionButton 
