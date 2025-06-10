@@ -98,21 +98,21 @@ const PendingBets: React.FC<PendingBetsProps> = ({ pendingBets, profile, classNa
             return (
               <div key={bet.id}>
                 <div 
-                  className="bg-black rounded-xl p-4 border border-[#AEE3F5]/30 animate-glow-pulse space-y-4"
+                  className="bg-black rounded-xl p-3 border border-[#AEE3F5]/30 animate-glow-pulse space-y-2"
                   style={{
                     boxShadow: '0 0 15px rgba(174, 227, 245, 0.3)',
                   }}
                 >
                   {/* Game header with solid icy blue underline */}
-                  <div className="text-center pb-2">
-                    <h3 className="text-xl font-bold text-white relative inline-block">
+                  <div className="text-center pb-1">
+                    <h3 className="text-2xl font-bold text-white relative inline-block">
                       {matchup.game}
                       <div className="absolute bottom-0 left-0 w-full h-1 bg-[#AEE3F5] opacity-90"></div>
                     </h3>
                   </div>
                   
                   {/* Bettor's pick */}
-                  <div className="text-center py-2">
+                  <div className="text-center py-1">
                     <p className="text-lg font-bold">
                       <span className="text-[#AEE3F5]">@{profile.username}</span>
                       <span className="text-white"> is on {betLine}</span>
@@ -120,26 +120,26 @@ const PendingBets: React.FC<PendingBetsProps> = ({ pendingBets, profile, classNa
                   </div>
                   
                   {/* Sport-specific statline */}
-                  <div className="text-center py-2">
-                    <p className="text-sm font-medium text-gray-400 italic">
+                  <div className="text-center py-1">
+                    <p className="text-base font-medium text-gray-400 italic">
                       {sportStatline}
                     </p>
                   </div>
                   
                   {/* Divider line */}
-                  <div className="flex justify-center py-2">
+                  <div className="flex justify-center py-1">
                     <div className="w-1/2 h-0.5 bg-gradient-to-r from-transparent via-[#AEE3F5]/40 to-transparent"></div>
                   </div>
                   
                   {/* Fade confidence */}
-                  <div className="text-center py-2">
+                  <div className="text-center py-1">
                     <p className="text-lg font-semibold text-gray-300">
                       Fade Confidence: <span className="text-[#AEE3F5] font-bold">{fadeConfidence}%</span>
                     </p>
                   </div>
                   
                   {/* Fade button */}
-                  <div className="w-full pt-2">
+                  <div className="w-full pt-1">
                     <Button 
                       className="w-full bg-[#AEE3F5] hover:bg-[#AEE3F5]/90 text-black font-bold py-3 rounded-xl"
                       onClick={() => handleFade(bet)}
