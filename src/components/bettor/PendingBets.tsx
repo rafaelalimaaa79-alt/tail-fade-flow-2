@@ -97,7 +97,6 @@ const PendingBets: React.FC<PendingBetsProps> = ({ pendingBets, className }) => 
                     onClick={() => handleFade(bet)}
                   >
                     <div className="absolute inset-0 bg-gradient-to-r from-transparent to-white/10 opacity-0 group-hover:opacity-100 transition-opacity"></div>
-                    <ThumbsDown className="h-4 w-4 mr-1.5 group-hover:scale-110 transition-transform" /> 
                     Fade {bet.betType}
                   </ActionButton>
                 </div>
