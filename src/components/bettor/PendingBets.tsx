@@ -80,8 +80,9 @@ const PendingBets: React.FC<PendingBetsProps> = ({ pendingBets, profile, classNa
                 
                 {/* Bettor's pick */}
                 <div className="text-center">
-                  <p className="text-base text-[#AEE3F5]">
-                    @{profile.username} is on {betLine}
+                  <p className="text-base font-semibold">
+                    <span className="text-[#AEE3F5]">@{profile.username}</span>
+                    <span className="text-white"> is on {betLine}</span>
                   </p>
                 </div>
                 

@@ -99,8 +99,9 @@ const PendingBetsList = () => {
             
             {/* Bettor's pick */}
             <div className="text-center">
-              <p className="text-base text-[#AEE3F5]">
-                @{bet.bettorName} is on {betLine}
+              <p className="text-base font-semibold">
+                <span className="text-[#AEE3F5]">@{bet.bettorName}</span>
+                <span className="text-white"> is on {betLine}</span>
               </p>
             </div>
             
