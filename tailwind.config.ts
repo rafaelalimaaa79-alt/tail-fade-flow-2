@@ -1,3 +1,4 @@
+
 import type { Config } from "tailwindcss";
 
 export default {
@@ -20,7 +21,7 @@ export default {
 		extend: {
 			fontFamily: {
 				rajdhani: ['Rajdhani', 'sans-serif'],
-				orbitron: ['Orbitron', 'sans-serif'],
+				exo: ['Exo 2', 'sans-serif'],
 				// Make Rajdhani the default font for all text
 				sans: ['Rajdhani', 'sans-serif'],
 			},
