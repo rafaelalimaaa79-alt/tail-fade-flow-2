@@ -1,5 +1,6 @@
 
 import React from "react";
+import { Link } from "react-router-dom";
 import ActionButton from "./ActionButton";
 import { BetterPlay } from "@/types/betTypes";
 import { showFadeNotification } from "@/utils/betting-notifications";
@@ -61,7 +62,12 @@ const PlayCard: React.FC<PlayCardProps> = ({ play, renderWaveText, onActionClick
       {/* Bettor Name and Bet Description */}
       <div className="mb-4 text-center">
         <h3 className="font-rajdhani text-lg font-bold text-white">
-          <span className="text-primary">@</span>{play.bettorName}'s is on {play.bet}
+          <Link 
+            to={`/bettor/${play.bettorName}`} 
+            className="text-primary hover:text-primary/80 transition-colors"
+          >
+            @{play.bettorName}
+          </Link>'s is on {play.bet}
         </h3>
       </div>
       
