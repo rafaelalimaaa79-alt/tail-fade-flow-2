@@ -69,11 +69,18 @@ const PendingBets: React.FC<PendingBetsProps> = ({ pendingBets, className }) => 
                 <div className="absolute bottom-0 left-6 h-20 w-20 rounded-full bg-onetime-orange/10 blur-xl"></div>
                 
                 {/* Bet Type as prominent header */}
-                <div className="mb-4 text-center">
+                <div className="mb-2 text-center">
                   <h4 className="text-xl font-extrabold text-white tracking-tight relative z-10 font-rajdhani">
                     {bet.betType}
                     <div className="h-1 w-16 bg-gradient-to-r from-onetime-red via-onetime-red/80 to-transparent rounded-full mx-auto mt-1"></div>
                   </h4>
+                </div>
+                
+                {/* Fade Confidence line */}
+                <div className="mb-4 text-center relative z-10">
+                  <p className="text-sm text-white/70">
+                    Fade Confidence: <span className={`font-bold ${confidenceData.colorClass}`}>{confidenceData.score}%</span>
+                  </p>
                 </div>
                 
                 {/* Confidence percentage in top right with same style as time was */}
