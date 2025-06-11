@@ -37,7 +37,7 @@ const SignInForm: React.FC<SignInFormProps> = ({
           <img 
             src="/lovable-uploads/15b68287-6284-47fd-b7cf-1c67129dec0b.png" 
             alt="Fade Zone logo" 
-            className="h-40 mx-auto mb-6 object-contain max-w-full"
+            className="h-48 mx-auto mb-6 object-contain max-w-full"
           />
           <h1 className="text-3xl font-light text-white leading-tight">
             Welcome to<br />Fade Zone
