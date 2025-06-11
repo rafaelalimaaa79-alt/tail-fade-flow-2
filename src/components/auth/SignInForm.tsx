@@ -3,9 +3,6 @@ import React, { useState } from "react";
 import { Eye, EyeOff } from "lucide-react";
 import { Input } from "@/components/ui/input";
 import { Button } from "@/components/ui/button";
-import SignInHeader from "./SignInHeader";
-import CreateAccountLink from "./CreateAccountLink";
-import ForgotPasswordLink from "./ForgotPasswordLink";
 
 interface SignInFormProps {
   email: string;
@@ -28,11 +25,59 @@ const SignInForm: React.FC<SignInFormProps> = ({
   onCreateAccount,
   onForgotPassword
 }) => {
+  const [showLoginForm, setShowLoginForm] = useState(false);
   const [showPassword, setShowPassword] = useState(false);
 
+  if (!showLoginForm) {
+    // Welcome screen similar to Robinhood
+    return (
+      <div className="w-full max-w-md space-y-8 flex flex-col justify-center min-h-screen">
+        {/* Logo */}
+        <div className="text-center mb-16">
+          <img 
+            src="/lovable-uploads/15b68287-6284-47fd-b7cf-1c67129dec0b.png" 
+            alt="Fade Zone logo" 
+            className="h-32 mx-auto mb-8"
+          />
+          <h1 className="text-4xl font-light text-white leading-tight">
+            Welcome to<br />Fade Zone
+          </h1>
+        </div>
+        
+        {/* Buttons */}
+        <div className="space-y-4 mt-auto mb-16">
+          <Button 
+            onClick={onCreateAccount}
+            className="w-full h-12 text-base bg-[#00D4AA] hover:bg-[#00D4AA]/90 text-black font-medium rounded-md"
+          >
+            Sign up
+          </Button>
+          
+          <Button 
+            onClick={() => setShowLoginForm(true)}
+            variant="outline"
+            className="w-full h-12 text-base border-[#00D4AA] text-[#00D4AA] bg-transparent hover:bg-[#00D4AA]/10 font-medium rounded-md"
+          >
+            Log in
+          </Button>
+        </div>
+      </div>
+    );
+  }
+
+  // Login form
   return (
     <div className="w-full max-w-md space-y-8">
-      <SignInHeader />
+      <div className="text-center">
+        <button 
+          onClick={() => setShowLoginForm(false)}
+          className="text-[#00D4AA] mb-6 text-sm"
+        >
+          ← Back
+        </button>
+        <h1 className="text-2xl font-bold text-white">Sign In</h1>
+        <p className="text-muted-foreground mt-1">Welcome back to Fade Zone</p>
+      </div>
       
       <form onSubmit={onSubmit} className="space-y-6">
         <div className="space-y-4">
@@ -44,7 +89,6 @@ const SignInForm: React.FC<SignInFormProps> = ({
               onChange={(e) => setEmail(e.target.value)}
               className="border-white/20 bg-white/5 focus:border-primary transition-all duration-300 focus:ring-1 focus:ring-primary"
             />
-            <div className="absolute inset-0 rounded-md pointer-events-none border border-transparent bg-gradient-to-r from-primary/10 via-transparent to-primary/10 opacity-0 group-focus-within:opacity-100 transition-opacity"></div>
           </div>
           
           <div className="relative">
@@ -62,7 +106,6 @@ const SignInForm: React.FC<SignInFormProps> = ({
             >
               {showPassword ? <EyeOff className="h-4 w-4" /> : <Eye className="h-4 w-4" />}
             </button>
-            <div className="absolute inset-0 rounded-md pointer-events-none border border-transparent bg-gradient-to-r from-primary/10 via-transparent to-primary/10 opacity-0 group-focus-within:opacity-100 transition-opacity"></div>
           </div>
         </div>
         
@@ -76,8 +119,13 @@ const SignInForm: React.FC<SignInFormProps> = ({
       </form>
       
       <div className="flex flex-col items-center space-y-4 pt-4 text-sm">
-        <CreateAccountLink onClick={onCreateAccount} />
-        <ForgotPasswordLink onClick={onForgotPassword} />
+        <button
+          type="button"
+          onClick={onForgotPassword}
+          className="text-white/80 hover:text-white transition-colors"
+        >
+          Forgot password?
+        </button>
       </div>
     </div>
   );
