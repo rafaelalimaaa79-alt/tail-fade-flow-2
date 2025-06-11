@@ -31,24 +31,24 @@ const SignInForm: React.FC<SignInFormProps> = ({
   if (!showLoginForm) {
     // Welcome screen similar to Robinhood
     return (
-      <div className="w-full max-w-md flex flex-col justify-between h-screen py-8">
+      <div className="w-full max-w-md flex flex-col justify-between h-screen max-h-screen overflow-hidden py-6">
         {/* Logo */}
-        <div className="text-center flex-1 flex flex-col justify-center">
+        <div className="text-center flex-1 flex flex-col justify-center min-h-0">
           <img 
             src="/lovable-uploads/15b68287-6284-47fd-b7cf-1c67129dec0b.png" 
             alt="Fade Zone logo" 
-            className="h-40 mx-auto mb-8"
+            className="h-32 mx-auto mb-6 object-contain"
           />
-          <h1 className="text-3xl font-light text-white leading-tight">
+          <h1 className="text-2xl font-light text-white leading-tight">
             Welcome to<br />Fade Zone
           </h1>
         </div>
         
         {/* Buttons */}
-        <div className="space-y-4">
+        <div className="space-y-3 flex-shrink-0">
           <Button 
             onClick={onCreateAccount}
-            className="w-full h-12 text-base bg-[#AEE3F5] hover:bg-[#AEE3F5]/90 text-black font-medium rounded-md"
+            className="w-full h-11 text-base bg-[#AEE3F5] hover:bg-[#AEE3F5]/90 text-black font-medium rounded-md"
           >
             Sign up
           </Button>
@@ -56,7 +56,7 @@ const SignInForm: React.FC<SignInFormProps> = ({
           <Button 
             onClick={() => setShowLoginForm(true)}
             variant="outline"
-            className="w-full h-12 text-base border-[#AEE3F5] text-[#AEE3F5] bg-transparent hover:bg-[#AEE3F5]/10 font-medium rounded-md"
+            className="w-full h-11 text-base border-[#AEE3F5] text-[#AEE3F5] bg-transparent hover:bg-[#AEE3F5]/10 font-medium rounded-md"
           >
             Log in
           </Button>
@@ -67,19 +67,19 @@ const SignInForm: React.FC<SignInFormProps> = ({
 
   // Login form
   return (
-    <div className="w-full max-w-md flex flex-col justify-center h-screen py-8">
-      <div className="text-center mb-6">
+    <div className="w-full max-w-md flex flex-col justify-center h-screen max-h-screen overflow-hidden py-6">
+      <div className="text-center mb-4 flex-shrink-0">
         <button 
           onClick={() => setShowLoginForm(false)}
-          className="text-[#AEE3F5] mb-4 text-sm"
+          className="text-[#AEE3F5] mb-3 text-sm"
         >
           ← Back
         </button>
-        <h1 className="text-2xl font-bold text-white">Sign In</h1>
-        <p className="text-muted-foreground mt-1">Welcome back to Fade Zone</p>
+        <h1 className="text-xl font-bold text-white">Sign In</h1>
+        <p className="text-muted-foreground mt-1 text-sm">Welcome back to Fade Zone</p>
       </div>
       
-      <form onSubmit={onSubmit} className="space-y-4">
+      <form onSubmit={onSubmit} className="space-y-3 flex-1 min-h-0 flex flex-col justify-center">
         <div className="space-y-3">
           <div className="relative">
             <Input
@@ -87,7 +87,7 @@ const SignInForm: React.FC<SignInFormProps> = ({
               placeholder="Email"
               value={email}
               onChange={(e) => setEmail(e.target.value)}
-              className="border-white/20 bg-white/5 focus:border-primary transition-all duration-300 focus:ring-1 focus:ring-primary"
+              className="border-white/20 bg-white/5 focus:border-primary transition-all duration-300 focus:ring-1 focus:ring-primary h-11"
             />
           </div>
           
@@ -97,7 +97,7 @@ const SignInForm: React.FC<SignInFormProps> = ({
               placeholder="Password"
               value={password}
               onChange={(e) => setPassword(e.target.value)}
-              className="pr-10 border-white/20 bg-white/5 focus:border-primary transition-all duration-300 focus:ring-1 focus:ring-primary"
+              className="pr-10 border-white/20 bg-white/5 focus:border-primary transition-all duration-300 focus:ring-1 focus:ring-primary h-11"
             />
             <button 
               type="button"
@@ -111,14 +111,14 @@ const SignInForm: React.FC<SignInFormProps> = ({
         
         <Button 
           type="submit" 
-          className="w-full h-12 text-base bg-primary hover:bg-primary/90 text-white shadow-[0_0_15px_rgba(108,92,231,0.4)] transition-all duration-300"
+          className="w-full h-11 text-base bg-primary hover:bg-primary/90 text-white shadow-[0_0_15px_rgba(108,92,231,0.4)] transition-all duration-300 mt-4"
           disabled={loading}
         >
           {loading ? "Signing in..." : "Sign In"}
         </Button>
       </form>
       
-      <div className="flex flex-col items-center space-y-3 pt-4 text-sm">
+      <div className="flex flex-col items-center space-y-2 pt-2 text-sm flex-shrink-0">
         <button
           type="button"
           onClick={onForgotPassword}
