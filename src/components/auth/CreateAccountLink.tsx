@@ -12,7 +12,7 @@ const CreateAccountLink: React.FC<CreateAccountLinkProps> = ({ onClick }) => {
       onClick={onClick}
       className="text-white/80 hover:text-white transition-colors"
     >
-      Don't have an account? <span className="text-primary">Create one</span>
+      Don't have an account? <span className="text-primary">Go to Home</span>
     </button>
   );
 };
