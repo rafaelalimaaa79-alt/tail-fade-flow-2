@@ -4,6 +4,7 @@ import { Link } from "react-router-dom";
 import ActionButton from "./ActionButton";
 import { BetterPlay } from "@/types/betTypes";
 import { showFadeNotification } from "@/utils/betting-notifications";
+import { Button } from "@/components/ui/button";
 
 interface PlayCardProps {
   play: BetterPlay;
@@ -81,65 +82,63 @@ const PlayCard: React.FC<PlayCardProps> = ({ play, renderWaveText, onActionClick
   const fadeConfidence = play.percentage;
   
   return (
-    <div className="rounded-xl bg-card p-6 shadow-lg border border-white/10 neon-glow">
-      {/* Header */}
-      <div className="mb-5 border-b border-white/10 pb-3">
-        <h2 className="font-exo text-4xl font-bold text-[#AEE3F5] text-center tracking-wider uppercase neon-text" 
-            style={{
-              textShadow: '0 0 5px #AEE3F5, 0 0 15px #AEE3F5'
-            }}>
-          FADE WATCH
-        </h2>
-        
-        {/* Game Matchup Mini Header */}
-        <div className="mt-3 text-center">
-          <p className="text-lg font-semibold text-white/80 tracking-wide">
+    <div className="block mb-4">
+      <div 
+        className="bg-black rounded-xl p-3 border border-[#AEE3F5]/30 animate-glow-pulse space-y-2 flex-grow flex flex-col min-h-[280px]"
+        style={{
+          boxShadow: '0 0 15px rgba(174, 227, 245, 0.3)',
+        }}
+      >
+        {/* Game header with solid icy blue underline */}
+        <div className="text-center pb-1">
+          <h3 className="text-2xl font-bold text-white relative inline-block">
             {gameMatchup}
+            <div className="absolute bottom-0 left-0 w-full h-1 bg-[#AEE3F5] opacity-90"></div>
+          </h3>
+        </div>
+        
+        {/* Bettor's pick */}
+        <div className="text-center py-1">
+          <p className="text-lg font-bold">
+            <span className="text-[#AEE3F5]">@{play.bettorName}</span>
+            <span className="text-white"> is on {play.bet}</span>
           </p>
         </div>
-      </div>
-      
-      {/* Bettor's pick */}
-      <div className="text-center mb-4">
-        <p className="text-xl font-bold">
-          <span className="text-[#AEE3F5]">@{play.bettorName}</span>
-          <span className="text-white"> is on {play.bet}</span>
-        </p>
-      </div>
-      
-      {/* Record statline */}
-      <div className="text-center mb-4">
-        <p className="text-lg font-medium text-gray-400 italic">
-          He is {play.record}
-        </p>
-      </div>
-      
-      {/* Fade confidence */}
-      <div className="text-center mb-5">
-        <p className="text-lg font-semibold text-gray-300">
-          Fade Confidence: <span className="text-[#AEE3F5] font-bold">{fadeConfidence}%</span>
-        </p>
-      </div>
-      
-      {/* Fading Users Count - Clean display without blocks */}
-      <div className="mb-5 text-center">
-        <div className="flex items-center justify-center gap-2">
-          <span className="text-white/70 font-medium text-base">Fading Users:</span>
-          <span className="text-white font-bold text-xl text-primary">
-            {play.userCount}
-          </span>
+        
+        {/* Record statline */}
+        <div className="text-center py-1">
+          <p className="text-lg font-medium text-gray-400 italic">
+            He is {play.record}
+          </p>
         </div>
-      </div>
-      
-      {/* Action Button */}
-      <div className="rounded-lg bg-muted p-4 text-center border border-white/10 shadow-lg">
-        <ActionButton 
-          variant="fade"
-          className="h-12 text-lg font-bold"
-          onClick={handleBetClick}
-        >
-          Bet {oppositeBet}
-        </ActionButton>
+        
+        {/* Divider line */}
+        <div className="flex justify-center py-1">
+          <div className="w-1/2 h-0.5 bg-gradient-to-r from-transparent via-[#AEE3F5]/40 to-transparent"></div>
+        </div>
+        
+        {/* Fade confidence */}
+        <div className="text-center py-1">
+          <p className="text-lg font-semibold text-gray-300">
+            Fade Confidence: <span className="text-[#AEE3F5] font-bold">{fadeConfidence}%</span>
+          </p>
+        </div>
+        
+        {/* Spacer to push button to bottom */}
+        <div className="flex-grow"></div>
+        
+        {/* Bet button with opposite bet */}
+        <div className="w-full pt-1">
+          <Button 
+            className="w-full py-4 rounded-xl transition-all duration-300 text-lg font-bold bg-[#AEE3F5] hover:bg-[#AEE3F5]/90 text-black"
+            style={{
+              boxShadow: "0 0 20px rgba(174, 227, 245, 0.8), 0 0 40px rgba(174, 227, 245, 0.4)"
+            }}
+            onClick={handleBetClick}
+          >
+            Bet {oppositeBet}
+          </Button>
+        </div>
       </div>
     </div>
   );
