@@ -31,24 +31,24 @@ const SignInForm: React.FC<SignInFormProps> = ({
   if (!showLoginForm) {
     // Welcome screen similar to Robinhood
     return (
-      <div className="w-full max-w-md h-screen flex flex-col justify-between px-4 py-4 overflow-hidden fixed top-0 left-1/2 transform -translate-x-1/2">
-        {/* Logo */}
-        <div className="text-center flex-1 flex flex-col justify-center items-center min-h-0">
+      <div className="w-full max-w-md h-screen flex flex-col justify-center px-4 py-4 overflow-hidden fixed top-0 left-1/2 transform -translate-x-1/2">
+        {/* Logo and welcome text - moved up */}
+        <div className="text-center flex-1 flex flex-col justify-center items-center min-h-0 -mt-16">
           <img 
             src="/lovable-uploads/15b68287-6284-47fd-b7cf-1c67129dec0b.png" 
             alt="Fade Zone logo" 
-            className="h-28 mx-auto mb-4 object-contain max-w-full"
+            className="h-40 mx-auto mb-6 object-contain max-w-full"
           />
-          <h1 className="text-xl font-light text-white leading-tight">
+          <h1 className="text-3xl font-light text-white leading-tight">
             Welcome to<br />Fade Zone
           </h1>
         </div>
         
-        {/* Buttons */}
-        <div className="space-y-3 flex-shrink-0 pb-safe">
+        {/* Buttons - moved up with less padding */}
+        <div className="space-y-3 flex-shrink-0 pb-8">
           <Button 
             onClick={onCreateAccount}
-            className="w-full h-10 text-sm bg-[#AEE3F5] hover:bg-[#AEE3F5]/90 text-black font-medium rounded-md"
+            className="w-full h-12 text-base bg-[#AEE3F5] hover:bg-[#AEE3F5]/90 text-black font-medium rounded-md"
           >
             Sign up
           </Button>
@@ -56,7 +56,7 @@ const SignInForm: React.FC<SignInFormProps> = ({
           <Button 
             onClick={() => setShowLoginForm(true)}
             variant="outline"
-            className="w-full h-10 text-sm border-[#AEE3F5] text-[#AEE3F5] bg-transparent hover:bg-[#AEE3F5]/10 font-medium rounded-md"
+            className="w-full h-12 text-base border-[#AEE3F5] text-[#AEE3F5] bg-transparent hover:bg-[#AEE3F5]/10 font-medium rounded-md"
           >
             Log in
           </Button>
