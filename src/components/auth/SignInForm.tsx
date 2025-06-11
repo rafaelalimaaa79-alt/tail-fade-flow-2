@@ -31,24 +31,24 @@ const SignInForm: React.FC<SignInFormProps> = ({
   if (!showLoginForm) {
     // Welcome screen similar to Robinhood
     return (
-      <div className="w-full max-w-md space-y-8 flex flex-col justify-center min-h-screen">
+      <div className="w-full max-w-md space-y-8 flex flex-col justify-center h-screen">
         {/* Logo */}
-        <div className="text-center mb-16">
+        <div className="text-center mb-8">
           <img 
             src="/lovable-uploads/15b68287-6284-47fd-b7cf-1c67129dec0b.png" 
             alt="Fade Zone logo" 
-            className="h-32 mx-auto mb-8"
+            className="h-24 mx-auto mb-6"
           />
-          <h1 className="text-4xl font-light text-white leading-tight">
+          <h1 className="text-3xl font-light text-white leading-tight">
             Welcome to<br />Fade Zone
           </h1>
         </div>
         
         {/* Buttons */}
-        <div className="space-y-4 mt-auto mb-16">
+        <div className="space-y-4 mt-auto mb-12">
           <Button 
             onClick={onCreateAccount}
-            className="w-full h-12 text-base bg-[#00D4AA] hover:bg-[#00D4AA]/90 text-black font-medium rounded-md"
+            className="w-full h-12 text-base bg-[#AEE3F5] hover:bg-[#AEE3F5]/90 text-black font-medium rounded-md"
           >
             Sign up
           </Button>
@@ -56,7 +56,7 @@ const SignInForm: React.FC<SignInFormProps> = ({
           <Button 
             onClick={() => setShowLoginForm(true)}
             variant="outline"
-            className="w-full h-12 text-base border-[#00D4AA] text-[#00D4AA] bg-transparent hover:bg-[#00D4AA]/10 font-medium rounded-md"
+            className="w-full h-12 text-base border-[#AEE3F5] text-[#AEE3F5] bg-transparent hover:bg-[#AEE3F5]/10 font-medium rounded-md"
           >
             Log in
           </Button>
@@ -67,11 +67,11 @@ const SignInForm: React.FC<SignInFormProps> = ({
 
   // Login form
   return (
-    <div className="w-full max-w-md space-y-8">
+    <div className="w-full max-w-md space-y-6 flex flex-col justify-center h-screen">
       <div className="text-center">
         <button 
           onClick={() => setShowLoginForm(false)}
-          className="text-[#00D4AA] mb-6 text-sm"
+          className="text-[#AEE3F5] mb-4 text-sm"
         >
           ← Back
         </button>
@@ -79,8 +79,8 @@ const SignInForm: React.FC<SignInFormProps> = ({
         <p className="text-muted-foreground mt-1">Welcome back to Fade Zone</p>
       </div>
       
-      <form onSubmit={onSubmit} className="space-y-6">
-        <div className="space-y-4">
+      <form onSubmit={onSubmit} className="space-y-4">
+        <div className="space-y-3">
           <div className="relative">
             <Input
               type="email"
@@ -118,7 +118,7 @@ const SignInForm: React.FC<SignInFormProps> = ({
         </Button>
       </form>
       
-      <div className="flex flex-col items-center space-y-4 pt-4 text-sm">
+      <div className="flex flex-col items-center space-y-3 pt-2 text-sm">
         <button
           type="button"
           onClick={onForgotPassword}
