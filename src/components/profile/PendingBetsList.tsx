@@ -1,4 +1,3 @@
-
 import React from "react";
 import { format } from "date-fns";
 import { Badge } from "@/components/ui/badge";
@@ -8,7 +7,6 @@ import { useBetStore } from "@/utils/portfolio-state";
 import { useNavigate } from "react-router-dom";
 import { ArrowRight, Clock, Star } from "lucide-react";
 import { Separator } from "@/components/ui/separator";
-import { getOppositeBet } from "@/utils/bet-conversion";
 
 const SPORTSBOOKS = {
   "hardrock": {
@@ -99,10 +97,6 @@ const PendingBetsList = () => {
         const betData = getBetLine(matchup.teams);
         const betLine = betData.team ? `${betData.team} ${betData.betType}` : betData.betType;
         
-        // Get the opposite team for the fade bet
-        const opponentTeam = matchup.teams.find(team => team !== betData.team);
-        const oppositeBet = getOppositeBet(betLine, opponentTeam);
-        
         return (
           <div key={bet.id}>
             <div 
@@ -158,7 +152,7 @@ const PendingBetsList = () => {
                       boxShadow: "0 0 20px rgba(108, 92, 231, 0.8), 0 0 40px rgba(108, 92, 231, 0.4)"
                     }}
                   >
-                    Bet {oppositeBet} Now on Hard Rock
+                    Bet Now on Hard Rock
                   </Button>
                 )}
               </div>
