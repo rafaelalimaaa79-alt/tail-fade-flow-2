@@ -1,5 +1,5 @@
 
-import React from "react";
+import React, { useMemo } from "react";
 import { Link } from "react-router-dom";
 import ActionButton from "./ActionButton";
 import { BetterPlay } from "@/types/betTypes";
@@ -38,26 +38,22 @@ const PlayCard: React.FC<PlayCardProps> = ({ play, renderWaveText, onActionClick
     return availableTeams[Math.floor(Math.random() * availableTeams.length)];
   };
 
-  // Get just the opposing team name
-  const randomOpposingTeam = getRandomOpposingTeam(play.bet);
-  
-  // Create a simple bet string based on the original bet type
-  const createOppositeBet = (originalBet: string, opposingTeam: string) => {
-    if (originalBet.includes('ML')) {
-      return `${opposingTeam} ML`;
-    } else if (originalBet.includes('-') || originalBet.includes('+')) {
-      // For spreads, just use ML for simplicity
-      return `${opposingTeam} ML`;
-    } else if (originalBet.toLowerCase().includes('over')) {
-      return `Under ${originalBet.split(' ').pop()}`;
-    } else if (originalBet.toLowerCase().includes('under')) {
-      return `Over ${originalBet.split(' ').pop()}`;
+  // Use useMemo to prevent the random team from changing on every render
+  const oppositeBet = useMemo(() => {
+    const randomOpposingTeam = getRandomOpposingTeam(play.bet);
+    
+    if (play.bet.includes('ML')) {
+      return `${randomOpposingTeam} ML`;
+    } else if (play.bet.includes('-') || play.bet.includes('+')) {
+      return `${randomOpposingTeam} ML`;
+    } else if (play.bet.toLowerCase().includes('over')) {
+      return `Under ${play.bet.split(' ').pop()}`;
+    } else if (play.bet.toLowerCase().includes('under')) {
+      return `Over ${play.bet.split(' ').pop()}`;
     } else {
-      return `${opposingTeam} ML`;
+      return `${randomOpposingTeam} ML`;
     }
-  };
-
-  const oppositeBet = createOppositeBet(play.bet, randomOpposingTeam);
+  }, [play.bet]);
 
   // Handle the bet action with notification only
   const handleBetClick = () => {
