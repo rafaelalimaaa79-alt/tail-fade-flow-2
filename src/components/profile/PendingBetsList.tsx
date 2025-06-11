@@ -7,6 +7,7 @@ import { useBetStore } from "@/utils/portfolio-state";
 import { useNavigate } from "react-router-dom";
 import { ArrowRight, Clock, Star } from "lucide-react";
 import { Separator } from "@/components/ui/separator";
+import { getOppositeBet } from "@/utils/bet-conversion";
 
 const SPORTSBOOKS = {
   "hardrock": {
@@ -97,6 +98,10 @@ const PendingBetsList = () => {
         const betData = getBetLine(matchup.teams);
         const betLine = betData.team ? `${betData.team} ${betData.betType}` : betData.betType;
         
+        // Get the opposite team for the fade bet
+        const opponentTeam = matchup.teams.find(team => team !== betData.team);
+        const oppositeBet = getOppositeBet(betLine, opponentTeam);
+        
         return (
           <div key={bet.id}>
             <div 
@@ -131,6 +136,13 @@ const PendingBetsList = () => {
               <div className="text-center">
                 <p className="text-base font-semibold text-gray-300">
                   Fade Confidence: <span className="text-[#AEE3F5] font-bold">{fadeConfidence}%</span>
+                </p>
+              </div>
+              
+              {/* Your Bet section */}
+              <div className="text-center">
+                <p className="text-base font-semibold text-gray-300">
+                  Your Bet: <span className="text-[#AEE3F5] font-bold">{oppositeBet}</span>
                 </p>
               </div>
               
