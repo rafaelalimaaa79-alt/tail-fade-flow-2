@@ -33,22 +33,24 @@ const SignInForm: React.FC<SignInFormProps> = ({
     return (
       <div className="w-full max-w-md h-screen flex flex-col justify-center px-4 py-4 overflow-hidden fixed top-0 left-1/2 transform -translate-x-1/2">
         {/* Logo and welcome text - moved up */}
-        <div className="text-center flex-1 flex flex-col justify-center items-center min-h-0 -mt-16">
+        <div className="text-center flex-1 flex flex-col justify-center items-center min-h-0 -mt-20">
           <img 
             src="/lovable-uploads/15b68287-6284-47fd-b7cf-1c67129dec0b.png" 
             alt="Fade Zone logo" 
             className="h-48 mx-auto mb-6 object-contain max-w-full"
           />
-          <h1 className="text-3xl font-light text-white leading-tight">
-            Welcome to<br />Fade Zone
+          <h1 className="text-4xl font-light leading-tight">
+            Welcome to<br />
+            <span className="text-white">Fade </span>
+            <span className="text-onetime-red">Zone</span>
           </h1>
         </div>
         
         {/* Buttons - moved up with less padding */}
-        <div className="space-y-3 flex-shrink-0 pb-8">
+        <div className="space-y-3 flex-shrink-0 pb-16">
           <Button 
             onClick={onCreateAccount}
-            className="w-full h-12 text-base bg-[#AEE3F5] hover:bg-[#AEE3F5]/90 text-black font-medium rounded-md"
+            className="w-full h-12 text-lg bg-[#AEE3F5] hover:bg-[#AEE3F5]/90 text-black font-medium rounded-md"
           >
             Sign up
           </Button>
@@ -56,7 +58,7 @@ const SignInForm: React.FC<SignInFormProps> = ({
           <Button 
             onClick={() => setShowLoginForm(true)}
             variant="outline"
-            className="w-full h-12 text-base border-[#AEE3F5] text-[#AEE3F5] bg-transparent hover:bg-[#AEE3F5]/10 font-medium rounded-md"
+            className="w-full h-12 text-lg border-[#AEE3F5] text-[#AEE3F5] bg-transparent hover:bg-[#AEE3F5]/10 font-medium rounded-md"
           >
             Log in
           </Button>
