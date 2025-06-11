@@ -4,7 +4,6 @@ import { Link } from "react-router-dom";
 import ActionButton from "./ActionButton";
 import { BetterPlay } from "@/types/betTypes";
 import { showFadeNotification } from "@/utils/betting-notifications";
-import { getOppositeBet } from "@/utils/bet-conversion";
 
 interface PlayCardProps {
   play: BetterPlay;
@@ -39,9 +38,26 @@ const PlayCard: React.FC<PlayCardProps> = ({ play, renderWaveText, onActionClick
     return availableTeams[Math.floor(Math.random() * availableTeams.length)];
   };
 
-  // Get the opposite bet and add a random opposing team
+  // Get just the opposing team name
   const randomOpposingTeam = getRandomOpposingTeam(play.bet);
-  const oppositeBet = getOppositeBet(play.bet, randomOpposingTeam);
+  
+  // Create a simple bet string based on the original bet type
+  const createOppositeBet = (originalBet: string, opposingTeam: string) => {
+    if (originalBet.includes('ML')) {
+      return `${opposingTeam} ML`;
+    } else if (originalBet.includes('-') || originalBet.includes('+')) {
+      // For spreads, just use ML for simplicity
+      return `${opposingTeam} ML`;
+    } else if (originalBet.toLowerCase().includes('over')) {
+      return `Under ${originalBet.split(' ').pop()}`;
+    } else if (originalBet.toLowerCase().includes('under')) {
+      return `Over ${originalBet.split(' ').pop()}`;
+    } else {
+      return `${opposingTeam} ML`;
+    }
+  };
+
+  const oppositeBet = createOppositeBet(play.bet, randomOpposingTeam);
 
   // Handle the bet action with notification only
   const handleBetClick = () => {
