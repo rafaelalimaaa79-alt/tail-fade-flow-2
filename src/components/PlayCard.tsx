@@ -1,4 +1,3 @@
-
 import React, { useMemo } from "react";
 import { Link } from "react-router-dom";
 import ActionButton from "./ActionButton";
@@ -83,6 +82,16 @@ const PlayCard: React.FC<PlayCardProps> = ({ play, renderWaveText, onActionClick
   
   return (
     <div className="block mb-4">
+      {/* FADE WATCH Header */}
+      <div className="mb-4 text-center">
+        <h2 className="font-exo text-4xl font-bold text-[#AEE3F5] tracking-wider uppercase neon-text" 
+            style={{
+              textShadow: '0 0 5px #AEE3F5, 0 0 15px #AEE3F5'
+            }}>
+          FADE WATCH
+        </h2>
+      </div>
+      
       <div 
         className="bg-black rounded-xl p-3 border border-[#AEE3F5]/30 animate-glow-pulse space-y-2 flex-grow flex flex-col min-h-[280px]"
         style={{
