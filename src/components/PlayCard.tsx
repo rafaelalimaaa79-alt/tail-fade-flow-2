@@ -13,12 +13,39 @@ interface PlayCardProps {
 }
 
 const PlayCard: React.FC<PlayCardProps> = ({ play, renderWaveText, onActionClick }) => {
-  // Use the new utility function to get the opposite bet
+  // Function to get a random opposing team based on the sport
+  const getRandomOpposingTeam = (originalBet: string) => {
+    // Extract sport-specific teams
+    const nbaTeams = ['Lakers', 'Celtics', 'Warriors', 'Heat', 'Bucks', 'Nets', '76ers', 'Nuggets', 'Suns', 'Mavericks'];
+    const mlbTeams = ['Yankees', 'Dodgers', 'Red Sox', 'Astros', 'Braves', 'Mets', 'Angels', 'Giants', 'Cubs', 'Cardinals'];
+    const nflTeams = ['Chiefs', 'Eagles', 'Cowboys', 'Bills', '49ers', 'Packers', 'Steelers', 'Patriots', 'Rams', 'Bengals'];
+    const nhlTeams = ['Bruins', 'Lightning', 'Avalanche', 'Oilers', 'Rangers', 'Capitals', 'Penguins', 'Kings', 'Flames', 'Stars'];
+    
+    // Determine sport based on team in the bet
+    let teams = nbaTeams; // default
+    
+    if (nflTeams.some(team => originalBet.includes(team))) {
+      teams = nflTeams;
+    } else if (mlbTeams.some(team => originalBet.includes(team))) {
+      teams = mlbTeams;
+    } else if (nhlTeams.some(team => originalBet.includes(team))) {
+      teams = nhlTeams;
+    }
+    
+    // Find teams that aren't in the original bet
+    const availableTeams = teams.filter(team => !originalBet.includes(team));
+    
+    // Return a random team from available teams
+    return availableTeams[Math.floor(Math.random() * availableTeams.length)];
+  };
+
+  // Get the opposite bet and add a random opposing team
   const oppositeBet = getOppositeBet(play.bet);
+  const randomOpposingTeam = getRandomOpposingTeam(play.bet);
 
   // Handle the bet action with notification only
   const handleBetClick = () => {
-    showFadeNotification(play.bettorName, oppositeBet);
+    showFadeNotification(play.bettorName, `${oppositeBet} vs ${randomOpposingTeam}`);
   };
 
   // Use the percentage from the play data instead of random generation
@@ -75,7 +102,7 @@ const PlayCard: React.FC<PlayCardProps> = ({ play, renderWaveText, onActionClick
           className="h-12 text-lg font-bold"
           onClick={handleBetClick}
         >
-          Bet {oppositeBet}
+          Bet {oppositeBet} vs {randomOpposingTeam}
         </ActionButton>
       </div>
     </div>
