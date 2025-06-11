@@ -31,13 +31,13 @@ const SignInForm: React.FC<SignInFormProps> = ({
   if (!showLoginForm) {
     // Welcome screen similar to Robinhood
     return (
-      <div className="w-full max-w-md space-y-8 flex flex-col justify-center h-screen">
+      <div className="w-full max-w-md flex flex-col justify-between h-screen py-8">
         {/* Logo */}
-        <div className="text-center mb-8">
+        <div className="text-center flex-1 flex flex-col justify-center">
           <img 
             src="/lovable-uploads/15b68287-6284-47fd-b7cf-1c67129dec0b.png" 
             alt="Fade Zone logo" 
-            className="h-24 mx-auto mb-6"
+            className="h-40 mx-auto mb-8"
           />
           <h1 className="text-3xl font-light text-white leading-tight">
             Welcome to<br />Fade Zone
@@ -45,7 +45,7 @@ const SignInForm: React.FC<SignInFormProps> = ({
         </div>
         
         {/* Buttons */}
-        <div className="space-y-4 mt-auto mb-12">
+        <div className="space-y-4">
           <Button 
             onClick={onCreateAccount}
             className="w-full h-12 text-base bg-[#AEE3F5] hover:bg-[#AEE3F5]/90 text-black font-medium rounded-md"
@@ -67,8 +67,8 @@ const SignInForm: React.FC<SignInFormProps> = ({
 
   // Login form
   return (
-    <div className="w-full max-w-md space-y-6 flex flex-col justify-center h-screen">
-      <div className="text-center">
+    <div className="w-full max-w-md flex flex-col justify-center h-screen py-8">
+      <div className="text-center mb-6">
         <button 
           onClick={() => setShowLoginForm(false)}
           className="text-[#AEE3F5] mb-4 text-sm"
@@ -118,7 +118,7 @@ const SignInForm: React.FC<SignInFormProps> = ({
         </Button>
       </form>
       
-      <div className="flex flex-col items-center space-y-3 pt-2 text-sm">
+      <div className="flex flex-col items-center space-y-3 pt-4 text-sm">
         <button
           type="button"
           onClick={onForgotPassword}
