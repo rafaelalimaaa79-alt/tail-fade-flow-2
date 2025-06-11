@@ -40,12 +40,12 @@ const PlayCard: React.FC<PlayCardProps> = ({ play, renderWaveText, onActionClick
   };
 
   // Get the opposite bet and add a random opposing team
-  const oppositeBet = getOppositeBet(play.bet);
   const randomOpposingTeam = getRandomOpposingTeam(play.bet);
+  const oppositeBet = getOppositeBet(play.bet, randomOpposingTeam);
 
   // Handle the bet action with notification only
   const handleBetClick = () => {
-    showFadeNotification(play.bettorName, `${oppositeBet} vs ${randomOpposingTeam}`);
+    showFadeNotification(play.bettorName, oppositeBet);
   };
 
   // Use the percentage from the play data instead of random generation
@@ -102,7 +102,7 @@ const PlayCard: React.FC<PlayCardProps> = ({ play, renderWaveText, onActionClick
           className="h-12 text-lg font-bold"
           onClick={handleBetClick}
         >
-          Bet {oppositeBet} vs {randomOpposingTeam}
+          Bet {oppositeBet}
         </ActionButton>
       </div>
     </div>
