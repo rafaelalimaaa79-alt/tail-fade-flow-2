@@ -1,9 +1,9 @@
-
 import React, { useState } from "react";
 import { useNavigate } from "react-router-dom";
-import { Check, Shield } from "lucide-react";
+import { Check, Shield, Fingerprint } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Card } from "@/components/ui/card";
+import { Switch } from "@/components/ui/switch";
 import SportsbookLoginModal from "@/components/sportsbooks/SportsbookLoginModal";
 
 // Initial sportsbooks - FanDuel and Hard Rock
@@ -27,6 +27,7 @@ const ConnectSportsbooks = () => {
   const [connectedSportsbooks, setConnectedSportsbooks] = useState<string[]>([]);
   const [selectedSportsbook, setSelectedSportsbook] = useState<string | null>(null);
   const [showLoginModal, setShowLoginModal] = useState(false);
+  const [faceIdEnabled, setFaceIdEnabled] = useState(false);
 
   const handleConnect = (sportsbookId: string) => {
     setSelectedSportsbook(sportsbookId);
@@ -40,6 +41,8 @@ const ConnectSportsbooks = () => {
   };
 
   const handleContinue = () => {
+    // Store Face ID preference before continuing
+    localStorage.setItem('biometricEnabled', faceIdEnabled.toString());
     navigate('/onboarding');
   };
 
@@ -94,7 +97,7 @@ const ConnectSportsbooks = () => {
           ))}
         </div>
 
-        <div className="bg-card/50 border border-white/10 rounded-lg p-4 mb-8">
+        <div className="bg-card/50 border border-white/10 rounded-lg p-4 mb-6">
           <div className="flex items-start gap-3">
             <Shield className="h-5 w-5 text-primary mt-0.5" />
             <div>
@@ -103,6 +106,25 @@ const ConnectSportsbooks = () => {
                 Your credentials are encrypted and never stored. We use secure methods to read your confirmed bets — nothing else.
               </p>
             </div>
+          </div>
+        </div>
+
+        <div className="bg-card/50 border border-white/10 rounded-lg p-4 mb-8">
+          <div className="flex items-center justify-between">
+            <div className="flex items-start gap-3">
+              <Fingerprint className="h-5 w-5 text-primary mt-0.5" />
+              <div>
+                <h3 className="font-medium text-white mb-1">Enable Face ID for Quick Access</h3>
+                <p className="text-sm text-muted-foreground">
+                  Log in instantly next time with Face ID. It's secure, private, and completely optional.
+                </p>
+              </div>
+            </div>
+            <Switch
+              checked={faceIdEnabled}
+              onCheckedChange={setFaceIdEnabled}
+              className="ml-3"
+            />
           </div>
         </div>
 
