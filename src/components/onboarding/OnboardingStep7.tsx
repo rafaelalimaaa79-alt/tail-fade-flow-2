@@ -153,13 +153,13 @@ const OnboardingStep7: React.FC<OnboardingStep7Props> = ({ onComplete }) => {
           className="space-y-3 mb-10 leading-relaxed"
         >
           <p className="text-white/80 text-base">
-            This is how you'll show up in the app.
+            This is the name <span className="font-semibold text-white">everyone will see</span>.
           </p>
           <p className="text-white/70 text-base">
-            Want to stay anonymous? Use a funny, weird, or made-up name.
+            Want to stay anonymous? Go with something <span className="font-semibold text-white/90">funny, fake, or made-up</span> — it's totally up to you.
           </p>
           <p className="text-white/60 text-sm">
-            No real names required.
+            <span className="font-semibold">No real names required.</span> Just bring the vibes.
           </p>
         </motion.div>
       </motion.div>
