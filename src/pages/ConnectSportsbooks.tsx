@@ -1,9 +1,9 @@
+
 import React, { useState } from "react";
 import { useNavigate } from "react-router-dom";
 import { Check, Shield, Fingerprint } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Card } from "@/components/ui/card";
-import { Switch } from "@/components/ui/switch";
 import SportsbookLoginModal from "@/components/sportsbooks/SportsbookLoginModal";
 
 // Initial sportsbooks - FanDuel and Hard Rock with proper logos
@@ -118,14 +118,29 @@ const ConnectSportsbooks = () => {
               </div>
             </div>
             
-            <div className="flex flex-col items-center gap-1">
-              <Switch
-                checked={faceIdEnabled}
-                onCheckedChange={setFaceIdEnabled}
-                className="data-[state=checked]:bg-primary"
-              />
-              <span className="text-xs text-muted-foreground">
-                {faceIdEnabled ? 'ON' : 'OFF'}
+            <div className="flex flex-col items-center gap-2">
+              <button
+                onClick={() => setFaceIdEnabled(!faceIdEnabled)}
+                className={`relative w-16 h-8 rounded-full transition-all duration-300 ${
+                  faceIdEnabled 
+                    ? 'bg-gradient-to-r from-primary to-primary/80 shadow-lg shadow-primary/25' 
+                    : 'bg-gray-700 border border-gray-600'
+                }`}
+              >
+                <div className={`absolute top-1 left-1 w-6 h-6 bg-white rounded-full transition-all duration-300 flex items-center justify-center ${
+                  faceIdEnabled ? 'translate-x-8' : 'translate-x-0'
+                }`}>
+                  {faceIdEnabled ? (
+                    <Check className="h-3 w-3 text-primary" />
+                  ) : (
+                    <div className="w-2 h-2 bg-gray-400 rounded-full" />
+                  )}
+                </div>
+              </button>
+              <span className={`text-xs font-medium ${
+                faceIdEnabled ? 'text-primary' : 'text-muted-foreground'
+              }`}>
+                {faceIdEnabled ? 'ENABLED' : 'DISABLED'}
               </span>
             </div>
           </div>
