@@ -1,7 +1,7 @@
 
 import React, { useState, useEffect } from "react";
 import { motion } from "framer-motion";
-import { User, CheckCircle, X } from "lucide-react";
+import { User, CheckCircle, X, Shuffle } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 
@@ -14,6 +14,13 @@ const OnboardingStep7: React.FC<OnboardingStep7Props> = ({ onComplete }) => {
   const [isChecking, setIsChecking] = useState(false);
   const [isAvailable, setIsAvailable] = useState<boolean | null>(null);
   const [error, setError] = useState("");
+
+  // Random username suggestions
+  const randomNames = [
+    "FadeKing", "SharpSlayer", "ColdHunter", "PublicFader", "BetBuster",
+    "LineChaser", "FadeZoneHero", "SharpKiller", "ColdStreak", "FadeMaster",
+    "PublicEnemy", "BetSniper", "LineReader", "FadeGod", "SharpBane"
+  ];
 
   // Simulate username availability check
   const checkUsernameAvailability = async (usernameToCheck: string) => {
@@ -65,6 +72,15 @@ const OnboardingStep7: React.FC<OnboardingStep7Props> = ({ onComplete }) => {
     }
   };
 
+  const generateRandomUsername = () => {
+    const randomName = randomNames[Math.floor(Math.random() * randomNames.length)];
+    const randomNumber = Math.floor(Math.random() * 999) + 1;
+    const generatedName = `${randomName}${randomNumber}`;
+    
+    setUsername(generatedName);
+    checkUsernameAvailability(generatedName);
+  };
+
   const handleSubmit = () => {
     if (!username.trim()) {
       setError("You gotta pick a name to enter the Zone.");
@@ -86,13 +102,13 @@ const OnboardingStep7: React.FC<OnboardingStep7Props> = ({ onComplete }) => {
 
   const getStatusIcon = () => {
     if (isChecking) {
-      return <div className="w-5 h-5 border-2 border-[#AEE3F5] border-t-transparent rounded-full animate-spin" />;
+      return <div className="w-4 h-4 border-2 border-[#AEE3F5] border-t-transparent rounded-full animate-spin" />;
     }
     if (isAvailable === true) {
-      return <CheckCircle className="w-5 h-5 text-green-400" />;
+      return <CheckCircle className="w-4 h-4 text-green-400" />;
     }
     if (isAvailable === false) {
-      return <X className="w-5 h-5 text-red-400" />;
+      return <X className="w-4 h-4 text-red-400" />;
     }
     return null;
   };
@@ -105,56 +121,55 @@ const OnboardingStep7: React.FC<OnboardingStep7Props> = ({ onComplete }) => {
   };
 
   return (
-    <div className="text-center">
+    <div className="text-center px-2">
       <motion.div
         initial={{ opacity: 0, y: 20 }}
         animate={{ opacity: 1, y: 0 }}
         transition={{ delay: 0.1 }}
-        className="mb-8"
+        className="mb-12"
       >
         <motion.div
           initial={{ scale: 0 }}
           animate={{ scale: 1 }}
           transition={{ delay: 0.3, type: "spring", stiffness: 200 }}
-          className="w-20 h-20 bg-[#AEE3F5]/20 rounded-full flex items-center justify-center mx-auto mb-6"
+          className="w-16 h-16 bg-[#AEE3F5]/20 rounded-full flex items-center justify-center mx-auto mb-8"
         >
-          <User className="w-10 h-10 text-[#AEE3F5]" />
+          <User className="w-8 h-8 text-[#AEE3F5]" />
         </motion.div>
         
         <motion.h2
           initial={{ opacity: 0 }}
           animate={{ opacity: 1 }}
           transition={{ delay: 0.4 }}
-          className="text-3xl font-light text-white mb-4"
+          className="text-4xl font-light text-white mb-8"
         >
-          Pick your <span className="text-[#AEE3F5]">FadeZone</span> name
+          Pick your <span className="text-[#AEE3F5] font-medium">FadeZone</span> name
         </motion.h2>
         
-        <motion.p
+        <motion.div
           initial={{ opacity: 0 }}
           animate={{ opacity: 1 }}
           transition={{ delay: 0.5 }}
-          className="text-white/70 text-sm mb-2"
+          className="space-y-3 mb-10 leading-relaxed"
         >
-          This is how you'll show up in the app. Want to stay anonymous? Go with something funny, weird, or completely made up. No real names required.
-        </motion.p>
-        
-        <motion.p
-          initial={{ opacity: 0 }}
-          animate={{ opacity: 1 }}
-          transition={{ delay: 0.6 }}
-          className="text-white/50 text-xs mb-8"
-        >
-          Example names: @PublicFader, @ColdFadeKing, @SharpUntilSunday
-        </motion.p>
+          <p className="text-white/80 text-base">
+            This is how you'll show up in the app.
+          </p>
+          <p className="text-white/70 text-base">
+            Want to stay anonymous? Use a funny, weird, or made-up name.
+          </p>
+          <p className="text-white/60 text-sm">
+            No real names required.
+          </p>
+        </motion.div>
       </motion.div>
 
-      <div className="space-y-6">
+      <div className="space-y-8">
         <motion.div
           initial={{ opacity: 0, y: 20 }}
           animate={{ opacity: 1, y: 0 }}
           transition={{ delay: 0.7 }}
-          className="relative"
+          className="space-y-4"
         >
           <div className="relative">
             <Input
@@ -162,7 +177,7 @@ const OnboardingStep7: React.FC<OnboardingStep7Props> = ({ onComplete }) => {
               placeholder="Enter username"
               value={username}
               onChange={handleUsernameChange}
-              className="w-full h-14 text-base bg-white/5 border-white/20 text-white placeholder:text-white/40 rounded-lg px-4 pr-12 focus:ring-2 focus:ring-[#AEE3F5]/50 focus:border-[#AEE3F5]/50 shadow-[0_0_20px_rgba(174,227,245,0.1)] focus:shadow-[0_0_30px_rgba(174,227,245,0.3)] transition-all duration-300"
+              className="w-full h-12 text-base bg-white/5 border-white/20 text-white placeholder:text-white/40 rounded-lg px-4 pr-12 focus:ring-2 focus:ring-[#AEE3F5]/50 focus:border-[#AEE3F5]/50 shadow-[0_0_20px_rgba(174,227,245,0.1)] focus:shadow-[0_0_30px_rgba(174,227,245,0.3)] transition-all duration-300"
               maxLength={20}
             />
             <div className="absolute right-3 top-1/2 transform -translate-y-1/2">
@@ -174,7 +189,7 @@ const OnboardingStep7: React.FC<OnboardingStep7Props> = ({ onComplete }) => {
             <motion.div
               initial={{ opacity: 0, y: 10 }}
               animate={{ opacity: 1, y: 0 }}
-              className="mt-2 text-sm"
+              className="text-sm"
             >
               <span className={`
                 ${isAvailable === true ? 'text-green-400' : 
@@ -190,21 +205,36 @@ const OnboardingStep7: React.FC<OnboardingStep7Props> = ({ onComplete }) => {
             <motion.div
               initial={{ opacity: 0, y: 10 }}
               animate={{ opacity: 1, y: 0 }}
-              className="mt-2 text-sm text-red-400"
+              className="text-sm text-red-400"
             >
               {error}
             </motion.div>
           )}
+
+          <motion.div
+            initial={{ opacity: 0, y: 10 }}
+            animate={{ opacity: 1, y: 0 }}
+            transition={{ delay: 0.8 }}
+          >
+            <Button
+              onClick={generateRandomUsername}
+              variant="ghost"
+              className="text-white/60 hover:text-[#AEE3F5] hover:bg-white/5 transition-all duration-300 text-sm h-9"
+            >
+              <Shuffle className="w-4 h-4 mr-2" />
+              Generate Random Name
+            </Button>
+          </motion.div>
         </motion.div>
 
         {username && isAvailable && (
           <motion.div
             initial={{ opacity: 0, y: 20 }}
             animate={{ opacity: 1, y: 0 }}
-            transition={{ delay: 0.8 }}
+            transition={{ delay: 0.9 }}
             className="p-4 bg-white/5 border border-white/10 rounded-lg"
           >
-            <p className="text-white/60 text-xs mb-2">Preview:</p>
+            <p className="text-white/50 text-xs mb-2">Preview:</p>
             <p className="text-white text-sm">
               <span className="text-[#AEE3F5]">@{username}</span> just faded ColdHands88
             </p>
@@ -214,15 +244,25 @@ const OnboardingStep7: React.FC<OnboardingStep7Props> = ({ onComplete }) => {
         <motion.div
           initial={{ opacity: 0, y: 20 }}
           animate={{ opacity: 1, y: 0 }}
-          transition={{ delay: 0.9 }}
+          transition={{ delay: 1.0 }}
+          className="space-y-4"
         >
           <Button
             onClick={handleSubmit}
             disabled={!username || !isAvailable || isChecking}
-            className="w-full h-14 text-base bg-[#AEE3F5] hover:bg-[#AEE3F5]/90 text-black font-medium shadow-[0_0_20px_rgba(174,227,245,0.4)] hover:shadow-[0_0_30px_rgba(174,227,245,0.6)] transition-all duration-300 disabled:opacity-50 disabled:shadow-none"
+            className="w-full h-12 text-base bg-[#AEE3F5] hover:bg-[#AEE3F5]/90 text-black font-medium shadow-[0_0_20px_rgba(174,227,245,0.4)] hover:shadow-[0_0_30px_rgba(174,227,245,0.6)] hover:scale-[1.02] transition-all duration-300 disabled:opacity-50 disabled:shadow-none disabled:hover:scale-100"
           >
             Lock In Username
           </Button>
+          
+          <motion.p
+            initial={{ opacity: 0 }}
+            animate={{ opacity: 1 }}
+            transition={{ delay: 1.1 }}
+            className="text-white/40 text-xs leading-relaxed"
+          >
+            Example names: @PublicFader, @ColdFadeKing, @SharpUntilSunday
+          </motion.p>
         </motion.div>
       </div>
     </div>
