@@ -33,7 +33,7 @@ const SignUp = () => {
     setLoading(true);
     
     try {
-      const redirectUrl = `${window.location.origin}/`;
+      const redirectUrl = `${window.location.origin}/onboarding`;
       
       const { data, error } = await supabase.auth.signUp({
         email,
@@ -49,7 +49,7 @@ const SignUp = () => {
         toast.success("Check your email for a verification link!");
       } else {
         toast.success("Account created successfully!");
-        navigate('/');
+        navigate('/onboarding');
       }
       
     } catch (error: any) {
@@ -69,7 +69,7 @@ const SignUp = () => {
       const { error } = await supabase.auth.signInWithOAuth({
         provider: 'google',
         options: {
-          redirectTo: `${window.location.origin}/`
+          redirectTo: `${window.location.origin}/onboarding`
         }
       });
       
@@ -85,7 +85,7 @@ const SignUp = () => {
       const { error } = await supabase.auth.signInWithOAuth({
         provider: 'apple',
         options: {
-          redirectTo: `${window.location.origin}/`
+          redirectTo: `${window.location.origin}/onboarding`
         }
       });
       
