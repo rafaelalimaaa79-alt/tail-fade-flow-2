@@ -5,10 +5,8 @@ import { Input } from "@/components/ui/input";
 import { Button } from "@/components/ui/button";
 
 interface SignUpFormProps {
-  phone: string;
-  setPhone: (phone: string) => void;
-  username: string;
-  setUsername: (username: string) => void;
+  email: string;
+  setEmail: (email: string) => void;
   password: string;
   setPassword: (password: string) => void;
   confirmPassword: string;
@@ -21,10 +19,8 @@ interface SignUpFormProps {
 }
 
 const SignUpForm: React.FC<SignUpFormProps> = ({
-  phone,
-  setPhone,
-  username,
-  setUsername,
+  email,
+  setEmail,
   password,
   setPassword,
   confirmPassword,
@@ -37,30 +33,6 @@ const SignUpForm: React.FC<SignUpFormProps> = ({
 }) => {
   const [showPassword, setShowPassword] = useState(false);
   const [showConfirmPassword, setShowConfirmPassword] = useState(false);
-
-  const formatPhoneNumber = (value: string) => {
-    // Remove all non-numeric characters
-    const phoneNumber = value.replace(/[^\d]/g, '');
-    
-    // Limit to 10 digits
-    const limitedPhoneNumber = phoneNumber.slice(0, 10);
-    
-    // Format as (XXX) XXX-XXXX
-    if (limitedPhoneNumber.length >= 6) {
-      return `(${limitedPhoneNumber.slice(0, 3)}) ${limitedPhoneNumber.slice(3, 6)}-${limitedPhoneNumber.slice(6)}`;
-    } else if (limitedPhoneNumber.length >= 3) {
-      return `(${limitedPhoneNumber.slice(0, 3)}) ${limitedPhoneNumber.slice(3)}`;
-    } else if (limitedPhoneNumber.length > 0) {
-      return `(${limitedPhoneNumber}`;
-    }
-    
-    return limitedPhoneNumber;
-  };
-
-  const handlePhoneChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-    const formattedPhone = formatPhoneNumber(e.target.value);
-    setPhone(formattedPhone);
-  };
 
   return (
     <div className="w-full max-w-md h-screen flex flex-col px-4 py-8 overflow-hidden fixed top-0 left-1/2 transform -translate-x-1/2">
@@ -125,10 +97,10 @@ const SignUpForm: React.FC<SignUpFormProps> = ({
           <div className="space-y-4">
             <div className="relative">
               <Input
-                type="tel"
-                placeholder="Phone Number"
-                value={phone}
-                onChange={handlePhoneChange}
+                type="email"
+                placeholder="Email Address"
+                value={email}
+                onChange={(e) => setEmail(e.target.value)}
                 className="border-white/20 bg-white/5 focus:border-[#AEE3F5] transition-all duration-300 focus:ring-1 focus:ring-[#AEE3F5] focus:shadow-[0_0_10px_rgba(174,227,245,0.3)] h-12 text-sm"
               />
             </div>

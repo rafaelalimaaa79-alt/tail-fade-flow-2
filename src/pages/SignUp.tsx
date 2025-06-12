@@ -7,8 +7,7 @@ import SignUpForm from "@/components/auth/SignUpForm";
 
 const SignUp = () => {
   const navigate = useNavigate();
-  const [phone, setPhone] = useState("");
-  const [username, setUsername] = useState("");
+  const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [confirmPassword, setConfirmPassword] = useState("");
   const [loading, setLoading] = useState(false);
@@ -16,7 +15,7 @@ const SignUp = () => {
   const handleSignUp = async (e: React.FormEvent) => {
     e.preventDefault();
     
-    if (!phone || !password || !confirmPassword) {
+    if (!email || !password || !confirmPassword) {
       toast.error("Please fill in all fields");
       return;
     }
@@ -36,11 +35,8 @@ const SignUp = () => {
     try {
       const redirectUrl = `${window.location.origin}/`;
       
-      // Remove formatting from phone number for Supabase
-      const cleanPhone = phone.replace(/[^\d]/g, '');
-      
       const { data, error } = await supabase.auth.signUp({
-        phone: `+1${cleanPhone}`, // Add US country code
+        email,
         password,
         options: {
           emailRedirectTo: redirectUrl,
@@ -49,8 +45,8 @@ const SignUp = () => {
       
       if (error) throw error;
       
-      if (data.user && !data.user.phone_confirmed_at) {
-        toast.success("Check your phone for a verification code!");
+      if (data.user && !data.user.email_confirmed_at) {
+        toast.success("Check your email for a verification link!");
       } else {
         toast.success("Account created successfully!");
         navigate('/');
@@ -104,10 +100,8 @@ const SignUp = () => {
     <div className="flex flex-col min-h-screen bg-background">
       <div className="flex-1 flex flex-col justify-center items-center px-4 sm:px-6 py-12">
         <SignUpForm
-          phone={phone}
-          setPhone={setPhone}
-          username={username}
-          setUsername={setUsername}
+          email={email}
+          setEmail={setEmail}
           password={password}
           setPassword={setPassword}
           confirmPassword={confirmPassword}
