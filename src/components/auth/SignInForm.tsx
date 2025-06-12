@@ -1,3 +1,4 @@
+
 import React, { useState } from "react";
 import { Eye, EyeOff } from "lucide-react";
 import { Input } from "@/components/ui/input";
@@ -31,8 +32,17 @@ const SignInForm: React.FC<SignInFormProps> = ({
     // Welcome screen similar to Robinhood
     return (
       <div className="w-full max-w-md h-screen flex flex-col justify-center px-4 py-4 overflow-hidden fixed top-0 left-1/2 transform -translate-x-1/2">
-        {/* Logo and welcome text - moved up */}
-        <div className="text-center flex-1 flex flex-col justify-center items-center min-h-0 -mt-20">
+        {/* Logo in top left */}
+        <div className="absolute top-8 left-4">
+          <img 
+            src="/lovable-uploads/15b68287-6284-47fd-b7cf-1c67129dec0b.png" 
+            alt="Fade Zone logo" 
+            className="h-16 w-16 object-contain"
+          />
+        </div>
+        
+        {/* Welcome text - moved down */}
+        <div className="text-center flex-1 flex flex-col justify-center items-center min-h-0 mt-8">
           <h1 className="text-4xl font-light leading-tight">
             Welcome to<br />
             The <span className="text-[#AEE3F5]" style={{ 
