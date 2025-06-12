@@ -99,18 +99,6 @@ const ConnectSportsbooks = () => {
           ))}
         </div>
 
-        <div className="bg-card/50 border border-white/10 rounded-lg p-4 mb-6">
-          <div className="flex items-start gap-3">
-            <Shield className="h-5 w-5 text-primary mt-0.5" />
-            <div>
-              <h3 className="font-medium text-white mb-1">Security Promise</h3>
-              <p className="text-sm text-muted-foreground">
-                Your credentials are encrypted and never stored. We use secure methods to read your confirmed bets — nothing else.
-              </p>
-            </div>
-          </div>
-        </div>
-
         <div className="bg-card/50 border border-white/10 rounded-lg p-4 mb-8">
           <div className="flex items-center justify-between">
             <div className="flex items-start gap-3">
