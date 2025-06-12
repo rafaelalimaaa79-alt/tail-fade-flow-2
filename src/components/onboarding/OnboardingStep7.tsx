@@ -73,7 +73,7 @@ const OnboardingStep7: React.FC<OnboardingStep7Props> = ({ onComplete }) => {
 
   const handleNotificationClose = () => {
     setShowNotification(false);
-    onComplete('/');
+    onComplete('/how-it-works');
   };
 
   return (
@@ -97,7 +97,7 @@ const OnboardingStep7: React.FC<OnboardingStep7Props> = ({ onComplete }) => {
             initial={{ opacity: 0, y: 20 }}
             animate={{ opacity: 1, y: 0 }}
             transition={{ delay: 1.0 }}
-            className="pt-4 pb-12"
+            className="pt-4 pb-16"
           >
             <Button
               onClick={handleSubmit}
