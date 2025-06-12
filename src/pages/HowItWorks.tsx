@@ -1,4 +1,3 @@
-
 import React from "react";
 import { motion } from "framer-motion";
 import { Button } from "@/components/ui/button";
@@ -16,13 +15,13 @@ const HowItWorks = () => {
     {
       number: "①",
       icon: <Snowflake className="w-8 h-8 text-[#AEE3F5]" />,
-      title: "We track cold bettors",
+      title: "We find cold bettors",
       description: "Losing streaks, bad picks, bad luck — we find 'em."
     },
     {
       number: "②", 
       icon: <ThumbsDown className="w-8 h-8 text-[#AEE3F5]" />,
-      title: "You bet the opposite",
+      title: "You fade the cold bettors",
       description: "Whatever they take, you take the other side."
     },
     {
