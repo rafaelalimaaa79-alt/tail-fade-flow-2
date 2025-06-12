@@ -1,4 +1,3 @@
-
 import React, { useState } from "react";
 import { useNavigate } from "react-router-dom";
 import { Check, Shield, Fingerprint } from "lucide-react";
@@ -54,7 +53,7 @@ const ConnectSportsbooks = () => {
       <div className="max-w-md mx-auto w-full px-4 py-8">
         <div className="text-center mb-8">
           <img 
-            src="/lovable-uploads/c77c9dc5-a7dd-4c1c-9428-804d5d7a4a79.png" 
+            src="/lovable-uploads/cd6a8903-d55e-4a4c-a745-0b8198dc4270.png" 
             alt="Fade Zone logo" 
             className="h-24 mx-auto mb-6"
           />
