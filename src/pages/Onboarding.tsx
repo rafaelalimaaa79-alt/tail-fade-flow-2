@@ -1,7 +1,7 @@
 import React, { useState } from "react";
 import { useNavigate } from "react-router-dom";
-import { motion, AnimatePresence } from "framer-motion";
-import { toast } from "sonner";
+import { Button } from "@/components/ui/button";
+import OnboardingProgress from "@/components/onboarding/OnboardingProgress";
 import OnboardingStep1 from "@/components/onboarding/OnboardingStep1";
 import OnboardingStep2 from "@/components/onboarding/OnboardingStep2";
 import OnboardingStep3 from "@/components/onboarding/OnboardingStep3";
@@ -9,145 +9,63 @@ import OnboardingStep4 from "@/components/onboarding/OnboardingStep4";
 import OnboardingStep5 from "@/components/onboarding/OnboardingStep5";
 import OnboardingStep6 from "@/components/onboarding/OnboardingStep6";
 import OnboardingStep7 from "@/components/onboarding/OnboardingStep7";
-import OnboardingProgress from "@/components/onboarding/OnboardingProgress";
-
-export interface OnboardingData {
-  betAmount: string;
-  bettingFrequency: string;
-  fadingExperience: string;
-  accountBalance: string;
-  bigPlays: string;
-  favoriteSport: string;
-  username: string;
-}
 
 const Onboarding = () => {
-  const navigate = useNavigate();
   const [currentStep, setCurrentStep] = useState(1);
-  const [onboardingData, setOnboardingData] = useState<OnboardingData>({
-    betAmount: "",
-    bettingFrequency: "",
-    fadingExperience: "",
-    accountBalance: "",
-    bigPlays: "",
-    favoriteSport: "",
-    username: ""
-  });
-
   const totalSteps = 7;
+  const navigate = useNavigate();
 
-  const updateData = (field: keyof OnboardingData, value: string) => {
-    setOnboardingData(prev => ({
-      ...prev,
-      [field]: value
-    }));
-  };
-
-  const nextStep = () => {
+  const handleNext = () => {
     if (currentStep < totalSteps) {
-      setCurrentStep(prev => prev + 1);
+      setCurrentStep(currentStep + 1);
     }
   };
 
-  const completeOnboarding = (route: string) => {
-    // Store onboarding data in localStorage for personalization
-    localStorage.setItem('onboardingData', JSON.stringify(onboardingData));
-    localStorage.setItem('onboardingCompleted', 'true');
-    
-    toast.success("Welcome to FadeZone! 🎉");
-    navigate(route);
-  };
-
-  const renderStep = () => {
-    switch (currentStep) {
-      case 1:
-        return (
-          <OnboardingStep1
-            value={onboardingData.betAmount}
-            onSelect={(value) => {
-              updateData('betAmount', value);
-              nextStep();
-            }}
-          />
-        );
-      case 2:
-        return (
-          <OnboardingStep2
-            value={onboardingData.bettingFrequency}
-            onSelect={(value) => {
-              updateData('bettingFrequency', value);
-              nextStep();
-            }}
-          />
-        );
-      case 3:
-        return (
-          <OnboardingStep3
-            value={onboardingData.fadingExperience}
-            onSelect={(value) => {
-              updateData('fadingExperience', value);
-              nextStep();
-            }}
-          />
-        );
-      case 4:
-        return (
-          <OnboardingStep4
-            value={onboardingData.accountBalance}
-            onSelect={(value) => {
-              updateData('accountBalance', value);
-              nextStep();
-            }}
-          />
-        );
-      case 5:
-        return (
-          <OnboardingStep5
-            value={onboardingData.bigPlays}
-            onSelect={(value) => {
-              updateData('bigPlays', value);
-              nextStep();
-            }}
-          />
-        );
-      case 6:
-        return (
-          <OnboardingStep6
-            value={onboardingData.favoriteSport}
-            onSelect={(value) => {
-              updateData('favoriteSport', value);
-              nextStep();
-            }}
-          />
-        );
-      case 7:
-        return (
-          <OnboardingStep7
-            onComplete={completeOnboarding}
-          />
-        );
-      default:
-        return null;
+  const handlePrevious = () => {
+    if (currentStep > 1) {
+      setCurrentStep(currentStep - 1);
     }
   };
 
+  const handleGetStarted = () => {
+    navigate('/connect-sportsbooks');
+  };
+  
   return (
-    <div className="min-h-screen bg-background flex flex-col">
-      <OnboardingProgress currentStep={currentStep} totalSteps={totalSteps} />
-      
-      <div className="flex-1 flex items-center justify-center px-4">
-        <AnimatePresence mode="wait">
-          <motion.div
-            key={currentStep}
-            initial={{ opacity: 0, x: 50 }}
-            animate={{ opacity: 1, x: 0 }}
-            exit={{ opacity: 0, x: -50 }}
-            transition={{ duration: 0.3, ease: "easeInOut" }}
-            className="w-full max-w-md"
-          >
-            {renderStep()}
-          </motion.div>
-        </AnimatePresence>
+    <div className="bg-black min-h-screen flex flex-col">
+      <div className="flex-1 flex flex-col justify-center items-center px-4">
+        <div className="w-full max-w-md">
+          <OnboardingProgress currentStep={currentStep} totalSteps={totalSteps} />
+          
+          <div className="mt-8">
+            {currentStep === 1 && <OnboardingStep1 />}
+            {currentStep === 2 && <OnboardingStep2 />}
+            {currentStep === 3 && <OnboardingStep3 />}
+            {currentStep === 4 && <OnboardingStep4 />}
+            {currentStep === 5 && <OnboardingStep5 />}
+            {currentStep === 6 && <OnboardingStep6 />}
+            {currentStep === 7 && <OnboardingStep7 />}
+          </div>
+          
+          <div className="mt-8 flex gap-4">
+            {currentStep > 1 && (
+              <Button 
+                onClick={handlePrevious}
+                variant="outline"
+                className="flex-1"
+              >
+                Back
+              </Button>
+            )}
+            
+            <Button 
+              onClick={currentStep === totalSteps ? handleGetStarted : handleNext}
+              className="flex-1 bg-primary hover:bg-primary/90"
+            >
+              {currentStep === totalSteps ? "Get Started" : "Next"}
+            </Button>
+          </div>
+        </div>
       </div>
     </div>
   );

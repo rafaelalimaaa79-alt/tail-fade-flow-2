@@ -1,4 +1,3 @@
-
 import { Toaster } from "@/components/ui/toaster";
 import { Toaster as Sonner } from "@/components/ui/sonner";
 import { TooltipProvider } from "@/components/ui/tooltip";
@@ -18,6 +17,7 @@ import SignIn from "./pages/SignIn";
 import SignUp from "./pages/SignUp";
 import Onboarding from "./pages/Onboarding";
 import ForgotPassword from "./pages/ForgotPassword";
+import ConnectSportsbooks from "./pages/ConnectSportsbooks";
 
 const queryClient = new QueryClient();
 
@@ -34,6 +34,7 @@ const App = () => (
             <Route path="/signup" element={<SignUp />} />
             <Route path="/onboarding" element={<Onboarding />} />
             <Route path="/forgot-password" element={<ForgotPassword />} />
+            <Route path="/connect-sportsbooks" element={<ConnectSportsbooks />} />
             
             {/* Protected Routes */}
             <Route path="/" element={<ProtectedRoute><Index /></ProtectedRoute>} />

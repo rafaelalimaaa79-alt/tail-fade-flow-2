@@ -1,4 +1,3 @@
-
 import React, { useState } from "react";
 import BottomNav from "@/components/BottomNav";
 import { useNavigate } from "react-router-dom";
@@ -7,6 +6,7 @@ import PendingBetsSection from "@/components/profile/PendingBetsSection";
 import PerformanceSection from "@/components/profile/PerformanceSection";
 import BiggestWinsSection from "@/components/profile/BiggestWinsSection";
 import ProfileIcon from "@/components/common/ProfileIcon";
+import SportsbooksSection from "@/components/profile/SportsbooksSection";
 
 // Mock data
 const userProfile = {
@@ -115,6 +115,8 @@ const ProfilePage = () => {
         />
 
         <PendingBetsSection />
+
+        <SportsbooksSection />
 
         <BiggestWinsSection wins={userProfile.tailingFadingWins} />
       </div>
