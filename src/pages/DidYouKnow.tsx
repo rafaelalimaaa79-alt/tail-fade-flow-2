@@ -58,7 +58,7 @@ const DidYouKnow = () => {
                 97%
               </div>
               <p className="text-xl text-white font-medium leading-relaxed">
-                lose money — yes, <span className="text-white font-bold">even the guy you buy picks from.</span>
+                lose money — yes, <span className="text-red-400 font-bold">even the guy you buy picks from.</span>
               </p>
             </div>
           </motion.div>
