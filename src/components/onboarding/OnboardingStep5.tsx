@@ -31,7 +31,7 @@ const OnboardingStep5: React.FC<OnboardingStep5Props> = ({ value, onSelect }) =>
           How often are you throwing bombs?
         </h2>
         <p className="text-white/70 text-sm">
-          We're talkin' big unit plays — the kind you feel in your soul.
+          We're talkin' big unit plays.
         </p>
       </motion.div>
 
