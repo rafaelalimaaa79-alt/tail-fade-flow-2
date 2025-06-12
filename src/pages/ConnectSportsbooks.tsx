@@ -17,7 +17,7 @@ const sportsbooks = [
   {
     id: "hardrock",
     name: "Hard Rock Bet",
-    icon: "https://images.unsplash.com/photo-1493225457124-a3eb161ffa5f?w=100&h=100&fit=crop&crop=center",
+    icon: "/lovable-uploads/eacb5b66-1588-4e02-8b16-6e3b623501d3.png",
     connected: false,
   },
 ];
