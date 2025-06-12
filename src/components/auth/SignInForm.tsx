@@ -75,9 +75,6 @@ const SignInForm: React.FC<SignInFormProps> = ({
         </button>
         <h1 className="text-3xl font-light text-white mb-2">Sign In</h1>
         <p className="text-white/80 mb-2">Welcome back to FadeZone</p>
-        <p className="text-[#AEE3F5] text-sm font-medium">
-          Let's see if your picks are still hot.
-        </p>
       </div>
       
       <div className="flex-1 flex flex-col justify-center min-h-0">
