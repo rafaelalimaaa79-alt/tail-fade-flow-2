@@ -45,7 +45,7 @@ const DidYouKnow = () => {
             animate={{ opacity: 1, y: 0 }}
             transition={{ delay: 0.7 }}
           >
-            <p className="text-2xl text-white/90 leading-relaxed">
+            <p className="text-3xl text-white/90 leading-relaxed">
               <span className="text-red-400 font-semibold">95%</span> lose — chasing picks, trusting hype, and betting blind.
             </p>
           </motion.div>
