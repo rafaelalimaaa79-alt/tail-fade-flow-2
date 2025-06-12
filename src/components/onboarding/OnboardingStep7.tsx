@@ -143,7 +143,7 @@ const OnboardingStep7: React.FC<OnboardingStep7Props> = ({ onComplete }) => {
           transition={{ delay: 0.4 }}
           className="text-4xl font-light text-white mb-8"
         >
-          Pick your <span className="text-[#AEE3F5] font-medium">FadeZone</span> name
+          Pick your <span className="text-[#AEE3F5] font-medium">FadeZone</span> username
         </motion.h2>
         
         <motion.div
