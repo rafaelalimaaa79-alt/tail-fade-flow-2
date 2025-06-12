@@ -1,4 +1,3 @@
-
 import React, { useState } from "react";
 import { useNavigate } from "react-router-dom";
 import { motion, AnimatePresence } from "framer-motion";
@@ -9,6 +8,7 @@ import OnboardingStep3 from "@/components/onboarding/OnboardingStep3";
 import OnboardingStep4 from "@/components/onboarding/OnboardingStep4";
 import OnboardingStep5 from "@/components/onboarding/OnboardingStep5";
 import OnboardingStep6 from "@/components/onboarding/OnboardingStep6";
+import OnboardingStep7 from "@/components/onboarding/OnboardingStep7";
 import OnboardingProgress from "@/components/onboarding/OnboardingProgress";
 
 export interface OnboardingData {
@@ -17,6 +17,7 @@ export interface OnboardingData {
   fadingExperience: string;
   accountBalance: string;
   bigPlays: string;
+  favoriteSport: string;
 }
 
 const Onboarding = () => {
@@ -27,10 +28,11 @@ const Onboarding = () => {
     bettingFrequency: "",
     fadingExperience: "",
     accountBalance: "",
-    bigPlays: ""
+    bigPlays: "",
+    favoriteSport: ""
   });
 
-  const totalSteps = 6;
+  const totalSteps = 7;
 
   const updateData = (field: keyof OnboardingData, value: string) => {
     setOnboardingData(prev => ({
@@ -109,6 +111,16 @@ const Onboarding = () => {
       case 6:
         return (
           <OnboardingStep6
+            value={onboardingData.favoriteSport}
+            onSelect={(value) => {
+              updateData('favoriteSport', value);
+              nextStep();
+            }}
+          />
+        );
+      case 7:
+        return (
+          <OnboardingStep7
             onComplete={completeOnboarding}
           />
         );
