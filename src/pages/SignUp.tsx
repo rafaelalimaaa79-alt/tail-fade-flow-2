@@ -47,9 +47,9 @@ const SignUp = () => {
       
       if (error) {
         // If phone signup fails, proceed anyway for now
-        console.log("Phone signup not available, proceeding to onboarding:", error);
-        toast.success("Account setup initiated - proceeding to onboarding");
-        navigate('/onboarding');
+        console.log("Phone signup not available, proceeding to sportsbook connection:", error);
+        toast.success("Account setup initiated - proceeding to sportsbook connection");
+        navigate('/connect-sportsbooks');
         return;
       }
       
@@ -57,14 +57,14 @@ const SignUp = () => {
         toast.success("Check your phone for a verification code!");
       } else {
         toast.success("Account created successfully!");
-        navigate('/onboarding');
+        navigate('/connect-sportsbooks');
       }
       
     } catch (error: any) {
       console.error("Sign up error:", error);
-      // For now, just proceed to onboarding regardless of the error
-      toast.success("Proceeding to onboarding - backend will handle verification");
-      navigate('/onboarding');
+      // For now, just proceed to sportsbook connection regardless of the error
+      toast.success("Proceeding to sportsbook connection - backend will handle verification");
+      navigate('/connect-sportsbooks');
     } finally {
       setLoading(false);
     }
@@ -79,7 +79,7 @@ const SignUp = () => {
       const { error } = await supabase.auth.signInWithOAuth({
         provider: 'google',
         options: {
-          redirectTo: `${window.location.origin}/onboarding`
+          redirectTo: `${window.location.origin}/connect-sportsbooks`
         }
       });
       
@@ -95,7 +95,7 @@ const SignUp = () => {
       const { error } = await supabase.auth.signInWithOAuth({
         provider: 'apple',
         options: {
-          redirectTo: `${window.location.origin}/onboarding`
+          redirectTo: `${window.location.origin}/connect-sportsbooks`
         }
       });
       

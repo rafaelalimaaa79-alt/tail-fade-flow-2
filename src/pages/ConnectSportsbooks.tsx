@@ -40,7 +40,7 @@ const ConnectSportsbooks = () => {
   };
 
   const handleContinue = () => {
-    navigate('/');
+    navigate('/onboarding');
   };
 
   const isConnected = (sportsbookId: string) => connectedSportsbooks.includes(sportsbookId);

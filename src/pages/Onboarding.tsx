@@ -53,7 +53,7 @@ const Onboarding = () => {
   };
 
   const handleGetStarted = () => {
-    navigate('/connect-sportsbooks');
+    navigate('/');
   };
 
   const handleComplete = (route: string) => {
