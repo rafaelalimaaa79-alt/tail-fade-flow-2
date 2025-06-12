@@ -59,7 +59,7 @@ const DidYouKnow = () => {
                 97%
               </div>
               <p className="text-xl text-white font-medium leading-relaxed">
-                lose money — yes, <span className="text-red-300 font-bold">even the guy you buy picks from.</span>
+                lose money — yes, <span className="text-white font-bold">even the guy you buy picks from.</span>
               </p>
             </div>
           </motion.div>
@@ -71,10 +71,10 @@ const DidYouKnow = () => {
             transition={{ delay: 1.0 }}
             className="pt-2"
           >
-            <p className="text-2xl font-black text-[#AEE3F5] leading-relaxed drop-shadow-[0_0_8px_rgba(174,227,245,0.3)]">
+            <p className="text-2xl font-black text-white leading-relaxed">
               Don't be the 97%.
             </p>
-            <p className="text-2xl font-black text-white mt-1 drop-shadow-[0_0_5px_rgba(255,255,255,0.2)]">
+            <p className="text-2xl font-black text-white mt-1">
               Fade them.
             </p>
           </motion.div>
