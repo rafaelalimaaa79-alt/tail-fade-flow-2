@@ -1,3 +1,4 @@
+
 import React, { useState, useEffect } from "react";
 import { motion } from "framer-motion";
 import { User, CheckCircle, X, Shuffle } from "lucide-react";
@@ -120,27 +121,27 @@ const OnboardingStep7: React.FC<OnboardingStep7Props> = ({ onComplete }) => {
   };
 
   return (
-    <div className="text-center px-2">
+    <div className="text-center px-2 h-full flex flex-col justify-center">
       <motion.div
         initial={{ opacity: 0, y: 20 }}
         animate={{ opacity: 1, y: 0 }}
         transition={{ delay: 0.1 }}
-        className="mb-8"
+        className="mb-6"
       >
         <motion.div
           initial={{ scale: 0 }}
           animate={{ scale: 1 }}
           transition={{ delay: 0.3, type: "spring", stiffness: 200 }}
-          className="w-16 h-16 bg-[#AEE3F5]/20 rounded-full flex items-center justify-center mx-auto mb-8"
+          className="w-12 h-12 bg-[#AEE3F5]/20 rounded-full flex items-center justify-center mx-auto mb-4"
         >
-          <User className="w-8 h-8 text-[#AEE3F5]" />
+          <User className="w-6 h-6 text-[#AEE3F5]" />
         </motion.div>
         
         <motion.h2
           initial={{ opacity: 0 }}
           animate={{ opacity: 1 }}
           transition={{ delay: 0.4 }}
-          className="text-4xl font-light text-white mb-8"
+          className="text-3xl font-light text-white mb-4"
         >
           Pick your <span className="text-[#AEE3F5] font-medium">FadeZone</span> username
         </motion.h2>
@@ -149,24 +150,24 @@ const OnboardingStep7: React.FC<OnboardingStep7Props> = ({ onComplete }) => {
           initial={{ opacity: 0 }}
           animate={{ opacity: 1 }}
           transition={{ delay: 0.5 }}
-          className="space-y-3 mb-8 leading-relaxed"
+          className="space-y-2 mb-4 leading-relaxed"
         >
-          <p className="text-white/80 text-base">
+          <p className="text-white/80 text-sm">
             This is the name <span className="font-semibold text-white">everyone will see</span>.
           </p>
-          <div className="text-white/70 text-base space-y-1">
+          <div className="text-white/70 text-sm space-y-1">
             <p>If you're <span className="font-semibold text-white/90">sharp</span>, you won't care who sees it.</p>
             <p>If you're <span className="font-semibold text-white/90">cold</span>… maybe go anonymous.</p>
           </div>
         </motion.div>
       </motion.div>
 
-      <div className="space-y-6">
+      <div className="space-y-4 flex-1 flex flex-col justify-center">
         <motion.div
           initial={{ opacity: 0, y: 20 }}
           animate={{ opacity: 1, y: 0 }}
           transition={{ delay: 0.7 }}
-          className="space-y-4"
+          className="space-y-3"
         >
           <div className="relative">
             <Input
@@ -174,7 +175,7 @@ const OnboardingStep7: React.FC<OnboardingStep7Props> = ({ onComplete }) => {
               placeholder="Enter username"
               value={username}
               onChange={handleUsernameChange}
-              className="w-full h-12 text-base bg-white/5 border-white/20 text-white placeholder:text-white/40 rounded-lg px-4 pr-12 focus:ring-2 focus:ring-[#AEE3F5]/50 focus:border-[#AEE3F5]/50 shadow-[0_0_20px_rgba(174,227,245,0.1)] focus:shadow-[0_0_30px_rgba(174,227,245,0.3)] transition-all duration-300"
+              className="w-full h-11 text-base bg-white/5 border-white/20 text-white placeholder:text-white/40 rounded-lg px-4 pr-12 focus:ring-2 focus:ring-[#AEE3F5]/50 focus:border-[#AEE3F5]/50 shadow-[0_0_20px_rgba(174,227,245,0.1)] focus:shadow-[0_0_30px_rgba(174,227,245,0.3)] transition-all duration-300"
               maxLength={20}
             />
             <div className="absolute right-3 top-1/2 transform -translate-y-1/2">
@@ -216,7 +217,7 @@ const OnboardingStep7: React.FC<OnboardingStep7Props> = ({ onComplete }) => {
             <Button
               onClick={generateRandomUsername}
               variant="ghost"
-              className="text-white/60 hover:text-[#AEE3F5] hover:bg-white/5 transition-all duration-300 text-sm h-9"
+              className="text-white/60 hover:text-[#AEE3F5] hover:bg-white/5 transition-all duration-300 text-sm h-8"
             >
               <Shuffle className="w-4 h-4 mr-2" />
               Generate Random Name
@@ -229,9 +230,9 @@ const OnboardingStep7: React.FC<OnboardingStep7Props> = ({ onComplete }) => {
             initial={{ opacity: 0, y: 20 }}
             animate={{ opacity: 1, y: 0 }}
             transition={{ delay: 0.9 }}
-            className="p-4 bg-white/5 border border-white/10 rounded-lg"
+            className="p-3 bg-white/5 border border-white/10 rounded-lg"
           >
-            <p className="text-white/50 text-xs mb-2">Preview:</p>
+            <p className="text-white/50 text-xs mb-1">Preview:</p>
             <p className="text-white text-sm">
               <span className="text-[#AEE3F5]">@{username}</span> just faded ColdHands88
             </p>
@@ -242,12 +243,12 @@ const OnboardingStep7: React.FC<OnboardingStep7Props> = ({ onComplete }) => {
           initial={{ opacity: 0, y: 20 }}
           animate={{ opacity: 1, y: 0 }}
           transition={{ delay: 1.0 }}
-          className="space-y-4 mb-8"
+          className="pt-4"
         >
           <Button
             onClick={handleSubmit}
             disabled={!username || !isAvailable || isChecking}
-            className="w-full h-12 text-base bg-[#AEE3F5] hover:bg-[#AEE3F5]/90 text-black font-medium shadow-[0_0_20px_rgba(174,227,245,0.4)] hover:shadow-[0_0_30px_rgba(174,227,245,0.6)] hover:scale-[1.02] transition-all duration-300 disabled:opacity-50 disabled:shadow-none disabled:hover:scale-100"
+            className="w-full h-11 text-base bg-[#AEE3F5] hover:bg-[#AEE3F5]/90 text-black font-medium shadow-[0_0_20px_rgba(174,227,245,0.4)] hover:shadow-[0_0_30px_rgba(174,227,245,0.6)] hover:scale-[1.02] transition-all duration-300 disabled:opacity-50 disabled:shadow-none disabled:hover:scale-100"
           >
             Lock In Username
           </Button>
