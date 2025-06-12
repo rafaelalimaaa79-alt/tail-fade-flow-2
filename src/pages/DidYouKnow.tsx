@@ -63,19 +63,22 @@ const DidYouKnow = () => {
             </div>
           </motion.div>
 
-          {/* Call to action text */}
+          {/* Call to action text - enhanced styling */}
           <motion.div
             initial={{ opacity: 0, y: 30 }}
             animate={{ opacity: 1, y: 0 }}
             transition={{ delay: 1.0 }}
-            className="pt-2"
+            className="pt-6 relative"
           >
-            <p className="text-2xl font-black text-white leading-relaxed">
-              Don't be the 97%.
-            </p>
-            <p className="text-2xl font-black text-white mt-1">
-              Fade them.
-            </p>
+            <div className="absolute inset-0 bg-gradient-to-r from-[#AEE3F5]/30 via-purple-500/20 to-[#AEE3F5]/30 rounded-2xl blur-3xl animate-pulse"></div>
+            <div className="relative z-10 space-y-3 py-6 px-4">
+              <p className="text-4xl font-black bg-gradient-to-r from-[#AEE3F5] via-white to-[#AEE3F5] bg-clip-text text-transparent leading-tight drop-shadow-[0_0_15px_rgba(174,227,245,0.8)]">
+                Don't be the 97%.
+              </p>
+              <p className="text-4xl font-black bg-gradient-to-r from-red-400 via-orange-500 to-yellow-500 bg-clip-text text-transparent drop-shadow-[0_0_15px_rgba(248,113,113,0.8)] animate-pulse">
+                Fade them.
+              </p>
+            </div>
           </motion.div>
         </div>
 
