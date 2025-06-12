@@ -1,3 +1,4 @@
+
 import React, { useState } from "react";
 import { Eye, EyeOff, Apple } from "lucide-react";
 import { Input } from "@/components/ui/input";
@@ -65,10 +66,10 @@ const SignInForm: React.FC<SignInFormProps> = ({
   // Login form with brand redesign
   return (
     <div className="w-full max-w-md h-screen flex flex-col px-6 py-4 overflow-hidden fixed top-0 left-1/2 transform -translate-x-1/2 animate-fade-in">
-      <div className="text-center mb-8 flex-shrink-0">
+      <div className="text-center mb-12 flex-shrink-0 mt-16">
         <button 
           onClick={() => setShowLoginForm(false)}
-          className="text-[#AEE3F5] mb-4 text-sm hover:text-[#AEE3F5]/80 transition-colors"
+          className="text-[#AEE3F5] mb-6 text-sm hover:text-[#AEE3F5]/80 transition-colors"
         >
           ← Back
         </button>
