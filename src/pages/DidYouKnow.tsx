@@ -75,7 +75,7 @@ const DidYouKnow = () => {
               <p className="text-4xl font-black bg-gradient-to-r from-[#AEE3F5] via-white to-[#AEE3F5] bg-clip-text text-transparent leading-tight drop-shadow-[0_0_15px_rgba(174,227,245,0.8)]">
                 Don't be the 97%.
               </p>
-              <p className="text-4xl font-black bg-gradient-to-r from-red-400 via-orange-500 to-yellow-500 bg-clip-text text-transparent drop-shadow-[0_0_15px_rgba(248,113,113,0.8)] animate-pulse">
+              <p className="text-4xl font-black text-[#AEE3F5] drop-shadow-[0_0_8px_rgba(174,227,245,0.4)]">
                 Fade them.
               </p>
             </div>
