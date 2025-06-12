@@ -174,7 +174,7 @@ const SignInForm: React.FC<SignInFormProps> = ({
           onClick={onForgotPassword}
           className="text-white/60 hover:text-[#AEE3F5] transition-colors"
         >
-          Forgot your edge?
+          Forgot your Password?
         </button>
       </div>
     </div>
