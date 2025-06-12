@@ -21,7 +21,7 @@ const HowItWorks = () => {
           <span className="text-[#AEE3F5]">Cold</span> Bettors Place Picks
         </>
       ),
-      description: "We track bettors who are **ice cold** — **losing streaks**, **bad runs**, you name it."
+      description: "We track bettors who are ice cold — losing streaks, bad runs, you name it."
     },
     {
       number: "②", 
@@ -33,7 +33,7 @@ const HowItWorks = () => {
       number: "③",
       icon: <TrendingUp className="w-8 h-8 text-[#AEE3F5]" />,
       title: "Watch Your Portfolio Grow", 
-      description: "**Every fade you make gets tracked.** You'll see your stats, **ROI**, and leaderboard rank."
+      description: "Every fade you make gets tracked. You'll see your stats, ROI, and leaderboard rank."
     }
   ];
 
@@ -78,11 +78,7 @@ const HowItWorks = () => {
                   {step.title}
                 </h3>
                 <p className="text-white/80 text-base leading-relaxed px-4">
-                  {typeof step.description === 'string' ? 
-                    step.description.split('**').map((part, i) => 
-                      i % 2 === 1 ? <span key={i} className="font-bold text-white">{part}</span> : part
-                    ) : step.description
-                  }
+                  {step.description}
                 </p>
               </div>
             </motion.div>
