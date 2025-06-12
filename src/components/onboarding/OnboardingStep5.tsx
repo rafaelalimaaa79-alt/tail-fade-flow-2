@@ -1,7 +1,7 @@
 
 import React from "react";
 import { motion } from "framer-motion";
-import { Target } from "lucide-react";
+import { Zap } from "lucide-react";
 
 interface OnboardingStep5Props {
   value: string;
@@ -10,10 +10,10 @@ interface OnboardingStep5Props {
 
 const OnboardingStep5: React.FC<OnboardingStep5Props> = ({ value, onSelect }) => {
   const options = [
-    { value: "finding-cold-bettors", label: "Finding cold bettors to fade" },
-    { value: "tracking-fading", label: "Tracking how I do fading" },
-    { value: "community-fading", label: "Seeing what the community is fading" },
-    { value: "all-above", label: "All of the above" }
+    { value: "every-weekend", label: "Every weekend — I live for it" },
+    { value: "when-feel-it", label: "Only when I really feel it" },
+    { value: "rarely-chill", label: "Rarely — I keep it chill" },
+    { value: "never-bankroll", label: "Never — I'm a bankroll guy" }
   ];
 
   return (
@@ -25,13 +25,13 @@ const OnboardingStep5: React.FC<OnboardingStep5Props> = ({ value, onSelect }) =>
         className="mb-8"
       >
         <div className="w-16 h-16 bg-[#AEE3F5]/20 rounded-full flex items-center justify-center mx-auto mb-4">
-          <Target className="w-8 h-8 text-[#AEE3F5]" />
+          <Zap className="w-8 h-8 text-[#AEE3F5]" />
         </div>
         <h2 className="text-2xl font-light text-white mb-3">
-          What do you want help with?
+          How often are you throwing bombs?
         </h2>
         <p className="text-white/70 text-sm">
-          Let us tailor your experience.
+          We're talkin' big unit plays — the kind you feel in your soul.
         </p>
       </motion.div>
 

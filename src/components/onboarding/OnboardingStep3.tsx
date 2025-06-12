@@ -10,9 +10,9 @@ interface OnboardingStep3Props {
 
 const OnboardingStep3: React.FC<OnboardingStep3Props> = ({ value, onSelect }) => {
   const options = [
-    { value: "experienced", label: "Yes – I've done it often" },
-    { value: "know-havent-tried", label: "I know what it is, haven't tried" },
-    { value: "no-whats-fading", label: "No – What's fading?" }
+    { value: "friends-ice-cold", label: "Yep. My friends are ice cold" },
+    { value: "thought-about-it", label: "I've thought about it, just haven't pulled the trigger" },
+    { value: "not-yet", label: "Not yet — but I probably should" }
   ];
 
   return (
@@ -27,10 +27,10 @@ const OnboardingStep3: React.FC<OnboardingStep3Props> = ({ value, onSelect }) =>
           <TrendingDown className="w-8 h-8 text-[#AEE3F5]" />
         </div>
         <h2 className="text-2xl font-light text-white mb-3">
-          Have you ever faded someone before?
+          Ever faded your buddy's "lock of the week"?
         </h2>
         <p className="text-white/70 text-sm">
-          This helps us understand your experience level.
+          You hear their pick and immediately bet the other side — yeah, we do that too.
         </p>
       </motion.div>
 

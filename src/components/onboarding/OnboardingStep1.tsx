@@ -13,8 +13,11 @@ const OnboardingStep1: React.FC<OnboardingStep1Props> = ({ value, onSelect }) =>
     { value: "$10", label: "$10" },
     { value: "$25", label: "$25" },
     { value: "$50", label: "$50" },
-    { value: "$100+", label: "$100+" },
-    { value: "no-units", label: "I don't use units" }
+    { value: "$75", label: "$75" },
+    { value: "$100", label: "$100" },
+    { value: "$200", label: "$200" },
+    { value: "$300", label: "$300" },
+    { value: "$400+", label: "$400+" }
   ];
 
   return (
@@ -29,10 +32,10 @@ const OnboardingStep1: React.FC<OnboardingStep1Props> = ({ value, onSelect }) =>
           <DollarSign className="w-8 h-8 text-[#AEE3F5]" />
         </div>
         <h2 className="text-2xl font-light text-white mb-3">
-          What's your average unit size?
+          What's your average bet amount?
         </h2>
         <p className="text-white/70 text-sm">
-          We'll use this to personalize your win/loss stats.
+          Pick the one that's closest.
         </p>
       </motion.div>
 

@@ -12,27 +12,27 @@ import OnboardingStep6 from "@/components/onboarding/OnboardingStep6";
 import OnboardingProgress from "@/components/onboarding/OnboardingProgress";
 
 export interface OnboardingData {
-  unitSize: string;
+  betAmount: string;
   bettingFrequency: string;
   fadingExperience: string;
-  frustrations: string[];
-  helpWith: string;
+  accountBalance: string;
+  bigPlays: string;
 }
 
 const Onboarding = () => {
   const navigate = useNavigate();
   const [currentStep, setCurrentStep] = useState(1);
   const [onboardingData, setOnboardingData] = useState<OnboardingData>({
-    unitSize: "",
+    betAmount: "",
     bettingFrequency: "",
     fadingExperience: "",
-    frustrations: [],
-    helpWith: ""
+    accountBalance: "",
+    bigPlays: ""
   });
 
   const totalSteps = 6;
 
-  const updateData = (field: keyof OnboardingData, value: string | string[]) => {
+  const updateData = (field: keyof OnboardingData, value: string) => {
     setOnboardingData(prev => ({
       ...prev,
       [field]: value
@@ -59,9 +59,9 @@ const Onboarding = () => {
       case 1:
         return (
           <OnboardingStep1
-            value={onboardingData.unitSize}
+            value={onboardingData.betAmount}
             onSelect={(value) => {
-              updateData('unitSize', value);
+              updateData('betAmount', value);
               nextStep();
             }}
           />
@@ -89,9 +89,9 @@ const Onboarding = () => {
       case 4:
         return (
           <OnboardingStep4
-            values={onboardingData.frustrations}
-            onSelect={(values) => {
-              updateData('frustrations', values);
+            value={onboardingData.accountBalance}
+            onSelect={(value) => {
+              updateData('accountBalance', value);
               nextStep();
             }}
           />
@@ -99,9 +99,9 @@ const Onboarding = () => {
       case 5:
         return (
           <OnboardingStep5
-            value={onboardingData.helpWith}
+            value={onboardingData.bigPlays}
             onSelect={(value) => {
-              updateData('helpWith', value);
+              updateData('bigPlays', value);
               nextStep();
             }}
           />

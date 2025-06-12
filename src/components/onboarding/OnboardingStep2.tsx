@@ -11,9 +11,9 @@ interface OnboardingStep2Props {
 const OnboardingStep2: React.FC<OnboardingStep2Props> = ({ value, onSelect }) => {
   const options = [
     { value: "daily", label: "Daily" },
-    { value: "few-times-week", label: "A few times a week" },
-    { value: "weekends", label: "Weekends only" },
-    { value: "rarely", label: "Rarely — just watching" }
+    { value: "weekly", label: "Weekly" },
+    { value: "favorite-team", label: "When my favorite team is playing" },
+    { value: "rarely", label: "Rarely — just watching for now" }
   ];
 
   return (
@@ -31,7 +31,7 @@ const OnboardingStep2: React.FC<OnboardingStep2Props> = ({ value, onSelect }) =>
           How often do you bet?
         </h2>
         <p className="text-white/70 text-sm">
-          Helps us control the amount of fades and alerts you get.
+          Just to get a feel for how you play.
         </p>
       </motion.div>
 
