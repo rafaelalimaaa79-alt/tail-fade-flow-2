@@ -16,14 +16,18 @@ const HowItWorks = () => {
     {
       number: "①",
       icon: <Snowflake className="w-8 h-8 text-[#AEE3F5]" />,
-      title: "Cold Bettors Place Picks",
+      title: (
+        <>
+          <span className="text-[#AEE3F5]">Cold</span> Bettors Place Picks
+        </>
+      ),
       description: "We track bettors who are **ice cold** — **losing streaks**, **bad runs**, you name it."
     },
     {
       number: "②", 
       icon: <ThumbsDown className="w-8 h-8 text-[#AEE3F5]" />,
       title: "You Fade Their Picks",
-      description: "When they bet on something, you go the other way."
+      description: "Whatever they bet on, you bet the opposite."
     },
     {
       number: "③",
@@ -70,13 +74,15 @@ const HowItWorks = () => {
 
               {/* Step Content */}
               <div className="space-y-2">
-                <h3 className="text-xl font-semibold text-white">
+                <h3 className="text-2xl font-semibold text-white">
                   {step.title}
                 </h3>
                 <p className="text-white/80 text-base leading-relaxed px-4">
-                  {step.description.split('**').map((part, i) => 
-                    i % 2 === 1 ? <span key={i} className="font-bold text-white">{part}</span> : part
-                  )}
+                  {typeof step.description === 'string' ? 
+                    step.description.split('**').map((part, i) => 
+                      i % 2 === 1 ? <span key={i} className="font-bold text-white">{part}</span> : part
+                    ) : step.description
+                  }
                 </p>
               </div>
             </motion.div>
