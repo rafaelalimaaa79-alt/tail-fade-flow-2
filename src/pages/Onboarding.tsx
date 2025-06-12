@@ -1,3 +1,4 @@
+
 import React, { useState } from "react";
 import { useNavigate } from "react-router-dom";
 import { Button } from "@/components/ui/button";
@@ -10,10 +11,33 @@ import OnboardingStep5 from "@/components/onboarding/OnboardingStep5";
 import OnboardingStep6 from "@/components/onboarding/OnboardingStep6";
 import OnboardingStep7 from "@/components/onboarding/OnboardingStep7";
 
+interface OnboardingData {
+  averageBet: string;
+  bettingFrequency: string;
+  fadedBuddy: string;
+  accountBalance: string;
+  throwingBombs: string;
+  favoriteSport: string;
+  username: string;
+}
+
 const Onboarding = () => {
   const [currentStep, setCurrentStep] = useState(1);
+  const [formData, setFormData] = useState<OnboardingData>({
+    averageBet: "",
+    bettingFrequency: "",
+    fadedBuddy: "",
+    accountBalance: "",
+    throwingBombs: "",
+    favoriteSport: "",
+    username: ""
+  });
   const totalSteps = 7;
   const navigate = useNavigate();
+
+  const handleStepSelect = (field: keyof OnboardingData, value: string) => {
+    setFormData(prev => ({ ...prev, [field]: value }));
+  };
 
   const handleNext = () => {
     if (currentStep < totalSteps) {
@@ -30,6 +54,12 @@ const Onboarding = () => {
   const handleGetStarted = () => {
     navigate('/connect-sportsbooks');
   };
+
+  const handleComplete = (route: string) => {
+    // Store the complete onboarding data
+    localStorage.setItem('onboardingData', JSON.stringify(formData));
+    navigate(route);
+  };
   
   return (
     <div className="bg-black min-h-screen flex flex-col">
@@ -38,13 +68,45 @@ const Onboarding = () => {
           <OnboardingProgress currentStep={currentStep} totalSteps={totalSteps} />
           
           <div className="mt-8">
-            {currentStep === 1 && <OnboardingStep1 />}
-            {currentStep === 2 && <OnboardingStep2 />}
-            {currentStep === 3 && <OnboardingStep3 />}
-            {currentStep === 4 && <OnboardingStep4 />}
-            {currentStep === 5 && <OnboardingStep5 />}
-            {currentStep === 6 && <OnboardingStep6 />}
-            {currentStep === 7 && <OnboardingStep7 />}
+            {currentStep === 1 && (
+              <OnboardingStep1 
+                value={formData.averageBet}
+                onSelect={(value) => handleStepSelect('averageBet', value)}
+              />
+            )}
+            {currentStep === 2 && (
+              <OnboardingStep2 
+                value={formData.bettingFrequency}
+                onSelect={(value) => handleStepSelect('bettingFrequency', value)}
+              />
+            )}
+            {currentStep === 3 && (
+              <OnboardingStep3 
+                value={formData.fadedBuddy}
+                onSelect={(value) => handleStepSelect('fadedBuddy', value)}
+              />
+            )}
+            {currentStep === 4 && (
+              <OnboardingStep4 
+                value={formData.accountBalance}
+                onSelect={(value) => handleStepSelect('accountBalance', value)}
+              />
+            )}
+            {currentStep === 5 && (
+              <OnboardingStep5 
+                value={formData.throwingBombs}
+                onSelect={(value) => handleStepSelect('throwingBombs', value)}
+              />
+            )}
+            {currentStep === 6 && (
+              <OnboardingStep6 
+                value={formData.favoriteSport}
+                onSelect={(value) => handleStepSelect('favoriteSport', value)}
+              />
+            )}
+            {currentStep === 7 && (
+              <OnboardingStep7 onComplete={handleComplete} />
+            )}
           </div>
           
           <div className="mt-8 flex gap-4">
@@ -58,12 +120,23 @@ const Onboarding = () => {
               </Button>
             )}
             
-            <Button 
-              onClick={currentStep === totalSteps ? handleGetStarted : handleNext}
-              className="flex-1 bg-primary hover:bg-primary/90"
-            >
-              {currentStep === totalSteps ? "Get Started" : "Next"}
-            </Button>
+            {currentStep < totalSteps && (
+              <Button 
+                onClick={handleNext}
+                className="flex-1 bg-primary hover:bg-primary/90"
+              >
+                Next
+              </Button>
+            )}
+
+            {currentStep === totalSteps && (
+              <Button 
+                onClick={handleGetStarted}
+                className="flex-1 bg-primary hover:bg-primary/90"
+              >
+                Get Started
+              </Button>
+            )}
           </div>
         </div>
       </div>
