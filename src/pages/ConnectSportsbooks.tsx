@@ -3,7 +3,6 @@ import { useNavigate } from "react-router-dom";
 import { Check, Shield, Fingerprint } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Card } from "@/components/ui/card";
-import { Switch } from "@/components/ui/switch";
 import SportsbookLoginModal from "@/components/sportsbooks/SportsbookLoginModal";
 
 // Initial sportsbooks - FanDuel and Hard Rock with proper logos
@@ -117,11 +116,27 @@ const ConnectSportsbooks = () => {
                 )}
               </div>
             </div>
-            <Switch
-              checked={faceIdEnabled}
-              onCheckedChange={setFaceIdEnabled}
-              className="ml-3"
-            />
+            
+            {/* Custom clear toggle */}
+            <button
+              onClick={() => setFaceIdEnabled(!faceIdEnabled)}
+              className={`relative inline-flex h-8 w-14 shrink-0 cursor-pointer rounded-full border-2 transition-colors duration-200 ease-in-out focus:outline-none ${
+                faceIdEnabled 
+                  ? 'bg-primary border-primary' 
+                  : 'bg-gray-600 border-gray-600'
+              }`}
+            >
+              <span
+                className={`pointer-events-none inline-block h-6 w-6 transform rounded-full bg-white shadow ring-0 transition duration-200 ease-in-out ${
+                  faceIdEnabled ? 'translate-x-6' : 'translate-x-0'
+                }`}
+              />
+              <span className={`absolute inset-0 flex items-center justify-center text-xs font-bold ${
+                faceIdEnabled ? 'text-white' : 'text-gray-400'
+              }`}>
+                {faceIdEnabled ? 'ON' : 'OFF'}
+              </span>
+            </button>
           </div>
         </div>
 
