@@ -15,12 +15,8 @@ interface SportsbookLoginModalProps {
 }
 
 const sportsbookNames: Record<string, string> = {
-  draftkings: "DraftKings",
   fanduel: "FanDuel",
-  betmgm: "BetMGM",
-  caesars: "Caesars",
-  espnbet: "ESPN BET",
-  betrivers: "BetRivers",
+  hardrock: "Hard Rock Bet",
 };
 
 const SportsbookLoginModal: React.FC<SportsbookLoginModalProps> = ({

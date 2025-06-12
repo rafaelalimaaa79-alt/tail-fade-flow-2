@@ -6,14 +6,8 @@ import { Button } from "@/components/ui/button";
 import { Card } from "@/components/ui/card";
 import SportsbookLoginModal from "@/components/sportsbooks/SportsbookLoginModal";
 
-// Mock sportsbook data
+// Initial sportsbooks - FanDuel and Hard Rock
 const sportsbooks = [
-  {
-    id: "draftkings",
-    name: "DraftKings",
-    icon: "/lovable-uploads/c77c9dc5-a7dd-4c1c-9428-804d5d7a4a79.png", // Using existing image as placeholder
-    connected: false,
-  },
   {
     id: "fanduel",
     name: "FanDuel",
@@ -21,26 +15,8 @@ const sportsbooks = [
     connected: false,
   },
   {
-    id: "betmgm",
-    name: "BetMGM",
-    icon: "/lovable-uploads/c77c9dc5-a7dd-4c1c-9428-804d5d7a4a79.png",
-    connected: false,
-  },
-  {
-    id: "caesars",
-    name: "Caesars",
-    icon: "/lovable-uploads/c77c9dc5-a7dd-4c1c-9428-804d5d7a4a79.png",
-    connected: false,
-  },
-  {
-    id: "espnbet",
-    name: "ESPN BET",
-    icon: "/lovable-uploads/c77c9dc5-a7dd-4c1c-9428-804d5d7a4a79.png",
-    connected: false,
-  },
-  {
-    id: "betrivers",
-    name: "BetRivers",
+    id: "hardrock",
+    name: "Hard Rock Bet",
     icon: "/lovable-uploads/c77c9dc5-a7dd-4c1c-9428-804d5d7a4a79.png",
     connected: false,
   },
