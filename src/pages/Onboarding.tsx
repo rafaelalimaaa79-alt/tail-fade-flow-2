@@ -110,9 +110,9 @@ const Onboarding = () => {
             )}
           </div>
           
-          {/* Only show navigation buttons for step 7, and back button for steps 2-6 */}
-          <div className="mt-8 flex gap-4">
-            {currentStep > 1 && currentStep < 7 && (
+          {/* Only show back button for steps 2-6 */}
+          {currentStep > 1 && currentStep < 7 && (
+            <div className="mt-8 flex gap-4">
               <Button 
                 onClick={handlePrevious}
                 variant="outline"
@@ -120,26 +120,8 @@ const Onboarding = () => {
               >
                 Back
               </Button>
-            )}
-
-            {currentStep === 7 && (
-              <>
-                <Button 
-                  onClick={handlePrevious}
-                  variant="outline"
-                  className="flex-1"
-                >
-                  Back
-                </Button>
-                <Button 
-                  onClick={handleGetStarted}
-                  className="flex-1 bg-primary hover:bg-primary/90"
-                >
-                  Get Started
-                </Button>
-              </>
-            )}
-          </div>
+            </div>
+          )}
         </div>
       </div>
     </div>
