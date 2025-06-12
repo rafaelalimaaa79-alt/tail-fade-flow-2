@@ -1,4 +1,3 @@
-
 import React, { useState, useEffect } from "react";
 import { motion } from "framer-motion";
 import { User, CheckCircle, X, Shuffle } from "lucide-react";
@@ -155,12 +154,10 @@ const OnboardingStep7: React.FC<OnboardingStep7Props> = ({ onComplete }) => {
           <p className="text-white/80 text-base">
             This is the name <span className="font-semibold text-white">everyone will see</span>.
           </p>
-          <p className="text-white/70 text-base">
-            If you're <span className="font-semibold text-white/90">sharp</span>, you won't care who sees it.
-          </p>
-          <p className="text-white/70 text-base">
-            If you're <span className="font-semibold text-white/90">cold</span>… maybe go anonymous.
-          </p>
+          <div className="text-white/70 text-base space-y-1">
+            <p>If you're <span className="font-semibold text-white/90">sharp</span>, you won't care who sees it.</p>
+            <p>If you're <span className="font-semibold text-white/90">cold</span>… maybe go anonymous.</p>
+          </div>
           <p className="text-white/60 text-sm">
             <span className="font-semibold">Funny or fake is fine</span> — just know your picks will do the talking.
           </p>
