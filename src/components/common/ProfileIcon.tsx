@@ -14,7 +14,7 @@ const ProfileIcon = ({ className }: ProfileIconProps) => {
       to="/profile"
       className={cn(
         "flex items-center justify-center w-10 h-10 rounded-full bg-[#AEE3F5]/20 border border-[#AEE3F5]/30 hover:bg-[#AEE3F5]/30 transition-all duration-300",
-        "text-[#AEE3F5] hover:text-[#AEE3F5]/80",
+        "text-[#AEE3F5] hover:text-[#AEE3F5]/80 mr-4",
         className
       )}
     >

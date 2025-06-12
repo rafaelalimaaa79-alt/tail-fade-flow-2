@@ -1,5 +1,3 @@
-
-
 import React from "react";
 import { useParams, useNavigate } from "react-router-dom";
 import BottomNav from "@/components/BottomNav";
@@ -76,9 +74,7 @@ const BettorDetail = () => {
             alt="Fade Zone logo" 
             className="h-32"
           />
-          <div className="flex items-center gap-2">
-            <ProfileIcon />
-          </div>
+          <ProfileIcon />
         </div>
         
         {/* Bettor header with improved styling and organization */}
@@ -129,4 +125,3 @@ const BettorDetail = () => {
 };
 
 export default BettorDetail;
-

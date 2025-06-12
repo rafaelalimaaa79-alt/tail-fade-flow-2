@@ -1,4 +1,3 @@
-
 import React, { useState, useEffect } from "react";
 import BottomNav from "@/components/BottomNav";
 import { useIsMobile } from "@/hooks/use-mobile";
@@ -35,4 +34,3 @@ const Public = () => {
 };
 
 export default Public;
-

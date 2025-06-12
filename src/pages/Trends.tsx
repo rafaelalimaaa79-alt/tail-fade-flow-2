@@ -1,4 +1,3 @@
-
 import React, { useState } from "react";
 import BottomNav from "@/components/BottomNav";
 import { useIsMobile } from "@/hooks/use-mobile";
@@ -44,4 +43,3 @@ const Trends = () => {
 };
 
 export default Trends;
-
