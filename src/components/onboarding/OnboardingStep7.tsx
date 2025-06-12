@@ -125,7 +125,7 @@ const OnboardingStep7: React.FC<OnboardingStep7Props> = ({ onComplete }) => {
         initial={{ opacity: 0, y: 20 }}
         animate={{ opacity: 1, y: 0 }}
         transition={{ delay: 0.1 }}
-        className="mb-12"
+        className="mb-8"
       >
         <motion.div
           initial={{ scale: 0 }}
@@ -149,7 +149,7 @@ const OnboardingStep7: React.FC<OnboardingStep7Props> = ({ onComplete }) => {
           initial={{ opacity: 0 }}
           animate={{ opacity: 1 }}
           transition={{ delay: 0.5 }}
-          className="space-y-3 mb-10 leading-relaxed"
+          className="space-y-3 mb-8 leading-relaxed"
         >
           <p className="text-white/80 text-base">
             This is the name <span className="font-semibold text-white">everyone will see</span>.
@@ -158,9 +158,6 @@ const OnboardingStep7: React.FC<OnboardingStep7Props> = ({ onComplete }) => {
             <p>If you're <span className="font-semibold text-white/90">sharp</span>, you won't care who sees it.</p>
             <p>If you're <span className="font-semibold text-white/90">cold</span>… maybe go anonymous.</p>
           </div>
-          <p className="text-white/60 text-sm">
-            <span className="font-semibold">Funny or fake is fine</span> — just know your picks will do the talking.
-          </p>
         </motion.div>
       </motion.div>
 
