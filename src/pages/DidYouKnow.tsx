@@ -12,23 +12,22 @@ const DidYouKnow = () => {
   };
 
   return (
-    <div className="bg-black min-h-screen flex flex-col justify-between items-center px-4 py-4">
-      <div className="w-full max-w-2xl text-center flex-1 flex flex-col justify-center">
-        {/* Header - moved higher */}
+    <div className="bg-black min-h-screen flex flex-col justify-center items-center px-4 py-4">
+      <div className="w-full max-w-2xl text-center space-y-8">
+        {/* Header */}
         <motion.div
           initial={{ opacity: 0, y: 20 }}
           animate={{ opacity: 1, y: 0 }}
           transition={{ delay: 0.2 }}
-          className="mb-4"
         >
           <h1 className="text-4xl font-bold text-white mb-2">
             Did You Know?
           </h1>
         </motion.div>
 
-        {/* Main Stats Content with reduced emphasis */}
-        <div className="space-y-4 mb-6">
-          {/* First stat - 3% with reduced glow */}
+        {/* Main Stats Content */}
+        <div className="space-y-4">
+          {/* First stat - 3% */}
           <motion.div
             initial={{ opacity: 0, y: 30 }}
             animate={{ opacity: 1, y: 0 }}
@@ -46,7 +45,7 @@ const DidYouKnow = () => {
             </div>
           </motion.div>
 
-          {/* Second stat - 97% lose with reduced glow */}
+          {/* Second stat - 97% */}
           <motion.div
             initial={{ opacity: 0, y: 30 }}
             animate={{ opacity: 1, y: 0 }}
@@ -64,7 +63,7 @@ const DidYouKnow = () => {
             </div>
           </motion.div>
 
-          {/* Call to action text with reduced glow */}
+          {/* Call to action text */}
           <motion.div
             initial={{ opacity: 0, y: 30 }}
             animate={{ opacity: 1, y: 0 }}
@@ -79,22 +78,22 @@ const DidYouKnow = () => {
             </p>
           </motion.div>
         </div>
-      </div>
 
-      {/* CTA Button - moved to bottom */}
-      <motion.div
-        initial={{ opacity: 0, y: 20 }}
-        animate={{ opacity: 1, y: 0 }}
-        transition={{ delay: 1.3 }}
-        className="w-full max-w-2xl"
-      >
-        <Button
-          onClick={handleShowMeHow}
-          className="w-full h-12 text-lg bg-[#AEE3F5] hover:bg-[#AEE3F5]/90 text-black font-bold shadow-[0_0_20px_rgba(174,227,245,0.3)] hover:shadow-[0_0_25px_rgba(174,227,245,0.4)] hover:scale-[1.02] transition-all duration-300"
+        {/* CTA Button - moved closer to content */}
+        <motion.div
+          initial={{ opacity: 0, y: 20 }}
+          animate={{ opacity: 1, y: 0 }}
+          transition={{ delay: 1.3 }}
+          className="w-full max-w-2xl pt-4"
         >
-          Show Me How It Works
-        </Button>
-      </motion.div>
+          <Button
+            onClick={handleShowMeHow}
+            className="w-full h-12 text-lg bg-[#AEE3F5] hover:bg-[#AEE3F5]/90 text-black font-bold shadow-[0_0_20px_rgba(174,227,245,0.3)] hover:shadow-[0_0_25px_rgba(174,227,245,0.4)] hover:scale-[1.02] transition-all duration-300"
+          >
+            Show Me How It Works
+          </Button>
+        </motion.div>
+      </div>
     </div>
   );
 };
