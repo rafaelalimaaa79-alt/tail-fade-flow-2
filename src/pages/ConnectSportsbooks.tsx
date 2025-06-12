@@ -1,4 +1,3 @@
-
 import React, { useState } from "react";
 import { useNavigate } from "react-router-dom";
 import { Check, Shield, Fingerprint } from "lucide-react";
@@ -54,8 +53,8 @@ const ConnectSportsbooks = () => {
       <div className="max-w-md mx-auto w-full px-4 py-8">
         <div className="text-center mb-8">
           <img 
-            src="/lovable-uploads/57cb1fb4-7471-451e-bf49-d4d5fa12bdcb.png" 
-            alt="ONE TIME logo" 
+            src="/lovable-uploads/c77c9dc5-a7dd-4c1c-9428-804d5d7a4a79.png" 
+            alt="Fade Zone logo" 
             className="h-24 mx-auto mb-6"
           />
           <h1 className="text-2xl font-bold text-white mb-2">Link Your Sportsbooks</h1>
@@ -73,7 +72,7 @@ const ConnectSportsbooks = () => {
                   <img 
                     src={sportsbook.icon} 
                     alt={`${sportsbook.name} logo`}
-                    className="w-10 h-10 rounded-lg object-cover"
+                    className="w-10 h-10 rounded-lg object-contain bg-white p-1"
                   />
                   <span className="font-medium text-white">{sportsbook.name}</span>
                 </div>
