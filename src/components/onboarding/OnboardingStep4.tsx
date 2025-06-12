@@ -30,9 +30,6 @@ const OnboardingStep4: React.FC<OnboardingStep4Props> = ({ value, onSelect }) =>
         <h2 className="text-2xl font-light text-white mb-3">
           Be honest… what's your account balance usually looking like after a week of football betting?
         </h2>
-        <p className="text-white/70 text-sm">
-          No shame, we've all been there.
-        </p>
       </motion.div>
 
       <div className="space-y-3">
