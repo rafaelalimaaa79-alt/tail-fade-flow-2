@@ -13,7 +13,7 @@ export const useSignIn = () => {
   
   // Get the redirect path from location state or default to home
   const from = location.state?.from || '/';
-
+  
   const handleSignIn = async (e: React.FormEvent) => {
     e.preventDefault();
     
@@ -102,7 +102,7 @@ export const useSignIn = () => {
   };
   
   const handleCreateAccount = () => {
-    navigate('/home');
+    navigate('/signup');
   };
 
   const handleForgotPassword = () => {
