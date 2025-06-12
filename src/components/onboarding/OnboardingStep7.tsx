@@ -1,3 +1,4 @@
+
 import React, { useState, useEffect } from "react";
 import { motion } from "framer-motion";
 import { User, CheckCircle, X, Shuffle } from "lucide-react";
@@ -174,7 +175,7 @@ const OnboardingStep7: React.FC<OnboardingStep7Props> = ({ onComplete }) => {
               placeholder="Enter username"
               value={username}
               onChange={handleUsernameChange}
-              className="w-full h-12 text-base bg-white/5 border-white/20 text-white placeholder:text-white/40 placeholder:text-center rounded-lg px-4 pr-12 focus:ring-2 focus:ring-[#AEE3F5]/50 focus:border-[#AEE3F5]/50 shadow-[0_0_20px_rgba(174,227,245,0.1)] focus:shadow-[0_0_30px_rgba(174,227,245,0.3)] transition-all duration-300"
+              className="w-full h-12 text-base bg-white/5 border-white/20 text-white placeholder:text-white/40 rounded-lg px-4 pr-12 focus:ring-2 focus:ring-[#AEE3F5]/50 focus:border-[#AEE3F5]/50 shadow-[0_0_20px_rgba(174,227,245,0.1)] focus:shadow-[0_0_30px_rgba(174,227,245,0.3)] transition-all duration-300"
               maxLength={20}
             />
             <div className="absolute right-3 top-1/2 transform -translate-y-1/2">
