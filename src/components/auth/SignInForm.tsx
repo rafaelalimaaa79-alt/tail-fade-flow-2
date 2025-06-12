@@ -1,3 +1,4 @@
+
 import React, { useState } from "react";
 import { Eye, EyeOff } from "lucide-react";
 import { Input } from "@/components/ui/input";
@@ -33,7 +34,7 @@ const SignInForm: React.FC<SignInFormProps> = ({
       <div className="w-full max-w-md h-screen flex flex-col justify-center px-4 py-4 overflow-hidden fixed top-0 left-1/2 transform -translate-x-1/2">
         {/* Welcome text - moved down */}
         <div className="text-center flex-1 flex flex-col justify-center items-center min-h-0 mt-8">
-          <h1 className="text-4xl sm:text-5xl font-light leading-tight">
+          <h1 className="text-5xl sm:text-6xl font-light leading-tight">
             Welcome to<br />
             The <span className="text-[#AEE3F5]" style={{ 
               textShadow: '0 0 10px #AEE3F5, 0 0 20px #AEE3F5, 0 0 30px #AEE3F5' 
