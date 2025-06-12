@@ -128,7 +128,6 @@ const ConnectSportsbooks = () => {
                 ? 'bg-primary hover:bg-primary/90 shadow-[0_0_30px_rgba(108,92,231,0.9)] animate-pulse brightness-150' 
                 : 'bg-primary hover:bg-primary/90'
             }`}
-            disabled={connectedSportsbooks.length === 0}
           >
             Continue
           </Button>
