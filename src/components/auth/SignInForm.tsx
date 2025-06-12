@@ -1,5 +1,3 @@
-
-
 import React, { useState } from "react";
 import { Eye, EyeOff } from "lucide-react";
 import { Input } from "@/components/ui/input";
@@ -38,12 +36,12 @@ const SignInForm: React.FC<SignInFormProps> = ({
           <img 
             src="/lovable-uploads/15b68287-6284-47fd-b7cf-1c67129dec0b.png" 
             alt="Fade Zone logo" 
-            className="h-32 w-32 mx-auto mb-8 object-contain rounded-full"
+            className="h-40 w-40 mx-auto mb-8 object-contain rounded-full"
             style={{ backgroundColor: '#000000' }}
           />
           <h1 className="text-4xl font-light leading-tight">
             Welcome to<br />
-            The <span className="text-onetime-red" style={{ 
+            The <span className="text-[#AEE3F5]" style={{ 
               textShadow: '0 0 10px #AEE3F5, 0 0 20px #AEE3F5, 0 0 30px #AEE3F5' 
             }}>FadeZone</span>
           </h1>
@@ -139,4 +137,3 @@ const SignInForm: React.FC<SignInFormProps> = ({
 };
 
 export default SignInForm;
-
