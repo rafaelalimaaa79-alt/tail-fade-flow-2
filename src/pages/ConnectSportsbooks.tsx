@@ -1,3 +1,4 @@
+
 import React, { useState } from "react";
 import { useNavigate } from "react-router-dom";
 import { Check, Shield, Fingerprint } from "lucide-react";
@@ -11,7 +12,7 @@ const sportsbooks = [
   {
     id: "fanduel",
     name: "FanDuel",
-    icon: "https://images.unsplash.com/photo-1611224923853-80b023f02d71?w=100&h=100&fit=crop&crop=center",
+    icon: "/lovable-uploads/6a8039d3-27ef-4e09-814e-f56252fcfba9.png",
     connected: false,
   },
   {
