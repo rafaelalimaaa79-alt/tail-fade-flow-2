@@ -10,14 +10,17 @@ type FullscreenNotificationProps = {
   onClose: () => void;
   bettorName: string;
   betDescription: string;
+  autoCloseAfter?: number;
 };
 
 const FullscreenNotification = ({
+  message,
   isOpen,
   variant,
   onClose,
   bettorName,
   betDescription,
+  autoCloseAfter = 0,
 }: FullscreenNotificationProps) => {
   const [isVisible, setIsVisible] = useState(false);
   const [textAppeared, setTextAppeared] = useState(false);
@@ -25,24 +28,35 @@ const FullscreenNotification = ({
 
   useEffect(() => {
     if (isOpen) {
-      // Quick animation sequence for elements appearing
       console.log("Fullscreen notification opening");
       setIsVisible(true);
       
       // Start animation sequence
       setTimeout(() => setTextAppeared(true), 300);
       
-      // Remove the automatic timeout - notification will stay until user clicks
+      // Auto-close after specified time if provided
+      if (autoCloseAfter > 0) {
+        const timer = setTimeout(() => {
+          handleClose();
+        }, autoCloseAfter);
+        
+        return () => clearTimeout(timer);
+      }
     }
-  }, [isOpen, onClose]);
+  }, [isOpen, autoCloseAfter]);
 
-  const handleBackdropClick = () => {
-    console.log("Backdrop clicked, closing notification");
+  const handleClose = () => {
+    console.log("Closing notification");
     setTextAppeared(false);
     setTimeout(() => {
       setIsVisible(false);
       onClose();
     }, 400);
+  };
+
+  const handleBackdropClick = () => {
+    console.log("Backdrop clicked, closing notification");
+    handleClose();
   };
 
   const handleViewAllBets = () => {
@@ -57,6 +71,9 @@ const FullscreenNotification = ({
   const bgGradient = variant === "tail" 
     ? "bg-gradient-to-br from-onetime-green/95 to-onetime-green/80" 
     : "bg-gradient-to-br from-[#AEE3F5]/95 to-[#AEE3F5]/80";
+
+  // Check if this is a welcome message
+  const isWelcomeMessage = message.includes("YOU'RE IN!");
 
   return (
     <div
@@ -84,7 +101,7 @@ const FullscreenNotification = ({
             `0 0 30px ${variant === "tail" ? "rgba(16, 185, 129, 0.7)" : "rgba(174, 227, 245, 0.7)"}` : 
             "none"
         }}
-        onClick={(e) => e.stopPropagation()} // Prevent clicks on the card from closing the notification
+        onClick={(e) => e.stopPropagation()}
       >
         {/* App logo positioned at top left */}
         <div className="absolute top-4 left-4">
@@ -97,39 +114,67 @@ const FullscreenNotification = ({
         
         {/* Centered content div that contains all text */}
         <div className="flex flex-col items-center justify-center h-full py-6">
-          {/* Main notification text */}
-          <div className={`overflow-hidden mb-2`}>
-            <h2 
-              className={`text-4xl font-bold transition-all duration-700 transform ${
-                textAppeared ? "translate-y-0 opacity-100" : "translate-y-full opacity-0"
-              }`}
-            >
-              You {variant === "tail" ? "tailed" : "faded"} @{bettorName}'s
-            </h2>
-          </div>
-          
-          {/* Bet description */}
-          <div className="overflow-hidden mt-4">
-            <h3 
-              className={`text-3xl font-semibold transition-all duration-700 transform ${
-                textAppeared ? "scale-100 opacity-100" : "scale-50 opacity-0"
-              }`}
-            >
-              {betDescription}
-            </h3>
-          </div>
-          
-          {/* View all bets link at the bottom */}
-          <div className="overflow-hidden mt-6">
-            <button
-              onClick={handleViewAllBets}
-              className={`text-lg font-medium underline transition-all duration-700 transform hover:opacity-80 ${
-                textAppeared ? "translate-y-0 opacity-100" : "translate-y-full opacity-0"
-              }`}
-            >
-              Click here to view all bets
-            </button>
-          </div>
+          {isWelcomeMessage ? (
+            <>
+              {/* Welcome message */}
+              <div className={`overflow-hidden mb-2`}>
+                <h2 
+                  className={`text-4xl font-bold transition-all duration-700 transform ${
+                    textAppeared ? "translate-y-0 opacity-100" : "translate-y-full opacity-0"
+                  }`}
+                >
+                  YOU'RE IN!
+                </h2>
+              </div>
+              
+              {/* Username welcome */}
+              <div className="overflow-hidden mt-4">
+                <h3 
+                  className={`text-3xl font-semibold transition-all duration-700 transform ${
+                    textAppeared ? "scale-100 opacity-100" : "scale-50 opacity-0"
+                  }`}
+                >
+                  Welcome @{bettorName}!
+                </h3>
+              </div>
+            </>
+          ) : (
+            <>
+              {/* Regular tail/fade message */}
+              <div className={`overflow-hidden mb-2`}>
+                <h2 
+                  className={`text-4xl font-bold transition-all duration-700 transform ${
+                    textAppeared ? "translate-y-0 opacity-100" : "translate-y-full opacity-0"
+                  }`}
+                >
+                  You {variant === "tail" ? "tailed" : "faded"} @{bettorName}'s
+                </h2>
+              </div>
+              
+              {/* Bet description */}
+              <div className="overflow-hidden mt-4">
+                <h3 
+                  className={`text-3xl font-semibold transition-all duration-700 transform ${
+                    textAppeared ? "scale-100 opacity-100" : "scale-50 opacity-0"
+                  }`}
+                >
+                  {betDescription}
+                </h3>
+              </div>
+              
+              {/* View all bets link at the bottom */}
+              <div className="overflow-hidden mt-6">
+                <button
+                  onClick={handleViewAllBets}
+                  className={`text-lg font-medium underline transition-all duration-700 transform hover:opacity-80 ${
+                    textAppeared ? "translate-y-0 opacity-100" : "translate-y-full opacity-0"
+                  }`}
+                >
+                  Click here to view all bets
+                </button>
+              </div>
+            </>
+          )}
         </div>
       </div>
     </div>
