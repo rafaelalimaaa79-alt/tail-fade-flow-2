@@ -135,16 +135,6 @@ const SignUpForm: React.FC<SignUpFormProps> = ({
             
             <div className="relative">
               <Input
-                type="text"
-                placeholder="Username"
-                value={username}
-                onChange={(e) => setUsername(e.target.value)}
-                className="border-white/20 bg-white/5 focus:border-[#AEE3F5] transition-all duration-300 focus:ring-1 focus:ring-[#AEE3F5] focus:shadow-[0_0_10px_rgba(174,227,245,0.3)] h-12 text-sm"
-              />
-            </div>
-            
-            <div className="relative">
-              <Input
                 type={showPassword ? "text" : "password"}
                 placeholder="Password"
                 value={password}
@@ -183,7 +173,7 @@ const SignUpForm: React.FC<SignUpFormProps> = ({
             className="w-full h-12 text-sm bg-[#AEE3F5] hover:bg-[#AEE3F5]/90 text-black font-medium shadow-[0_0_15px_rgba(174,227,245,0.4)] hover:shadow-[0_0_25px_rgba(174,227,245,0.6)] transition-all duration-300 mt-6"
             disabled={loading}
           >
-            {loading ? "Creating Account..." : "Create Account"}
+            {loading ? "Getting Started..." : "Get Started"}
           </Button>
         </form>
       </div>

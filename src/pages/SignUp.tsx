@@ -16,7 +16,7 @@ const SignUp = () => {
   const handleSignUp = async (e: React.FormEvent) => {
     e.preventDefault();
     
-    if (!phone || !username || !password || !confirmPassword) {
+    if (!phone || !password || !confirmPassword) {
       toast.error("Please fill in all fields");
       return;
     }
@@ -44,9 +44,6 @@ const SignUp = () => {
         password,
         options: {
           emailRedirectTo: redirectUrl,
-          data: {
-            username: username,
-          }
         }
       });
       
