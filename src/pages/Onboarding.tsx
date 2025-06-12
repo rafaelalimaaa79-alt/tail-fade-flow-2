@@ -18,6 +18,7 @@ export interface OnboardingData {
   accountBalance: string;
   bigPlays: string;
   favoriteSport: string;
+  username: string;
 }
 
 const Onboarding = () => {
@@ -29,7 +30,8 @@ const Onboarding = () => {
     fadingExperience: "",
     accountBalance: "",
     bigPlays: "",
-    favoriteSport: ""
+    favoriteSport: "",
+    username: ""
   });
 
   const totalSteps = 7;
