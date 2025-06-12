@@ -36,8 +36,11 @@ const SignUp = () => {
     try {
       const redirectUrl = `${window.location.origin}/`;
       
+      // Remove formatting from phone number for Supabase
+      const cleanPhone = phone.replace(/[^\d]/g, '');
+      
       const { data, error } = await supabase.auth.signUp({
-        phone,
+        phone: `+1${cleanPhone}`, // Add US country code
         password,
         options: {
           emailRedirectTo: redirectUrl,
