@@ -26,7 +26,7 @@ const ConnectSportsbooks = () => {
   const [connectedSportsbooks, setConnectedSportsbooks] = useState<string[]>([]);
   const [selectedSportsbook, setSelectedSportsbook] = useState<string | null>(null);
   const [showLoginModal, setShowLoginModal] = useState(false);
-  const [faceIdEnabled, setFaceIdEnabled] = useState(true); // Default to enabled
+  const [faceIdEnabled, setFaceIdEnabled] = useState(false);
 
   const handleConnect = (sportsbookId: string) => {
     setSelectedSportsbook(sportsbookId);
@@ -123,7 +123,11 @@ const ConnectSportsbooks = () => {
         <div className="flex justify-center">
           <Button
             onClick={handleContinue}
-            className="w-full bg-primary hover:bg-primary/90"
+            className={`w-full transition-all duration-500 ${
+              faceIdEnabled 
+                ? 'bg-primary hover:bg-primary/90 shadow-[0_0_20px_rgba(108,92,231,0.6)] animate-pulse' 
+                : 'bg-primary hover:bg-primary/90'
+            }`}
             disabled={connectedSportsbooks.length === 0}
           >
             Continue
