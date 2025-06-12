@@ -116,7 +116,7 @@ const ConnectSportsbooks = () => {
                 : 'bg-gray-600/50 text-gray-400 cursor-default'
             }`}
           >
-            {faceIdEnabled ? 'Face ID Enabled' : 'Face ID Disabled'}
+            {faceIdEnabled ? 'Face ID Enabled' : 'Enable Face ID'}
           </button>
         </div>
 
