@@ -1,4 +1,3 @@
-
 import React, { useState } from "react";
 import { useNavigate } from "react-router-dom";
 import { Check, Shield, Fingerprint } from "lucide-react";
@@ -7,18 +6,18 @@ import { Card } from "@/components/ui/card";
 import { Switch } from "@/components/ui/switch";
 import SportsbookLoginModal from "@/components/sportsbooks/SportsbookLoginModal";
 
-// Initial sportsbooks - FanDuel and Hard Rock
+// Initial sportsbooks - FanDuel and Hard Rock with proper logos
 const sportsbooks = [
   {
     id: "fanduel",
     name: "FanDuel",
-    icon: "/lovable-uploads/c77c9dc5-a7dd-4c1c-9428-804d5d7a4a79.png",
+    icon: "https://images.unsplash.com/photo-1611224923853-80b023f02d71?w=100&h=100&fit=crop&crop=center",
     connected: false,
   },
   {
     id: "hardrock",
     name: "Hard Rock Bet",
-    icon: "/lovable-uploads/c77c9dc5-a7dd-4c1c-9428-804d5d7a4a79.png",
+    icon: "https://images.unsplash.com/photo-1493225457124-a3eb161ffa5f?w=100&h=100&fit=crop&crop=center",
     connected: false,
   },
 ];
@@ -73,7 +72,7 @@ const ConnectSportsbooks = () => {
                   <img 
                     src={sportsbook.icon} 
                     alt={`${sportsbook.name} logo`}
-                    className="w-10 h-10 rounded-lg"
+                    className="w-10 h-10 rounded-lg object-cover"
                   />
                   <span className="font-medium text-white">{sportsbook.name}</span>
                 </div>
