@@ -37,11 +37,12 @@ const Onboarding = () => {
 
   const handleStepSelect = (field: keyof OnboardingData, value: string) => {
     setFormData(prev => ({ ...prev, [field]: value }));
-  };
-
-  const handleNext = () => {
+    
+    // Auto-advance to next step after selection (except for step 7)
     if (currentStep < totalSteps) {
-      setCurrentStep(currentStep + 1);
+      setTimeout(() => {
+        setCurrentStep(currentStep + 1);
+      }, 300); // Small delay for better UX
     }
   };
 
@@ -109,8 +110,9 @@ const Onboarding = () => {
             )}
           </div>
           
+          {/* Only show navigation buttons for step 7, and back button for steps 2-6 */}
           <div className="mt-8 flex gap-4">
-            {currentStep > 1 && (
+            {currentStep > 1 && currentStep < 7 && (
               <Button 
                 onClick={handlePrevious}
                 variant="outline"
@@ -119,23 +121,23 @@ const Onboarding = () => {
                 Back
               </Button>
             )}
-            
-            {currentStep < totalSteps && (
-              <Button 
-                onClick={handleNext}
-                className="flex-1 bg-primary hover:bg-primary/90"
-              >
-                Next
-              </Button>
-            )}
 
-            {currentStep === totalSteps && (
-              <Button 
-                onClick={handleGetStarted}
-                className="flex-1 bg-primary hover:bg-primary/90"
-              >
-                Get Started
-              </Button>
+            {currentStep === 7 && (
+              <>
+                <Button 
+                  onClick={handlePrevious}
+                  variant="outline"
+                  className="flex-1"
+                >
+                  Back
+                </Button>
+                <Button 
+                  onClick={handleGetStarted}
+                  className="flex-1 bg-primary hover:bg-primary/90"
+                >
+                  Get Started
+                </Button>
+              </>
             )}
           </div>
         </div>
