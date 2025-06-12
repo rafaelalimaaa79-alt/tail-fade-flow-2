@@ -4,6 +4,7 @@ import BottomNav from "@/components/BottomNav";
 import { useIsMobile } from "@/hooks/use-mobile";
 import ProfileIcon from "@/components/common/ProfileIcon";
 import PublicGamesList from "@/components/public/PublicGamesList";
+import TrendsNotificationHandler from "@/components/trends/TrendsNotificationHandler";
 
 const Public = () => {
   const isMobile = useIsMobile();
@@ -30,6 +31,7 @@ const Public = () => {
       </div>
       
       <BottomNav />
+      <TrendsNotificationHandler />
     </div>
   );
 };
