@@ -1,4 +1,3 @@
-
 import React, { useState } from "react";
 import { Eye, EyeOff } from "lucide-react";
 import { Input } from "@/components/ui/input";
@@ -37,6 +36,50 @@ const SignUpForm: React.FC<SignUpFormProps> = ({
 }) => {
   const [showPassword, setShowPassword] = useState(false);
   const [showConfirmPassword, setShowConfirmPassword] = useState(false);
+
+  const formatPhoneNumber = (value: string) => {
+    // Remove all non-numeric characters except +
+    const phoneNumber = value.replace(/[^\d+]/g, '');
+    
+    // If it starts with +1, format as +1 (XXX) XXX-XXXX
+    if (phoneNumber.startsWith('+1')) {
+      const digits = phoneNumber.slice(2);
+      if (digits.length <= 3) {
+        return `+1 ${digits}`;
+      } else if (digits.length <= 6) {
+        return `+1 (${digits.slice(0, 3)}) ${digits.slice(3)}`;
+      } else {
+        return `+1 (${digits.slice(0, 3)}) ${digits.slice(3, 6)}-${digits.slice(6, 10)}`;
+      }
+    }
+    // If it starts with +, keep as is
+    else if (phoneNumber.startsWith('+')) {
+      return phoneNumber;
+    }
+    // If no country code, assume US and format as +1 (XXX) XXX-XXXX
+    else {
+      if (phoneNumber.length <= 3) {
+        return phoneNumber ? `+1 ${phoneNumber}` : '';
+      } else if (phoneNumber.length <= 6) {
+        return `+1 (${phoneNumber.slice(0, 3)}) ${phoneNumber.slice(3)}`;
+      } else {
+        return `+1 (${phoneNumber.slice(0, 3)}) ${phoneNumber.slice(3, 6)}-${phoneNumber.slice(6, 10)}`;
+      }
+    }
+  };
+
+  const handlePhoneChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    const value = e.target.value;
+    
+    // If user is typing + at the beginning, allow it
+    if (value === '+') {
+      setPhone(value);
+      return;
+    }
+    
+    const formattedPhone = formatPhoneNumber(value);
+    setPhone(formattedPhone);
+  };
 
   return (
     <div className="w-full max-w-md h-screen flex flex-col px-4 py-8 overflow-hidden fixed top-0 left-1/2 transform -translate-x-1/2">
@@ -112,9 +155,9 @@ const SignUpForm: React.FC<SignUpFormProps> = ({
             <div className="relative">
               <Input
                 type="tel"
-                placeholder="Phone Number"
+                placeholder="Phone Number (+1 (555) 123-4567)"
                 value={phone}
-                onChange={(e) => setPhone(e.target.value)}
+                onChange={handlePhoneChange}
                 className="border-white/20 bg-white/5 focus:border-[#AEE3F5] transition-all duration-300 focus:ring-1 focus:ring-[#AEE3F5] focus:shadow-[0_0_10px_rgba(174,227,245,0.3)] h-12 text-sm"
               />
             </div>
