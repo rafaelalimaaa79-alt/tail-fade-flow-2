@@ -1,4 +1,3 @@
-
 import React, { useState } from "react";
 import { Eye, EyeOff, Apple } from "lucide-react";
 import { Input } from "@/components/ui/input";
@@ -74,7 +73,14 @@ const SignInForm: React.FC<SignInFormProps> = ({
           ← Back
         </button>
         <h1 className="text-3xl font-light text-white mb-2">Sign In</h1>
-        <p className="text-white/80 mb-2">Welcome back to FadeZone</p>
+        <p className="text-white/80 mb-4">Welcome back to FadeZone</p>
+        <button
+          type="button"
+          onClick={onForgotPassword}
+          className="text-white/60 hover:text-[#AEE3F5] transition-colors text-sm"
+        >
+          Forgot your edge?
+        </button>
       </div>
       
       <div className="flex-1 flex flex-col justify-center min-h-0">
