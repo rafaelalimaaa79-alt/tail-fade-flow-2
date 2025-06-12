@@ -37,9 +37,6 @@ const DidYouKnow = () => {
           >
             <div className="absolute inset-0 bg-gradient-to-r from-[#AEE3F5]/20 to-[#AEE3F5]/10 rounded-xl blur-2xl"></div>
             <div className="relative z-10 space-y-2 py-4">
-              <p className="text-xl text-white/90 font-medium text-left">
-                Only
-              </p>
               <div className="text-7xl font-black text-[#AEE3F5] leading-none drop-shadow-[0_0_10px_rgba(174,227,245,0.4)]">
                 3%
               </div>
@@ -58,9 +55,6 @@ const DidYouKnow = () => {
           >
             <div className="absolute inset-0 bg-gradient-to-r from-red-500/20 to-red-600/10 rounded-xl blur-2xl"></div>
             <div className="relative z-10 space-y-2 py-4">
-              <p className="text-xl text-white/90 font-medium text-left">
-                The other
-              </p>
               <div className="text-7xl font-black text-red-400 leading-none drop-shadow-[0_0_10px_rgba(248,113,113,0.4)]">
                 97%
               </div>
