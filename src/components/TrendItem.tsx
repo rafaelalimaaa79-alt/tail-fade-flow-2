@@ -1,3 +1,4 @@
+
 import React from "react";
 import { Link } from "react-router-dom";
 import { Card } from "@/components/ui/card";
@@ -11,6 +12,7 @@ import TrendBetHistory from "./trend/TrendBetHistory";
 import TrendVisibilityWrapper from "./trend/TrendVisibilityWrapper";
 import { Button } from "@/components/ui/button";
 import { getOppositeBet } from "@/utils/bet-conversion";
+import { showFadeNotification } from "@/utils/betting-notifications";
 
 type TrendItemProps = {
   id: string;
@@ -117,6 +119,12 @@ const TrendItem = ({
   const opponentTeam = matchup.teams.find(team => !betLine.includes(team));
   const oppositeBet = getOppositeBet(betLine, opponentTeam);
   
+  // Handle bet button click
+  const handleBetClick = () => {
+    console.log("Bet button clicked for:", name, oppositeBet);
+    showFadeNotification(name, oppositeBet);
+  };
+  
   return (
     <div className="block mb-4">
       <TrendVisibilityWrapper>
@@ -178,6 +186,7 @@ const TrendItem = ({
               {/* Bet button with opposite bet */}
               <div className="w-full pt-1">
                 <Button 
+                  onClick={handleBetClick}
                   className={cn(
                     "w-full py-4 rounded-xl transition-all duration-300 text-lg font-bold",
                     isMostVisible 
