@@ -112,8 +112,8 @@ const ConnectSportsbooks = () => {
             onClick={() => setFaceIdEnabled(!faceIdEnabled)}
             className={`w-full py-3 px-4 rounded-lg font-medium transition-all duration-300 ${
               faceIdEnabled 
-                ? 'bg-primary text-white hover:bg-primary/90' 
-                : 'bg-gray-600/50 text-gray-400 cursor-default'
+                ? 'bg-gray-600/50 text-gray-400 cursor-default'
+                : 'bg-primary text-white hover:bg-primary/90' 
             }`}
           >
             {faceIdEnabled ? 'Face ID Enabled' : 'Enable Face ID'}
@@ -125,7 +125,7 @@ const ConnectSportsbooks = () => {
             onClick={handleContinue}
             className={`w-full transition-all duration-500 ${
               faceIdEnabled 
-                ? 'bg-primary hover:bg-primary/90 shadow-[0_0_20px_rgba(108,92,231,0.6)] animate-pulse' 
+                ? 'bg-primary hover:bg-primary/90 shadow-[0_0_30px_rgba(108,92,231,0.9)] animate-pulse brightness-150' 
                 : 'bg-primary hover:bg-primary/90'
             }`}
             disabled={connectedSportsbooks.length === 0}
