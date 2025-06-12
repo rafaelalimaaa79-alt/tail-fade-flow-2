@@ -1,4 +1,3 @@
-
 import React, { useState } from "react";
 import { useNavigate } from "react-router-dom";
 import { Button } from "@/components/ui/button";
@@ -55,7 +54,6 @@ const ForgotPassword = () => {
             </div>
             <h1 className="text-3xl font-light text-white mb-3">Reset Your Password</h1>
             <p className="text-white/80 text-base leading-relaxed">
-              Forgot your edge? No worries.<br />
               Drop your email and we'll send you a reset link.
             </p>
           </div>
