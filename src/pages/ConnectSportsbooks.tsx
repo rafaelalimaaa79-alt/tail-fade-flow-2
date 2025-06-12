@@ -1,8 +1,10 @@
+
 import React, { useState } from "react";
 import { useNavigate } from "react-router-dom";
-import { Check, Shield, Fingerprint } from "lucide-react";
+import { Check, Shield, Fingerprint, AlertCircle } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Card } from "@/components/ui/card";
+import { Alert, AlertDescription } from "@/components/ui/alert";
 import SportsbookLoginModal from "@/components/sportsbooks/SportsbookLoginModal";
 
 // Initial sportsbooks - FanDuel and Hard Rock with proper logos
@@ -46,6 +48,7 @@ const ConnectSportsbooks = () => {
   };
 
   const isConnected = (sportsbookId: string) => connectedSportsbooks.includes(sportsbookId);
+  const canProceed = connectedSportsbooks.length > 0 || faceIdEnabled;
 
   return (
     <div className="bg-black min-h-screen">
@@ -97,7 +100,7 @@ const ConnectSportsbooks = () => {
           ))}
         </div>
 
-        <div className="bg-card/50 border border-white/10 rounded-lg p-4 mb-8">
+        <div className="bg-card/50 border border-white/10 rounded-lg p-4 mb-6">
           <div className="flex items-start gap-3 mb-4">
             <Fingerprint className="h-5 w-5 text-primary mt-0.5" />
             <div>
@@ -111,22 +114,34 @@ const ConnectSportsbooks = () => {
           <button
             onClick={() => setFaceIdEnabled(!faceIdEnabled)}
             className={`w-full py-3 px-4 rounded-lg font-medium transition-all duration-300 ${
-              faceIdEnabled 
-                ? 'bg-gray-600/50 text-gray-400 cursor-default'
-                : 'bg-primary text-white hover:bg-primary/90' 
+              !faceIdEnabled 
+                ? 'bg-primary text-white hover:bg-primary/90' 
+                : 'bg-gray-600/50 text-gray-400 cursor-default'
             }`}
           >
-            {faceIdEnabled ? 'Face ID Enabled' : 'Enable Face ID'}
+            {!faceIdEnabled ? 'Enable Face ID' : 'Face ID Enabled'}
           </button>
         </div>
+
+        {!canProceed && (
+          <Alert className="mb-6 border-orange-500/50 bg-orange-500/10">
+            <AlertCircle className="h-4 w-4 text-orange-500" />
+            <AlertDescription className="text-orange-200">
+              Please connect at least one sportsbook or enable Face ID to continue.
+            </AlertDescription>
+          </Alert>
+        )}
 
         <div className="flex justify-center">
           <Button
             onClick={handleContinue}
+            disabled={!canProceed}
             className={`w-full transition-all duration-500 ${
-              faceIdEnabled 
+              canProceed && faceIdEnabled 
                 ? 'bg-primary hover:bg-primary/90 shadow-[0_0_30px_rgba(108,92,231,0.9)] animate-pulse brightness-150' 
-                : 'bg-primary hover:bg-primary/90'
+                : canProceed
+                ? 'bg-primary hover:bg-primary/90'
+                : 'bg-gray-600 cursor-not-allowed opacity-50'
             }`}
           >
             Continue
