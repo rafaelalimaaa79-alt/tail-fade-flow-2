@@ -13,7 +13,7 @@ const OnboardingStep4: React.FC<OnboardingStep4Props> = ({ value, onSelect }) =>
     { value: "up-big", label: "Up big — I swear I'm sharp" },
     { value: "about-even", label: "About even — win some, lose some" },
     { value: "lose-little", label: "Lose a little — enough to feel it" },
-    { value: "down-bad", label: "Down bad — every Sunday humbles me" }
+    { value: "down-bad", label: "Down bad — every weekend humbles me" }
   ];
 
   return (
