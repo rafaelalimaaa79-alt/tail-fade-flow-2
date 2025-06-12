@@ -1,3 +1,4 @@
+
 import React, { useState } from "react";
 import { useNavigate } from "react-router-dom";
 import { Check, Shield, Fingerprint } from "lucide-react";
@@ -72,7 +73,7 @@ const ConnectSportsbooks = () => {
                   <img 
                     src={sportsbook.icon} 
                     alt={`${sportsbook.name} logo`}
-                    className="w-10 h-10 rounded-lg object-contain bg-white p-1"
+                    className="w-10 h-10 rounded-full object-cover"
                   />
                   <span className="font-medium text-white">{sportsbook.name}</span>
                 </div>
