@@ -105,42 +105,19 @@ const ConnectSportsbooks = () => {
               <p className="text-sm text-muted-foreground mb-2">
                 Log in instantly next time with Face ID. It's secure, private, and faster.
               </p>
-              {!faceIdEnabled && (
-                <button 
-                  onClick={() => setFaceIdEnabled(true)}
-                  className="text-xs text-primary hover:text-primary/80 underline"
-                >
-                  I don't want Face ID
-                </button>
-              )}
             </div>
           </div>
           
-          <div className="flex flex-col items-center gap-2">
-            <button
-              onClick={() => setFaceIdEnabled(!faceIdEnabled)}
-              className={`relative w-16 h-8 rounded-full transition-all duration-300 ${
-                faceIdEnabled 
-                  ? 'bg-gradient-to-r from-primary to-primary/80 shadow-lg shadow-primary/25' 
-                  : 'bg-gray-700 border border-gray-600'
-              }`}
-            >
-              <div className={`absolute top-1 left-1 w-6 h-6 bg-white rounded-full transition-all duration-300 flex items-center justify-center ${
-                faceIdEnabled ? 'translate-x-8' : 'translate-x-0'
-              }`}>
-                {faceIdEnabled ? (
-                  <Check className="h-3 w-3 text-primary" />
-                ) : (
-                  <div className="w-2 h-2 bg-gray-400 rounded-full" />
-                )}
-              </div>
-            </button>
-            <span className={`text-xs font-medium ${
-              faceIdEnabled ? 'text-primary' : 'text-muted-foreground'
-            }`}>
-              {faceIdEnabled ? 'ENABLED' : 'DISABLED'}
-            </span>
-          </div>
+          <button
+            onClick={() => setFaceIdEnabled(!faceIdEnabled)}
+            className={`w-full py-3 px-4 rounded-lg font-medium transition-all duration-300 ${
+              faceIdEnabled 
+                ? 'bg-primary text-white hover:bg-primary/90' 
+                : 'bg-gray-600/50 text-gray-400 cursor-default'
+            }`}
+          >
+            {faceIdEnabled ? 'Face ID Enabled' : 'Face ID Disabled'}
+          </button>
         </div>
 
         <div className="flex justify-center">
