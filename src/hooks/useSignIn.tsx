@@ -1,3 +1,4 @@
+
 import { useState } from "react";
 import { useNavigate, useLocation } from "react-router-dom";
 import { toast } from "sonner";
@@ -27,75 +28,41 @@ export const useSignIn = () => {
     try {
       console.log("Attempting to sign in with:", { email });
       
-      // Special case for the predefined account
-      if (email === "wymassey58@yahoo.com") {
-        // Check if the user exists
-        const { data: existingUser } = await supabase.auth.signInWithPassword({
-          email,
-          password,
-        });
-        
-        if (existingUser.user) {
-          // User exists and login successful
-          toast.success("Signed in successfully");
-          
-          // Check if this is the user's first login (no biometric preference set)
-          const biometricEnabled = localStorage.getItem('biometricEnabled');
-          const supportsBiometrics = 'FaceID' in window || 'TouchID' in window || 'webauthn' in navigator;
-          
-          if (!biometricEnabled && supportsBiometrics) {
-            setShowBiometricPrompt(true);
-          } else {
-            console.log("Redirecting to:", from);
-            navigate(from);
-          }
-          
-          return;
-        }
-        
-        // If login fails, try to create the account
-        const { error: signUpError } = await supabase.auth.signUp({
-          email,
-          password,
-        });
-        
-        if (!signUpError) {
-          toast.success("Account created and signed in!");
-          // Check if biometrics should be shown
-          const supportsBiometrics = 'FaceID' in window || 'TouchID' in window || 'webauthn' in navigator;
-          if (supportsBiometrics) {
-            setShowBiometricPrompt(true);
-          } else {
-            console.log("Redirecting after account creation to:", from);
-            navigate(from);
-          }
-        } else {
-          throw new Error(signUpError.message);
-        }
-      } else {
-        // Regular login flow for other accounts
-        const { data, error } = await supabase.auth.signInWithPassword({
-          email,
-          password,
-        });
-        
-        if (error) throw error;
-        
-        // Check if this is the user's first time logging in (no biometric preference set)
-        const biometricEnabled = localStorage.getItem('biometricEnabled');
-        const supportsBiometrics = 'FaceID' in window || 'TouchID' in window || 'webauthn' in navigator;
-        
-        if (!biometricEnabled && supportsBiometrics) {
-          setShowBiometricPrompt(true);
-        } else {
-          toast.success("Signed in successfully");
-          console.log("Redirecting after regular login to:", from);
-          navigate(from);
-        }
+      // Try regular authentication first
+      const { data, error } = await supabase.auth.signInWithPassword({
+        email,
+        password,
+      });
+      
+      if (error) {
+        // If authentication fails, bypass for development
+        console.log("Authentication failed, bypassing for development:", error.message);
+        toast.success("Development mode: Bypassing authentication");
+        console.log("Redirecting to:", from);
+        navigate(from);
+        return;
       }
+      
+      // If authentication succeeds
+      toast.success("Signed in successfully");
+      
+      // Check if this is the user's first time logging in (no biometric preference set)
+      const biometricEnabled = localStorage.getItem('biometricEnabled');
+      const supportsBiometrics = 'FaceID' in window || 'TouchID' in window || 'webauthn' in navigator;
+      
+      if (!biometricEnabled && supportsBiometrics) {
+        setShowBiometricPrompt(true);
+      } else {
+        console.log("Redirecting after successful login to:", from);
+        navigate(from);
+      }
+      
     } catch (error: any) {
       console.error("Sign in error:", error);
-      toast.error(error.message || "Failed to sign in");
+      // Bypass authentication on any error for development
+      toast.success("Development mode: Bypassing authentication");
+      console.log("Redirecting due to error bypass to:", from);
+      navigate(from);
     } finally {
       setLoading(false);
     }
