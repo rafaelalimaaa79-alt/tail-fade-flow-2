@@ -72,7 +72,7 @@ const DidYouKnow = () => {
           >
             <div className="absolute inset-0 bg-gradient-to-r from-[#AEE3F5]/30 via-purple-500/20 to-[#AEE3F5]/30 rounded-2xl blur-3xl animate-pulse"></div>
             <div className="relative z-10 space-y-3 py-6 px-4">
-              <p className="text-4xl font-black bg-gradient-to-r from-[#AEE3F5] via-white to-[#AEE3F5] bg-clip-text text-transparent leading-tight drop-shadow-[0_0_15px_rgba(174,227,245,0.8)]">
+              <p className="text-4xl font-black bg-gradient-to-r from-[#AEE3F5] via-white to-[#AEE3F5] bg-clip-text text-transparent leading-tight drop-shadow-[0_0_4px_rgba(174,227,245,0.3)]">
                 Don't be the 97%.
               </p>
               <p className="text-4xl font-black text-[#AEE3F5] drop-shadow-[0_0_4px_rgba(174,227,245,0.3)]">
