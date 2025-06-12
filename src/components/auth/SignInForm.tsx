@@ -1,4 +1,3 @@
-
 import React, { useState } from "react";
 import { Eye, EyeOff, Apple } from "lucide-react";
 import { Input } from "@/components/ui/input";
@@ -67,12 +66,6 @@ const SignInForm: React.FC<SignInFormProps> = ({
   return (
     <div className="w-full max-w-md h-screen flex flex-col px-6 py-4 overflow-hidden fixed top-0 left-1/2 transform -translate-x-1/2 animate-fade-in">
       <div className="text-center mb-12 flex-shrink-0 mt-16">
-        <button 
-          onClick={() => setShowLoginForm(false)}
-          className="text-[#AEE3F5] mb-6 text-sm hover:text-[#AEE3F5]/80 transition-colors"
-        >
-          ← Back
-        </button>
         <h1 className="text-3xl font-light text-white mb-2">Sign In</h1>
         <p className="text-white/80 mb-4">Welcome back to FadeZone</p>
       </div>
@@ -169,13 +162,19 @@ const SignInForm: React.FC<SignInFormProps> = ({
         </div>
       </div>
       
-      <div className="flex flex-col items-center pt-6 text-sm flex-shrink-0 pb-safe">
+      <div className="flex flex-col items-center pt-6 text-sm flex-shrink-0 pb-safe space-y-2">
         <button
           type="button"
           onClick={onForgotPassword}
           className="text-white/60 hover:text-[#AEE3F5] transition-colors"
         >
           Forgot your Password?
+        </button>
+        <button 
+          onClick={() => setShowLoginForm(false)}
+          className="text-[#AEE3F5] text-sm hover:text-[#AEE3F5]/80 transition-colors"
+        >
+          ← Back
         </button>
       </div>
     </div>
