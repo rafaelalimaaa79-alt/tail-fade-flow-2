@@ -7,6 +7,8 @@ import { Button } from "@/components/ui/button";
 interface SignUpFormProps {
   email: string;
   setEmail: (email: string) => void;
+  phone: string;
+  setPhone: (phone: string) => void;
   password: string;
   setPassword: (password: string) => void;
   confirmPassword: string;
@@ -21,6 +23,8 @@ interface SignUpFormProps {
 const SignUpForm: React.FC<SignUpFormProps> = ({
   email,
   setEmail,
+  phone,
+  setPhone,
   password,
   setPassword,
   confirmPassword,
@@ -101,6 +105,16 @@ const SignUpForm: React.FC<SignUpFormProps> = ({
                 placeholder="Email Address"
                 value={email}
                 onChange={(e) => setEmail(e.target.value)}
+                className="border-white/20 bg-white/5 focus:border-[#AEE3F5] transition-all duration-300 focus:ring-1 focus:ring-[#AEE3F5] focus:shadow-[0_0_10px_rgba(174,227,245,0.3)] h-12 text-sm"
+              />
+            </div>
+            
+            <div className="relative">
+              <Input
+                type="tel"
+                placeholder="Phone Number"
+                value={phone}
+                onChange={(e) => setPhone(e.target.value)}
                 className="border-white/20 bg-white/5 focus:border-[#AEE3F5] transition-all duration-300 focus:ring-1 focus:ring-[#AEE3F5] focus:shadow-[0_0_10px_rgba(174,227,245,0.3)] h-12 text-sm"
               />
             </div>

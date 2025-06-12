@@ -8,6 +8,7 @@ import SignUpForm from "@/components/auth/SignUpForm";
 const SignUp = () => {
   const navigate = useNavigate();
   const [email, setEmail] = useState("");
+  const [phone, setPhone] = useState("");
   const [password, setPassword] = useState("");
   const [confirmPassword, setConfirmPassword] = useState("");
   const [loading, setLoading] = useState(false);
@@ -15,7 +16,7 @@ const SignUp = () => {
   const handleSignUp = async (e: React.FormEvent) => {
     e.preventDefault();
     
-    if (!email || !password || !confirmPassword) {
+    if (!email || !phone || !password || !confirmPassword) {
       toast.error("Please fill in all fields");
       return;
     }
@@ -33,20 +34,20 @@ const SignUp = () => {
     setLoading(true);
     
     try {
-      const redirectUrl = `${window.location.origin}/onboarding`;
-      
       const { data, error } = await supabase.auth.signUp({
-        email,
+        phone,
         password,
         options: {
-          emailRedirectTo: redirectUrl,
+          data: {
+            email: email
+          }
         }
       });
       
       if (error) throw error;
       
-      if (data.user && !data.user.email_confirmed_at) {
-        toast.success("Check your email for a verification link!");
+      if (data.user && !data.user.phone_confirmed_at) {
+        toast.success("Check your phone for a verification code!");
       } else {
         toast.success("Account created successfully!");
         navigate('/onboarding');
@@ -102,6 +103,8 @@ const SignUp = () => {
         <SignUpForm
           email={email}
           setEmail={setEmail}
+          phone={phone}
+          setPhone={setPhone}
           password={password}
           setPassword={setPassword}
           confirmPassword={confirmPassword}
