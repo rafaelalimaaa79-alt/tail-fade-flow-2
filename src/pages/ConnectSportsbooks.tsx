@@ -1,3 +1,4 @@
+
 import React, { useState } from "react";
 import { useNavigate } from "react-router-dom";
 import { Check, Shield, Fingerprint } from "lucide-react";
@@ -59,7 +60,8 @@ const ConnectSportsbooks = () => {
           />
           <h1 className="text-2xl font-bold text-white mb-2">Link Your Sportsbooks</h1>
           <p className="text-muted-foreground text-sm px-4">
-            Sync your picks automatically by logging in to your sportsbooks. We'll never place bets or share your info. Just pure tracking power.
+            Security Promise
+            Your credentials are encrypted and never stored. We use secure methods to read your confirmed bets — nothing else.
           </p>
         </div>
 
