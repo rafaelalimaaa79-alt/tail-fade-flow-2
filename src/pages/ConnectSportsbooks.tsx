@@ -1,7 +1,7 @@
 
 import React, { useState } from "react";
 import { useNavigate } from "react-router-dom";
-import { Check, X, Shield } from "lucide-react";
+import { Check, Shield } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Card } from "@/components/ui/card";
 import SportsbookLoginModal from "@/components/sportsbooks/SportsbookLoginModal";
@@ -37,10 +37,6 @@ const ConnectSportsbooks = () => {
     setConnectedSportsbooks(prev => [...prev, sportsbookId]);
     setShowLoginModal(false);
     setSelectedSportsbook(null);
-  };
-
-  const handleSkip = () => {
-    navigate('/');
   };
 
   const handleContinue = () => {
@@ -110,17 +106,10 @@ const ConnectSportsbooks = () => {
           </div>
         </div>
 
-        <div className="flex gap-3">
-          <Button
-            onClick={handleSkip}
-            variant="outline"
-            className="flex-1"
-          >
-            Skip for Now
-          </Button>
+        <div className="flex justify-center">
           <Button
             onClick={handleContinue}
-            className="flex-1 bg-primary hover:bg-primary/90"
+            className="w-full bg-primary hover:bg-primary/90"
             disabled={connectedSportsbooks.length === 0}
           >
             Continue
