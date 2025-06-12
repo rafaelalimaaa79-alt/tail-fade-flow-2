@@ -31,9 +31,6 @@ const OnboardingStep6: React.FC<OnboardingStep6Props> = ({ value, onSelect }) =>
         <h2 className="text-2xl font-light text-white mb-3">
           What sport do you bet on the most?
         </h2>
-        <p className="text-white/70 text-sm">
-          No wrong answers, just don't say preseason baseball.
-        </p>
       </motion.div>
 
       <div className="space-y-3">
