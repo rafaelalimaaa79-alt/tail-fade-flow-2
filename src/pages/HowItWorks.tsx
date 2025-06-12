@@ -16,24 +16,20 @@ const HowItWorks = () => {
     {
       number: "①",
       icon: <Snowflake className="w-8 h-8 text-[#AEE3F5]" />,
-      title: (
-        <>
-          <span className="text-[#AEE3F5]">Cold</span> Bettors Place Picks
-        </>
-      ),
-      description: "We track bettors who are ice cold — losing streaks, bad runs, you name it."
+      title: "We track cold bettors",
+      description: "Losing streaks, bad picks, bad luck — we find 'em."
     },
     {
       number: "②", 
       icon: <ThumbsDown className="w-8 h-8 text-[#AEE3F5]" />,
-      title: "You Fade Their Picks",
-      description: "Whatever they bet on, you bet the opposite."
+      title: "You bet the opposite",
+      description: "Whatever they take, you take the other side."
     },
     {
       number: "③",
       icon: <TrendingUp className="w-8 h-8 text-[#AEE3F5]" />,
-      title: "Watch Your Portfolio Grow", 
-      description: "Every fade you make gets tracked. You'll see your stats, ROI, and leaderboard rank."
+      title: "Watch your stats climb", 
+      description: "Your performance, ROI, and fade record are all tracked."
     }
   ];
 
@@ -96,7 +92,7 @@ const HowItWorks = () => {
             onClick={handleEnterFadeZone}
             className="w-full h-12 text-lg bg-[#AEE3F5] hover:bg-[#AEE3F5]/90 text-black font-semibold shadow-[0_0_20px_rgba(174,227,245,0.4)] hover:shadow-[0_0_30px_rgba(174,227,245,0.6)] hover:scale-[1.02] transition-all duration-300"
           >
-            I'm Ready to Fade
+            Enter the FadeZone
           </Button>
         </motion.div>
       </div>

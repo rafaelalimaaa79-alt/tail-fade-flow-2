@@ -73,7 +73,7 @@ const OnboardingStep7: React.FC<OnboardingStep7Props> = ({ onComplete }) => {
 
   const handleNotificationClose = () => {
     setShowNotification(false);
-    onComplete('/how-it-works');
+    onComplete('/did-you-know');
   };
 
   return (

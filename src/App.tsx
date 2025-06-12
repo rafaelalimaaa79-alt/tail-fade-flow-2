@@ -20,6 +20,7 @@ import Onboarding from "./pages/Onboarding";
 import ForgotPassword from "./pages/ForgotPassword";
 import ConnectSportsbooks from "./pages/ConnectSportsbooks";
 import HowItWorks from "./pages/HowItWorks";
+import DidYouKnow from "./pages/DidYouKnow";
 
 const queryClient = new QueryClient();
 
@@ -35,6 +36,7 @@ const App = () => (
             <Route path="/signin" element={<SignIn />} />
             <Route path="/signup" element={<SignUp />} />
             <Route path="/onboarding" element={<Onboarding />} />
+            <Route path="/did-you-know" element={<DidYouKnow />} />
             <Route path="/how-it-works" element={<HowItWorks />} />
             <Route path="/forgot-password" element={<ForgotPassword />} />
             <Route path="/connect-sportsbooks" element={<ConnectSportsbooks />} />
