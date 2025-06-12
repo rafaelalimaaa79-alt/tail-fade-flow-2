@@ -27,7 +27,7 @@ const ConnectSportsbooks = () => {
   const [connectedSportsbooks, setConnectedSportsbooks] = useState<string[]>([]);
   const [selectedSportsbook, setSelectedSportsbook] = useState<string | null>(null);
   const [showLoginModal, setShowLoginModal] = useState(false);
-  const [faceIdEnabled, setFaceIdEnabled] = useState(false);
+  const [faceIdEnabled, setFaceIdEnabled] = useState(true); // Default to enabled
 
   const handleConnect = (sportsbookId: string) => {
     setSelectedSportsbook(sportsbookId);
@@ -104,9 +104,17 @@ const ConnectSportsbooks = () => {
               <Fingerprint className="h-5 w-5 text-primary mt-0.5" />
               <div>
                 <h3 className="font-medium text-white mb-1">Enable Face ID for Quick Access</h3>
-                <p className="text-sm text-muted-foreground">
-                  Log in instantly next time with Face ID. It's secure, private, and completely optional.
+                <p className="text-sm text-muted-foreground mb-2">
+                  Log in instantly next time with Face ID. It's secure, private, and faster.
                 </p>
+                {!faceIdEnabled && (
+                  <button 
+                    onClick={() => setFaceIdEnabled(true)}
+                    className="text-xs text-primary hover:text-primary/80 underline"
+                  >
+                    I don't want Face ID
+                  </button>
+                )}
               </div>
             </div>
             <Switch
