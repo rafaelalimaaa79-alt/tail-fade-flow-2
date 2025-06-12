@@ -251,15 +251,6 @@ const OnboardingStep7: React.FC<OnboardingStep7Props> = ({ onComplete }) => {
           >
             Lock In Username
           </Button>
-          
-          <motion.p
-            initial={{ opacity: 0 }}
-            animate={{ opacity: 1 }}
-            transition={{ delay: 1.1 }}
-            className="text-white/40 text-xs leading-relaxed"
-          >
-            Example names: @PublicFader, @ColdFadeKing, @SharpUntilSunday
-          </motion.p>
         </motion.div>
       </div>
     </div>
