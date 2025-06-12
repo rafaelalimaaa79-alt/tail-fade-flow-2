@@ -36,7 +36,7 @@ const DidYouKnow = () => {
           >
             <div className="absolute inset-0 bg-gradient-to-r from-red-500/20 to-red-600/20 rounded-lg blur-xl"></div>
             <p className="text-4xl font-bold text-white relative z-10 leading-tight">
-              Only <span className="text-[#AEE3F5]">3–5%</span> of sports bettors are profitable each year.
+              Only <span className="text-[#AEE3F5]">3%</span> of sports bettors are profitable each year.
             </p>
           </motion.div>
 
@@ -46,7 +46,7 @@ const DidYouKnow = () => {
             transition={{ delay: 0.7 }}
           >
             <p className="text-3xl text-white/90 leading-relaxed">
-              <span className="text-red-400 font-semibold">95%</span> lose — chasing picks, trusting hype, and betting blind.
+              The other <span className="text-red-400 font-semibold">97%</span> lose money — yes, even the guy you buy picks from.
             </p>
           </motion.div>
 
@@ -56,7 +56,7 @@ const DidYouKnow = () => {
             transition={{ delay: 1.0 }}
           >
             <p className="text-2xl font-semibold text-[#AEE3F5] leading-relaxed">
-              Don't be the 95%. Fade them.
+              Don't be the 97%. Fade them.
             </p>
           </motion.div>
         </div>
