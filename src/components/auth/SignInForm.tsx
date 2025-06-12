@@ -1,4 +1,3 @@
-
 import React, { useState } from "react";
 import { Eye, EyeOff } from "lucide-react";
 import { Input } from "@/components/ui/input";
@@ -40,9 +39,7 @@ const SignInForm: React.FC<SignInFormProps> = ({
             className="h-48 mx-auto mb-6 object-contain max-w-full"
           />
           <h1 className="text-4xl font-light leading-tight">
-            Welcome to<br />
-            <span className="text-white">Fade </span>
-            <span className="text-onetime-red">Zone</span>
+            The <span className="text-white">Fade</span><span className="text-onetime-red">Zone</span>
           </h1>
         </div>
         
