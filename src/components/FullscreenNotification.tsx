@@ -103,11 +103,11 @@ const FullscreenNotification = ({
         }}
         onClick={(e) => e.stopPropagation()}
       >
-        {/* App logo positioned at top left */}
+        {/* App logo positioned at top left - use Fade Zone logo for welcome messages */}
         <div className="absolute top-4 left-4">
           <img 
-            src="/lovable-uploads/57cb1fb4-7471-451e-bf49-d4d5fa12bdcb.png" 
-            alt="ONE TIME logo" 
+            src={isWelcomeMessage ? "/lovable-uploads/3e435459-afcf-4bd3-aab8-f85479b54ffa.png" : "/lovable-uploads/57cb1fb4-7471-451e-bf49-d4d5fa12bdcb.png"}
+            alt={isWelcomeMessage ? "Fade Zone logo" : "ONE TIME logo"}
             className="h-16 w-16 transition-all duration-700 transform"
           />
         </div>
