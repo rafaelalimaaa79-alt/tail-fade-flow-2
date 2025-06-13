@@ -61,24 +61,24 @@ const SignInForm: React.FC<SignInFormProps> = ({
     );
   }
 
-  // Login form with no scrolling
+  // Login form with no scrolling - tighter spacing
   return (
     <div className="w-full max-w-md h-screen flex flex-col px-6 mx-auto overflow-hidden">
-      <div className="text-center mb-8 flex-shrink-0 mt-16">
+      <div className="text-center mb-6 flex-shrink-0 mt-12">
         <h1 className="text-3xl font-light text-white mb-2">Sign In</h1>
-        <p className="text-white/80 mb-4">Welcome back to FadeZone</p>
+        <p className="text-white/80 mb-3">Welcome back to FadeZone</p>
       </div>
       
       <div className="flex-1 flex flex-col justify-center min-h-0">
-        <form onSubmit={onSubmit} className="space-y-6">
-          <div className="space-y-5">
+        <form onSubmit={onSubmit} className="space-y-5">
+          <div className="space-y-4">
             <div className="relative">
               <Input
                 type="text"
                 placeholder="Username or Email"
                 value={email}
                 onChange={(e) => setEmail(e.target.value)}
-                className="h-14 text-base border-2 border-white/20 bg-black/50 focus:border-[#AEE3F5] transition-all duration-300 focus:ring-2 focus:ring-[#AEE3F5]/30 rounded-xl px-4 placeholder:text-white/50 focus:shadow-[0_0_20px_rgba(174,227,245,0.2)]"
+                className="h-12 text-base border-2 border-white/20 bg-black/50 focus:border-[#AEE3F5] transition-all duration-300 focus:ring-2 focus:ring-[#AEE3F5]/30 rounded-xl px-4 placeholder:text-white/50 focus:shadow-[0_0_20px_rgba(174,227,245,0.2)]"
               />
             </div>
             
@@ -88,7 +88,7 @@ const SignInForm: React.FC<SignInFormProps> = ({
                 placeholder="Password"
                 value={password}
                 onChange={(e) => setPassword(e.target.value)}
-                className="h-14 text-base pr-12 border-2 border-white/20 bg-black/50 focus:border-[#AEE3F5] transition-all duration-300 focus:ring-2 focus:ring-[#AEE3F5]/30 rounded-xl px-4 placeholder:text-white/50 focus:shadow-[0_0_20px_rgba(174,227,245,0.2)]"
+                className="h-12 text-base pr-12 border-2 border-white/20 bg-black/50 focus:border-[#AEE3F5] transition-all duration-300 focus:ring-2 focus:ring-[#AEE3F5]/30 rounded-xl px-4 placeholder:text-white/50 focus:shadow-[0_0_20px_rgba(174,227,245,0.2)]"
               />
               <button 
                 type="button"
@@ -102,15 +102,15 @@ const SignInForm: React.FC<SignInFormProps> = ({
           
           <Button 
             type="submit" 
-            className="w-full h-14 text-lg bg-[#AEE3F5] hover:bg-[#AEE3F5]/90 text-black font-medium rounded-xl shadow-[0_0_20px_rgba(174,227,245,0.4)] hover:shadow-[0_0_30px_rgba(174,227,245,0.6)] transition-all duration-300 mt-8"
+            className="w-full h-12 text-lg bg-[#AEE3F5] hover:bg-[#AEE3F5]/90 text-black font-medium rounded-xl shadow-[0_0_20px_rgba(174,227,245,0.4)] hover:shadow-[0_0_30px_rgba(174,227,245,0.6)] transition-all duration-300 mt-6"
             disabled={loading}
           >
             {loading ? "Signing in..." : "Sign In"}
           </Button>
         </form>
 
-        {/* Alternative sign-in options - condensed */}
-        <div className="mt-6 space-y-3">
+        {/* Alternative sign-in options - more compact */}
+        <div className="mt-5 space-y-3">
           <div className="relative">
             <div className="absolute inset-0 flex items-center">
               <span className="w-full border-t border-white/20" />
@@ -124,7 +124,7 @@ const SignInForm: React.FC<SignInFormProps> = ({
             <Button
               type="button"
               variant="outline"
-              className="h-10 border-white/20 hover:border-[#AEE3F5]/50 hover:bg-[#AEE3F5]/5 transition-all duration-300 text-xs"
+              className="h-9 border-white/20 hover:border-[#AEE3F5]/50 hover:bg-[#AEE3F5]/5 transition-all duration-300 text-xs"
               onClick={() => console.log("Sign in with Apple")}
             >
               <Apple className="h-4 w-4 mr-1" />
@@ -133,7 +133,7 @@ const SignInForm: React.FC<SignInFormProps> = ({
             <Button
               type="button"
               variant="outline"
-              className="h-10 border-white/20 hover:border-[#AEE3F5]/50 hover:bg-[#AEE3F5]/5 transition-all duration-300 text-xs"
+              className="h-9 border-white/20 hover:border-[#AEE3F5]/50 hover:bg-[#AEE3F5]/5 transition-all duration-300 text-xs"
               onClick={() => console.log("Sign in with Google")}
             >
               <svg className="h-4 w-4 mr-1" viewBox="0 0 24 24">
@@ -149,7 +149,7 @@ const SignInForm: React.FC<SignInFormProps> = ({
           <Button
             type="button"
             variant="outline"
-            className="w-full h-10 border-white/20 hover:border-[#AEE3F5]/50 hover:bg-[#AEE3F5]/5 transition-all duration-300 text-xs"
+            className="w-full h-9 border-white/20 hover:border-[#AEE3F5]/50 hover:bg-[#AEE3F5]/5 transition-all duration-300 text-xs"
             onClick={() => console.log("Biometric login")}
           >
             <svg className="h-4 w-4 mr-1" fill="none" viewBox="0 0 24 24" stroke="currentColor">
@@ -160,7 +160,7 @@ const SignInForm: React.FC<SignInFormProps> = ({
         </div>
       </div>
       
-      <div className="flex flex-col items-center pt-4 text-sm flex-shrink-0 pb-6 space-y-2">
+      <div className="flex flex-col items-center pt-3 text-sm flex-shrink-0 pb-4 space-y-2">
         <button
           type="button"
           onClick={onForgotPassword}
