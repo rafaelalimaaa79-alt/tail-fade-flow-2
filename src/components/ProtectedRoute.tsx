@@ -10,7 +10,7 @@ type ProtectedRouteProps = {
 };
 
 // Development mode flag to bypass authentication checks
-const BYPASS_AUTH = false; // Disabled to enforce authentication
+const BYPASS_AUTH = true; // Enabled to allow direct access to home page
 
 const ProtectedRoute = ({ children }: ProtectedRouteProps) => {
   const [isVerifying, setIsVerifying] = useState(!BYPASS_AUTH);
