@@ -32,6 +32,9 @@ const App = () => (
       <BrowserRouter>
         <AuthProvider>
           <Routes>
+            {/* Default route now goes to sign up */}
+            <Route path="/" element={<SignUp />} />
+            
             {/* Auth Routes */}
             <Route path="/signin" element={<SignIn />} />
             <Route path="/signup" element={<SignUp />} />
@@ -42,7 +45,7 @@ const App = () => (
             <Route path="/connect-sportsbooks" element={<ConnectSportsbooks />} />
             
             {/* Protected Routes */}
-            <Route path="/" element={<ProtectedRoute><Index /></ProtectedRoute>} />
+            <Route path="/dashboard" element={<ProtectedRoute><Index /></ProtectedRoute>} />
             <Route path="/trends" element={<ProtectedRoute><Trends /></ProtectedRoute>} />
             <Route path="/profile" element={<ProtectedRoute><Profile /></ProtectedRoute>} />
             <Route path="/bettor/:id" element={<ProtectedRoute><BettorDetail /></ProtectedRoute>} />
