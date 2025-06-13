@@ -1,5 +1,3 @@
-
-
 import React, { useState } from "react";
 import { Eye, EyeOff, Apple } from "lucide-react";
 import { Input } from "@/components/ui/input";
@@ -30,35 +28,35 @@ const SignInForm: React.FC<SignInFormProps> = ({
   const [showPassword, setShowPassword] = useState(false);
 
   if (!showLoginForm) {
-    // Welcome screen with better button positioning
+    // Welcome screen with buttons directly below text
     return (
       <div className="w-full max-w-md h-screen flex flex-col justify-center px-6 py-4 overflow-hidden fixed top-0 left-1/2 transform -translate-x-1/2 animate-fade-in">
-        {/* Welcome text - reduced space */}
-        <div className="text-center flex-1 flex flex-col justify-center items-center min-h-0 -mt-20">
-          <h1 className="text-5xl sm:text-6xl font-light leading-tight mb-6">
+        {/* Welcome text and buttons container */}
+        <div className="text-center flex flex-col justify-center items-center">
+          <h1 className="text-5xl sm:text-6xl font-light leading-tight mb-12">
             Welcome to<br />
             The <span className="text-[#AEE3F5]" style={{ 
               textShadow: '0 0 10px #AEE3F5, 0 0 20px #AEE3F5, 0 0 30px #AEE3F5' 
             }}>FadeZone</span>
           </h1>
-        </div>
-        
-        {/* Buttons positioned much higher with more space from bottom */}
-        <div className="space-y-4 flex-shrink-0 pb-20">
-          <Button 
-            onClick={onCreateAccount}
-            className="w-full h-14 text-lg bg-[#AEE3F5] hover:bg-[#AEE3F5]/90 text-black font-medium rounded-xl shadow-[0_0_20px_rgba(174,227,245,0.4)] hover:shadow-[0_0_30px_rgba(174,227,245,0.6)] transition-all duration-300"
-          >
-            Sign up
-          </Button>
           
-          <Button 
-            onClick={() => setShowLoginForm(true)}
-            variant="outline"
-            className="w-full h-14 text-lg border-[#AEE3F5] text-[#AEE3F5] bg-transparent hover:bg-[#AEE3F5]/10 font-medium rounded-xl border-2 hover:border-[#AEE3F5]/80 transition-all duration-300"
-          >
-            Log in
-          </Button>
+          {/* Buttons positioned directly below text */}
+          <div className="space-y-4 w-full">
+            <Button 
+              onClick={onCreateAccount}
+              className="w-full h-14 text-lg bg-[#AEE3F5] hover:bg-[#AEE3F5]/90 text-black font-medium rounded-xl shadow-[0_0_20px_rgba(174,227,245,0.4)] hover:shadow-[0_0_30px_rgba(174,227,245,0.6)] transition-all duration-300"
+            >
+              Sign up
+            </Button>
+            
+            <Button 
+              onClick={() => setShowLoginForm(true)}
+              variant="outline"
+              className="w-full h-14 text-lg border-[#AEE3F5] text-[#AEE3F5] bg-transparent hover:bg-[#AEE3F5]/10 font-medium rounded-xl border-2 hover:border-[#AEE3F5]/80 transition-all duration-300"
+            >
+              Log in
+            </Button>
+          </div>
         </div>
       </div>
     );
