@@ -1,3 +1,4 @@
+
 import React, { useState } from "react";
 import BottomNav from "@/components/BottomNav";
 import { useNavigate } from "react-router-dom";
@@ -91,8 +92,8 @@ const ProfilePage = () => {
       <div className="max-w-md mx-auto w-full px-2">
         <div className="flex justify-between items-center pt-2 mb-4">
           <img 
-            src="/lovable-uploads/57cb1fb4-7471-451e-bf49-d4d5fa12bdcb.png" 
-            alt="ONE TIME logo" 
+            src="/lovable-uploads/ef71dcb7-0442-49e5-b4e1-065c91579237.png" 
+            alt="Fade Zone logo" 
             className="h-24"
           />
           <ProfileIcon />
