@@ -1,3 +1,4 @@
+
 import React, { useState } from "react";
 import { useNavigate } from "react-router-dom";
 import { Check, Shield, Fingerprint, AlertCircle } from "lucide-react";
@@ -137,9 +138,9 @@ const ConnectSportsbooks = () => {
             disabled={!canProceed}
             className={`w-full transition-all duration-500 ${
               canProceed && faceIdEnabled 
-                ? 'bg-primary hover:bg-primary/90 shadow-[0_0_30px_rgba(108,92,231,0.9)] animate-pulse brightness-150' 
+                ? 'bg-[#AEE3F5] hover:bg-[#AEE3F5]/90 text-black shadow-[0_0_30px_rgba(174,227,245,0.9)] animate-pulse brightness-150' 
                 : canProceed
-                ? 'bg-primary hover:bg-primary/90'
+                ? 'bg-[#AEE3F5] hover:bg-[#AEE3F5]/90 text-black'
                 : 'bg-gray-600 cursor-not-allowed opacity-50'
             }`}
           >
