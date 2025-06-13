@@ -1,4 +1,5 @@
 
+
 import React, { useState } from "react";
 import { Eye, EyeOff, Apple } from "lucide-react";
 import { Input } from "@/components/ui/input";
@@ -42,8 +43,8 @@ const SignInForm: React.FC<SignInFormProps> = ({
           </h1>
         </div>
         
-        {/* Buttons with reduced bottom spacing */}
-        <div className="space-y-4 flex-shrink-0 pb-8">
+        {/* Buttons moved higher up */}
+        <div className="space-y-4 flex-shrink-0 pb-4">
           <Button 
             onClick={onCreateAccount}
             className="w-full h-14 text-lg bg-[#AEE3F5] hover:bg-[#AEE3F5]/90 text-black font-medium rounded-xl shadow-[0_0_20px_rgba(174,227,245,0.4)] hover:shadow-[0_0_30px_rgba(174,227,245,0.6)] transition-all duration-300"
