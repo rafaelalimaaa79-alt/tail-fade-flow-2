@@ -28,18 +28,13 @@ export const useSignIn = () => {
     try {
       console.log("Attempting to sign in with:", { email });
       
-      // Try regular authentication first
       const { data, error } = await supabase.auth.signInWithPassword({
         email,
         password,
       });
       
       if (error) {
-        // If authentication fails, bypass for development
-        console.log("Authentication failed, bypassing for development:", error.message);
-        toast.success("Development mode: Bypassing authentication");
-        console.log("Redirecting to:", from);
-        navigate(from);
+        toast.error(error.message);
         return;
       }
       
@@ -59,10 +54,7 @@ export const useSignIn = () => {
       
     } catch (error: any) {
       console.error("Sign in error:", error);
-      // Bypass authentication on any error for development
-      toast.success("Development mode: Bypassing authentication");
-      console.log("Redirecting due to error bypass to:", from);
-      navigate(from);
+      toast.error("Failed to sign in. Please try again.");
     } finally {
       setLoading(false);
     }

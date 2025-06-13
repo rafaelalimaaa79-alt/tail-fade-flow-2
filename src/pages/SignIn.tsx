@@ -8,7 +8,7 @@ import SignInForm from "@/components/auth/SignInForm";
 import BiometricPrompt from "@/components/auth/BiometricPrompt";
 
 // Development mode flag to bypass authentication checks
-const BYPASS_AUTH = true; // This should match the flag in ProtectedRoute
+const BYPASS_AUTH = false; // Disabled to enforce authentication
 
 const SignIn = () => {
   const location = useLocation();
