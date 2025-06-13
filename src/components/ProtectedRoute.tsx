@@ -13,20 +13,20 @@ type ProtectedRouteProps = {
 const BYPASS_AUTH = true; // Enabled to allow direct access to home page
 
 const ProtectedRoute = ({ children }: ProtectedRouteProps) => {
-  const [isVerifying, setIsVerifying] = useState(false); // Start with false when bypassing auth
+  const [isVerifying, setIsVerifying] = useState(false);
   const navigate = useNavigate();
   const location = useLocation();
   const { user, loading } = useAuth();
   const { attemptBiometricAuth } = useBiometricAuth();
   
+  // If bypassing auth, render children immediately without any checks
+  if (BYPASS_AUTH) {
+    console.log("ProtectedRoute: Authentication bypassed for development");
+    return <>{children}</>;
+  }
+  
   useEffect(() => {
-    // If we're bypassing authentication, don't perform any checks
-    if (BYPASS_AUTH) {
-      console.log("ProtectedRoute: Authentication bypassed for development");
-      return; // Exit early, no verification needed
-    }
-    
-    setIsVerifying(true); // Only set verifying if not bypassing
+    setIsVerifying(true);
     
     const checkAuth = async () => {
       try {
@@ -89,7 +89,7 @@ const ProtectedRoute = ({ children }: ProtectedRouteProps) => {
 
   // Auto-logout after 1 minute of inactivity
   useEffect(() => {
-    if (BYPASS_AUTH || !user) return;
+    if (!user) return;
 
     let timeoutId: NodeJS.Timeout;
     
