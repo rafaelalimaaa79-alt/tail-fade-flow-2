@@ -48,7 +48,7 @@ const ConnectSportsbooks = () => {
   };
 
   const isConnected = (sportsbookId: string) => connectedSportsbooks.includes(sportsbookId);
-  const canProceed = connectedSportsbooks.length > 0 || faceIdEnabled;
+  const canProceed = connectedSportsbooks.length > 0 && faceIdEnabled;
 
   return (
     <div className="bg-black min-h-screen">
@@ -127,7 +127,7 @@ const ConnectSportsbooks = () => {
           <Alert className="mb-6 border-orange-500/50 bg-orange-500/10">
             <AlertCircle className="h-4 w-4 text-orange-500" />
             <AlertDescription className="text-orange-200">
-              Please connect at least one sportsbook or enable Face ID to continue.
+              Please connect at least one sportsbook and enable Face ID to continue.
             </AlertDescription>
           </Alert>
         )}
