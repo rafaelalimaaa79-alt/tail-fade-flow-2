@@ -29,11 +29,10 @@ const SignInForm: React.FC<SignInFormProps> = ({
   const [showPassword, setShowPassword] = useState(false);
 
   if (!showLoginForm) {
-    // Welcome screen with buttons directly below text
+    // Welcome screen with buttons directly below text - no scrolling
     return (
-      <div className="w-full max-w-md h-screen flex flex-col justify-center px-6 py-4 overflow-hidden mx-auto">
-        {/* Welcome text and buttons container */}
-        <div className="text-center flex flex-col justify-center items-center">
+      <div className="w-full max-w-md h-screen flex flex-col justify-center items-center px-6 mx-auto overflow-hidden">
+        <div className="text-center">
           <h1 className="text-5xl sm:text-6xl font-light leading-tight mb-12">
             Welcome to<br />
             The <span className="text-[#AEE3F5]" style={{ 
@@ -41,7 +40,6 @@ const SignInForm: React.FC<SignInFormProps> = ({
             }}>FadeZone</span>
           </h1>
           
-          {/* Buttons positioned directly below text */}
           <div className="space-y-4 w-full">
             <Button 
               onClick={onCreateAccount}
@@ -63,10 +61,10 @@ const SignInForm: React.FC<SignInFormProps> = ({
     );
   }
 
-  // Login form with brand redesign
+  // Login form with no scrolling
   return (
-    <div className="w-full max-w-md h-screen flex flex-col px-6 py-4 overflow-hidden mx-auto">
-      <div className="text-center mb-12 flex-shrink-0 mt-16">
+    <div className="w-full max-w-md h-screen flex flex-col px-6 mx-auto overflow-hidden">
+      <div className="text-center mb-8 flex-shrink-0 mt-16">
         <h1 className="text-3xl font-light text-white mb-2">Sign In</h1>
         <p className="text-white/80 mb-4">Welcome back to FadeZone</p>
       </div>
@@ -111,8 +109,8 @@ const SignInForm: React.FC<SignInFormProps> = ({
           </Button>
         </form>
 
-        {/* Alternative sign-in options */}
-        <div className="mt-8 space-y-4">
+        {/* Alternative sign-in options - condensed */}
+        <div className="mt-6 space-y-3">
           <div className="relative">
             <div className="absolute inset-0 flex items-center">
               <span className="w-full border-t border-white/20" />
@@ -126,19 +124,19 @@ const SignInForm: React.FC<SignInFormProps> = ({
             <Button
               type="button"
               variant="outline"
-              className="h-12 border-white/20 hover:border-[#AEE3F5]/50 hover:bg-[#AEE3F5]/5 transition-all duration-300"
+              className="h-10 border-white/20 hover:border-[#AEE3F5]/50 hover:bg-[#AEE3F5]/5 transition-all duration-300 text-xs"
               onClick={() => console.log("Sign in with Apple")}
             >
-              <Apple className="h-5 w-5 mr-2" />
+              <Apple className="h-4 w-4 mr-1" />
               Apple
             </Button>
             <Button
               type="button"
               variant="outline"
-              className="h-12 border-white/20 hover:border-[#AEE3F5]/50 hover:bg-[#AEE3F5]/5 transition-all duration-300"
+              className="h-10 border-white/20 hover:border-[#AEE3F5]/50 hover:bg-[#AEE3F5]/5 transition-all duration-300 text-xs"
               onClick={() => console.log("Sign in with Google")}
             >
-              <svg className="h-5 w-5 mr-2" viewBox="0 0 24 24">
+              <svg className="h-4 w-4 mr-1" viewBox="0 0 24 24">
                 <path fill="currentColor" d="M22.56 12.25c0-.78-.07-1.53-.2-2.25H12v4.26h5.92c-.26 1.37-1.04 2.53-2.21 3.31v2.77h3.57c2.08-1.92 3.28-4.74 3.28-8.09z"/>
                 <path fill="currentColor" d="M12 23c2.97 0 5.46-.98 7.28-2.66l-3.57-2.77c-.98.66-2.23 1.06-3.71 1.06-2.86 0-5.29-1.93-6.16-4.53H2.18v2.84C3.99 20.53 7.7 23 12 23z"/>
                 <path fill="currentColor" d="M5.84 14.09c-.22-.66-.35-1.36-.35-2.09s.13-1.43.35-2.09V7.07H2.18C1.43 8.55 1 10.22 1 12s.43 3.45 1.18 4.93l2.85-2.22.81-.62z"/>
@@ -148,14 +146,13 @@ const SignInForm: React.FC<SignInFormProps> = ({
             </Button>
           </div>
 
-          {/* Biometric option */}
           <Button
             type="button"
             variant="outline"
-            className="w-full h-12 border-white/20 hover:border-[#AEE3F5]/50 hover:bg-[#AEE3F5]/5 transition-all duration-300"
+            className="w-full h-10 border-white/20 hover:border-[#AEE3F5]/50 hover:bg-[#AEE3F5]/5 transition-all duration-300 text-xs"
             onClick={() => console.log("Biometric login")}
           >
-            <svg className="h-5 w-5 mr-2" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+            <svg className="h-4 w-4 mr-1" fill="none" viewBox="0 0 24 24" stroke="currentColor">
               <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 15v2m-6 4h12a2 2 0 002-2v-6a2 2 0 00-2-2H6a2 2 0 00-2 2v6a2 2 0 002 2zm10-10V7a4 4 0 00-8 0v4h8z" />
             </svg>
             Face ID / Touch ID
@@ -163,7 +160,7 @@ const SignInForm: React.FC<SignInFormProps> = ({
         </div>
       </div>
       
-      <div className="flex flex-col items-center pt-6 text-sm flex-shrink-0 pb-safe space-y-2">
+      <div className="flex flex-col items-center pt-4 text-sm flex-shrink-0 pb-6 space-y-2">
         <button
           type="button"
           onClick={onForgotPassword}
