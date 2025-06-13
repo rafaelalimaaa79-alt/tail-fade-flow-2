@@ -1,4 +1,3 @@
-
 import React, { useState, useEffect } from "react";
 import PublicGameItem from "./PublicGameItem";
 
@@ -12,6 +11,7 @@ interface PublicGame {
   isLive: boolean;
   spread: string;
   sport: string;
+  fadeZonePercentage?: number; // Add this to stabilize the percentage
 }
 
 // Mock data - in production this would come from your API
@@ -25,7 +25,8 @@ const mockPublicGames: PublicGame[] = [
     gameTime: "2024-06-03T20:00:00Z",
     isLive: false,
     spread: "-5",
-    sport: "NBA"
+    sport: "NBA",
+    fadeZonePercentage: 78
   },
   {
     id: "2",
@@ -36,7 +37,8 @@ const mockPublicGames: PublicGame[] = [
     gameTime: "2024-06-03T18:30:00Z",
     isLive: true,
     spread: "-7.5",
-    sport: "NFL"
+    sport: "NFL",
+    fadeZonePercentage: 85
   },
   {
     id: "3",
@@ -47,7 +49,8 @@ const mockPublicGames: PublicGame[] = [
     gameTime: "2024-06-03T21:30:00Z",
     isLive: false,
     spread: "-3",
-    sport: "NBA"
+    sport: "NBA",
+    fadeZonePercentage: 74
   },
   {
     id: "4",
@@ -58,7 +61,8 @@ const mockPublicGames: PublicGame[] = [
     gameTime: "2024-06-03T19:00:00Z",
     isLive: false,
     spread: "-1.5",
-    sport: "MLB"
+    sport: "MLB",
+    fadeZonePercentage: 81
   },
   {
     id: "5",
@@ -69,7 +73,8 @@ const mockPublicGames: PublicGame[] = [
     gameTime: "2024-06-03T20:30:00Z",
     isLive: false,
     spread: "-1",
-    sport: "NHL"
+    sport: "NHL",
+    fadeZonePercentage: 88
   },
   {
     id: "6",
@@ -80,7 +85,8 @@ const mockPublicGames: PublicGame[] = [
     gameTime: "2024-06-03T22:00:00Z",
     isLive: false,
     spread: "-3.5",
-    sport: "NFL"
+    sport: "NFL",
+    fadeZonePercentage: 72
   },
   {
     id: "7",
@@ -91,32 +97,46 @@ const mockPublicGames: PublicGame[] = [
     gameTime: "2024-06-03T17:00:00Z",
     isLive: true,
     spread: "-2",
-    sport: "MLB"
+    sport: "MLB",
+    fadeZonePercentage: 76
   }
 ];
 
 const PublicGamesList = () => {
-  const [games, setGames] = useState<PublicGame[]>([]);
+  const [games, setGames] = useState<PublicGame[]>(() => {
+    // Initialize with sorted data immediately to prevent flash
+    return [...mockPublicGames].sort((a, b) => b.publicPercentage - a.publicPercentage);
+  });
+
+  const [isInitialized, setIsInitialized] = useState(false);
 
   useEffect(() => {
-    // Sort games by public percentage (highest first)
-    const sortedGames = [...mockPublicGames].sort((a, b) => b.publicPercentage - a.publicPercentage);
-    setGames(sortedGames);
+    // Add a small delay to let the page settle before enabling effects
+    const initTimer = setTimeout(() => {
+      setIsInitialized(true);
+    }, 100);
 
-    // Simulate real-time updates every 30 seconds
+    // Simulate real-time updates every 30 seconds, but only after initialization
     const interval = setInterval(() => {
-      setGames(prevGames => {
-        const updatedGames = prevGames.map(game => ({
-          ...game,
-          publicPercentage: Math.round(Math.max(70, Math.min(95, game.publicPercentage + (Math.random() - 0.5) * 4))),
-          totalBets: game.totalBets + Math.floor(Math.random() * 20)
-        }));
-        return updatedGames.sort((a, b) => b.publicPercentage - a.publicPercentage);
-      });
+      if (isInitialized) {
+        setGames(prevGames => {
+          const updatedGames = prevGames.map(game => ({
+            ...game,
+            publicPercentage: Math.round(Math.max(70, Math.min(95, game.publicPercentage + (Math.random() - 0.5) * 2))), // Reduced volatility
+            totalBets: game.totalBets + Math.floor(Math.random() * 10), // Reduced increment
+            // Keep fadeZonePercentage stable during updates
+            fadeZonePercentage: game.fadeZonePercentage || Math.round(Math.max(70, Math.min(95, 100 - game.publicPercentage + (Math.random() - 0.5) * 4)))
+          }));
+          return updatedGames.sort((a, b) => b.publicPercentage - a.publicPercentage);
+        });
+      }
     }, 30000);
 
-    return () => clearInterval(interval);
-  }, []);
+    return () => {
+      clearTimeout(initTimer);
+      clearInterval(interval);
+    };
+  }, [isInitialized]);
 
   return (
     <div className="space-y-3">
@@ -127,6 +147,7 @@ const PublicGamesList = () => {
             key={game.id} 
             game={game} 
             rank={index + 1}
+            isInitialized={isInitialized}
           />
         ))}
       </div>

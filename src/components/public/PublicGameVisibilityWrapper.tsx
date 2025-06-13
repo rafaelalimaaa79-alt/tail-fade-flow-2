@@ -3,16 +3,22 @@ import React, { useState, useEffect, useRef, ReactNode } from "react";
 
 type PublicGameVisibilityWrapperProps = {
   children: (isVisible: boolean, isMostVisible: boolean) => ReactNode;
+  isInitialized?: boolean;
 };
 
-const PublicGameVisibilityWrapper = ({ children }: PublicGameVisibilityWrapperProps) => {
+const PublicGameVisibilityWrapper = ({ children, isInitialized = false }: PublicGameVisibilityWrapperProps) => {
   const [isVisible, setIsVisible] = useState(false);
   const [isMostVisible, setIsMostVisible] = useState(false);
   const itemRef = useRef<HTMLDivElement>(null);
   
   useEffect(() => {
     const currentItem = itemRef.current;
-    if (!currentItem) return;
+    if (!currentItem || !isInitialized) {
+      // Don't start visibility effects until initialized
+      setIsVisible(false);
+      setIsMostVisible(false);
+      return;
+    }
 
     // Create an intersection observer to detect when the item is visible
     const visibilityObserver = new IntersectionObserver(
@@ -32,8 +38,8 @@ const PublicGameVisibilityWrapper = ({ children }: PublicGameVisibilityWrapperPr
     
     // Create a function that checks which visible public game item is most centered
     const checkMostCentered = () => {
-      // Only proceed if this item is visible
-      if (!isVisible || !currentItem) {
+      // Only proceed if this item is visible and initialized
+      if (!isVisible || !currentItem || !isInitialized) {
         setIsMostVisible(false);
         return;
       }
@@ -64,22 +70,34 @@ const PublicGameVisibilityWrapper = ({ children }: PublicGameVisibilityWrapperPr
       setIsMostVisible(closestItem === currentItem);
     };
     
-    // Check on scroll and resize
-    window.addEventListener('scroll', checkMostCentered);
-    window.addEventListener('resize', checkMostCentered);
+    // Check on scroll and resize with throttling
+    let ticking = false;
+    const throttledCheck = () => {
+      if (!ticking) {
+        requestAnimationFrame(() => {
+          checkMostCentered();
+          ticking = false;
+        });
+        ticking = true;
+      }
+    };
     
-    // Initial check
-    setTimeout(checkMostCentered, 100);
+    window.addEventListener('scroll', throttledCheck);
+    window.addEventListener('resize', throttledCheck);
+    
+    // Initial check with small delay
+    const initialCheckTimer = setTimeout(checkMostCentered, 200);
     
     return () => {
       // Clean up
       if (currentItem) {
         visibilityObserver.unobserve(currentItem);
       }
-      window.removeEventListener('scroll', checkMostCentered);
-      window.removeEventListener('resize', checkMostCentered);
+      window.removeEventListener('scroll', throttledCheck);
+      window.removeEventListener('resize', throttledCheck);
+      clearTimeout(initialCheckTimer);
     };
-  }, [isVisible]);
+  }, [isVisible, isInitialized]);
   
   return (
     <div ref={itemRef} className="public-game-item">

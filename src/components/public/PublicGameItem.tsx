@@ -17,14 +17,16 @@ interface PublicGame {
   isLive: boolean;
   spread: string;
   sport: string;
+  fadeZonePercentage?: number;
 }
 
 interface PublicGameItemProps {
   game: PublicGame;
   rank: number;
+  isInitialized?: boolean;
 }
 
-const PublicGameItem = ({ game, rank }: PublicGameItemProps) => {
+const PublicGameItem = ({ game, rank, isInitialized = false }: PublicGameItemProps) => {
   const getTimeInEST = () => {
     if (game.isLive) {
       return (
@@ -50,10 +52,10 @@ const PublicGameItem = ({ game, rank }: PublicGameItemProps) => {
     );
   };
 
-  // FadeZone percentage - keeping it within 70-95% range
-  const fadeZonePercentage = Math.max(70, Math.min(95, 
-    100 - game.publicPercentage + (Math.random() - 0.5) * 8
-  ));
+  // Use stable fadeZone percentage from props or calculate once
+  const fadeZonePercentage = game.fadeZonePercentage || Math.round(Math.max(70, Math.min(95, 
+    100 - game.publicPercentage + (Math.random() - 0.5) * 4
+  )));
 
   // Get the opposite bet for the button
   const oppositeBet = getOppositeBet(`${game.team} ${game.spread}`, game.opponent);
@@ -64,11 +66,12 @@ const PublicGameItem = ({ game, rank }: PublicGameItemProps) => {
   };
 
   return (
-    <PublicGameVisibilityWrapper>
+    <PublicGameVisibilityWrapper isInitialized={isInitialized}>
       {(isVisible, isMostVisible) => (
         <div className={cn(
-          "relative bg-gradient-to-r from-white/5 to-white/10 border-2 border-[#AEE3F5]/30 rounded-xl overflow-hidden hover:from-white/10 hover:to-white/15 transition-all duration-300 hover:border-[#AEE3F5]/50 hover:shadow-lg hover:shadow-[#AEE3F5]/10 max-w-sm mx-auto",
-          !isMostVisible && "grayscale opacity-50"
+          "relative bg-gradient-to-r from-white/5 to-white/10 border-2 border-[#AEE3F5]/30 rounded-xl overflow-hidden transition-all duration-300 max-w-sm mx-auto",
+          isInitialized && "hover:from-white/10 hover:to-white/15 hover:border-[#AEE3F5]/50 hover:shadow-lg hover:shadow-[#AEE3F5]/10",
+          !isInitialized || (!isMostVisible && "opacity-75") // Start neutral, then apply effects
         )}>
           {/* Header with Game - Centered */}
           <div className="flex justify-center items-center px-4 py-3 bg-black/20 border-b border-white/10">
@@ -84,8 +87,11 @@ const PublicGameItem = ({ game, rank }: PublicGameItemProps) => {
               <div className="text-[#AEE3F5] text-lg font-black uppercase tracking-wide">
                 FadeZone
               </div>
-              <div className="text-[#AEE3F5] text-3xl font-bold animate-pulse-slow">
-                {Math.round(fadeZonePercentage)}%
+              <div className={cn(
+                "text-[#AEE3F5] text-3xl font-bold",
+                isInitialized && "animate-pulse-slow"
+              )}>
+                {fadeZonePercentage}%
               </div>
               <div className="text-white/80 text-sm text-center font-medium leading-relaxed">
                 of FadeZone bettors are on <span className="text-white font-semibold">{game.team} {game.spread}</span>
@@ -102,7 +108,10 @@ const PublicGameItem = ({ game, rank }: PublicGameItemProps) => {
               <div className="text-red-400 text-lg font-black uppercase tracking-wide">
                 Public
               </div>
-              <div className="text-red-400 text-3xl font-bold animate-pulse-slow">
+              <div className={cn(
+                "text-red-400 text-3xl font-bold",
+                isInitialized && "animate-pulse-slow"
+              )}>
                 {game.publicPercentage}%
               </div>
               <div className="text-white/80 text-sm text-center font-medium leading-relaxed">
@@ -117,7 +126,7 @@ const PublicGameItem = ({ game, rank }: PublicGameItemProps) => {
               variant="fade" 
               onClick={handleFade}
               className="h-10 text-base"
-              glowEffect={isMostVisible}
+              glowEffect={isInitialized && isMostVisible}
             >
               Bet {oppositeBet}
             </ActionButton>
