@@ -1,3 +1,4 @@
+
 import React, { useState } from "react";
 import { Eye, EyeOff, Apple } from "lucide-react";
 import { Input } from "@/components/ui/input";
@@ -30,7 +31,7 @@ const SignInForm: React.FC<SignInFormProps> = ({
   if (!showLoginForm) {
     // Welcome screen with buttons directly below text
     return (
-      <div className="w-full max-w-md h-screen flex flex-col justify-center px-6 py-4 overflow-hidden fixed top-0 left-1/2 transform -translate-x-1/2 animate-fade-in">
+      <div className="w-full max-w-md h-screen flex flex-col justify-center px-6 py-4 overflow-hidden mx-auto">
         {/* Welcome text and buttons container */}
         <div className="text-center flex flex-col justify-center items-center">
           <h1 className="text-5xl sm:text-6xl font-light leading-tight mb-12">
@@ -64,7 +65,7 @@ const SignInForm: React.FC<SignInFormProps> = ({
 
   // Login form with brand redesign
   return (
-    <div className="w-full max-w-md h-screen flex flex-col px-6 py-4 overflow-hidden fixed top-0 left-1/2 transform -translate-x-1/2 animate-fade-in">
+    <div className="w-full max-w-md h-screen flex flex-col px-6 py-4 overflow-hidden mx-auto">
       <div className="text-center mb-12 flex-shrink-0 mt-16">
         <h1 className="text-3xl font-light text-white mb-2">Sign In</h1>
         <p className="text-white/80 mb-4">Welcome back to FadeZone</p>
