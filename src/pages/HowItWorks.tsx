@@ -8,8 +8,8 @@ const HowItWorks = () => {
   const navigate = useNavigate();
 
   const handleEnterFadeZone = () => {
-    // Navigate directly to home page using React Router
-    navigate('/', { replace: true });
+    // Navigate to the dashboard/home page
+    navigate('/dashboard', { replace: true });
   };
 
   const steps = [
