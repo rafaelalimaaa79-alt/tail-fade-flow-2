@@ -1,4 +1,3 @@
-
 import React, { useState } from "react";
 import { useNavigate } from "react-router-dom";
 import { Check, Shield, Fingerprint, AlertCircle } from "lucide-react";
@@ -102,7 +101,7 @@ const ConnectSportsbooks = () => {
 
         <div className="bg-card/50 border border-white/10 rounded-lg p-4 mb-6">
           <div className="flex items-start gap-3 mb-4">
-            <Fingerprint className="h-5 w-5 text-primary mt-0.5" />
+            <Fingerprint className="h-5 w-5 text-[#AEE3F5] mt-0.5" />
             <div>
               <h3 className="font-medium text-white mb-1">Enable Face ID for Quick Access</h3>
               <p className="text-sm text-muted-foreground mb-2">
@@ -115,7 +114,7 @@ const ConnectSportsbooks = () => {
             onClick={() => setFaceIdEnabled(!faceIdEnabled)}
             className={`w-full py-3 px-4 rounded-lg font-medium transition-all duration-300 ${
               !faceIdEnabled 
-                ? 'bg-primary text-white hover:bg-primary/90' 
+                ? 'bg-[#AEE3F5] text-black hover:bg-[#AEE3F5]/90 shadow-[0_0_15px_rgba(174,227,245,0.4)]' 
                 : 'bg-gray-600/50 text-gray-400 cursor-default'
             }`}
           >
