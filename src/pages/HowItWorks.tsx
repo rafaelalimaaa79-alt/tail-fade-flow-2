@@ -1,4 +1,3 @@
-
 import React from "react";
 import { motion } from "framer-motion";
 import { Button } from "@/components/ui/button";
@@ -9,7 +8,8 @@ const HowItWorks = () => {
   const navigate = useNavigate();
 
   const handleEnterFadeZone = () => {
-    navigate('/');
+    // For now, directly navigate to home page bypassing authentication
+    window.location.href = '/';
   };
 
   const steps = [
