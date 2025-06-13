@@ -7,11 +7,20 @@ import { useNavigate } from 'react-router-dom';
 
 export const useBiometricAuth = () => {
   const [isAuthenticating, setIsAuthenticating] = useState(false);
+  const [lastAttempt, setLastAttempt] = useState<number>(0);
   const { biometricEnabled, user } = useAuth();
   const navigate = useNavigate();
 
   // Simulated biometric authentication since web browsers don't directly support Face ID/Touch ID
   const authenticateWithBiometrics = async (): Promise<boolean> => {
+    // Prevent rapid successive attempts
+    const now = Date.now();
+    if (now - lastAttempt < 5000) { // 5 second cooldown
+      console.log("Biometric authentication cooldown active");
+      return false;
+    }
+    
+    setLastAttempt(now);
     setIsAuthenticating(true);
     
     try {
@@ -34,12 +43,10 @@ export const useBiometricAuth = () => {
       } else {
         // If no session exists, biometric authentication failed
         console.log("Biometric authentication failed - no valid session");
-        toast.error('Biometric authentication failed');
-        return false;
+        return false; // Don't show error toast for failed biometric auth
       }
     } catch (error) {
       console.error('Biometric authentication error:', error);
-      toast.error('Biometric authentication error');
       return false;
     } finally {
       setIsAuthenticating(false);

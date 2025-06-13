@@ -14,6 +14,7 @@ const BYPASS_AUTH = true; // Enabled to allow direct access to home page
 
 const ProtectedRoute = ({ children }: ProtectedRouteProps) => {
   const [isVerifying, setIsVerifying] = useState(false);
+  const [biometricAttempted, setBiometricAttempted] = useState(false);
   const navigate = useNavigate();
   const location = useLocation();
   const { user, loading } = useAuth();
@@ -36,11 +37,12 @@ const ProtectedRoute = ({ children }: ProtectedRouteProps) => {
         
         if (!session) {
           console.log("ProtectedRoute: No session found, checking biometric options");
-          // If biometric authentication is enabled, try it first
+          // If biometric authentication is enabled and not already attempted, try it once
           const biometricEnabled = localStorage.getItem('biometricEnabled') === 'true';
           
-          if (biometricEnabled) {
+          if (biometricEnabled && !biometricAttempted) {
             console.log("ProtectedRoute: Attempting biometric authentication");
+            setBiometricAttempted(true);
             const success = await attemptBiometricAuth();
             if (success) {
               console.log("ProtectedRoute: Biometric authentication successful");
@@ -85,7 +87,7 @@ const ProtectedRoute = ({ children }: ProtectedRouteProps) => {
         setIsVerifying(false);
       }
     }
-  }, [user, loading, navigate, location.pathname, attemptBiometricAuth]);
+  }, [user, loading, navigate, location.pathname, attemptBiometricAuth, biometricAttempted]);
 
   // Auto-logout after 1 minute of inactivity
   useEffect(() => {
