@@ -8,8 +8,8 @@ const HowItWorks = () => {
   const navigate = useNavigate();
 
   const handleEnterFadeZone = () => {
-    // For now, directly navigate to home page bypassing authentication
-    window.location.href = '/';
+    // Navigate directly to home page using React Router
+    navigate('/', { replace: true });
   };
 
   const steps = [
