@@ -13,7 +13,7 @@ type ProtectedRouteProps = {
 const BYPASS_AUTH = true; // Enabled to allow direct access to home page
 
 const ProtectedRoute = ({ children }: ProtectedRouteProps) => {
-  const [isVerifying, setIsVerifying] = useState(!BYPASS_AUTH);
+  const [isVerifying, setIsVerifying] = useState(false); // Start with false when bypassing auth
   const navigate = useNavigate();
   const location = useLocation();
   const { user, loading } = useAuth();
@@ -23,9 +23,10 @@ const ProtectedRoute = ({ children }: ProtectedRouteProps) => {
     // If we're bypassing authentication, don't perform any checks
     if (BYPASS_AUTH) {
       console.log("ProtectedRoute: Authentication bypassed for development");
-      setIsVerifying(false);
-      return;
+      return; // Exit early, no verification needed
     }
+    
+    setIsVerifying(true); // Only set verifying if not bypassing
     
     const checkAuth = async () => {
       try {
