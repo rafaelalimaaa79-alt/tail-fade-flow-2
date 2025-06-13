@@ -30,11 +30,11 @@ const SignInForm: React.FC<SignInFormProps> = ({
   const [showPassword, setShowPassword] = useState(false);
 
   if (!showLoginForm) {
-    // Welcome screen with fade-in animation
+    // Welcome screen with better button positioning
     return (
       <div className="w-full max-w-md h-screen flex flex-col justify-center px-6 py-4 overflow-hidden fixed top-0 left-1/2 transform -translate-x-1/2 animate-fade-in">
-        {/* Welcome text */}
-        <div className="text-center flex-1 flex flex-col justify-center items-center min-h-0 mt-8">
+        {/* Welcome text - reduced space */}
+        <div className="text-center flex-1 flex flex-col justify-center items-center min-h-0 -mt-20">
           <h1 className="text-5xl sm:text-6xl font-light leading-tight mb-6">
             Welcome to<br />
             The <span className="text-[#AEE3F5]" style={{ 
@@ -43,8 +43,8 @@ const SignInForm: React.FC<SignInFormProps> = ({
           </h1>
         </div>
         
-        {/* Buttons moved higher up */}
-        <div className="space-y-4 flex-shrink-0 pb-4">
+        {/* Buttons positioned much higher with more space from bottom */}
+        <div className="space-y-4 flex-shrink-0 pb-20">
           <Button 
             onClick={onCreateAccount}
             className="w-full h-14 text-lg bg-[#AEE3F5] hover:bg-[#AEE3F5]/90 text-black font-medium rounded-xl shadow-[0_0_20px_rgba(174,227,245,0.4)] hover:shadow-[0_0_30px_rgba(174,227,245,0.6)] transition-all duration-300"
