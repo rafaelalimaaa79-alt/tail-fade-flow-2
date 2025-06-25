@@ -23,6 +23,8 @@ const TrendItemWithInlineChat = ({
     toggleSmackTalk(`trend-${trendId}`, trendTitle);
   };
 
+  const isThisChatOpen = isOpen && smackTalkData?.itemId === `trend-${trendId}`;
+
   return (
     <div className="mb-4">
       <div className="relative">
@@ -33,12 +35,14 @@ const TrendItemWithInlineChat = ({
         />
       </div>
 
-      <InlineSmackTalk
-        isOpen={isOpen && smackTalkData?.itemId === `trend-${trendId}`}
-        onClose={closeSmackTalk}
-        itemId={smackTalkData?.itemId || ""}
-        itemTitle={smackTalkData?.itemTitle}
-      />
+      {isThisChatOpen && (
+        <InlineSmackTalk
+          isOpen={true}
+          onClose={closeSmackTalk}
+          itemId={smackTalkData?.itemId || ""}
+          itemTitle={smackTalkData?.itemTitle}
+        />
+      )}
     </div>
   );
 };

@@ -24,6 +24,8 @@ const PublicGameItemWithInlineChat = ({
     toggleSmackTalk(`public-game-${gameId}`, gameTitle);
   };
 
+  const isThisChatOpen = isOpen && smackTalkData?.itemId === `public-game-${gameId}`;
+
   return (
     <div className="max-w-sm mx-auto mb-4">
       <div className="relative">
@@ -41,12 +43,14 @@ const PublicGameItemWithInlineChat = ({
         </button>
       </div>
 
-      <InlineSmackTalk
-        isOpen={isOpen && smackTalkData?.itemId === `public-game-${gameId}`}
-        onClose={closeSmackTalk}
-        itemId={smackTalkData?.itemId || ""}
-        itemTitle={smackTalkData?.itemTitle}
-      />
+      {isThisChatOpen && (
+        <InlineSmackTalk
+          isOpen={true}
+          onClose={closeSmackTalk}
+          itemId={smackTalkData?.itemId || ""}
+          itemTitle={smackTalkData?.itemTitle}
+        />
+      )}
     </div>
   );
 };
