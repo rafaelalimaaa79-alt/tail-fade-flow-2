@@ -10,10 +10,10 @@ const BottomNav = () => {
   const { signOut } = useAuth();
   
   const isActive = (path: string) => {
-    if (path === "/" && location.pathname === "/") {
+    if (path === "/dashboard" && (location.pathname === "/dashboard" || location.pathname === "/")) {
       return true;
     }
-    if (path !== "/" && location.pathname.startsWith(path)) {
+    if (path !== "/dashboard" && location.pathname.startsWith(path)) {
       return true;
     }
     return false;
@@ -25,8 +25,8 @@ const BottomNav = () => {
   return (
     <nav className="bottom-nav">
       <Link
-        to="/"
-        className={cn("nav-item", isActive("/") ? activeStyle : "text-white/70")}
+        to="/dashboard"
+        className={cn("nav-item", isActive("/dashboard") ? activeStyle : "text-white/70")}
       >
         <Home className="h-6 w-6 mb-1" />
         <span>Home</span>
