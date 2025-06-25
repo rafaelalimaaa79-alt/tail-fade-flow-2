@@ -2,6 +2,10 @@
 import { supabase } from "@/integrations/supabase/client";
 import { Challenge } from "@/types/challenge";
 import { toast } from "sonner";
+import type { Database } from "@/integrations/supabase/types";
+
+type ChallengeRow = Database['public']['Tables']['challenges']['Row'];
+type ChallengeParticipantRow = Database['public']['Tables']['challenge_participants']['Row'];
 
 // Function to fetch challenges by type
 export const fetchChallengesByType = async (type: string): Promise<Challenge[]> => {
@@ -18,7 +22,7 @@ export const fetchChallengesByType = async (type: string): Promise<Challenge[]> 
   }
 
   // Then fetch participant counts for each challenge
-  const challengeIds = challenges.map(c => c.id);
+  const challengeIds = challenges.map((c: ChallengeRow) => c.id);
   
   if (challengeIds.length === 0) {
     return [];
@@ -39,7 +43,7 @@ export const fetchChallengesByType = async (type: string): Promise<Challenge[]> 
   // Create a map of challenge_id to count by counting occurrences
   const countMap: Record<string, number> = {};
   if (participants) {
-    participants.forEach(item => {
+    participants.forEach((item: ChallengeParticipantRow) => {
       if (!countMap[item.challenge_id]) {
         countMap[item.challenge_id] = 0;
       }
@@ -48,7 +52,7 @@ export const fetchChallengesByType = async (type: string): Promise<Challenge[]> 
   }
   
   // Merge the challenges with their participant counts
-  return challenges.map(challenge => ({
+  return challenges.map((challenge: ChallengeRow) => ({
     ...challenge,
     type: challenge.type as "tournament" | "fixed" | "custom",
     format: challenge.format as "1v1" | "2v2" | "multi",
