@@ -1,4 +1,3 @@
-
 import React, { useState, useEffect } from "react";
 import BottomNav from "@/components/BottomNav";
 import { useIsMobile } from "@/hooks/use-mobile";
@@ -14,8 +13,8 @@ const Public = () => {
       <div className={`max-w-md mx-auto w-full px-2 ${isMobile ? "pb-24" : ""}`}>
         <div className="flex justify-between items-center pt-2 mb-4">
           <img 
-            src="/lovable-uploads/15b68287-6284-47fd-b7cf-1c67129dec0b.png" 
-            alt="Fade Zone logo" 
+            src="/lovable-uploads/720cf92e-fe49-4a51-86fa-afaa97e6e295.png" 
+            alt="CHALKD logo" 
             className="h-32"
           />
           <ProfileIcon />
