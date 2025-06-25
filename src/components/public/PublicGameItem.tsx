@@ -92,7 +92,7 @@ const PublicGameItem = ({ game, rank, isInitialized = false }: PublicGameItemPro
                 </div>
                 <div className={cn(
                   "text-[#AEE3F5] text-3xl font-bold",
-                  isInitialized && isMostVisible && "animate-pulse-slow"
+                  isMostVisible && "animate-pulse-slow"
                 )}>
                   {fadeZonePercentage}%
                 </div>
@@ -113,7 +113,7 @@ const PublicGameItem = ({ game, rank, isInitialized = false }: PublicGameItemPro
                 </div>
                 <div className={cn(
                   "text-red-400 text-3xl font-bold",
-                  isInitialized && isMostVisible && "animate-pulse-slow"
+                  isMostVisible && "animate-pulse-slow"
                 )}>
                   {game.publicPercentage}%
                 </div>
@@ -129,7 +129,7 @@ const PublicGameItem = ({ game, rank, isInitialized = false }: PublicGameItemPro
                 variant="fade" 
                 onClick={handleFade}
                 className="h-10 text-base"
-                glowEffect={isInitialized && isMostVisible}
+                glowEffect={isMostVisible}
               >
                 Bet {oppositeBet}
               </ActionButton>

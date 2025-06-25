@@ -13,12 +13,7 @@ const PublicGameVisibilityWrapper = ({ children, isInitialized = false }: Public
   
   useEffect(() => {
     const currentItem = itemRef.current;
-    if (!currentItem || !isInitialized) {
-      // Don't start visibility effects until initialized
-      setIsVisible(false);
-      setIsMostVisible(false);
-      return;
-    }
+    if (!currentItem) return;
 
     // Create an intersection observer to detect when the item is visible
     const visibilityObserver = new IntersectionObserver(
@@ -38,8 +33,8 @@ const PublicGameVisibilityWrapper = ({ children, isInitialized = false }: Public
     
     // Create a function that checks which visible public game item is most centered
     const checkMostCentered = () => {
-      // Only proceed if this item is visible and initialized
-      if (!isVisible || !currentItem || !isInitialized) {
+      // Only proceed if this item is visible
+      if (!isVisible || !currentItem) {
         setIsMostVisible(false);
         return;
       }
@@ -70,34 +65,22 @@ const PublicGameVisibilityWrapper = ({ children, isInitialized = false }: Public
       setIsMostVisible(closestItem === currentItem);
     };
     
-    // Check on scroll and resize with throttling
-    let ticking = false;
-    const throttledCheck = () => {
-      if (!ticking) {
-        requestAnimationFrame(() => {
-          checkMostCentered();
-          ticking = false;
-        });
-        ticking = true;
-      }
-    };
+    // Check on scroll and resize
+    window.addEventListener('scroll', checkMostCentered);
+    window.addEventListener('resize', checkMostCentered);
     
-    window.addEventListener('scroll', throttledCheck);
-    window.addEventListener('resize', throttledCheck);
-    
-    // Initial check with small delay
-    const initialCheckTimer = setTimeout(checkMostCentered, 200);
+    // Initial check
+    setTimeout(checkMostCentered, 100);
     
     return () => {
       // Clean up
       if (currentItem) {
         visibilityObserver.unobserve(currentItem);
       }
-      window.removeEventListener('scroll', throttledCheck);
-      window.removeEventListener('resize', throttledCheck);
-      clearTimeout(initialCheckTimer);
+      window.removeEventListener('scroll', checkMostCentered);
+      window.removeEventListener('resize', checkMostCentered);
     };
-  }, [isVisible, isInitialized]);
+  }, [isVisible]);
   
   return (
     <div ref={itemRef} className="public-game-item">
