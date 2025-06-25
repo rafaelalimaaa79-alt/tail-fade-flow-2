@@ -34,7 +34,7 @@ const DidYouKnow = () => {
             </div>
           </motion.div>
 
-          {/* Call to action text - enhanced styling */}
+          {/* Call to action text - enhanced styling with smaller font */}
           <motion.div
             initial={{ opacity: 0, y: 30 }}
             animate={{ opacity: 1, y: 0 }}
@@ -43,10 +43,10 @@ const DidYouKnow = () => {
           >
             <div className="absolute inset-0 bg-gradient-to-r from-[#AEE3F5]/30 via-purple-500/20 to-[#AEE3F5]/30 rounded-2xl blur-3xl animate-pulse"></div>
             <div className="relative z-10 space-y-2 py-4 px-4">
-              <p className="text-2xl sm:text-3xl font-black bg-gradient-to-r from-[#AEE3F5] via-white to-[#AEE3F5] bg-clip-text text-transparent leading-tight drop-shadow-[0_0_4px_rgba(174,227,245,0.3)]">
+              <p className="text-xl sm:text-2xl font-black bg-gradient-to-r from-[#AEE3F5] via-white to-[#AEE3F5] bg-clip-text text-transparent leading-tight drop-shadow-[0_0_4px_rgba(174,227,245,0.3)]">
                 Don't be the 97%.
               </p>
-              <p className="text-2xl sm:text-3xl font-black text-[#AEE3F5] drop-shadow-[0_0_4px_rgba(174,227,245,0.3)]">
+              <p className="text-xl sm:text-2xl font-black text-[#AEE3F5] drop-shadow-[0_0_4px_rgba(174,227,245,0.3)]">
                 Fade them.
               </p>
             </div>
