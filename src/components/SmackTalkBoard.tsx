@@ -190,9 +190,6 @@ const SmackTalkBoard = ({ isOpen, onClose, itemId, itemTitle }: SmackTalkBoardPr
           <SheetTitle className="text-white text-xl font-bold">
             Smack Talk 💬
           </SheetTitle>
-          <p className="text-gray-400 text-sm">
-            Roast bad picks. Ride hot streaks. Talk your talk.
-          </p>
           {itemTitle && (
             <p className="text-gray-300 text-sm font-medium mt-2">
               {itemTitle}
