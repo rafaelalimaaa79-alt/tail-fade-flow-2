@@ -5,7 +5,7 @@ import { showFadeNotification } from "@/utils/betting-notifications";
 import PublicGameVisibilityWrapper from "./PublicGameVisibilityWrapper";
 import { cn } from "@/lib/utils";
 import { getOppositeBet } from "@/utils/bet-conversion";
-import { MessageCircle } from "lucide-react";
+import { MessageSquare } from "lucide-react";
 
 interface PublicGame {
   id: string;
@@ -74,10 +74,10 @@ const PublicGameItem = ({ game, rank, isInitialized = false }: PublicGameItemPro
           !isInitialized || (!isMostVisible && "opacity-75") // Start neutral, then apply effects
         )}>
           {/* Chat Icon */}
-          <button className="absolute top-3 right-3 z-10 p-1.5 rounded-full bg-black/20 hover:bg-black/40 transition-colors">
-            <MessageCircle 
+          <button className="absolute top-3 right-3 z-10 p-2 rounded-lg bg-black/20 hover:bg-black/40 transition-colors border border-white/20">
+            <MessageSquare 
               className={cn(
-                "h-4 w-4",
+                "h-5 w-5",
                 isMostVisible ? "text-white" : "text-white/60"
               )} 
             />

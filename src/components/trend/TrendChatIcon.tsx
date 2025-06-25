@@ -1,6 +1,6 @@
 
 import React from "react";
-import { MessageCircle } from "lucide-react";
+import { MessageSquare } from "lucide-react";
 import { cn } from "@/lib/utils";
 
 type TrendChatIconProps = {
@@ -9,10 +9,10 @@ type TrendChatIconProps = {
 
 const TrendChatIcon = ({ isMostVisible }: TrendChatIconProps) => {
   return (
-    <button className="absolute top-3 right-3 z-10 p-1.5 rounded-full bg-black/20 hover:bg-black/40 transition-colors">
-      <MessageCircle 
+    <button className="absolute top-3 right-3 z-10 p-2 rounded-lg bg-black/20 hover:bg-black/40 transition-colors border border-white/20">
+      <MessageSquare 
         className={cn(
-          "h-4 w-4",
+          "h-5 w-5",
           isMostVisible ? "text-white" : "text-white/60"
         )} 
       />
