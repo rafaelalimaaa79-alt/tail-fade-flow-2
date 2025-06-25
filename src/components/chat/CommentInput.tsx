@@ -34,8 +34,8 @@ const CommentInput = ({
           onChange={(e) => setNewComment(e.target.value)}
           onKeyPress={handleKeyPress}
           placeholder="Add a comment..."
-          className="flex-1 bg-black border-[#AEE3F5]/30 text-[#AEE3F5] placeholder-[#AEE3F5]/50 resize-none min-h-[36px] max-h-[80px] text-sm focus:border-[#AEE3F5]/60"
-          rows={1}
+          className="flex-1 bg-black border-[#AEE3F5]/30 text-[#AEE3F5] placeholder-[#AEE3F5]/50 resize-none min-h-[60px] max-h-[80px] text-sm focus:border-[#AEE3F5]/60"
+          rows={3}
           maxLength={250}
           disabled={isSubmitting}
         />
