@@ -1,4 +1,3 @@
-
 import React from "react";
 import { Separator } from "@/components/ui/separator";
 import ActionButton from "@/components/ActionButton";
@@ -6,6 +5,7 @@ import { showFadeNotification } from "@/utils/betting-notifications";
 import PublicGameVisibilityWrapper from "./PublicGameVisibilityWrapper";
 import { cn } from "@/lib/utils";
 import { getOppositeBet } from "@/utils/bet-conversion";
+import { MessageCircle } from "lucide-react";
 
 interface PublicGame {
   id: string;
@@ -73,6 +73,16 @@ const PublicGameItem = ({ game, rank, isInitialized = false }: PublicGameItemPro
           isInitialized && "hover:from-white/10 hover:to-white/15 hover:border-[#AEE3F5]/50 hover:shadow-lg hover:shadow-[#AEE3F5]/10",
           !isInitialized || (!isMostVisible && "opacity-75") // Start neutral, then apply effects
         )}>
+          {/* Chat Icon */}
+          <button className="absolute top-3 right-3 z-10 p-1.5 rounded-full bg-black/20 hover:bg-black/40 transition-colors">
+            <MessageCircle 
+              className={cn(
+                "h-4 w-4",
+                isMostVisible ? "text-white" : "text-white/60"
+              )} 
+            />
+          </button>
+
           {/* Header with Game - Centered */}
           <div className="flex justify-center items-center px-4 py-3 bg-black/20 border-b border-white/10">
             <div className="text-white font-bold text-sm text-center uppercase tracking-wide font-mono drop-shadow-[0_0_8px_rgba(255,255,255,0.3)] bg-gradient-to-r from-white via-white/90 to-white bg-clip-text">

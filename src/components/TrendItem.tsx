@@ -1,4 +1,3 @@
-
 import React from "react";
 import { Link } from "react-router-dom";
 import { Card } from "@/components/ui/card";
@@ -13,6 +12,7 @@ import TrendVisibilityWrapper from "./trend/TrendVisibilityWrapper";
 import { Button } from "@/components/ui/button";
 import { getOppositeBet } from "@/utils/bet-conversion";
 import { showFadeNotification } from "@/utils/betting-notifications";
+import { MessageCircle } from "lucide-react";
 
 type TrendItemProps = {
   id: string;
@@ -131,7 +131,7 @@ const TrendItem = ({
         {(isVisible, isMostVisible) => (
           <Card 
             className={cn(
-              "rounded-lg bg-card shadow-md overflow-hidden min-h-[280px] flex flex-col transition-all duration-300",
+              "rounded-lg bg-card shadow-md overflow-hidden min-h-[280px] flex flex-col transition-all duration-300 relative",
               isMostVisible ? "border-onetime-red" : "border-gray-500",
               !isMostVisible && "grayscale"
             )}
@@ -139,6 +139,16 @@ const TrendItem = ({
               boxShadow: "0 0 10px rgba(239, 68, 68, 0.7)"
             } : undefined}
           >
+            {/* Chat Icon */}
+            <button className="absolute top-3 right-3 z-10 p-1.5 rounded-full bg-black/20 hover:bg-black/40 transition-colors">
+              <MessageCircle 
+                className={cn(
+                  "h-4 w-4",
+                  isMostVisible ? "text-white" : "text-white/60"
+                )} 
+              />
+            </button>
+
             <div 
               className="bg-black rounded-xl p-3 border border-[#AEE3F5]/30 animate-glow-pulse space-y-2 flex-grow flex flex-col"
               style={{
