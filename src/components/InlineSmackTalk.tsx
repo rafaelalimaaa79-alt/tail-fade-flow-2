@@ -1,29 +1,11 @@
 
 import React, { useState, useEffect } from "react";
-import { Heart, Send, X } from "lucide-react";
-import { Textarea } from "@/components/ui/textarea";
-import { Button } from "@/components/ui/button";
 import { supabase } from "@/integrations/supabase/client";
 import { useToast } from "@/hooks/use-toast";
-import { cn } from "@/lib/utils";
-
-interface Comment {
-  id: string;
-  item_id: string;
-  user_id: string;
-  username: string;
-  content: string;
-  created_at: string;
-  likes_count: number;
-  user_has_liked: boolean;
-}
-
-interface InlineSmackTalkProps {
-  isOpen: boolean;
-  onClose: () => void;
-  itemId: string;
-  itemTitle?: string;
-}
+import ChatHeader from "./chat/ChatHeader";
+import CommentsList from "./chat/CommentsList";
+import CommentInput from "./chat/CommentInput";
+import { Comment, InlineSmackTalkProps } from "./chat/types";
 
 const InlineSmackTalk = ({ isOpen, onClose, itemId, itemTitle }: InlineSmackTalkProps) => {
   const [comments, setComments] = useState<Comment[]>([]);
@@ -160,132 +142,25 @@ const InlineSmackTalk = ({ isOpen, onClose, itemId, itemTitle }: InlineSmackTalk
     }
   };
 
-  const formatTimeAgo = (timestamp: string) => {
-    const now = new Date();
-    const commentTime = new Date(timestamp);
-    const diffInMinutes = Math.floor((now.getTime() - commentTime.getTime()) / (1000 * 60));
-
-    if (diffInMinutes < 1) return "now";
-    if (diffInMinutes < 60) return `${diffInMinutes}m`;
-    if (diffInMinutes < 1440) return `${Math.floor(diffInMinutes / 60)}h`;
-    return `${Math.floor(diffInMinutes / 1440)}d`;
-  };
-
-  const handleKeyPress = (e: React.KeyboardEvent) => {
-    if (e.key === 'Enter' && !e.shiftKey) {
-      e.preventDefault();
-      handleSubmitComment();
-    }
-  };
-
   if (!isOpen) return null;
 
   return (
     <div className="bg-black border-l border-r border-b border-[#AEE3F5] overflow-hidden animate-in slide-in-from-top-4 duration-300">
-      {/* Header */}
-      <div className="flex items-center justify-between px-4 py-2 border-b border-[#AEE3F5]/20 bg-black">
-        <div className="flex items-center gap-2">
-          <div className="text-sm">💬</div>
-          <div className="text-[#AEE3F5] font-medium text-sm">Chat</div>
-          {itemTitle && (
-            <div className="text-[#AEE3F5]/60 text-xs">• {itemTitle}</div>
-          )}
-        </div>
-        <button
-          onClick={onClose}
-          className="text-[#AEE3F5]/60 hover:text-[#AEE3F5] transition-colors p-1 rounded-md hover:bg-[#AEE3F5]/10"
-        >
-          <X className="h-4 w-4" />
-        </button>
-      </div>
+      <ChatHeader itemTitle={itemTitle} onClose={onClose} />
+      
+      <CommentsList 
+        comments={comments}
+        isLoading={isLoading}
+        onLikeComment={handleLikeComment}
+      />
 
-      {/* Comments Section */}
-      <div className="max-h-64 overflow-y-auto px-4 py-3 bg-black">
-        {isLoading ? (
-          <div className="text-center text-[#AEE3F5]/60 py-6">
-            <div className="text-sm">Loading comments...</div>
-          </div>
-        ) : comments.length === 0 ? (
-          <div className="text-center text-[#AEE3F5]/60 py-6">
-            <div className="text-sm font-medium">No comments yet</div>
-            <div className="text-xs mt-1 opacity-80">Be the first to comment</div>
-          </div>
-        ) : (
-          <div className="space-y-3">
-            {comments.map((comment) => (
-              <div key={comment.id} className="flex items-start gap-3 text-sm">
-                <div className="flex-1 min-w-0">
-                  <div className="flex items-baseline gap-2 flex-wrap">
-                    <span className="text-[#AEE3F5] font-bold text-sm">
-                      @{comment.username}
-                    </span>
-                    <span className="text-[#AEE3F5]/40 text-xs">
-                      {formatTimeAgo(comment.created_at)}
-                    </span>
-                  </div>
-                  <div className="text-[#AEE3F5] mt-0.5 leading-relaxed">
-                    {comment.content}
-                  </div>
-                </div>
-                
-                {/* Like Button */}
-                <button
-                  onClick={() => handleLikeComment(comment.id, comment.user_has_liked)}
-                  className={cn(
-                    "flex items-center gap-1 px-2 py-1 rounded-full transition-colors text-xs flex-shrink-0",
-                    comment.user_has_liked
-                      ? "text-red-400 bg-red-400/10"
-                      : "text-[#AEE3F5]/60 hover:text-red-400 hover:bg-red-400/10"
-                  )}
-                >
-                  <Heart
-                    className={cn(
-                      "h-3.5 w-3.5",
-                      comment.user_has_liked && "fill-current"
-                    )}
-                  />
-                  {comment.likes_count > 0 && (
-                    <span>{comment.likes_count}</span>
-                  )}
-                </button>
-              </div>
-            ))}
-          </div>
-        )}
-      </div>
-
-      {/* Input Section */}
-      <div className="border-t border-[#AEE3F5]/20 p-3 bg-black rounded-b-xl">
-        <div className="flex gap-2">
-          <Textarea
-            value={newComment}
-            onChange={(e) => setNewComment(e.target.value)}
-            onKeyPress={handleKeyPress}
-            placeholder="Add a comment..."
-            className="flex-1 bg-black border-[#AEE3F5]/30 text-[#AEE3F5] placeholder-[#AEE3F5]/50 resize-none min-h-[36px] max-h-[80px] text-sm focus:border-[#AEE3F5]/60"
-            rows={1}
-            maxLength={250}
-            disabled={isSubmitting}
-          />
-          <Button
-            onClick={handleSubmitComment}
-            disabled={!newComment.trim() || isSubmitting}
-            className="bg-[#AEE3F5] hover:bg-[#AEE3F5]/80 text-black px-3 self-end h-9"
-          >
-            <Send className="h-3.5 w-3.5" />
-          </Button>
-        </div>
-        <div className="flex justify-between items-center mt-2">
-          <span className="text-xs text-[#AEE3F5]/40">
-            {newComment.length}/250
-          </span>
-          {!currentUser && (
-            <span className="text-xs text-[#AEE3F5]/60">
-              Sign in to comment
-            </span>
-          )}
-        </div>
-      </div>
+      <CommentInput
+        newComment={newComment}
+        setNewComment={setNewComment}
+        onSubmit={handleSubmitComment}
+        isSubmitting={isSubmitting}
+        currentUser={currentUser}
+      />
     </div>
   );
 };
