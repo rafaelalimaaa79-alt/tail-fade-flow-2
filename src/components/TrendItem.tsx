@@ -1,10 +1,9 @@
-
 import React from "react";
 import { Card } from "@/components/ui/card";
 import { cn } from "@/lib/utils";
 import TrendVisibilityWrapper from "./trend/TrendVisibilityWrapper";
 import TrendItemContent from "./trend/TrendItemContent";
-import TrendItemWithChat from "./TrendItemWithChat";
+import TrendItemWithInlineChat from "./TrendItemWithInlineChat";
 import { getOppositeBet } from "@/utils/bet-conversion";
 import { showFadeNotification } from "@/utils/betting-notifications";
 import { getFadeConfidence, getMatchup, getBetLine, getSportStatline } from "@/utils/trend-helpers";
@@ -16,13 +15,13 @@ type TrendItemProps = {
   betType: string;
   reason: string;
   isTailRecommendation: boolean;
-  recentBets: number[]; // 1 = win, 0 = loss
+  recentBets: number[];
   unitPerformance: number;
-  tailScore?: number; // Optional score for tail recommendation
-  fadeScore?: number; // Optional score for fade recommendation
-  userCount?: number; // Number of users tailing or fading
-  categoryBets?: number[]; // Added: category-specific bet history
-  categoryName?: string; // Added: specific category name (e.g., "NBA O/U")
+  tailScore?: number;
+  fadeScore?: number;
+  userCount?: number;
+  categoryBets?: number[];
+  categoryName?: string;
 };
 
 const TrendItem = ({
@@ -34,11 +33,11 @@ const TrendItem = ({
   isTailRecommendation,
   recentBets,
   unitPerformance,
-  tailScore = 75, // Default value
-  fadeScore = 80, // Default value
-  userCount = 210, // Default value
-  categoryBets, // New prop
-  categoryName, // New prop
+  tailScore = 75,
+  fadeScore = 80,
+  userCount = 210,
+  categoryBets,
+  categoryName,
 }: TrendItemProps) => {
   // Calculate win-loss record
   const wins = recentBets.filter(bet => bet === 1).length;
@@ -61,39 +60,37 @@ const TrendItem = ({
   };
   
   return (
-    <div className="block mb-4">
-      <TrendVisibilityWrapper>
-        {(isVisible, isMostVisible) => (
-          <TrendItemWithChat
-            trendId={id}
-            trendTitle={name}
-            isMostVisible={isMostVisible}
+    <TrendVisibilityWrapper>
+      {(isVisible, isMostVisible) => (
+        <TrendItemWithInlineChat
+          trendId={id}
+          trendTitle={name}
+          isMostVisible={isMostVisible}
+        >
+          <Card 
+            className={cn(
+              "rounded-lg bg-card shadow-md overflow-hidden min-h-[280px] flex flex-col transition-all duration-300 relative",
+              isMostVisible ? "border-onetime-red" : "border-gray-500",
+              !isMostVisible && "grayscale"
+            )}
+            style={isMostVisible ? {
+              boxShadow: "0 0 10px rgba(239, 68, 68, 0.7)"
+            } : undefined}
           >
-            <Card 
-              className={cn(
-                "rounded-lg bg-card shadow-md overflow-hidden min-h-[280px] flex flex-col transition-all duration-300 relative",
-                isMostVisible ? "border-onetime-red" : "border-gray-500",
-                !isMostVisible && "grayscale"
-              )}
-              style={isMostVisible ? {
-                boxShadow: "0 0 10px rgba(239, 68, 68, 0.7)"
-              } : undefined}
-            >
-              <TrendItemContent
-                matchup={matchup}
-                name={name}
-                betLine={betLine}
-                sportStatline={sportStatline}
-                fadeConfidence={fadeConfidence}
-                oppositeBet={oppositeBet}
-                onBetClick={handleBetClick}
-                isMostVisible={isMostVisible}
-              />
-            </Card>
-          </TrendItemWithChat>
-        )}
-      </TrendVisibilityWrapper>
-    </div>
+            <TrendItemContent
+              matchup={matchup}
+              name={name}
+              betLine={betLine}
+              sportStatline={sportStatline}
+              fadeConfidence={fadeConfidence}
+              oppositeBet={oppositeBet}
+              onBetClick={handleBetClick}
+              isMostVisible={isMostVisible}
+            />
+          </Card>
+        </TrendItemWithInlineChat>
+      )}
+    </TrendVisibilityWrapper>
   );
 };
 

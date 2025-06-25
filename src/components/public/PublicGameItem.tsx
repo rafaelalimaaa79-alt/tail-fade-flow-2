@@ -4,11 +4,9 @@ import { Separator } from "@/components/ui/separator";
 import ActionButton from "@/components/ActionButton";
 import { showFadeNotification } from "@/utils/betting-notifications";
 import PublicGameVisibilityWrapper from "./PublicGameVisibilityWrapper";
+import PublicGameItemWithInlineChat from "./PublicGameItemWithInlineChat";
 import { cn } from "@/lib/utils";
 import { getOppositeBet } from "@/utils/bet-conversion";
-import { MessageSquare } from "lucide-react";
-import SmackTalkBoard from "@/components/SmackTalkBoard";
-import { useSmackTalkBoard } from "@/hooks/useSmackTalkBoard";
 
 interface PublicGame {
   id: string;
@@ -30,8 +28,6 @@ interface PublicGameItemProps {
 }
 
 const PublicGameItem = ({ game, rank, isInitialized = false }: PublicGameItemProps) => {
-  const { isOpen, smackTalkData, openSmackTalk, closeSmackTalk } = useSmackTalkBoard();
-
   const getTimeInEST = () => {
     if (game.isLive) {
       return (
@@ -43,7 +39,6 @@ const PublicGameItem = ({ game, rank, isInitialized = false }: PublicGameItemPro
     }
     
     const gameTime = new Date(game.gameTime);
-    // Convert to EST (UTC-5) or EDT (UTC-4) depending on daylight savings
     const estTime = new Date(gameTime.toLocaleString("en-US", {timeZone: "America/New_York"}));
     
     return (
@@ -57,12 +52,10 @@ const PublicGameItem = ({ game, rank, isInitialized = false }: PublicGameItemPro
     );
   };
 
-  // Use stable fadeZone percentage from props or calculate once
   const fadeZonePercentage = game.fadeZonePercentage || Math.round(Math.max(70, Math.min(95, 
     100 - game.publicPercentage + (Math.random() - 0.5) * 4
   )));
 
-  // Get the opposite bet for the button
   const oppositeBet = getOppositeBet(`${game.team} ${game.spread}`, game.opponent);
 
   const handleFade = () => {
@@ -70,35 +63,19 @@ const PublicGameItem = ({ game, rank, isInitialized = false }: PublicGameItemPro
     showFadeNotification("Public Fade", betDescription);
   };
 
-  const handleChatClick = () => {
-    openSmackTalk(
-      `public-game-${game.id}`,
-      `${game.team} vs ${game.opponent}`
-    );
-  };
-
   return (
-    <>
-      <PublicGameVisibilityWrapper isInitialized={isInitialized}>
-        {(isVisible, isMostVisible) => (
+    <PublicGameVisibilityWrapper isInitialized={isInitialized}>
+      {(isVisible, isMostVisible) => (
+        <PublicGameItemWithInlineChat
+          gameId={game.id}
+          gameTitle={`${game.team} vs ${game.opponent}`}
+          isMostVisible={isMostVisible}
+        >
           <div className={cn(
-            "relative bg-gradient-to-r from-white/5 to-white/10 border-2 border-[#AEE3F5]/30 rounded-xl overflow-hidden transition-all duration-300 max-w-sm mx-auto",
+            "relative bg-gradient-to-r from-white/5 to-white/10 border-2 border-[#AEE3F5]/30 rounded-xl overflow-hidden transition-all duration-300",
             isInitialized && "hover:from-white/10 hover:to-white/15 hover:border-[#AEE3F5]/50 hover:shadow-lg hover:shadow-[#AEE3F5]/10",
-            !isInitialized || (!isMostVisible && "opacity-75") // Start neutral, then apply effects
+            !isInitialized || (!isMostVisible && "opacity-75")
           )}>
-            {/* Chat Icon */}
-            <button 
-              onClick={handleChatClick}
-              className="absolute top-1 right-3 z-10 p-2 rounded-lg bg-black/20 hover:bg-black/40 transition-colors border border-white/20"
-            >
-              <MessageSquare 
-                className={cn(
-                  "h-5 w-5",
-                  isMostVisible ? "text-white" : "text-white/60"
-                )} 
-              />
-            </button>
-
             {/* Header with Game - Centered */}
             <div className="flex justify-center items-center px-4 py-3 bg-black/20 border-b border-white/10">
               <div className="text-white font-bold text-sm text-center uppercase tracking-wide font-mono drop-shadow-[0_0_8px_rgba(255,255,255,0.3)] bg-gradient-to-r from-white via-white/90 to-white bg-clip-text">
@@ -161,16 +138,9 @@ const PublicGameItem = ({ game, rank, isInitialized = false }: PublicGameItemPro
             {/* Bottom Glow Effect */}
             <div className="absolute bottom-0 left-0 right-0 h-px bg-gradient-to-r from-transparent via-[#AEE3F5]/50 to-transparent"></div>
           </div>
-        )}
-      </PublicGameVisibilityWrapper>
-
-      <SmackTalkBoard
-        isOpen={isOpen}
-        onClose={closeSmackTalk}
-        itemId={smackTalkData?.itemId || ""}
-        itemTitle={smackTalkData?.itemTitle}
-      />
-    </>
+        </PublicGameItemWithInlineChat>
+      )}
+    </PublicGameVisibilityWrapper>
   );
 };
 
