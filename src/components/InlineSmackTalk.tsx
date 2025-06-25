@@ -181,7 +181,7 @@ const InlineSmackTalk = ({ isOpen, onClose, itemId, itemTitle }: InlineSmackTalk
   if (!isOpen) return null;
 
   return (
-    <div className="bg-black border-l border-r border-b border-[#AEE3F5] rounded-b-xl overflow-hidden animate-in slide-in-from-top-4 duration-300">
+    <div className="bg-black border-l border-r border-b border-[#AEE3F5] overflow-hidden animate-in slide-in-from-top-4 duration-300">
       {/* Header */}
       <div className="flex items-center justify-between px-4 py-2 border-b border-[#AEE3F5]/20 bg-black">
         <div className="flex items-center gap-2">
@@ -255,7 +255,7 @@ const InlineSmackTalk = ({ isOpen, onClose, itemId, itemTitle }: InlineSmackTalk
       </div>
 
       {/* Input Section */}
-      <div className="border-t border-[#AEE3F5]/20 p-3 bg-black">
+      <div className="border-t border-[#AEE3F5]/20 p-3 bg-black rounded-b-xl">
         <div className="flex gap-2">
           <Textarea
             value={newComment}
