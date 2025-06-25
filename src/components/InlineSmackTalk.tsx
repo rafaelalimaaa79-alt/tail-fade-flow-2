@@ -174,9 +174,9 @@ const InlineSmackTalk = ({ isOpen, onClose, itemId, itemTitle }: InlineSmackTalk
     const diffInMinutes = Math.floor((now.getTime() - commentTime.getTime()) / (1000 * 60));
 
     if (diffInMinutes < 1) return "now";
-    if (diffInMinutes < 60) return `${diffInMinutes}m ago`;
-    if (diffInMinutes < 1440) return `${Math.floor(diffInMinutes / 60)}h ago`;
-    return `${Math.floor(diffInMinutes / 1440)}d ago`;
+    if (diffInMinutes < 60) return `${diffInMinutes}m`;
+    if (diffInMinutes < 1440) return `${Math.floor(diffInMinutes / 60)}h`;
+    return `${Math.floor(diffInMinutes / 1440)}d`;
   };
 
   const handleKeyPress = (e: React.KeyboardEvent) => {
@@ -189,87 +189,94 @@ const InlineSmackTalk = ({ isOpen, onClose, itemId, itemTitle }: InlineSmackTalk
   if (!isOpen) return null;
 
   return (
-    <div className="bg-gray-900/95 border-t border-gray-700 rounded-b-lg overflow-hidden animate-in slide-in-from-top-2 duration-300">
-      {/* Header */}
-      <div className="flex items-center justify-between p-4 border-b border-gray-700">
-        <div>
-          <h3 className="text-white font-bold text-lg flex items-center gap-2">
-            💬 Smack Talk
-          </h3>
-          {itemTitle && (
-            <p className="text-gray-300 text-sm mt-1">{itemTitle}</p>
-          )}
+    <div className="absolute inset-0 bg-gray-900/98 backdrop-blur-sm rounded-lg overflow-hidden animate-in slide-in-from-bottom-4 duration-300 z-20 flex flex-col">
+      {/* Compact Header */}
+      <div className="flex items-center justify-between px-4 py-3 border-b border-gray-700/50 bg-gray-900/95 flex-shrink-0">
+        <div className="flex items-center gap-3">
+          <div className="text-lg">💬</div>
+          <div>
+            <div className="text-white font-semibold text-sm">Smack Talk</div>
+            {itemTitle && (
+              <div className="text-gray-400 text-xs">{itemTitle}</div>
+            )}
+          </div>
         </div>
         <button
           onClick={onClose}
-          className="text-gray-400 hover:text-white transition-colors p-1 rounded"
+          className="text-gray-400 hover:text-white transition-colors p-1.5 rounded-md hover:bg-gray-800"
         >
-          <X className="h-5 w-5" />
+          <X className="h-4 w-4" />
         </button>
       </div>
 
-      {/* Comments Section */}
+      {/* Comments Feed - Scrollable */}
       <div 
         id={`comments-${itemId}`}
-        className="max-h-80 overflow-y-auto p-4 space-y-3"
+        className="flex-1 overflow-y-auto px-4 py-3 space-y-3"
       >
         {isLoading ? (
-          <div className="text-center text-gray-400 py-6">
-            Loading comments...
+          <div className="text-center text-gray-400 py-8">
+            <div className="text-sm">Loading comments...</div>
           </div>
         ) : comments.length === 0 ? (
-          <div className="text-center text-gray-400 py-6">
-            <p className="text-base">No one's talking… yet.</p>
-            <p className="text-sm mt-1">Drop the first chirp.</p>
+          <div className="text-center text-gray-400 py-8">
+            <div className="text-sm font-medium">No one's talking… yet.</div>
+            <div className="text-xs mt-1 opacity-80">Drop the first chirp.</div>
           </div>
         ) : (
           comments.map((comment) => (
             <div
               key={comment.id}
-              className="bg-gray-800/50 rounded-lg p-3 border border-gray-700"
+              className="flex items-start gap-3 text-sm"
             >
-              <div className="flex items-center justify-between mb-2">
-                <div className="flex items-center space-x-2">
-                  <span className="text-[#AEE3F5] font-semibold text-sm">
+              <div className="flex-1 min-w-0">
+                <div className="flex items-baseline gap-2 flex-wrap">
+                  <span className="text-[#AEE3F5] font-bold text-sm">
                     @{comment.username}
                   </span>
                   <span className="text-gray-500 text-xs">
                     {formatTimeAgo(comment.created_at)}
                   </span>
                 </div>
-                <button
-                  onClick={() => handleLikeComment(comment.id, comment.user_has_liked)}
-                  className={cn(
-                    "flex items-center space-x-1 px-2 py-1 rounded-full transition-colors",
-                    comment.user_has_liked
-                      ? "text-red-400 bg-red-400/10"
-                      : "text-gray-400 hover:text-red-400 hover:bg-red-400/10"
-                  )}
-                >
-                  <Heart
-                    className={cn(
-                      "h-4 w-4",
-                      comment.user_has_liked && "fill-current"
-                    )}
-                  />
-                  <span className="text-xs">{comment.likes_count}</span>
-                </button>
+                <div className="text-white mt-0.5 leading-relaxed">
+                  {comment.content}
+                </div>
               </div>
-              <p className="text-white text-sm">{comment.content}</p>
+              
+              {/* Like Button */}
+              <button
+                onClick={() => handleLikeComment(comment.id, comment.user_has_liked)}
+                className={cn(
+                  "flex items-center gap-1 px-2 py-1 rounded-full transition-colors text-xs flex-shrink-0",
+                  comment.user_has_liked
+                    ? "text-red-400 bg-red-400/10"
+                    : "text-gray-500 hover:text-red-400 hover:bg-red-400/10"
+                )}
+              >
+                <Heart
+                  className={cn(
+                    "h-3.5 w-3.5",
+                    comment.user_has_liked && "fill-current"
+                  )}
+                />
+                {comment.likes_count > 0 && (
+                  <span>{comment.likes_count}</span>
+                )}
+              </button>
             </div>
           ))
         )}
       </div>
 
-      {/* Input Section */}
-      <div className="border-t border-gray-700 p-4 bg-gray-900">
-        <div className="flex space-x-2">
+      {/* Sticky Input at Bottom */}
+      <div className="border-t border-gray-700/50 p-4 bg-gray-900/95 flex-shrink-0">
+        <div className="flex gap-2">
           <Textarea
             value={newComment}
             onChange={(e) => setNewComment(e.target.value)}
             onKeyPress={handleKeyPress}
             placeholder="Got something to say?"
-            className="flex-1 bg-gray-800 border-gray-600 text-white placeholder-gray-400 resize-none min-h-[40px] max-h-[80px]"
+            className="flex-1 bg-gray-800/80 border-gray-600/50 text-white placeholder-gray-500 resize-none min-h-[36px] max-h-[80px] text-sm"
             rows={1}
             maxLength={250}
             disabled={isSubmitting}
@@ -277,18 +284,18 @@ const InlineSmackTalk = ({ isOpen, onClose, itemId, itemTitle }: InlineSmackTalk
           <Button
             onClick={handleSubmitComment}
             disabled={!newComment.trim() || isSubmitting}
-            className="bg-[#AEE3F5] hover:bg-[#AEE3F5]/80 text-gray-900 px-4 self-end"
+            className="bg-[#AEE3F5] hover:bg-[#AEE3F5]/80 text-gray-900 px-4 self-end h-9"
           >
-            <Send className="h-4 w-4" />
+            <Send className="h-3.5 w-3.5" />
           </Button>
         </div>
         <div className="flex justify-between items-center mt-2">
           <span className="text-xs text-gray-500">
-            {newComment.length}/250 characters
+            {newComment.length}/250
           </span>
           {!currentUser && (
             <span className="text-xs text-gray-400">
-              Sign in to post comments
+              Sign in to post
             </span>
           )}
         </div>
