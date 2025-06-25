@@ -130,6 +130,7 @@ const PublicGameItem = ({ game, rank, isInitialized = false }: PublicGameItemPro
                 onClick={handleFade}
                 className="h-10 text-base"
                 glowEffect={isMostVisible}
+                isMostVisible={isMostVisible}
               >
                 Bet {oppositeBet}
               </ActionButton>
