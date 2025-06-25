@@ -5,11 +5,15 @@ import { cn } from "@/lib/utils";
 
 type TrendChatIconProps = {
   isMostVisible: boolean;
+  onClick: () => void;
 };
 
-const TrendChatIcon = ({ isMostVisible }: TrendChatIconProps) => {
+const TrendChatIcon = ({ isMostVisible, onClick }: TrendChatIconProps) => {
   return (
-    <button className="absolute top-3 right-3 z-10 p-2 rounded-lg bg-black/20 hover:bg-black/40 transition-colors border border-white/20">
+    <button 
+      onClick={onClick}
+      className="absolute top-3 right-3 z-10 p-2 rounded-lg bg-black/20 hover:bg-black/40 transition-colors border border-white/20"
+    >
       <MessageSquare 
         className={cn(
           "h-5 w-5",

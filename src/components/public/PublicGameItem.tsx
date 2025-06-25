@@ -7,6 +7,8 @@ import PublicGameVisibilityWrapper from "./PublicGameVisibilityWrapper";
 import { cn } from "@/lib/utils";
 import { getOppositeBet } from "@/utils/bet-conversion";
 import { MessageSquare } from "lucide-react";
+import SmackTalkBoard from "@/components/SmackTalkBoard";
+import { useSmackTalkBoard } from "@/hooks/useSmackTalkBoard";
 
 interface PublicGame {
   id: string;
@@ -28,6 +30,8 @@ interface PublicGameItemProps {
 }
 
 const PublicGameItem = ({ game, rank, isInitialized = false }: PublicGameItemProps) => {
+  const { isOpen, smackTalkData, openSmackTalk, closeSmackTalk } = useSmackTalkBoard();
+
   const getTimeInEST = () => {
     if (game.isLive) {
       return (
@@ -66,88 +70,107 @@ const PublicGameItem = ({ game, rank, isInitialized = false }: PublicGameItemPro
     showFadeNotification("Public Fade", betDescription);
   };
 
-  return (
-    <PublicGameVisibilityWrapper isInitialized={isInitialized}>
-      {(isVisible, isMostVisible) => (
-        <div className={cn(
-          "relative bg-gradient-to-r from-white/5 to-white/10 border-2 border-[#AEE3F5]/30 rounded-xl overflow-hidden transition-all duration-300 max-w-sm mx-auto",
-          isInitialized && "hover:from-white/10 hover:to-white/15 hover:border-[#AEE3F5]/50 hover:shadow-lg hover:shadow-[#AEE3F5]/10",
-          !isInitialized || (!isMostVisible && "opacity-75") // Start neutral, then apply effects
-        )}>
-          {/* Chat Icon */}
-          <button className="absolute top-1 right-3 z-10 p-2 rounded-lg bg-black/20 hover:bg-black/40 transition-colors border border-white/20">
-            <MessageSquare 
-              className={cn(
-                "h-5 w-5",
-                isMostVisible ? "text-white" : "text-white/60"
-              )} 
-            />
-          </button>
+  const handleChatClick = () => {
+    openSmackTalk(
+      `public-game-${game.id}`,
+      `${game.team} vs ${game.opponent}`
+    );
+  };
 
-          {/* Header with Game - Centered */}
-          <div className="flex justify-center items-center px-4 py-3 bg-black/20 border-b border-white/10">
-            <div className="text-white font-bold text-sm text-center uppercase tracking-wide font-mono drop-shadow-[0_0_8px_rgba(255,255,255,0.3)] bg-gradient-to-r from-white via-white/90 to-white bg-clip-text">
-              {game.team} vs {game.opponent}
-            </div>
-          </div>
-          
-          {/* Split Content with Separator */}
-          <div className="flex items-stretch">
-            {/* FadeZone Side */}
-            <div className="flex-1 flex flex-col items-center justify-center px-4 py-2 space-y-2">
-              <div className="text-[#AEE3F5] text-lg font-black uppercase tracking-wide">
-                FadeZone
-              </div>
-              <div className={cn(
-                "text-[#AEE3F5] text-3xl font-bold",
-                isInitialized && "animate-pulse-slow"
-              )}>
-                {fadeZonePercentage}%
-              </div>
-              <div className="text-white/80 text-sm text-center font-medium leading-relaxed">
-                of FadeZone bettors are on <span className="text-white font-semibold">{game.team} {game.spread}</span>
-              </div>
-            </div>
-            
-            {/* Vertical Separator */}
-            <div className="flex items-center">
-              <Separator orientation="vertical" className="h-20 bg-white/30" />
-            </div>
-            
-            {/* Public Side */}
-            <div className="flex-1 flex flex-col items-center justify-center px-4 py-2 space-y-2">
-              <div className="text-red-400 text-lg font-black uppercase tracking-wide">
-                Public
-              </div>
-              <div className={cn(
-                "text-red-400 text-3xl font-bold",
-                isInitialized && "animate-pulse-slow"
-              )}>
-                {game.publicPercentage}%
-              </div>
-              <div className="text-white/80 text-sm text-center font-medium leading-relaxed">
-                of Public bettors are on <span className="text-white font-semibold">{game.team} {game.spread}</span>
-              </div>
-            </div>
-          </div>
-          
-          {/* Fade Button */}
-          <div className="px-4 py-3 border-t border-white/10">
-            <ActionButton 
-              variant="fade" 
-              onClick={handleFade}
-              className="h-10 text-base"
-              glowEffect={isInitialized && isMostVisible}
+  return (
+    <>
+      <PublicGameVisibilityWrapper isInitialized={isInitialized}>
+        {(isVisible, isMostVisible) => (
+          <div className={cn(
+            "relative bg-gradient-to-r from-white/5 to-white/10 border-2 border-[#AEE3F5]/30 rounded-xl overflow-hidden transition-all duration-300 max-w-sm mx-auto",
+            isInitialized && "hover:from-white/10 hover:to-white/15 hover:border-[#AEE3F5]/50 hover:shadow-lg hover:shadow-[#AEE3F5]/10",
+            !isInitialized || (!isMostVisible && "opacity-75") // Start neutral, then apply effects
+          )}>
+            {/* Chat Icon */}
+            <button 
+              onClick={handleChatClick}
+              className="absolute top-1 right-3 z-10 p-2 rounded-lg bg-black/20 hover:bg-black/40 transition-colors border border-white/20"
             >
-              Bet {oppositeBet}
-            </ActionButton>
+              <MessageSquare 
+                className={cn(
+                  "h-5 w-5",
+                  isMostVisible ? "text-white" : "text-white/60"
+                )} 
+              />
+            </button>
+
+            {/* Header with Game - Centered */}
+            <div className="flex justify-center items-center px-4 py-3 bg-black/20 border-b border-white/10">
+              <div className="text-white font-bold text-sm text-center uppercase tracking-wide font-mono drop-shadow-[0_0_8px_rgba(255,255,255,0.3)] bg-gradient-to-r from-white via-white/90 to-white bg-clip-text">
+                {game.team} vs {game.opponent}
+              </div>
+            </div>
+            
+            {/* Split Content with Separator */}
+            <div className="flex items-stretch">
+              {/* FadeZone Side */}
+              <div className="flex-1 flex flex-col items-center justify-center px-4 py-2 space-y-2">
+                <div className="text-[#AEE3F5] text-lg font-black uppercase tracking-wide">
+                  FadeZone
+                </div>
+                <div className={cn(
+                  "text-[#AEE3F5] text-3xl font-bold",
+                  isInitialized && "animate-pulse-slow"
+                )}>
+                  {fadeZonePercentage}%
+                </div>
+                <div className="text-white/80 text-sm text-center font-medium leading-relaxed">
+                  of FadeZone bettors are on <span className="text-white font-semibold">{game.team} {game.spread}</span>
+                </div>
+              </div>
+              
+              {/* Vertical Separator */}
+              <div className="flex items-center">
+                <Separator orientation="vertical" className="h-20 bg-white/30" />
+              </div>
+              
+              {/* Public Side */}
+              <div className="flex-1 flex flex-col items-center justify-center px-4 py-2 space-y-2">
+                <div className="text-red-400 text-lg font-black uppercase tracking-wide">
+                  Public
+                </div>
+                <div className={cn(
+                  "text-red-400 text-3xl font-bold",
+                  isInitialized && "animate-pulse-slow"
+                )}>
+                  {game.publicPercentage}%
+                </div>
+                <div className="text-white/80 text-sm text-center font-medium leading-relaxed">
+                  of Public bettors are on <span className="text-white font-semibold">{game.team} {game.spread}</span>
+                </div>
+              </div>
+            </div>
+            
+            {/* Fade Button */}
+            <div className="px-4 py-3 border-t border-white/10">
+              <ActionButton 
+                variant="fade" 
+                onClick={handleFade}
+                className="h-10 text-base"
+                glowEffect={isInitialized && isMostVisible}
+              >
+                Bet {oppositeBet}
+              </ActionButton>
+            </div>
+            
+            {/* Bottom Glow Effect */}
+            <div className="absolute bottom-0 left-0 right-0 h-px bg-gradient-to-r from-transparent via-[#AEE3F5]/50 to-transparent"></div>
           </div>
-          
-          {/* Bottom Glow Effect */}
-          <div className="absolute bottom-0 left-0 right-0 h-px bg-gradient-to-r from-transparent via-[#AEE3F5]/50 to-transparent"></div>
-        </div>
-      )}
-    </PublicGameVisibilityWrapper>
+        )}
+      </PublicGameVisibilityWrapper>
+
+      <SmackTalkBoard
+        isOpen={isOpen}
+        onClose={closeSmackTalk}
+        itemId={smackTalkData?.itemId || ""}
+        itemTitle={smackTalkData?.itemTitle}
+      />
+    </>
   );
 };
 
