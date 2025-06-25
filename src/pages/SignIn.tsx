@@ -7,9 +7,6 @@ import { useSignIn } from "@/hooks/useSignIn";
 import SignInForm from "@/components/auth/SignInForm";
 import BiometricPrompt from "@/components/auth/BiometricPrompt";
 
-// Development mode flag to bypass authentication checks
-const BYPASS_AUTH = false; // Disabled to enforce authentication
-
 const SignIn = () => {
   const location = useLocation();
   const navigate = useNavigate();
@@ -29,35 +26,34 @@ const SignIn = () => {
   
   const { attemptBiometricAuth } = useBiometricAuth();
   
-  // Only check if user is already logged in when not bypassing auth
+  // Check if user is already logged in
   useEffect(() => {
-    if (BYPASS_AUTH) {
-      console.log("SignIn: Authentication bypassed for development, showing sign-in form");
-      return;
-    }
-    
     const checkUser = async () => {
-      const { data } = await supabase.auth.getSession();
-      if (data.session?.user) {
-        console.log("User already logged in, redirecting to:", from);
-        navigate(from);
+      try {
+        const { data } = await supabase.auth.getSession();
+        if (data.session?.user) {
+          console.log("User already logged in, redirecting to:", from);
+          navigate(from);
+        }
+      } catch (error) {
+        console.error("Error checking session:", error);
       }
     };
     
     checkUser();
   }, [from, navigate]);
 
-  // Only try biometric login if enabled and not bypassing auth
+  // Try biometric login if enabled
   useEffect(() => {
-    if (BYPASS_AUTH) {
-      return;
-    }
-    
     const tryBiometric = async () => {
-      // Only try biometric if we have it enabled and not on a fresh login attempt
-      const biometricEnabled = localStorage.getItem('biometricEnabled') === 'true';
-      if (biometricEnabled && !location.state?.freshLogin) {
-        await attemptBiometricAuth(from);
+      try {
+        // Only try biometric if we have it enabled and not on a fresh login attempt
+        const biometricEnabled = localStorage.getItem('biometricEnabled') === 'true';
+        if (biometricEnabled && !location.state?.freshLogin) {
+          await attemptBiometricAuth(from);
+        }
+      } catch (error) {
+        console.error("Error with biometric auth:", error);
       }
     };
     
