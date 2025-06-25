@@ -74,7 +74,7 @@ const PublicGameItem = ({ game, rank, isInitialized = false }: PublicGameItemPro
           <div className={cn(
             "relative bg-gradient-to-r from-white/5 to-white/10 border-2 border-[#AEE3F5]/30 rounded-xl overflow-hidden transition-all duration-300",
             isInitialized && "hover:from-white/10 hover:to-white/15 hover:border-[#AEE3F5]/50 hover:shadow-lg hover:shadow-[#AEE3F5]/10",
-            !isInitialized || (!isMostVisible && "opacity-75")
+            !isMostVisible && "grayscale"
           )}>
             {/* Header with Game - Centered */}
             <div className="flex justify-center items-center px-4 py-3 bg-black/20 border-b border-white/10">
@@ -92,7 +92,7 @@ const PublicGameItem = ({ game, rank, isInitialized = false }: PublicGameItemPro
                 </div>
                 <div className={cn(
                   "text-[#AEE3F5] text-3xl font-bold",
-                  isInitialized && "animate-pulse-slow"
+                  isInitialized && isMostVisible && "animate-pulse-slow"
                 )}>
                   {fadeZonePercentage}%
                 </div>
@@ -113,7 +113,7 @@ const PublicGameItem = ({ game, rank, isInitialized = false }: PublicGameItemPro
                 </div>
                 <div className={cn(
                   "text-red-400 text-3xl font-bold",
-                  isInitialized && "animate-pulse-slow"
+                  isInitialized && isMostVisible && "animate-pulse-slow"
                 )}>
                   {game.publicPercentage}%
                 </div>
