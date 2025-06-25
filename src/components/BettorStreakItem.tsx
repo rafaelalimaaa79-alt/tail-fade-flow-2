@@ -10,11 +10,7 @@ type BettorStreakItemProps = {
 };
 
 const BettorStreakItem = ({ id, name, profit, streak }: BettorStreakItemProps) => {
-  const formattedProfit = new Intl.NumberFormat('en-US', {
-    style: 'currency',
-    currency: 'USD',
-    maximumFractionDigits: 0,
-  }).format(Math.abs(profit));
+  const formattedProfit = Math.abs(profit);
   
   return (
     <Link to={`/bettor/${id}`}>
@@ -22,7 +18,7 @@ const BettorStreakItem = ({ id, name, profit, streak }: BettorStreakItemProps) =
         <div>
           <div className="font-medium text-white">@{name}</div>
           <div className={`text-sm ${profit > 0 ? 'text-[#C4D7DC]' : 'text-[#AEE3F5]'}`}>
-            {profit > 0 ? '+' : '-'}{formattedProfit}
+            {profit > 0 ? '+' : '-'}{formattedProfit} Units
           </div>
         </div>
         

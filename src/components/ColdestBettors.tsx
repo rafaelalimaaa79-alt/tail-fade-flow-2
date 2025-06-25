@@ -4,16 +4,16 @@ import BettorStreakItem from "./BettorStreakItem";
 
 // Mock data - this would come from an API in a real app
 const coldestBettors = [
-  { id: "6", name: "Kevin", profit: -1650, streak: [0, 0, 0, 0, 1] }, // 1=win, 0=loss
-  { id: "7", name: "Lisa", profit: -1490, streak: [0, 0, 0, 1, 0] },
-  { id: "8", name: "Ryan", profit: -1250, streak: [1, 0, 0, 0, 0] },
-  { id: "9", name: "Emily", profit: -1100, streak: [0, 1, 0, 0, 0] },
-  { id: "10", name: "Alex", profit: -970, streak: [0, 0, 1, 0, 0] },
-  { id: "11", name: "Sam", profit: -890, streak: [0, 0, 0, 1, 1] },
-  { id: "12", name: "Jordan", profit: -750, streak: [1, 0, 0, 0, 1] },
-  { id: "13", name: "Casey", profit: -680, streak: [0, 1, 0, 1, 0] },
-  { id: "14", name: "Morgan", profit: -550, streak: [0, 0, 1, 0, 1] },
-  { id: "15", name: "Blake", profit: -420, streak: [1, 0, 1, 0, 0] },
+  { id: "6", name: "Kevin", profit: -165, streak: [0, 0, 0, 0, 1] }, // 1=win, 0=loss
+  { id: "7", name: "Lisa", profit: -149, streak: [0, 0, 0, 1, 0] },
+  { id: "8", name: "Ryan", profit: -125, streak: [1, 0, 0, 0, 0] },
+  { id: "9", name: "Emily", profit: -110, streak: [0, 1, 0, 0, 0] },
+  { id: "10", name: "Alex", profit: -21, streak: [0, 0, 0, 0, 0] },
+  { id: "11", name: "Sam", profit: -19, streak: [0, 0, 0, 1, 0] },
+  { id: "12", name: "Jordan", profit: -18, streak: [1, 0, 0, 0, 0] },
+  { id: "13", name: "Casey", profit: -17, streak: [0, 1, 0, 0, 0] },
+  { id: "14", name: "Taylor", profit: -16, streak: [0, 0, 1, 0, 0] },
+  { id: "15", name: "Blake", profit: -42, streak: [1, 0, 1, 0, 0] },
 ];
 
 const ColdestBettors = () => {
