@@ -153,7 +153,7 @@ const PublicGamesList = () => {
       </div>
       
       {/* Footer */}
-      <div className="mt-6 p-4 bg-gradient-to-r from-[#AEE3F5]/10 to-[#AEE3F5]/5 rounded-lg border border-[#AEE3F5]/20">
+      <div className="mt-6 p-4 bg-black rounded-lg border border-[#AEE3F5]/20">
         <div className="text-center">
           <div className="text-[#AEE3F5] font-bold text-sm mb-1">
             🔥 Fade Strategy Alert 🔥

@@ -64,7 +64,7 @@ const PublicGameItem = ({ game, rank, isInitialized = false }: PublicGameItemPro
   };
 
   return (
-    <PublicGameVisibilityWrapper isInitialized={isInitialized}>
+    <PublicGameVisibilityWrapper>
       {(isVisible, isMostVisible) => (
         <PublicGameItemWithInlineChat
           gameId={game.id}
@@ -72,8 +72,8 @@ const PublicGameItem = ({ game, rank, isInitialized = false }: PublicGameItemPro
           isMostVisible={isMostVisible}
         >
           <div className={cn(
-            "relative bg-gradient-to-r from-white/5 to-white/10 border-2 border-[#AEE3F5]/30 rounded-xl overflow-hidden transition-all duration-300",
-            isInitialized && "hover:from-white/10 hover:to-white/15 hover:border-[#AEE3F5]/50 hover:shadow-lg hover:shadow-[#AEE3F5]/10",
+            "relative bg-black border-2 border-[#AEE3F5]/30 rounded-xl overflow-hidden transition-all duration-300",
+            isInitialized && "hover:border-[#AEE3F5]/50 hover:shadow-lg hover:shadow-[#AEE3F5]/10",
             !isMostVisible && "grayscale"
           )}>
             {/* Header with Game - Centered */}
