@@ -83,11 +83,6 @@ const InlineSmackTalk = ({ isOpen, onClose, itemId, itemTitle }: InlineSmackTalk
 
       setNewComment("");
       await loadComments();
-      
-      toast({
-        title: "Comment posted!",
-        description: "Your comment has been added to the discussion",
-      });
     } catch (error) {
       console.error('Error posting comment:', error);
       toast({

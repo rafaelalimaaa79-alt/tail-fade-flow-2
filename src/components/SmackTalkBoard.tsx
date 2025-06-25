@@ -1,4 +1,3 @@
-
 import React, { useState, useEffect } from "react";
 import { Heart, Send } from "lucide-react";
 import { Sheet, SheetContent, SheetHeader, SheetTitle } from "@/components/ui/sheet";
@@ -105,11 +104,6 @@ const SmackTalkBoard = ({ isOpen, onClose, itemId, itemTitle }: SmackTalkBoardPr
 
       setNewComment("");
       await loadComments();
-      
-      toast({
-        title: "Comment posted!",
-        description: "Your comment has been added to the discussion",
-      });
     } catch (error) {
       console.error('Error posting comment:', error);
       toast({
