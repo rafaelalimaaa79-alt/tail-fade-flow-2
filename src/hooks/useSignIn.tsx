@@ -12,8 +12,8 @@ export const useSignIn = () => {
   const [loading, setLoading] = useState(false);
   const [showBiometricPrompt, setShowBiometricPrompt] = useState(false);
   
-  // Get the redirect path from location state or default to home
-  const from = location.state?.from || '/';
+  // Get the redirect path from location state or default to dashboard
+  const from = location.state?.from || '/dashboard';
   
   const handleSignIn = async (e: React.FormEvent) => {
     e.preventDefault();
@@ -48,6 +48,7 @@ export const useSignIn = () => {
       if (!biometricEnabled && supportsBiometrics) {
         setShowBiometricPrompt(true);
       } else {
+        // Always redirect if biometrics aren't available or already configured
         console.log("Redirecting after successful login to:", from);
         navigate(from);
       }
@@ -70,6 +71,9 @@ export const useSignIn = () => {
   
   const closeBiometricPrompt = () => {
     setShowBiometricPrompt(false);
+    // Redirect to dashboard when biometric prompt is closed
+    console.log("Biometric prompt closed, redirecting to:", from);
+    navigate(from);
   };
 
   return {
