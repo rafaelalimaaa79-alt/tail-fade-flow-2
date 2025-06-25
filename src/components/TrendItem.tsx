@@ -4,7 +4,7 @@ import { Card } from "@/components/ui/card";
 import { cn } from "@/lib/utils";
 import TrendVisibilityWrapper from "./trend/TrendVisibilityWrapper";
 import TrendItemContent from "./trend/TrendItemContent";
-import TrendChatIcon from "./trend/TrendChatIcon";
+import TrendItemWithChat from "./TrendItemWithChat";
 import { getOppositeBet } from "@/utils/bet-conversion";
 import { showFadeNotification } from "@/utils/betting-notifications";
 import { getFadeConfidence, getMatchup, getBetLine, getSportStatline } from "@/utils/trend-helpers";
@@ -64,29 +64,33 @@ const TrendItem = ({
     <div className="block mb-4">
       <TrendVisibilityWrapper>
         {(isVisible, isMostVisible) => (
-          <Card 
-            className={cn(
-              "rounded-lg bg-card shadow-md overflow-hidden min-h-[280px] flex flex-col transition-all duration-300 relative",
-              isMostVisible ? "border-onetime-red" : "border-gray-500",
-              !isMostVisible && "grayscale"
-            )}
-            style={isMostVisible ? {
-              boxShadow: "0 0 10px rgba(239, 68, 68, 0.7)"
-            } : undefined}
+          <TrendItemWithChat
+            trendId={id}
+            trendTitle={name}
+            isMostVisible={isMostVisible}
           >
-            <TrendChatIcon isMostVisible={isMostVisible} />
-
-            <TrendItemContent
-              matchup={matchup}
-              name={name}
-              betLine={betLine}
-              sportStatline={sportStatline}
-              fadeConfidence={fadeConfidence}
-              oppositeBet={oppositeBet}
-              onBetClick={handleBetClick}
-              isMostVisible={isMostVisible}
-            />
-          </Card>
+            <Card 
+              className={cn(
+                "rounded-lg bg-card shadow-md overflow-hidden min-h-[280px] flex flex-col transition-all duration-300 relative",
+                isMostVisible ? "border-onetime-red" : "border-gray-500",
+                !isMostVisible && "grayscale"
+              )}
+              style={isMostVisible ? {
+                boxShadow: "0 0 10px rgba(239, 68, 68, 0.7)"
+              } : undefined}
+            >
+              <TrendItemContent
+                matchup={matchup}
+                name={name}
+                betLine={betLine}
+                sportStatline={sportStatline}
+                fadeConfidence={fadeConfidence}
+                oppositeBet={oppositeBet}
+                onBetClick={handleBetClick}
+                isMostVisible={isMostVisible}
+              />
+            </Card>
+          </TrendItemWithChat>
         )}
       </TrendVisibilityWrapper>
     </div>
