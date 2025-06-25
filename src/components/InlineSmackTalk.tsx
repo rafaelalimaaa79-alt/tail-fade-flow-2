@@ -180,7 +180,7 @@ const InlineSmackTalk = ({ isOpen, onClose, itemId, itemTitle }: InlineSmackTalk
   if (!isOpen) return null;
 
   return (
-    <div className="bg-black border-t border-[#AEE3F5]/30 rounded-b-xl overflow-hidden animate-in slide-in-from-top-4 duration-300">
+    <div className="bg-black border border-[#AEE3F5] rounded-b-xl overflow-hidden animate-in slide-in-from-top-4 duration-300">
       {/* Header */}
       <div className="flex items-center justify-between px-4 py-2 border-b border-[#AEE3F5]/20 bg-black">
         <div className="flex items-center gap-2">
