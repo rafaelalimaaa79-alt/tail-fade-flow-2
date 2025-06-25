@@ -1,4 +1,3 @@
-
 import React, { useState, useEffect } from "react";
 import { Heart, Send, X } from "lucide-react";
 import { Textarea } from "@/components/ui/textarea";
@@ -181,32 +180,32 @@ const InlineSmackTalk = ({ isOpen, onClose, itemId, itemTitle }: InlineSmackTalk
   if (!isOpen) return null;
 
   return (
-    <div className="bg-gray-900/95 border-t border-[#AEE3F5]/30 rounded-b-xl overflow-hidden animate-in slide-in-from-top-4 duration-300">
+    <div className="bg-black border-t border-[#AEE3F5]/30 rounded-b-xl overflow-hidden animate-in slide-in-from-top-4 duration-300">
       {/* Header */}
-      <div className="flex items-center justify-between px-4 py-2 border-b border-gray-700/50 bg-gray-900/98">
+      <div className="flex items-center justify-between px-4 py-2 border-b border-[#AEE3F5]/20 bg-black">
         <div className="flex items-center gap-2">
           <div className="text-sm">💬</div>
-          <div className="text-white font-medium text-sm">Chat</div>
+          <div className="text-[#AEE3F5] font-medium text-sm">Chat</div>
           {itemTitle && (
-            <div className="text-gray-400 text-xs">• {itemTitle}</div>
+            <div className="text-[#AEE3F5]/60 text-xs">• {itemTitle}</div>
           )}
         </div>
         <button
           onClick={onClose}
-          className="text-gray-400 hover:text-white transition-colors p-1 rounded-md hover:bg-gray-800"
+          className="text-[#AEE3F5]/60 hover:text-[#AEE3F5] transition-colors p-1 rounded-md hover:bg-[#AEE3F5]/10"
         >
           <X className="h-4 w-4" />
         </button>
       </div>
 
       {/* Comments Section */}
-      <div className="max-h-64 overflow-y-auto px-4 py-3">
+      <div className="max-h-64 overflow-y-auto px-4 py-3 bg-black">
         {isLoading ? (
-          <div className="text-center text-gray-400 py-6">
+          <div className="text-center text-[#AEE3F5]/60 py-6">
             <div className="text-sm">Loading comments...</div>
           </div>
         ) : comments.length === 0 ? (
-          <div className="text-center text-gray-400 py-6">
+          <div className="text-center text-[#AEE3F5]/60 py-6">
             <div className="text-sm font-medium">No comments yet</div>
             <div className="text-xs mt-1 opacity-80">Be the first to comment</div>
           </div>
@@ -219,11 +218,11 @@ const InlineSmackTalk = ({ isOpen, onClose, itemId, itemTitle }: InlineSmackTalk
                     <span className="text-[#AEE3F5] font-bold text-sm">
                       @{comment.username}
                     </span>
-                    <span className="text-gray-500 text-xs">
+                    <span className="text-[#AEE3F5]/40 text-xs">
                       {formatTimeAgo(comment.created_at)}
                     </span>
                   </div>
-                  <div className="text-white mt-0.5 leading-relaxed">
+                  <div className="text-[#AEE3F5] mt-0.5 leading-relaxed">
                     {comment.content}
                   </div>
                 </div>
@@ -235,7 +234,7 @@ const InlineSmackTalk = ({ isOpen, onClose, itemId, itemTitle }: InlineSmackTalk
                     "flex items-center gap-1 px-2 py-1 rounded-full transition-colors text-xs flex-shrink-0",
                     comment.user_has_liked
                       ? "text-red-400 bg-red-400/10"
-                      : "text-gray-500 hover:text-red-400 hover:bg-red-400/10"
+                      : "text-[#AEE3F5]/60 hover:text-red-400 hover:bg-red-400/10"
                   )}
                 >
                   <Heart
@@ -255,14 +254,14 @@ const InlineSmackTalk = ({ isOpen, onClose, itemId, itemTitle }: InlineSmackTalk
       </div>
 
       {/* Input Section */}
-      <div className="border-t border-gray-700/50 p-3 bg-gray-900/98">
+      <div className="border-t border-[#AEE3F5]/20 p-3 bg-black">
         <div className="flex gap-2">
           <Textarea
             value={newComment}
             onChange={(e) => setNewComment(e.target.value)}
             onKeyPress={handleKeyPress}
             placeholder="Add a comment..."
-            className="flex-1 bg-gray-800/80 border-gray-600/50 text-white placeholder-gray-500 resize-none min-h-[36px] max-h-[80px] text-sm"
+            className="flex-1 bg-black border-[#AEE3F5]/30 text-[#AEE3F5] placeholder-[#AEE3F5]/50 resize-none min-h-[36px] max-h-[80px] text-sm focus:border-[#AEE3F5]/60"
             rows={1}
             maxLength={250}
             disabled={isSubmitting}
@@ -270,17 +269,17 @@ const InlineSmackTalk = ({ isOpen, onClose, itemId, itemTitle }: InlineSmackTalk
           <Button
             onClick={handleSubmitComment}
             disabled={!newComment.trim() || isSubmitting}
-            className="bg-[#AEE3F5] hover:bg-[#AEE3F5]/80 text-gray-900 px-3 self-end h-9"
+            className="bg-[#AEE3F5] hover:bg-[#AEE3F5]/80 text-black px-3 self-end h-9"
           >
             <Send className="h-3.5 w-3.5" />
           </Button>
         </div>
         <div className="flex justify-between items-center mt-2">
-          <span className="text-xs text-gray-500">
+          <span className="text-xs text-[#AEE3F5]/40">
             {newComment.length}/250
           </span>
           {!currentUser && (
-            <span className="text-xs text-gray-400">
+            <span className="text-xs text-[#AEE3F5]/60">
               Sign in to comment
             </span>
           )}
