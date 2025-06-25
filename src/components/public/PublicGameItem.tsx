@@ -1,3 +1,4 @@
+
 import React from "react";
 import { Separator } from "@/components/ui/separator";
 import ActionButton from "@/components/ActionButton";
@@ -74,7 +75,7 @@ const PublicGameItem = ({ game, rank, isInitialized = false }: PublicGameItemPro
           !isInitialized || (!isMostVisible && "opacity-75") // Start neutral, then apply effects
         )}>
           {/* Chat Icon */}
-          <button className="absolute top-3 right-3 z-10 p-2 rounded-lg bg-black/20 hover:bg-black/40 transition-colors border border-white/20">
+          <button className="absolute top-1 right-3 z-10 p-2 rounded-lg bg-black/20 hover:bg-black/40 transition-colors border border-white/20">
             <MessageSquare 
               className={cn(
                 "h-5 w-5",
