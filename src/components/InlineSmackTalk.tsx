@@ -1,4 +1,3 @@
-
 import React, { useState, useEffect } from "react";
 import { supabase } from "@/integrations/supabase/client";
 import { useToast } from "@/hooks/use-toast";
@@ -145,7 +144,7 @@ const InlineSmackTalk = ({ isOpen, onClose, itemId, itemTitle }: InlineSmackTalk
   if (!isOpen) return null;
 
   return (
-    <div className="bg-black border-l border-r border-b border-[#AEE3F5] overflow-hidden animate-in slide-in-from-top-4 duration-300">
+    <div className="bg-black border-l border-r border-b border-[#AEE3F5] overflow-hidden animate-in slide-in-from-top-4 duration-300 h-80 flex flex-col">
       <ChatHeader itemTitle={itemTitle} onClose={onClose} />
       
       <CommentsList 
