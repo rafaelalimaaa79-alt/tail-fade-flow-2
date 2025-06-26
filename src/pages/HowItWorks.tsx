@@ -1,3 +1,4 @@
+
 import React from "react";
 import { motion } from "framer-motion";
 import { Button } from "@/components/ui/button";
@@ -8,7 +9,7 @@ const HowItWorks = () => {
   const navigate = useNavigate();
 
   const handleEnterFadeZone = () => {
-    // Navigate to the dashboard/home page
+    // Navigate directly to the dashboard since user just completed onboarding
     navigate('/dashboard', { replace: true });
   };
 
