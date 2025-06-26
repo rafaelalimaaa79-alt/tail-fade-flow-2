@@ -7,6 +7,10 @@ export const validateUsername = (value: string) => {
     return "Only letters, numbers, and underscores allowed";
   }
   
+  if (value.length > 0 && value.length <= 8) {
+    return "Username must be more than 8 characters";
+  }
+  
   if (value.length > 20) {
     return "Username must be 20 characters or less";
   }
