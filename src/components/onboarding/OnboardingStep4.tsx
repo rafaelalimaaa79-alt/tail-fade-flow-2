@@ -10,9 +10,9 @@ interface OnboardingStep4Props {
 
 const OnboardingStep4: React.FC<OnboardingStep4Props> = ({ value, onSelect }) => {
   const options = [
-    { value: "always-up", label: "I'm always up" },
+    { value: "usually-up", label: "I'm usually up" },
     { value: "grind-break-even", label: "It's a grind to break even" },
-    { value: "never-up", label: "I'm never up" }
+    { value: "usually-down", label: "I'm usually down" }
   ];
 
   return (
