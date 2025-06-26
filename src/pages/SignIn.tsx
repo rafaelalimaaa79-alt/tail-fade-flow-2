@@ -26,15 +26,17 @@ const SignIn = () => {
   
   const { attemptBiometricAuth } = useBiometricAuth();
   
-  // Only redirect if user is logged in AND we're coming from a protected route
-  // This prevents auto-redirect when someone directly visits the sign-in page
+  // Only redirect if user is logged in AND we have a specific redirect location that's not root
   useEffect(() => {
     const checkUser = async () => {
       try {
         const { data } = await supabase.auth.getSession();
-        if (data.session?.user && from !== '/') {
-          // Only redirect if we have a specific "from" location that's not the root
-          // This allows users to visit /signin directly without auto-redirect
+        // Only redirect if:
+        // 1. User is logged in
+        // 2. We have a specific "from" location 
+        // 3. The "from" location is not the root '/' or '/signin'
+        // 4. We're not currently on the root path
+        if (data.session?.user && from && from !== '/' && from !== '/signin' && location.pathname !== '/') {
           console.log("User already logged in, redirecting to:", from);
           navigate(from);
         }
@@ -43,23 +45,27 @@ const SignIn = () => {
       }
     };
     
-    // Only check and potentially redirect if we have a specific redirect location
-    if (from && from !== '/') {
+    // Only check and potentially redirect if we have a valid redirect location
+    if (from && from !== '/' && from !== '/signin' && location.pathname !== '/') {
       checkUser();
     }
-  }, [from, navigate]);
+  }, [from, navigate, location.pathname]);
 
-  // Try biometric login if enabled - only on fresh visits, not on logout
+  // Try biometric login if enabled - but not on root page visits
   useEffect(() => {
     const tryBiometric = async () => {
       try {
-        // Only try biometric if we have it enabled and not coming from a logout or fresh login attempt
         const biometricEnabled = localStorage.getItem('biometricEnabled') === 'true';
         const comingFromLogout = location.state?.fromLogout;
         const freshLogin = location.state?.freshLogin;
+        const isRootPage = location.pathname === '/';
         
-        // Also don't try biometric if accessing signin directly (from === '/')
-        if (biometricEnabled && !comingFromLogout && !freshLogin && from !== '/') {
+        // Don't try biometric if:
+        // - Coming from logout
+        // - Fresh login attempt
+        // - Visiting root page directly
+        // - No specific redirect location
+        if (biometricEnabled && !comingFromLogout && !freshLogin && !isRootPage && from && from !== '/') {
           await attemptBiometricAuth(from);
         }
       } catch (error) {
@@ -68,7 +74,7 @@ const SignIn = () => {
     };
     
     tryBiometric();
-  }, [attemptBiometricAuth, from, location.state]);
+  }, [attemptBiometricAuth, from, location.state, location.pathname]);
 
   return (
     <div className="flex flex-col min-h-screen bg-background">

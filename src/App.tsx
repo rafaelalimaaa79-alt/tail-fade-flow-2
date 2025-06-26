@@ -32,7 +32,7 @@ const App = () => (
       <BrowserRouter>
         <AuthProvider>
           <Routes>
-            {/* Root route always goes to sign in */}
+            {/* Root route always goes to sign in - no authentication check */}
             <Route path="/" element={<SignIn />} />
             
             {/* Auth Routes */}
