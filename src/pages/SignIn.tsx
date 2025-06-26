@@ -43,13 +43,16 @@ const SignIn = () => {
     checkUser();
   }, [from, navigate]);
 
-  // Try biometric login if enabled
+  // Try biometric login if enabled - only on fresh visits, not on logout
   useEffect(() => {
     const tryBiometric = async () => {
       try {
-        // Only try biometric if we have it enabled and not on a fresh login attempt
+        // Only try biometric if we have it enabled and not coming from a logout or fresh login attempt
         const biometricEnabled = localStorage.getItem('biometricEnabled') === 'true';
-        if (biometricEnabled && !location.state?.freshLogin) {
+        const comingFromLogout = location.state?.fromLogout;
+        const freshLogin = location.state?.freshLogin;
+        
+        if (biometricEnabled && !comingFromLogout && !freshLogin) {
           await attemptBiometricAuth(from);
         }
       } catch (error) {

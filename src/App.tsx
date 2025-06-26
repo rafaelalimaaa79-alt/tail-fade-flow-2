@@ -32,7 +32,7 @@ const App = () => (
       <BrowserRouter>
         <AuthProvider>
           <Routes>
-            {/* Default route now goes to sign in */}
+            {/* Root route always goes to sign in */}
             <Route path="/" element={<SignIn />} />
             
             {/* Auth Routes */}

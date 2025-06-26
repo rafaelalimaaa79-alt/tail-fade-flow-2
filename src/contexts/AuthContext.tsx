@@ -35,32 +35,41 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
     // Set up auth state listener first
     const { data: { subscription } } = supabase.auth.onAuthStateChange(
       (event, session) => {
+        console.log('Auth state changed:', event, session?.user?.id);
         setSession(session);
         setUser(session?.user ?? null);
         
         if (event === 'SIGNED_OUT') {
           // Clear any local state that should be reset on sign out
           setBiometricEnabled(false);
+          // Always redirect to signin on sign out
+          console.log('User signed out, redirecting to signin');
+          navigate('/signin');
         }
       }
     );
 
     // Then check for existing session
     supabase.auth.getSession().then(({ data: { session } }) => {
+      console.log('Initial session check:', session?.user?.id);
       setSession(session);
       setUser(session?.user ?? null);
       setLoading(false);
     });
 
     return () => subscription.unsubscribe();
-  }, []);
+  }, [navigate]);
   
   const signOut = useCallback(async () => {
     try {
+      console.log('Signing out user');
       await supabase.auth.signOut();
-      navigate('/signin');
+      // The auth state change listener will handle the redirect
     } catch (error) {
+      console.error('Error signing out:', error);
       toast.error('Error signing out');
+      // Force redirect to signin even if there's an error
+      navigate('/signin');
     }
   }, [navigate]);
 
