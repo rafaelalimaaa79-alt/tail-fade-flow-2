@@ -10,14 +10,11 @@ interface OnboardingStep1Props {
 
 const OnboardingStep1: React.FC<OnboardingStep1Props> = ({ value, onSelect }) => {
   const options = [
-    { value: "$10", label: "$10" },
-    { value: "$25", label: "$25" },
-    { value: "$50", label: "$50" },
-    { value: "$75", label: "$75" },
+    { value: "$15", label: "$15" },
+    { value: "$35", label: "$35" },
+    { value: "$70", label: "$70" },
     { value: "$100", label: "$100" },
-    { value: "$200", label: "$200" },
-    { value: "$300", label: "$300" },
-    { value: "$400+", label: "$400+" }
+    { value: "$200", label: "$200" }
   ];
 
   return (
