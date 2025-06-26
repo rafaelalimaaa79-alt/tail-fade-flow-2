@@ -10,9 +10,8 @@ interface OnboardingStep3Props {
 
 const OnboardingStep3: React.FC<OnboardingStep3Props> = ({ value, onSelect }) => {
   const options = [
-    { value: "friends-ice-cold", label: "Yep. My friends are ice cold" },
-    { value: "thought-about-it", label: "I've thought about it, just haven't pulled the trigger" },
-    { value: "not-yet", label: "Not yet — but I probably should" }
+    { value: "absolutely", label: "Absolutely" },
+    { value: "never", label: "Never" }
   ];
 
   return (
