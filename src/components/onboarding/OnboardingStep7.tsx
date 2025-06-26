@@ -7,7 +7,6 @@ import OnboardingHeader from "./OnboardingHeader";
 import UsernameInput from "./UsernameInput";
 import UsernamePreview from "./UsernamePreview";
 import { validateUsername, checkUsernameAvailability } from "@/utils/usernameValidation";
-import { generateRandomUsername } from "@/utils/usernameGenerator";
 
 interface OnboardingStep7Props {
   onComplete: (route: string) => void;
@@ -40,15 +39,6 @@ const OnboardingStep7: React.FC<OnboardingStep7Props> = ({ onComplete }) => {
     } else {
       setIsAvailable(null);
     }
-  };
-
-  const handleGenerateRandom = async () => {
-    const generatedName = generateRandomUsername();
-    setUsername(generatedName);
-    setIsChecking(true);
-    const available = await checkUsernameAvailability(generatedName);
-    setIsAvailable(available);
-    setIsChecking(false);
   };
 
   const handleSubmit = () => {
@@ -88,7 +78,6 @@ const OnboardingStep7: React.FC<OnboardingStep7Props> = ({ onComplete }) => {
             isAvailable={isAvailable}
             error={error}
             onUsernameChange={handleUsernameChange}
-            onGenerateRandom={handleGenerateRandom}
           />
 
           <UsernamePreview username={username} isAvailable={isAvailable} />

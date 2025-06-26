@@ -1,8 +1,7 @@
 
 import React from "react";
 import { motion } from "framer-motion";
-import { CheckCircle, X, Shuffle } from "lucide-react";
-import { Button } from "@/components/ui/button";
+import { CheckCircle, X } from "lucide-react";
 import { Input } from "@/components/ui/input";
 
 interface UsernameInputProps {
@@ -11,7 +10,6 @@ interface UsernameInputProps {
   isAvailable: boolean | null;
   error: string;
   onUsernameChange: (e: React.ChangeEvent<HTMLInputElement>) => void;
-  onGenerateRandom: () => void;
 }
 
 const UsernameInput: React.FC<UsernameInputProps> = ({
@@ -19,8 +17,7 @@ const UsernameInput: React.FC<UsernameInputProps> = ({
   isChecking,
   isAvailable,
   error,
-  onUsernameChange,
-  onGenerateRandom
+  onUsernameChange
 }) => {
   const getStatusIcon = () => {
     if (isChecking) {
@@ -88,21 +85,6 @@ const UsernameInput: React.FC<UsernameInputProps> = ({
           {error}
         </motion.div>
       )}
-
-      <motion.div
-        initial={{ opacity: 0, y: 10 }}
-        animate={{ opacity: 1, y: 0 }}
-        transition={{ delay: 0.8 }}
-      >
-        <Button
-          onClick={onGenerateRandom}
-          variant="ghost"
-          className="text-white/60 hover:text-[#AEE3F5] hover:bg-white/5 transition-all duration-300 text-sm h-8"
-        >
-          <Shuffle className="w-4 h-4 mr-2" />
-          Generate Random Name
-        </Button>
-      </motion.div>
     </motion.div>
   );
 };
