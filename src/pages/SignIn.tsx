@@ -26,12 +26,15 @@ const SignIn = () => {
   
   const { attemptBiometricAuth } = useBiometricAuth();
   
-  // Check if user is already logged in
+  // Only redirect if user is logged in AND we're coming from a protected route
+  // This prevents auto-redirect when someone directly visits the sign-in page
   useEffect(() => {
     const checkUser = async () => {
       try {
         const { data } = await supabase.auth.getSession();
-        if (data.session?.user) {
+        if (data.session?.user && from !== '/') {
+          // Only redirect if we have a specific "from" location that's not the root
+          // This allows users to visit /signin directly without auto-redirect
           console.log("User already logged in, redirecting to:", from);
           navigate(from);
         }
@@ -40,7 +43,10 @@ const SignIn = () => {
       }
     };
     
-    checkUser();
+    // Only check and potentially redirect if we have a specific redirect location
+    if (from && from !== '/') {
+      checkUser();
+    }
   }, [from, navigate]);
 
   // Try biometric login if enabled - only on fresh visits, not on logout
@@ -52,7 +58,8 @@ const SignIn = () => {
         const comingFromLogout = location.state?.fromLogout;
         const freshLogin = location.state?.freshLogin;
         
-        if (biometricEnabled && !comingFromLogout && !freshLogin) {
+        // Also don't try biometric if accessing signin directly (from === '/')
+        if (biometricEnabled && !comingFromLogout && !freshLogin && from !== '/') {
           await attemptBiometricAuth(from);
         }
       } catch (error) {
