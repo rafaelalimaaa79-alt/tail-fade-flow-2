@@ -29,9 +29,6 @@ const OnboardingStep3: React.FC<OnboardingStep3Props> = ({ value, onSelect }) =>
         <h2 className="text-2xl font-light text-white mb-3">
           Ever faded your buddy's "lock of the week"?
         </h2>
-        <p className="text-white/70 text-sm">
-          You hear their pick and immediately bet the other side — yeah, we do that too.
-        </p>
       </motion.div>
 
       <div className="space-y-3">
