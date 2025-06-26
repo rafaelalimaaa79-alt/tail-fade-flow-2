@@ -3,7 +3,7 @@ export const validateUsername = (value: string) => {
   // Only allow letters, numbers, and underscores
   const validPattern = /^[a-zA-Z0-9_]*$/;
   
-  if (!validPattern.test(value)) {
+  if (value.length > 0 && !validPattern.test(value)) {
     return "Only letters, numbers, and underscores allowed";
   }
   

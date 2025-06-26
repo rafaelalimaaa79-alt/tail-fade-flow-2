@@ -22,22 +22,22 @@ const OnboardingStep7: React.FC<OnboardingStep7Props> = ({ onComplete }) => {
   const handleUsernameChange = async (e: React.ChangeEvent<HTMLInputElement>) => {
     const value = e.target.value;
     
-    const validationError = validateUsername(value);
-    if (validationError) {
-      setError(validationError);
-      return;
-    }
-    
-    setError("");
+    // Always update the username first
     setUsername(value);
     
-    if (value.length > 0) {
+    // Then validate
+    const validationError = validateUsername(value);
+    setError(validationError);
+    
+    // Only check availability if there's no validation error and username has content
+    if (!validationError && value.length > 8) {
       setIsChecking(true);
       const available = await checkUsernameAvailability(value);
       setIsAvailable(available);
       setIsChecking(false);
     } else {
       setIsAvailable(null);
+      setIsChecking(false);
     }
   };
 
