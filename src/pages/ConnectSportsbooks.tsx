@@ -1,4 +1,3 @@
-
 import React, { useState } from "react";
 import { useNavigate } from "react-router-dom";
 import { Check, Shield, Fingerprint, AlertCircle } from "lucide-react";
@@ -54,11 +53,6 @@ const ConnectSportsbooks = () => {
     <div className="bg-black min-h-screen">
       <div className="max-w-md mx-auto w-full px-4 py-8">
         <div className="text-center mb-8">
-          <img 
-            src="/lovable-uploads/cd6a8903-d55e-4a4c-a745-0b8198dc4270.png" 
-            alt="Fade Zone logo" 
-            className="h-24 mx-auto mb-6"
-          />
           <h1 className="text-2xl font-bold text-white mb-2">Link Your Sportsbooks</h1>
           <p className="text-muted-foreground text-sm px-4">
             Security Promise
