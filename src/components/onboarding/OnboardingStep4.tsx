@@ -1,4 +1,3 @@
-
 import React from "react";
 import { motion } from "framer-motion";
 import { TrendingUp } from "lucide-react";
@@ -10,9 +9,9 @@ interface OnboardingStep4Props {
 
 const OnboardingStep4: React.FC<OnboardingStep4Props> = ({ value, onSelect }) => {
   const options = [
-    { value: "usually-up", label: "I'm usually up" },
-    { value: "grind-break-even", label: "It's a grind to break even" },
-    { value: "usually-down", label: "I'm usually down" }
+    { value: "up-more-than-down", label: "Up more than down" },
+    { value: "win-some-lose-some", label: "Win some, lose some" },
+    { value: "down-bad-every-week", label: "Down bad every week" }
   ];
 
   return (
