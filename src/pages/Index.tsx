@@ -58,7 +58,7 @@ const Dashboard = () => {
       <div className={`max-w-md mx-auto w-full px-2 ${isMobile ? "pb-24" : ""}`}>
         <div className="flex justify-between items-center pt-2 mb-4">
           <img 
-            src="/lovable-uploads/265d0d33-b593-445b-a3a0-7f516d2dab28.png" 
+            src="/lovable-uploads/7158b6ef-c172-4e78-9294-9cba0c6b6db7.png" 
             alt="NoShot logo" 
             className="h-32"
           />
