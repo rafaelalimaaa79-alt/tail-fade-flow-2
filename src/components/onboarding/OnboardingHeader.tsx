@@ -26,7 +26,7 @@ const OnboardingHeader: React.FC = () => {
         transition={{ delay: 0.4 }}
         className="text-3xl font-light text-white mb-4"
       >
-        Pick your <span className="text-[#AEE3F5] font-medium">FadeZone</span> username
+        Pick your <span className="text-[#AEE3F5] font-medium">NoShot</span> username
       </motion.h2>
       
       <motion.div
