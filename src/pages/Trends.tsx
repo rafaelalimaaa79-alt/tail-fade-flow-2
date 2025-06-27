@@ -20,8 +20,8 @@ const Trends = () => {
       <div className={`max-w-md mx-auto w-full px-2 ${isMobile ? "pb-24" : ""}`}>
         <div className="flex justify-between items-center pt-2 mb-4">
           <img 
-            src="/lovable-uploads/1c43228f-bd98-4cd2-b560-ec6a33c8534f.png" 
-            alt="CHALKD logo" 
+            src="/lovable-uploads/265d0d33-b593-445b-a3a0-7f516d2dab28.png" 
+            alt="NoShot logo" 
             className="h-32"
           />
           <ProfileIcon />
