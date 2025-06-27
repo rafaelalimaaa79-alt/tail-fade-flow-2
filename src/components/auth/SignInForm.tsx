@@ -36,7 +36,7 @@ const SignInForm: React.FC<SignInFormProps> = ({
             Welcome to<br />
             <span className="text-[#AEE3F5]" style={{ 
               textShadow: '0 0 10px #AEE3F5, 0 0 20px #AEE3F5, 0 0 30px #AEE3F5' 
-            }}>CHALKD</span>
+            }}>NoShot</span>
           </h1>
           
           <div className="space-y-4 w-full">
@@ -65,7 +65,7 @@ const SignInForm: React.FC<SignInFormProps> = ({
     <div className="w-full max-w-md h-screen flex flex-col px-6 mx-auto overflow-hidden">
       <div className="text-center mb-6 flex-shrink-0 mt-12">
         <h1 className="text-3xl font-light text-white mb-2">Sign In</h1>
-        <p className="text-white/80 mb-3">Welcome back to CHALKD</p>
+        <p className="text-white/80 mb-3">Welcome back to NoShot</p>
       </div>
       
       <div className="flex-1 flex flex-col justify-center min-h-0">
