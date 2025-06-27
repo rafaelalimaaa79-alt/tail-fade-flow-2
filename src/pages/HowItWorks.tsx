@@ -45,7 +45,7 @@ const HowItWorks = () => {
           className="text-center mb-8"
         >
           <h1 className="text-3xl sm:text-4xl font-light text-white mb-2">
-            How <span className="text-[#AEE3F5] font-medium">FadeZone</span> Works
+            How <span className="text-[#AEE3F5] font-medium">NoShot</span> Works
           </h1>
         </motion.div>
 
@@ -92,7 +92,7 @@ const HowItWorks = () => {
             onClick={handleEnterFadeZone}
             className="w-full h-12 text-lg bg-[#AEE3F5] hover:bg-[#AEE3F5]/90 text-black font-semibold shadow-[0_0_20px_rgba(174,227,245,0.4)] hover:shadow-[0_0_30px_rgba(174,227,245,0.6)] hover:scale-[1.02] transition-all duration-300"
           >
-            Enter the FadeZone
+            Enter NoShot
           </Button>
         </motion.div>
       </div>
