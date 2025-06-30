@@ -92,9 +92,10 @@ const ProfilePage = () => {
       <div className="max-w-md mx-auto w-full px-2">
         <div className="flex justify-between items-center pt-2 mb-4">
           <img 
-            src="/lovable-uploads/ef71dcb7-0442-49e5-b4e1-065c91579237.png" 
-            alt="Fade Zone logo" 
-            className="h-24"
+            src="/lovable-uploads/7b63dfa5-820d-4bd0-82f2-9e01001a0364.png" 
+            alt="NoShot logo" 
+            className="h-40 cursor-pointer"
+            onClick={() => navigate("/dashboard")}
           />
           <ProfileIcon />
         </div>
