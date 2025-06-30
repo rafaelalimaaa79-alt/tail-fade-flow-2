@@ -33,7 +33,7 @@ const SignInForm: React.FC<SignInFormProps> = ({
     return (
       <div className="w-full max-w-md h-screen flex flex-col justify-center items-center px-6 mx-auto overflow-hidden">
         <div className="text-center">
-          <h1 className="text-5xl sm:text-6xl font-light leading-tight mb-4">
+          <h1 className="text-5xl sm:text-6xl font-light leading-tight mb-2">
             Welcome to
           </h1>
           <div className="mb-12">
