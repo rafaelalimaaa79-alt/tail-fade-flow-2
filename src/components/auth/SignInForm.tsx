@@ -40,7 +40,7 @@ const SignInForm: React.FC<SignInFormProps> = ({
             <img 
               src="/lovable-uploads/99f513eb-4898-4734-a758-01b21af1919b.png" 
               alt="NoShot logo" 
-              className="h-20 mx-auto drop-shadow-[0_0_20px_rgba(174,227,245,0.5)]"
+              className="h-40 mx-auto drop-shadow-[0_0_20px_rgba(174,227,245,0.5)]"
             />
           </div>
           
