@@ -92,20 +92,28 @@ const PendingBetsList = () => {
     return { team, betType };
   };
 
+  // Create bets with fade confidence and sort by highest confidence
+  const betsWithConfidence = pendingBets.map(bet => ({
+    ...bet,
+    fadeConfidence: getFadeConfidence(),
+    matchup: getMatchup(),
+    betData: (() => {
+      const matchup = getMatchup();
+      return getBetLine(matchup.teams);
+    })()
+  })).sort((a, b) => b.fadeConfidence - a.fadeConfidence);
+
   // Determine which bets to show
-  const betsToShow = showAll ? pendingBets : pendingBets.slice(0, 3);
+  const betsToShow = showAll ? betsWithConfidence : betsWithConfidence.slice(0, 3);
   const hasMoreBets = pendingBets.length > 3;
   
   return (
     <div className="space-y-4">
       {betsToShow.map((bet, index) => {
-        const fadeConfidence = getFadeConfidence();
-        const matchup = getMatchup();
-        const betData = getBetLine(matchup.teams);
-        const betLine = betData.team ? `${betData.team} ${betData.betType}` : betData.betType;
+        const betLine = bet.betData.team ? `${bet.betData.team} ${bet.betData.betType}` : bet.betData.betType;
         
         // Get the opposite team for the fade bet
-        const opponentTeam = matchup.teams.find(team => team !== betData.team);
+        const opponentTeam = bet.matchup.teams.find(team => team !== bet.betData.team);
         const oppositeBet = getOppositeBet(betLine, opponentTeam);
         
         return (
@@ -119,7 +127,7 @@ const PendingBetsList = () => {
               {/* Game header with solid icy blue underline */}
               <div className="text-center pb-1">
                 <h3 className="text-base font-bold text-white relative inline-block">
-                  {matchup.game}
+                  {bet.matchup.game}
                   <div className="absolute bottom-0 left-0 w-full h-0.5 bg-[#AEE3F5] opacity-90"></div>
                 </h3>
               </div>
@@ -141,7 +149,7 @@ const PendingBetsList = () => {
               {/* Fade confidence */}
               <div className="text-center">
                 <p className="text-base font-semibold text-gray-300">
-                  Fade Confidence: <span className="text-[#AEE3F5] font-bold">{fadeConfidence}%</span>
+                  Fade Confidence: <span className="text-[#AEE3F5] font-bold">{bet.fadeConfidence}%</span>
                 </p>
               </div>
               
@@ -186,15 +194,18 @@ const PendingBetsList = () => {
         );
       })}
       
-      {/* View All / Show Less Button */}
+      {/* View All / Show Less Button - More Prominent */}
       {hasMoreBets && (
-        <div className="flex justify-center pt-4">
+        <div className="flex justify-center pt-6">
           <Button
-            variant="outline"
             onClick={() => setShowAll(!showAll)}
-            className="border-[#AEE3F5]/30 text-[#AEE3F5] hover:bg-[#AEE3F5]/10 hover:border-[#AEE3F5]/50"
+            className="bg-[#AEE3F5] hover:bg-[#AEE3F5]/90 text-black font-bold py-3 px-8 text-lg rounded-xl shadow-lg"
+            style={{
+              boxShadow: "0 0 20px rgba(174, 227, 245, 0.6), 0 0 40px rgba(174, 227, 245, 0.3)"
+            }}
           >
-            {showAll ? `Show Less` : `View All ${pendingBets.length} Pending Bets`}
+            {showAll ? `Show Top 3 Bets` : `View All ${pendingBets.length} Pending Bets`}
+            {!showAll && <ArrowRight className="ml-2 h-5 w-5" />}
           </Button>
         </div>
       )}

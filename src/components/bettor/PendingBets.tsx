@@ -83,8 +83,23 @@ const PendingBets: React.FC<PendingBetsProps> = ({ pendingBets, profile, classNa
     return sportStatlines[sport as keyof typeof sportStatlines] || `He is ${wins} for ${totalBets} in his last ${totalBets} bets`;
   };
 
+  // Create bets with fade confidence and sort by highest confidence
+  const betsWithConfidence = pendingBets.map(bet => ({
+    ...bet,
+    fadeConfidence: getFadeConfidence(),
+    matchup: getMatchup(),
+    betLine: (() => {
+      const matchup = getMatchup();
+      return getBetLine(matchup.teams);
+    })(),
+    sportStatline: (() => {
+      const matchup = getMatchup();
+      return getSportStatline(matchup.sport);
+    })()
+  })).sort((a, b) => b.fadeConfidence - a.fadeConfidence);
+
   // Determine which bets to show
-  const betsToShow = showAll ? pendingBets : pendingBets.slice(0, 3);
+  const betsToShow = showAll ? betsWithConfidence : betsWithConfidence.slice(0, 3);
   const hasMoreBets = pendingBets.length > 3;
 
   return (
@@ -96,11 +111,6 @@ const PendingBets: React.FC<PendingBetsProps> = ({ pendingBets, profile, classNa
       {pendingBets.length > 0 ? (
         <div className="space-y-6 relative z-10">
           {betsToShow.map((bet, index) => {
-            const fadeConfidence = getFadeConfidence();
-            const matchup = getMatchup();
-            const betLine = getBetLine(matchup.teams);
-            const sportStatline = getSportStatline(matchup.sport);
-            
             return (
               <div key={bet.id}>
                 <div 
@@ -112,7 +122,7 @@ const PendingBets: React.FC<PendingBetsProps> = ({ pendingBets, profile, classNa
                   {/* Game header with solid icy blue underline */}
                   <div className="text-center pb-1">
                     <h3 className="text-2xl font-bold text-white relative inline-block">
-                      {matchup.game}
+                      {bet.matchup.game}
                       <div className="absolute bottom-0 left-0 w-full h-1 bg-[#AEE3F5] opacity-90"></div>
                     </h3>
                   </div>
@@ -121,14 +131,14 @@ const PendingBets: React.FC<PendingBetsProps> = ({ pendingBets, profile, classNa
                   <div className="text-center py-1">
                     <p className="text-lg font-bold">
                       <span className="text-[#AEE3F5]">@{profile.username}</span>
-                      <span className="text-white"> is on {betLine}</span>
+                      <span className="text-white"> is on {bet.betLine}</span>
                     </p>
                   </div>
                   
                   {/* Sport-specific statline */}
                   <div className="text-center py-1">
                     <p className="text-base font-medium text-gray-400 italic">
-                      {sportStatline}
+                      {bet.sportStatline}
                     </p>
                   </div>
                   
@@ -140,7 +150,7 @@ const PendingBets: React.FC<PendingBetsProps> = ({ pendingBets, profile, classNa
                   {/* Fade confidence */}
                   <div className="text-center py-1">
                     <p className="text-lg font-semibold text-gray-300">
-                      Fade Confidence: <span className="text-[#AEE3F5] font-bold">{fadeConfidence}%</span>
+                      Fade Confidence: <span className="text-[#AEE3F5] font-bold">{bet.fadeConfidence}%</span>
                     </p>
                   </div>
                   
@@ -150,7 +160,7 @@ const PendingBets: React.FC<PendingBetsProps> = ({ pendingBets, profile, classNa
                       className="w-full bg-[#AEE3F5] hover:bg-[#AEE3F5]/90 text-black font-bold py-3 rounded-xl"
                       onClick={() => handleFade(bet)}
                     >
-                      Fade {betLine}
+                      Fade {bet.betLine}
                     </Button>
                   </div>
                 </div>
@@ -165,15 +175,18 @@ const PendingBets: React.FC<PendingBetsProps> = ({ pendingBets, profile, classNa
             );
           })}
           
-          {/* View All / Show Less Button */}
+          {/* View All / Show Less Button - More Prominent */}
           {hasMoreBets && (
             <div className="flex justify-center pt-6">
               <Button
-                variant="outline"
                 onClick={() => setShowAll(!showAll)}
-                className="border-[#AEE3F5]/30 text-[#AEE3F5] hover:bg-[#AEE3F5]/10 hover:border-[#AEE3F5]/50"
+                className="bg-[#AEE3F5] hover:bg-[#AEE3F5]/90 text-black font-bold py-3 px-8 text-lg rounded-xl shadow-lg"
+                style={{
+                  boxShadow: "0 0 20px rgba(174, 227, 245, 0.6), 0 0 40px rgba(174, 227, 245, 0.3)"
+                }}
               >
-                {showAll ? `Show Less` : `View All ${pendingBets.length} Pending Bets`}
+                {showAll ? `Show Top 3 Bets` : `View All ${pendingBets.length} Pending Bets`}
+                {!showAll && <ArrowRight className="ml-2 h-5 w-5" />}
               </Button>
             </div>
           )}
