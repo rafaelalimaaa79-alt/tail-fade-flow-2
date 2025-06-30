@@ -33,14 +33,14 @@ const SignInForm: React.FC<SignInFormProps> = ({
     return (
       <div className="w-full max-w-md h-screen flex flex-col justify-center items-center px-6 mx-auto overflow-hidden">
         <div className="text-center">
-          <h1 className="text-5xl sm:text-6xl font-light leading-tight mb-2">
+          <h1 className="text-5xl sm:text-6xl font-light leading-tight mb-1">
             Welcome to
           </h1>
           <div className="mb-12">
             <img 
               src="/lovable-uploads/99f513eb-4898-4734-a758-01b21af1919b.png" 
               alt="NoShot logo" 
-              className="h-40 mx-auto drop-shadow-[0_0_20px_rgba(174,227,245,0.5)]"
+              className="h-52 mx-auto drop-shadow-[0_0_20px_rgba(174,227,245,0.5)]"
             />
           </div>
           
