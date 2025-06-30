@@ -85,10 +85,10 @@ const PublicGameItem = ({ game, rank, isInitialized = false }: PublicGameItemPro
             
             {/* Split Content with Separator */}
             <div className="flex items-stretch">
-              {/* CHALKD Side */}
+              {/* NoShot Side */}
               <div className="flex-1 flex flex-col items-center justify-center px-4 py-2 space-y-2">
                 <div className="text-[#AEE3F5] text-lg font-black uppercase tracking-wide">
-                  CHALKD
+                  NoShot
                 </div>
                 <div className={cn(
                   "text-[#AEE3F5] text-3xl font-bold",
@@ -97,7 +97,7 @@ const PublicGameItem = ({ game, rank, isInitialized = false }: PublicGameItemPro
                   {fadeZonePercentage}%
                 </div>
                 <div className="text-white/80 text-sm text-center font-medium leading-relaxed">
-                  of CHALKD bettors are on <span className="text-white font-semibold">{game.team} {game.spread}</span>
+                  of NoShot bettors are on <span className="text-white font-semibold">{game.team} {game.spread}</span>
                 </div>
               </div>
               
