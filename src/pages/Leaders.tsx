@@ -1,3 +1,4 @@
+
 import React, { useMemo } from "react";
 import BottomNav from "@/components/BottomNav";
 import { useIsMobile } from "@/hooks/use-mobile";
@@ -17,7 +18,7 @@ const Leaders = () => {
       <div className={`max-w-md mx-auto w-full px-2 ${isMobile ? "pb-24" : ""}`}>
         <div className="flex justify-between items-center pt-2 mb-4">
           <img 
-            src="/lovable-uploads/548c9fc2-64d6-4972-9b5f-ca71a4784f83.png" 
+            src="/lovable-uploads/1b4cf4d6-d079-464c-b7d3-a17230281f25.png" 
             alt="NoShot logo" 
             className="h-32"
           />
