@@ -1,5 +1,5 @@
 
-import React from "react";
+import React, { useState } from "react";
 import { BettorBet, BettorProfile } from "@/types/bettor";
 import { cn } from "@/lib/utils";
 import { format } from "date-fns";
@@ -17,6 +17,8 @@ type PendingBetsProps = {
 };
 
 const PendingBets: React.FC<PendingBetsProps> = ({ pendingBets, profile, className }) => {
+  const [showAll, setShowAll] = useState(false);
+  
   const handleFade = (bet: BettorBet) => {
     showFadeNotification("Bettor", bet.betType);
   };
@@ -81,6 +83,10 @@ const PendingBets: React.FC<PendingBetsProps> = ({ pendingBets, profile, classNa
     return sportStatlines[sport as keyof typeof sportStatlines] || `He is ${wins} for ${totalBets} in his last ${totalBets} bets`;
   };
 
+  // Determine which bets to show
+  const betsToShow = showAll ? pendingBets : pendingBets.slice(0, 3);
+  const hasMoreBets = pendingBets.length > 3;
+
   return (
     <div className={cn("rounded-xl bg-black p-6 shadow-2xl relative overflow-hidden border border-white/10", className)}>
       <h3 className="mb-6 text-3xl font-bold text-[#AEE3F5] text-center relative z-10 drop-shadow-[0_0_8px_rgba(174,227,245,0.7)] font-rajdhani uppercase tracking-wide">
@@ -89,7 +95,7 @@ const PendingBets: React.FC<PendingBetsProps> = ({ pendingBets, profile, classNa
       
       {pendingBets.length > 0 ? (
         <div className="space-y-6 relative z-10">
-          {pendingBets.map((bet, index) => {
+          {betsToShow.map((bet, index) => {
             const fadeConfidence = getFadeConfidence();
             const matchup = getMatchup();
             const betLine = getBetLine(matchup.teams);
@@ -150,7 +156,7 @@ const PendingBets: React.FC<PendingBetsProps> = ({ pendingBets, profile, classNa
                 </div>
                 
                 {/* Separator line between cards (not after the last one) */}
-                {index < pendingBets.length - 1 && (
+                {index < betsToShow.length - 1 && (
                   <div className="flex justify-center py-4">
                     <div className="w-3/4 h-0.5 bg-gradient-to-r from-transparent via-[#AEE3F5]/50 to-transparent"></div>
                   </div>
@@ -158,6 +164,19 @@ const PendingBets: React.FC<PendingBetsProps> = ({ pendingBets, profile, classNa
               </div>
             );
           })}
+          
+          {/* View All / Show Less Button */}
+          {hasMoreBets && (
+            <div className="flex justify-center pt-6">
+              <Button
+                variant="outline"
+                onClick={() => setShowAll(!showAll)}
+                className="border-[#AEE3F5]/30 text-[#AEE3F5] hover:bg-[#AEE3F5]/10 hover:border-[#AEE3F5]/50"
+              >
+                {showAll ? `Show Less` : `View All ${pendingBets.length} Pending Bets`}
+              </Button>
+            </div>
+          )}
         </div>
       ) : (
         <div className="rounded-lg bg-black p-6 text-center border border-white/10">

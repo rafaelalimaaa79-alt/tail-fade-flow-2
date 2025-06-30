@@ -1,4 +1,5 @@
-import React from "react";
+
+import React, { useState } from "react";
 import { format } from "date-fns";
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
@@ -29,6 +30,7 @@ const DEFAULT_SPORTSBOOK = "hardrock";
 const PendingBetsList = () => {
   const { pendingBets, markBetAsPlaced } = useBetStore();
   const navigate = useNavigate();
+  const [showAll, setShowAll] = useState(false);
   
   if (pendingBets.length === 0) {
     return (
@@ -89,10 +91,14 @@ const PendingBetsList = () => {
     // For spreads and ML, include team name
     return { team, betType };
   };
+
+  // Determine which bets to show
+  const betsToShow = showAll ? pendingBets : pendingBets.slice(0, 3);
+  const hasMoreBets = pendingBets.length > 3;
   
   return (
     <div className="space-y-4">
-      {pendingBets.map((bet, index) => {
+      {betsToShow.map((bet, index) => {
         const fadeConfidence = getFadeConfidence();
         const matchup = getMatchup();
         const betData = getBetLine(matchup.teams);
@@ -171,7 +177,7 @@ const PendingBetsList = () => {
             </div>
             
             {/* Separator line between cards (not after the last one) */}
-            {index < pendingBets.length - 1 && (
+            {index < betsToShow.length - 1 && (
               <div className="flex justify-center py-2">
                 <div className="w-3/4 h-0.5 bg-gradient-to-r from-transparent via-[#AEE3F5]/50 to-transparent"></div>
               </div>
@@ -179,6 +185,19 @@ const PendingBetsList = () => {
           </div>
         );
       })}
+      
+      {/* View All / Show Less Button */}
+      {hasMoreBets && (
+        <div className="flex justify-center pt-4">
+          <Button
+            variant="outline"
+            onClick={() => setShowAll(!showAll)}
+            className="border-[#AEE3F5]/30 text-[#AEE3F5] hover:bg-[#AEE3F5]/10 hover:border-[#AEE3F5]/50"
+          >
+            {showAll ? `Show Less` : `View All ${pendingBets.length} Pending Bets`}
+          </Button>
+        </div>
+      )}
     </div>
   );
 };
