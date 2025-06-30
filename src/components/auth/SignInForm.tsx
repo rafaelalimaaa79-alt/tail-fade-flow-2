@@ -1,3 +1,4 @@
+
 import React, { useState } from "react";
 import { Eye, EyeOff, Apple } from "lucide-react";
 import { Input } from "@/components/ui/input";
@@ -28,16 +29,20 @@ const SignInForm: React.FC<SignInFormProps> = ({
   const [showPassword, setShowPassword] = useState(false);
 
   if (!showLoginForm) {
-    // Welcome screen with buttons directly below text - no scrolling
+    // Welcome screen with logo instead of text
     return (
       <div className="w-full max-w-md h-screen flex flex-col justify-center items-center px-6 mx-auto overflow-hidden">
         <div className="text-center">
-          <h1 className="text-5xl sm:text-6xl font-light leading-tight mb-12">
-            Welcome to<br />
-            <span className="text-[#AEE3F5]" style={{ 
-              textShadow: '0 0 10px #AEE3F5, 0 0 20px #AEE3F5, 0 0 30px #AEE3F5' 
-            }}>NoShot</span>
+          <h1 className="text-5xl sm:text-6xl font-light leading-tight mb-8">
+            Welcome to
           </h1>
+          <div className="mb-12">
+            <img 
+              src="/lovable-uploads/99f513eb-4898-4734-a758-01b21af1919b.png" 
+              alt="NoShot logo" 
+              className="h-20 mx-auto drop-shadow-[0_0_20px_rgba(174,227,245,0.5)]"
+            />
+          </div>
           
           <div className="space-y-4 w-full">
             <Button 
