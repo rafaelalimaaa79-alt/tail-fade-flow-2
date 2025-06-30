@@ -20,7 +20,7 @@ const Leaders = () => {
           <img 
             src="/lovable-uploads/7b63dfa5-820d-4bd0-82f2-9e01001a0364.png" 
             alt="NoShot logo" 
-            className="h-32"
+            className="h-40"
           />
           <ProfileIcon />
         </div>
