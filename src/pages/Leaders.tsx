@@ -1,16 +1,21 @@
-
 import React, { useMemo } from "react";
 import BottomNav from "@/components/BottomNav";
 import { useIsMobile } from "@/hooks/use-mobile";
 import TabsContainer from "@/components/leaders/TabsContainer";
 import ProfileIcon from "@/components/common/ProfileIcon";
 import { coldestBettors } from "@/components/leaders/mockData";
+import { useNavigate } from "react-router-dom";
 
 const Leaders = () => {
   const isMobile = useIsMobile();
+  const navigate = useNavigate();
 
   // Memoize the data to prevent unnecessary recalculations
   const memoizedColdestBettors = useMemo(() => coldestBettors, []);
+
+  const handleLogoClick = () => {
+    navigate("/dashboard");
+  };
 
   // Memoize the entire component output for optimal performance
   return useMemo(() => (
@@ -20,7 +25,8 @@ const Leaders = () => {
           <img 
             src="/lovable-uploads/7b63dfa5-820d-4bd0-82f2-9e01001a0364.png" 
             alt="NoShot logo" 
-            className="h-40"
+            className="h-40 cursor-pointer"
+            onClick={handleLogoClick}
           />
           <ProfileIcon />
         </div>
@@ -36,7 +42,7 @@ const Leaders = () => {
       </div>
       <BottomNav />
     </div>
-  ), [isMobile, memoizedColdestBettors]);
+  ), [isMobile, memoizedColdestBettors, handleLogoClick]);
 };
 
 export default Leaders;
