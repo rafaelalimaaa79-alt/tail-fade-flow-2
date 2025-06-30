@@ -20,7 +20,7 @@ const Trends = () => {
       <div className={`max-w-md mx-auto w-full px-2 ${isMobile ? "pb-24" : ""}`}>
         <div className="flex justify-between items-center pt-2 mb-4">
           <img 
-            src="/lovable-uploads/1b4cf4d6-d079-464c-b7d3-a17230281f25.png" 
+            src="/lovable-uploads/7b63dfa5-820d-4bd0-82f2-9e01001a0364.png" 
             alt="NoShot logo" 
             className="h-32"
           />
