@@ -51,7 +51,7 @@ const Settings = () => {
             variant="ghost"
             size="icon"
             onClick={() => navigate("/profile")}
-            className="text-[#00BFFF] hover:bg-[#00BFFF]/10 mr-4"
+            className="text-[#AEE3F5] hover:bg-[#AEE3F5]/10 mr-4"
           >
             <ArrowLeft className="h-6 w-6" />
           </Button>
@@ -77,7 +77,7 @@ const Settings = () => {
                   type="email"
                   value={email}
                   onChange={(e) => setEmail(e.target.value)}
-                  className="bg-gray-900 border-gray-600 text-white focus:border-[#00BFFF] focus:ring-[#00BFFF]"
+                  className="bg-gray-900 border-gray-600 text-white focus:border-[#AEE3F5] focus:ring-[#AEE3F5]"
                 />
               </div>
               
@@ -89,13 +89,13 @@ const Settings = () => {
                     type={showCurrentPassword ? "text" : "password"}
                     value={currentPassword}
                     onChange={(e) => setCurrentPassword(e.target.value)}
-                    className="bg-gray-900 border-gray-600 text-white pr-12 focus:border-[#00BFFF] focus:ring-[#00BFFF]"
+                    className="bg-gray-900 border-gray-600 text-white pr-12 focus:border-[#AEE3F5] focus:ring-[#AEE3F5]"
                   />
                   <Button
                     type="button"
                     variant="ghost"
                     size="icon"
-                    className="absolute right-0 top-0 h-10 w-10 text-gray-400 hover:text-[#00BFFF]"
+                    className="absolute right-0 top-0 h-10 w-10 text-gray-400 hover:text-[#AEE3F5]"
                     onClick={() => setShowCurrentPassword(!showCurrentPassword)}
                   >
                     {showCurrentPassword ? <EyeOff className="h-4 w-4" /> : <Eye className="h-4 w-4" />}
@@ -111,13 +111,13 @@ const Settings = () => {
                     type={showNewPassword ? "text" : "password"}
                     value={newPassword}
                     onChange={(e) => setNewPassword(e.target.value)}
-                    className="bg-gray-900 border-gray-600 text-white pr-12 focus:border-[#00BFFF] focus:ring-[#00BFFF]"
+                    className="bg-gray-900 border-gray-600 text-white pr-12 focus:border-[#AEE3F5] focus:ring-[#AEE3F5]"
                   />
                   <Button
                     type="button"
                     variant="ghost"
                     size="icon"
-                    className="absolute right-0 top-0 h-10 w-10 text-gray-400 hover:text-[#00BFFF]"
+                    className="absolute right-0 top-0 h-10 w-10 text-gray-400 hover:text-[#AEE3F5]"
                     onClick={() => setShowNewPassword(!showNewPassword)}
                   >
                     {showNewPassword ? <EyeOff className="h-4 w-4" /> : <Eye className="h-4 w-4" />}
@@ -127,7 +127,7 @@ const Settings = () => {
 
               <Button 
                 onClick={handleSaveAccountSettings}
-                className="w-full bg-[#00BFFF] hover:bg-[#00BFFF]/80 text-black font-medium"
+                className="w-full bg-[#AEE3F5] hover:bg-[#AEE3F5]/80 text-black font-medium"
               >
                 Save Account Changes
               </Button>
@@ -148,7 +148,7 @@ const Settings = () => {
                   <p className="text-white font-medium">Current Plan</p>
                   <p className="text-gray-400 text-sm">Free Tier</p>
                 </div>
-                <Button className="bg-[#00BFFF] hover:bg-[#00BFFF]/80 text-black font-medium">
+                <Button className="bg-[#AEE3F5] hover:bg-[#AEE3F5]/80 text-black font-medium">
                   Upgrade
                 </Button>
               </div>
@@ -156,7 +156,7 @@ const Settings = () => {
               <Separator className="bg-gray-700" />
               
               <div className="space-y-3">
-                <Button variant="outline" className="w-full border-gray-600 text-white hover:bg-gray-800 hover:border-[#00BFFF]">
+                <Button variant="outline" className="w-full border-gray-600 text-white hover:bg-gray-800 hover:border-[#AEE3F5]">
                   Update Payment Method
                 </Button>
                 <Button variant="outline" className="w-full border-red-500 text-red-500 hover:bg-red-500/10 hover:border-red-400">
@@ -183,7 +183,7 @@ const Settings = () => {
                 <Switch
                   checked={emailNotifications}
                   onCheckedChange={setEmailNotifications}
-                  className="data-[state=checked]:bg-[#00BFFF]"
+                  className="data-[state=checked]:bg-[#AEE3F5]"
                 />
               </div>
               
@@ -195,13 +195,13 @@ const Settings = () => {
                 <Switch
                   checked={pushNotifications}
                   onCheckedChange={setPushNotifications}
-                  className="data-[state=checked]:bg-[#00BFFF]"
+                  className="data-[state=checked]:bg-[#AEE3F5]"
                 />
               </div>
 
               <Button 
                 onClick={handleSaveNotifications}
-                className="w-full bg-[#00BFFF] hover:bg-[#00BFFF]/80 text-black font-medium"
+                className="w-full bg-[#AEE3F5] hover:bg-[#AEE3F5]/80 text-black font-medium"
               >
                 Save Notification Settings
               </Button>
@@ -221,7 +221,7 @@ const Settings = () => {
                 <p className="text-gray-400 mb-6">No sportsbooks connected</p>
                 <Button 
                   onClick={handleConnectSportsbook}
-                  className="bg-[#00BFFF] hover:bg-[#00BFFF]/80 text-black font-medium"
+                  className="bg-[#AEE3F5] hover:bg-[#AEE3F5]/80 text-black font-medium"
                 >
                   Connect Sportsbook
                 </Button>
@@ -246,7 +246,7 @@ const Settings = () => {
                 <Switch
                   checked={publicProfile}
                   onCheckedChange={setPublicProfile}
-                  className="data-[state=checked]:bg-[#00BFFF]"
+                  className="data-[state=checked]:bg-[#AEE3F5]"
                 />
               </div>
 
@@ -255,7 +255,7 @@ const Settings = () => {
               <div className="space-y-3">
                 <Button 
                   onClick={handleSavePrivacy}
-                  className="w-full bg-[#00BFFF] hover:bg-[#00BFFF]/80 text-black font-medium"
+                  className="w-full bg-[#AEE3F5] hover:bg-[#AEE3F5]/80 text-black font-medium"
                 >
                   Save Privacy Settings
                 </Button>
