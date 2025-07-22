@@ -44,10 +44,17 @@ const TrendItem = ({
   const losses = recentBets.filter(bet => bet === 0).length;
   const score = isTailRecommendation ? tailScore : fadeScore;
   
-  const fadeConfidence = getFadeConfidence();
-  const matchup = getMatchup();
-  const betLine = getBetLine(matchup.teams);
-  const sportStatline = getSportStatline(matchup.sport);
+  // Use specific data for ProPicker trend, otherwise use random helpers
+  const fadeConfidence = name === "ProPicker" ? 98 : getFadeConfidence();
+  const matchup = name === "ProPicker" 
+    ? { game: "LSU vs Ole Miss", teams: ["LSU", "Ole Miss"], sport: "NCAAFB" }
+    : getMatchup(betType);
+  const betLine = name === "ProPicker" 
+    ? "Ole Miss ML"
+    : getBetLine(matchup.teams, matchup.sport);
+  const sportStatline = name === "ProPicker"
+    ? "He is 4 for 20 in his last 20 NCAAFB bets"
+    : getSportStatline(matchup.sport);
   
   // Get the opponent team for the bet conversion
   const opponentTeam = matchup.teams.find(team => !betLine.includes(team));
