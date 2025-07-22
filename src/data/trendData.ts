@@ -32,16 +32,16 @@ export const trendData = [
   {
     id: "3",
     name: "ProPicker",
-    betDescription: "Celtics vs Heat Over 220",
-    betType: "NBA",
+    betDescription: "Ole Miss ML",
+    betType: "NCAAFB",
     isTailRecommendation: false,
-    reason: "2-6 record on over/under bets",
-    recentBets: [0, 0, 1, 0, 0, 0, 1, 0, 0, 0],
+    reason: "4-20 record on college football bets",
+    recentBets: [0, 0, 1, 0, 0, 0, 1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1, 0, 1, 0],
     unitPerformance: -7.2,
-    fadeScore: 88,
+    fadeScore: 98,
     userCount: 176,
-    categoryBets: [0, 0, 0, 0, 1, 0], // Only 6 bets for NBA O/U
-    categoryName: "NBA O/U",
+    categoryBets: [0, 0, 0, 0, 1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1, 0, 1, 0], // 4 wins out of 20 bets for NCAAFB ML
+    categoryName: "NCAAFB ML",
   },
   {
     id: "4",
