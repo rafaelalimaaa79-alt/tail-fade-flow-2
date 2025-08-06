@@ -19,7 +19,7 @@ export const getOppositeBet = (originalBet: string, opponentTeam?: string) => {
   // Handle moneylines (ML)
   if (originalBet.includes('ML')) {
     const team = originalBet.replace(' ML', '');
-    return opponentTeam ? `${opponentTeam} ML` : 'Opposite ML';
+    return opponentTeam ? `${opponentTeam} ML` : `${team} ML`;
   }
   
   // Handle over/under totals
