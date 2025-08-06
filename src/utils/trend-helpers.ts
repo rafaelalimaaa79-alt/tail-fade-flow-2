@@ -1,4 +1,6 @@
 
+import { getRandomGame, realGames } from "@/data/realGamesData";
+
 // Function to get fade confidence (mock data for now)
 export const getFadeConfidence = () => {
   return Math.floor(Math.random() * 30) + 70; // Random between 70-99%
@@ -6,7 +8,6 @@ export const getFadeConfidence = () => {
 
 // Function to generate matchups for different sports
 export const getMatchup = (sport?: string) => {
-  const { getRandomGame } = require("@/data/realGamesData");
   const game = getRandomGame(sport);
   
   return {
@@ -18,8 +19,6 @@ export const getMatchup = (sport?: string) => {
 
 // Function to generate realistic bet lines for different sports
 export const getBetLine = (teams: string[], sport?: string) => {
-  const { realGames } = require("@/data/realGamesData");
-  
   // Find a game that matches one of the teams
   const matchingGame = realGames.find((game: any) => 
     game.teams.some((gameTeam: string) => teams.includes(gameTeam))
