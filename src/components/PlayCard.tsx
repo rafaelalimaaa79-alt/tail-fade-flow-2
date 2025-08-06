@@ -4,6 +4,7 @@ import { Link } from "react-router-dom";
 import ActionButton from "./ActionButton";
 import { BetterPlay } from "@/types/betTypes";
 import { showFadeNotification } from "@/utils/betting-notifications";
+import { getOppositeBet } from "@/utils/bet-conversion";
 import { Button } from "@/components/ui/button";
 
 interface PlayCardProps {
@@ -72,20 +73,10 @@ const PlayCard: React.FC<PlayCardProps> = ({ play, renderWaveText, onActionClick
   const { oppositeBet, gameMatchup } = useMemo(() => {
     const { currentTeam, opponent, matchup } = getActualMatchup(play.bet);
     
-    let bet;
-    if (play.bet.includes('ML')) {
-      bet = `${opponent} ML`;
-    } else if (play.bet.includes('-') || play.bet.includes('+')) {
-      bet = `${opponent} ML`;
-    } else if (play.bet.toLowerCase().includes('over')) {
-      bet = `Under ${play.bet.split(' ').pop()}`;
-    } else if (play.bet.toLowerCase().includes('under')) {
-      bet = `Over ${play.bet.split(' ').pop()}`;
-    } else {
-      bet = `${opponent} ML`;
-    }
+    // Use the proper bet conversion function
+    const oppositeBet = getOppositeBet(play.bet, opponent);
     
-    return { oppositeBet: bet, gameMatchup: matchup };
+    return { oppositeBet, gameMatchup: matchup };
   }, [play.bet]);
 
   // Handle the bet action with notification only
