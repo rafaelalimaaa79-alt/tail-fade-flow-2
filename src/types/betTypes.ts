@@ -12,7 +12,7 @@ export interface BetterPlay {
 export const playsOfTheDay: BetterPlay[] = [
   {
     bettorName: "NoCoverKev",
-    bet: "Celtics -6.5",
+    bet: "Clemson -2.5",
     suggestionType: "fade",
     stats: "Currently on a cold streak — high-confidence fade.",
     record: "2-12 in last 14 bets",
@@ -21,7 +21,7 @@ export const playsOfTheDay: BetterPlay[] = [
   },
   {
     bettorName: "ColdHands88",
-    bet: "Yankees ML", 
+    bet: "Eagles -7", 
     suggestionType: "fade",
     stats: "Ice cold performance — perfect fade opportunity.",
     record: "1-9 in last 10 bets",
@@ -30,7 +30,7 @@ export const playsOfTheDay: BetterPlay[] = [
   },
   {
     bettorName: "SlumpCityJack",
-    bet: "Dodgers -1.5",
+    bet: "Alabama -8.5",
     suggestionType: "fade",
     stats: "Deep slump continues — easy fade.",
     record: "3-11 in last 14 bets",
@@ -39,7 +39,7 @@ export const playsOfTheDay: BetterPlay[] = [
   },
   {
     bettorName: "IcyColdTakes",
-    bet: "Lakers +3",
+    bet: "Chiefs -2.5",
     suggestionType: "fade",
     stats: "Struggling badly — fade with confidence.",
     record: "2-13 in last 15 bets",
@@ -48,7 +48,7 @@ export const playsOfTheDay: BetterPlay[] = [
   },
   {
     bettorName: "FrozenPicks",
-    bet: "Warriors ML",
+    bet: "Notre Dame -2.5",
     suggestionType: "fade",
     stats: "Cold streak continues — time to fade.",
     record: "4-10 in last 14 bets",
