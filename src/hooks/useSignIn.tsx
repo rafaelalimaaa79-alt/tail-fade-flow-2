@@ -26,8 +26,9 @@ export const useSignIn = () => {
     // Check for guest login first - bypass all auth
     if (email.trim() === "Guest1" && password.trim() === "Guest1") {
       console.log("Guest login detected, bypassing auth");
+      localStorage.setItem('guestMode', 'true');
       toast.success("Guest login successful");
-      navigate(from);
+      navigate('/dashboard');
       return;
     }
     

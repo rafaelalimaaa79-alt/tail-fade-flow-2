@@ -25,6 +25,13 @@ const ProtectedRoute = ({ children }: ProtectedRouteProps) => {
     console.log("ProtectedRoute: Authentication bypassed for development");
     return <>{children}</>;
   }
+
+  // Allow guest mode access
+  const isGuestMode = localStorage.getItem('guestMode') === 'true';
+  if (isGuestMode) {
+    console.log("ProtectedRoute: Guest mode access granted");
+    return <>{children}</>;
+  }
   
   useEffect(() => {
     setIsVerifying(true);
