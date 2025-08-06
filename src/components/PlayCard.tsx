@@ -1,7 +1,5 @@
 
 import React, { useMemo } from "react";
-import { Link } from "react-router-dom";
-import ActionButton from "./ActionButton";
 import { BetterPlay } from "@/types/betTypes";
 import { showFadeNotification } from "@/utils/betting-notifications";
 import { getOppositeBet } from "@/utils/bet-conversion";
