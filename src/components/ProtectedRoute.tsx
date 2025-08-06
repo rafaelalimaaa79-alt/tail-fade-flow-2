@@ -34,6 +34,14 @@ const ProtectedRoute = ({ children }: ProtectedRouteProps) => {
   }
   
   useEffect(() => {
+    // Check for guest mode first, before any auth checks
+    const isGuestMode = localStorage.getItem('guestMode') === 'true';
+    if (isGuestMode) {
+      console.log("ProtectedRoute: Guest mode detected, skipping auth checks");
+      setIsVerifying(false);
+      return;
+    }
+
     setIsVerifying(true);
     
     const checkAuth = async () => {
