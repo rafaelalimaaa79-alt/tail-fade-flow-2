@@ -15,28 +15,28 @@ interface PlayCardProps {
 const PlayCard: React.FC<PlayCardProps> = ({ play, renderWaveText, onActionClick }) => {
   // Function to get the actual opposing team from real games data
   const getActualMatchup = (bet: string) => {
-    // Real matchups from your games data
+    // Real matchups from your exact games data - maintaining correct order
     const realMatchups = {
-      'Clemson': 'LSU',
       'LSU': 'Clemson',
-      'Eagles': 'Cowboys', 
-      'Cowboys': 'Eagles',
+      'Clemson': 'LSU',
+      'Ohio State': 'Texas',
+      'Texas': 'Ohio State', 
       'Alabama': 'Florida State',
       'Florida State': 'Alabama',
-      'Chiefs': 'Chargers',
-      'Chargers': 'Chiefs', 
-      'Notre Dame': 'Miami',
-      'Miami': 'Notre Dame',
-      'Ohio State': 'Texas',
-      'Texas': 'Ohio State',
       'Auburn': 'Baylor',
       'Baylor': 'Auburn',
       'Tennessee': 'Syracuse',
       'Syracuse': 'Tennessee',
+      'Notre Dame': 'Miami',
+      'Miami': 'Notre Dame',
       'South Carolina': 'Virginia Tech',
       'Virginia Tech': 'South Carolina',
       'North Carolina': 'TCU',
       'TCU': 'North Carolina',
+      'Eagles': 'Cowboys',
+      'Cowboys': 'Eagles',
+      'Chiefs': 'Chargers',
+      'Chargers': 'Chiefs',
       'Bengals': 'Browns',
       'Browns': 'Bengals',
       'Steelers': 'Jets',
