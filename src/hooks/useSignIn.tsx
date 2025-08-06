@@ -26,6 +26,14 @@ export const useSignIn = () => {
     setLoading(true);
     
     try {
+      // Check for guest login first
+      if (email === "Guest1" && password === "Guest1") {
+        toast.success("Guest login successful");
+        console.log("Guest login, redirecting to:", from);
+        navigate(from);
+        return;
+      }
+      
       console.log("Attempting to sign in with:", { email });
       
       const { data, error } = await supabase.auth.signInWithPassword({
