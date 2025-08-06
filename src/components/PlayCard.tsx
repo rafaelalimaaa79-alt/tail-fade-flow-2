@@ -13,61 +13,76 @@ interface PlayCardProps {
 }
 
 const PlayCard: React.FC<PlayCardProps> = ({ play, renderWaveText, onActionClick }) => {
-  // Function to get a random opposing team based on the sport
-  const getRandomOpposingTeam = (originalBet: string) => {
-    // Extract sport-specific teams
-    const nbaTeams = ['Lakers', 'Celtics', 'Warriors', 'Heat', 'Bucks', 'Nets', '76ers', 'Nuggets', 'Suns', 'Mavericks'];
-    const mlbTeams = ['Yankees', 'Dodgers', 'Red Sox', 'Astros', 'Braves', 'Mets', 'Angels', 'Giants', 'Cubs', 'Cardinals'];
-    const nflTeams = ['Chiefs', 'Eagles', 'Cowboys', 'Bills', '49ers', 'Packers', 'Steelers', 'Patriots', 'Rams', 'Bengals'];
-    const nhlTeams = ['Bruins', 'Lightning', 'Avalanche', 'Oilers', 'Rangers', 'Capitals', 'Penguins', 'Kings', 'Flames', 'Stars'];
+  // Function to get the actual opposing team from real games data
+  const getActualMatchup = (bet: string) => {
+    // Real matchups from your games data
+    const realMatchups = {
+      'Clemson': 'LSU',
+      'LSU': 'Clemson',
+      'Eagles': 'Cowboys', 
+      'Cowboys': 'Eagles',
+      'Alabama': 'Florida State',
+      'Florida State': 'Alabama',
+      'Chiefs': 'Chargers',
+      'Chargers': 'Chiefs', 
+      'Notre Dame': 'Miami',
+      'Miami': 'Notre Dame',
+      'Ohio State': 'Texas',
+      'Texas': 'Ohio State',
+      'Auburn': 'Baylor',
+      'Baylor': 'Auburn',
+      'Tennessee': 'Syracuse',
+      'Syracuse': 'Tennessee',
+      'South Carolina': 'Virginia Tech',
+      'Virginia Tech': 'South Carolina',
+      'North Carolina': 'TCU',
+      'TCU': 'North Carolina',
+      'Bengals': 'Browns',
+      'Browns': 'Bengals',
+      'Steelers': 'Jets',
+      'Jets': 'Steelers',
+      '49ers': 'Seahawks',
+      'Seahawks': '49ers',
+      'Dolphins': 'Bills',
+      'Bills': 'Dolphins'
+    };
+
+    // Extract team from bet
+    const allTeams = Object.keys(realMatchups);
+    const currentTeam = allTeams.find(team => bet.includes(team));
     
-    // Determine sport based on team in the bet
-    let teams = nbaTeams; // default
-    
-    if (nflTeams.some(team => originalBet.includes(team))) {
-      teams = nflTeams;
-    } else if (mlbTeams.some(team => originalBet.includes(team))) {
-      teams = mlbTeams;
-    } else if (nhlTeams.some(team => originalBet.includes(team))) {
-      teams = nhlTeams;
+    if (currentTeam && realMatchups[currentTeam as keyof typeof realMatchups]) {
+      const opponent = realMatchups[currentTeam as keyof typeof realMatchups];
+      return {
+        currentTeam,
+        opponent,
+        matchup: `${currentTeam} vs ${opponent}`
+      };
     }
     
-    // Find teams that aren't in the original bet
-    const availableTeams = teams.filter(team => !originalBet.includes(team));
-    
-    // Return a random team from available teams
-    return availableTeams[Math.floor(Math.random() * availableTeams.length)];
+    // Fallback if team not found
+    return {
+      currentTeam: 'Team',
+      opponent: 'Opponent',
+      matchup: 'Team vs Opponent'
+    };
   };
 
-  // Function to extract the team from the bet
-  const getTeamFromBet = (bet: string) => {
-    const nbaTeams = ['Lakers', 'Celtics', 'Warriors', 'Heat', 'Bucks', 'Nets', '76ers', 'Nuggets', 'Suns', 'Mavericks'];
-    const mlbTeams = ['Yankees', 'Dodgers', 'Red Sox', 'Astros', 'Braves', 'Mets', 'Angels', 'Giants', 'Cubs', 'Cardinals'];
-    const nflTeams = ['Chiefs', 'Eagles', 'Cowboys', 'Bills', '49ers', 'Packers', 'Steelers', 'Patriots', 'Rams', 'Bengals'];
-    const nhlTeams = ['Bruins', 'Lightning', 'Avalanche', 'Oilers', 'Rangers', 'Capitals', 'Penguins', 'Kings', 'Flames', 'Stars'];
-    
-    const allTeams = [...nbaTeams, ...mlbTeams, ...nflTeams, ...nhlTeams];
-    return allTeams.find(team => bet.includes(team)) || 'Team';
-  };
-
-  // Use useMemo to prevent the random team from changing on every render
+  // Use useMemo to prevent the data from changing on every render
   const { oppositeBet, gameMatchup } = useMemo(() => {
-    const randomOpposingTeam = getRandomOpposingTeam(play.bet);
-    const currentTeam = getTeamFromBet(play.bet);
-    
-    const matchup = `${currentTeam} vs ${randomOpposingTeam}`;
+    const { currentTeam, opponent, matchup } = getActualMatchup(play.bet);
     
     let bet;
     if (play.bet.includes('ML')) {
-      bet = `${randomOpposingTeam} ML`;
+      bet = `${opponent} ML`;
     } else if (play.bet.includes('-') || play.bet.includes('+')) {
-      bet = `${randomOpposingTeam} ML`;
+      bet = `${opponent} ML`;
     } else if (play.bet.toLowerCase().includes('over')) {
       bet = `Under ${play.bet.split(' ').pop()}`;
     } else if (play.bet.toLowerCase().includes('under')) {
       bet = `Over ${play.bet.split(' ').pop()}`;
     } else {
-      bet = `${randomOpposingTeam} ML`;
+      bet = `${opponent} ML`;
     }
     
     return { oppositeBet: bet, gameMatchup: matchup };
