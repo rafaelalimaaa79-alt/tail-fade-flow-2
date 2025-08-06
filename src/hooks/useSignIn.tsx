@@ -23,17 +23,17 @@ export const useSignIn = () => {
       return;
     }
     
+    // Check for guest login first - bypass all auth
+    if (email.trim() === "Guest1" && password.trim() === "Guest1") {
+      console.log("Guest login detected, bypassing auth");
+      toast.success("Guest login successful");
+      navigate(from);
+      return;
+    }
+    
     setLoading(true);
     
     try {
-      // Check for guest login first
-      if (email === "Guest1" && password === "Guest1") {
-        toast.success("Guest login successful");
-        console.log("Guest login, redirecting to:", from);
-        navigate(from);
-        return;
-      }
-      
       console.log("Attempting to sign in with:", { email });
       
       const { data, error } = await supabase.auth.signInWithPassword({
