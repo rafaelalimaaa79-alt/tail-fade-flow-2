@@ -2,27 +2,36 @@
 import { BettorBet } from "@/types/bettor";
 
 // Common sports and teams data used across mock generators
-export const sports = ['NBA', 'NFL', 'MLB', 'NHL', 'UFC'];
+export const sports = ['NCAAFB', 'NFL'];
 export const teams = [
-  'Lakers', 'Warriors', 'Celtics', 'Heat', 'Bucks',
-  'Chiefs', 'Eagles', 'Cowboys', 'Bills', '49ers',
-  'Yankees', 'Dodgers', 'Red Sox', 'Astros', 'Braves',
-  'Maple Leafs', 'Bruins', 'Lightning', 'Avalanche', 'Oilers'
+  // NCAAFB teams
+  'LSU', 'Clemson', 'Ohio State', 'Texas', 'Alabama', 'Florida State',
+  'Auburn', 'Baylor', 'Tennessee', 'Syracuse', 'Notre Dame', 'Miami',
+  'South Carolina', 'Virginia Tech', 'North Carolina', 'TCU',
+  // NFL teams  
+  'Eagles', 'Cowboys', 'Chiefs', 'Chargers', 'Bengals', 'Browns',
+  'Steelers', 'Jets', '49ers', 'Seahawks', 'Dolphins', 'Bills'
 ];
 
-// NBA-specific bet types that make sense
-export const nbaBetTypes = [
+// Real bet types based on actual upcoming games
+export const ncaafbBetTypes = [
   'ML', // Moneyline
-  '-1.5', '-2.5', '-3.5', '-4.5', '-5.5', '-6.5', '-7.5', // Point spreads
-  '+1.5', '+2.5', '+3.5', '+4.5', '+5.5', '+6.5', '+7.5', // Point spreads
-  'Over 220.5', 'Over 225.5', 'Over 230.5', 'Over 235.5', // Total points
-  'Under 220.5', 'Under 225.5', 'Under 230.5', 'Under 235.5', // Total points
-  'Over 110.5', 'Over 115.5', 'Over 120.5', // Team totals
-  'Under 110.5', 'Under 115.5', 'Under 120.5' // Team totals
+  '-1.5', '-2.5', '-3.5', '-7.5', '-8.5', '-9.5', '-12.5', // Real spreads from games
+  '+1.5', '+2.5', '+3.5', '+7.5', '+8.5', '+9.5', '+12.5', // Real spreads from games
+  'Over 51.5', 'Over 53.5', 'Over 56.5', // Real totals from games
+  'Under 51.5', 'Under 53.5', 'Under 56.5' // Real totals from games
 ];
 
-// Original bet types for other sports
-export const betTypes = ['ML', '-1.5', '+2.5', '-3.5', 'Over 220.5', 'Under 48.5'];
+export const nflBetTypes = [
+  'ML', // Moneyline
+  '-1.5', '-2.5', '-3', '-5.5', '-7', // Real spreads from games
+  '+1.5', '+2.5', '+3', '+5.5', '+7', // Real spreads from games
+  'Over 39.5', 'Over 44.5', 'Over 45.5', 'Over 46.5', 'Over 51.5', // Real totals from games
+  'Under 39.5', 'Under 44.5', 'Under 45.5', 'Under 46.5', 'Under 51.5' // Real totals from games
+];
+
+// Combined bet types for all sports
+export const betTypes = [...ncaafbBetTypes, ...nflBetTypes];
 
 // Shared utility to calculate timeframe-specific data points
 export const getDataPointsForTimeframe = (timeframe: '1D' | '1W' | '1M' | '3M' | '1Y'): number => {

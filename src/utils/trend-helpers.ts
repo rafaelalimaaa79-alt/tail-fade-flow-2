@@ -6,54 +6,61 @@ export const getFadeConfidence = () => {
 
 // Function to generate matchups for different sports
 export const getMatchup = (sport?: string) => {
-  const nbaMatchups = [
-    { game: "Lakers vs Celtics", teams: ["Lakers", "Celtics"], sport: "NBA" },
-    { game: "Warriors vs Nets", teams: ["Warriors", "Nets"], sport: "NBA" }, 
-    { game: "Bucks vs Heat", teams: ["Bucks", "Heat"], sport: "NBA" },
-    { game: "76ers vs Nuggets", teams: ["76ers", "Nuggets"], sport: "NBA" }
-  ];
+  const { getRandomGame } = require("@/data/realGamesData");
+  const game = getRandomGame(sport);
   
-  const ncaafbMatchups = [
-    { game: "LSU vs Ole Miss", teams: ["LSU", "Ole Miss"], sport: "NCAAFB" },
-    { game: "Alabama vs Georgia", teams: ["Alabama", "Georgia"], sport: "NCAAFB" },
-    { game: "Ohio State vs Michigan", teams: ["Ohio State", "Michigan"], sport: "NCAAFB" },
-    { game: "Clemson vs FSU", teams: ["Clemson", "FSU"], sport: "NCAAFB" }
-  ];
-  
-  if (sport === "NCAAFB") {
-    return ncaafbMatchups[Math.floor(Math.random() * ncaafbMatchups.length)];
-  }
-  
-  return nbaMatchups[Math.floor(Math.random() * nbaMatchups.length)];
+  return {
+    game: game.matchup,
+    teams: game.teams,
+    sport: game.sport
+  };
 };
 
 // Function to generate realistic bet lines for different sports
 export const getBetLine = (teams: string[], sport?: string) => {
-  const team = teams[Math.floor(Math.random() * teams.length)];
+  const { realGames } = require("@/data/realGamesData");
   
-  const nbaBetTypes = [
-    "Over 230.5", "Under 225.5", "-3.5", "+5.5", "Over 115.5", "Under 110.5", "ML"
-  ];
+  // Find a game that matches one of the teams
+  const matchingGame = realGames.find((game: any) => 
+    game.teams.some((gameTeam: string) => teams.includes(gameTeam))
+  );
   
-  const ncaafbBetTypes = [
-    "Over 52.5", "Under 48.5", "-7.5", "+10.5", "Over 24.5", "Under 21.5", "ML"
-  ];
-  
-  const betTypes = sport === "NCAAFB" ? ncaafbBetTypes : nbaBetTypes;
-  const betType = betTypes[Math.floor(Math.random() * betTypes.length)];
-  
-  // For totals, don't include team name for game totals
-  if (betType.includes("Over") || betType.includes("Under")) {
-    if ((sport === "NBA" && (betType.includes("230.5") || betType.includes("225.5"))) ||
-        (sport === "NCAAFB" && (betType.includes("52.5") || betType.includes("48.5")))) {
-      return betType; // Game total
-    } else {
-      return `${team} ${betType}`; // Team total
+  if (matchingGame) {
+    const team = teams[Math.floor(Math.random() * teams.length)];
+    
+    // Array of possible bet types for this game
+    const availableBets = [];
+    
+    // Add spread bets
+    if (matchingGame.spread) {
+      // Extract spread value and apply to either team
+      const spreadMatch = matchingGame.spread.match(/([-+]?\d+\.?\d*)/);
+      if (spreadMatch) {
+        const spreadValue = parseFloat(spreadMatch[1]);
+        availableBets.push(`${team} ${spreadValue > 0 ? '+' : ''}${Math.abs(spreadValue)}`);
+        availableBets.push(`${team} ${spreadValue > 0 ? '' : '+'}${-spreadValue}`);
+      }
     }
+    
+    // Add moneyline
+    availableBets.push(`${team} ML`);
+    
+    // Add totals
+    if (matchingGame.total) {
+      const totalMatch = matchingGame.total.match(/(\d+\.?\d*)/);
+      if (totalMatch) {
+        const totalValue = totalMatch[1];
+        availableBets.push(`Over ${totalValue}`);
+        availableBets.push(`Under ${totalValue}`);
+      }
+    }
+    
+    return availableBets[Math.floor(Math.random() * availableBets.length)];
   }
   
-  // For spreads and ML, include team name
-  return `${team} ${betType}`;
+  // Fallback to random team with ML if no matching game found
+  const team = teams[Math.floor(Math.random() * teams.length)];
+  return `${team} ML`;
 };
 
 // Function to generate sport-specific statlines
