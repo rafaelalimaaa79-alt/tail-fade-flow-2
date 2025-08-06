@@ -8,11 +8,11 @@ export const getOppositeBet = (originalBet: string, opponentTeam?: string) => {
     const spread = parts[1];
     
     if (spread.startsWith('-')) {
-      const newSpread = '+' + spread.substring(1);
-      return opponentTeam ? `${opponentTeam} ${newSpread}` : `+${spread.substring(1)}`;
+      const spreadValue = spread.substring(1); // Remove the minus
+      return opponentTeam ? `${opponentTeam} +${spreadValue}` : `+${spreadValue}`;
     } else if (spread.startsWith('+')) {
-      const newSpread = '-' + spread.substring(1);
-      return opponentTeam ? `${opponentTeam} ${newSpread}` : `-${spread.substring(1)}`;
+      const spreadValue = spread.substring(1); // Remove the plus
+      return opponentTeam ? `${opponentTeam} -${spreadValue}` : `-${spreadValue}`;
     }
   }
   
