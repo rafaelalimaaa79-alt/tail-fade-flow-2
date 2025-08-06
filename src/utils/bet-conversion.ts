@@ -1,7 +1,7 @@
 
 // Utility function to convert a bet to its opposite side
 export const getOppositeBet = (originalBet: string, opponentTeam?: string) => {
-  // Handle point spreads (e.g., "Dodgers -2" -> "Padres +2")
+  // Handle point spreads (e.g., "Notre Dame -2.5" -> "Opponent +2.5")
   if (originalBet.includes('-') && (originalBet.includes('.5') || /[+-]\d+/.test(originalBet))) {
     const parts = originalBet.split(' ');
     const team = parts[0];
@@ -14,6 +14,14 @@ export const getOppositeBet = (originalBet: string, opponentTeam?: string) => {
       const newSpread = '-' + spread.substring(1);
       return opponentTeam ? `${opponentTeam} ${newSpread}` : `-${spread.substring(1)}`;
     }
+  }
+  
+  // Handle positive spreads without + sign (e.g., "Notre Dame 2.5" -> "Opponent -2.5")
+  if (/\d+\.?\d*$/.test(originalBet) && !originalBet.includes('ML') && !originalBet.toLowerCase().includes('over') && !originalBet.toLowerCase().includes('under')) {
+    const parts = originalBet.split(' ');
+    const team = parts[0];
+    const spread = parts[parts.length - 1];
+    return opponentTeam ? `${opponentTeam} -${spread}` : `-${spread}`;
   }
   
   // Handle moneylines (ML)
