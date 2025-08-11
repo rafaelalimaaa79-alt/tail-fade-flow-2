@@ -236,9 +236,6 @@ const ConnectSportsbooks = () => {
                         )}
                       </div>
                       <span>{sportsbook.name}</span>
-                      {sportsbook.requiresSdk && (
-                        <Badge variant="secondary" className="text-xs ml-auto">SDK Required</Badge>
-                      )}
                     </div>
                   </SelectItem>
                 ))}
@@ -257,69 +254,59 @@ const ConnectSportsbooks = () => {
             
             return (
               <Card className="p-6 bg-card border border-white/10">
-                <div className="flex items-center justify-between">
-                  <div className="flex items-center gap-4">
-                    <div className="w-12 h-12 rounded-lg bg-black border border-white/20 flex items-center justify-center overflow-hidden">
-                      {selectedSportsbook.icon ? (
-                        <img 
-                          src={selectedSportsbook.icon} 
-                          alt={`${selectedSportsbook.name} logo`}
-                          className="w-full h-full object-contain"
-                        />
-                      ) : (
-                        <span className="text-sm font-medium text-white">{selectedSportsbook.logoText}</span>
-                      )}
-                    </div>
-                    <div>
-                      <div className="flex items-center gap-2 mb-1">
-                        <h3 className="text-lg font-semibold text-white">{selectedSportsbook.name}</h3>
-                        {selectedSportsbook.requiresSdk && (
-                          <Badge variant="secondary" className="text-xs">SDK Required</Badge>
-                        )}
-                      </div>
-                      <div className={`text-sm ${isLinked ? 'text-green-400' : 'text-muted-foreground'}`}>
-                        {statusLabel}
-                      </div>
-                    </div>
+                <div className="flex flex-col items-center text-center space-y-4">
+                  <div className="w-16 h-16 rounded-lg bg-black border border-white/20 flex items-center justify-center overflow-hidden">
+                    {selectedSportsbook.icon ? (
+                      <img 
+                        src={selectedSportsbook.icon} 
+                        alt={`${selectedSportsbook.name} logo`}
+                        className="w-full h-full object-contain"
+                      />
+                    ) : (
+                      <span className="text-lg font-medium text-white">{selectedSportsbook.logoText}</span>
+                    )}
                   </div>
                   
-                  <div className="flex items-center gap-3">
+                  <div className={`text-sm ${isLinked ? 'text-green-400' : 'text-muted-foreground'}`}>
+                    {statusLabel}
+                  </div>
+                  
+                  <div className="w-full">
                     {isLinked ? (
-                      <Button
+                      <button
                         onClick={() => handleAction(selectedSportsbook, 'fixSync')}
-                        variant="outline"
-                        size="sm"
+                        className="w-full py-3 px-4 rounded-lg font-medium transition-all duration-300 bg-gray-600/50 text-gray-400 cursor-default"
                       >
-                        Fix Sync
-                      </Button>
+                        Connected
+                      </button>
                     ) : status === 'NEEDS_2FA' ? (
-                      <Button
+                      <button
                         onClick={() => handleAction(selectedSportsbook, 'enter2fa')}
-                        className="bg-primary hover:bg-primary/90 text-white"
-                        size="sm"
+                        className="w-full py-3 px-4 rounded-lg font-medium transition-all duration-300 bg-[#AEE3F5] text-black hover:bg-[#AEE3F5]/90 shadow-[0_0_15px_rgba(174,227,245,0.4)]"
                       >
                         Enter Code
-                      </Button>
+                      </button>
                     ) : status === 'LINKING' ? (
-                      <Button disabled size="sm">
+                      <button
+                        disabled
+                        className="w-full py-3 px-4 rounded-lg font-medium transition-all duration-300 bg-gray-600/50 text-gray-400 cursor-not-allowed"
+                      >
                         Linking…
-                      </Button>
+                      </button>
                     ) : selectedSportsbook.requiresSdk ? (
-                      <Button
+                      <button
                         onClick={() => handleAction(selectedSportsbook, 'mobileInfo')}
-                        variant="outline"
-                        size="sm"
+                        className="w-full py-3 px-4 rounded-lg font-medium transition-all duration-300 bg-gray-600/50 text-gray-400 cursor-default"
                       >
-                        Learn More
-                      </Button>
+                        Coming Soon
+                      </button>
                     ) : (
-                      <Button
+                      <button
                         onClick={() => handleAction(selectedSportsbook, 'connect')}
-                        className="bg-primary hover:bg-primary/90 text-white"
-                        size="sm"
+                        className="w-full py-3 px-4 rounded-lg font-medium transition-all duration-300 bg-[#AEE3F5] text-black hover:bg-[#AEE3F5]/90 shadow-[0_0_15px_rgba(174,227,245,0.4)]"
                       >
-                        Connect
-                      </Button>
+                        Connect Now
+                      </button>
                     )}
                   </div>
                 </div>
