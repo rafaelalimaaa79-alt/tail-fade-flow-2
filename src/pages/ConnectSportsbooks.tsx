@@ -95,6 +95,9 @@ const ConnectSportsbooks = () => {
   const [tfaSubmitting, setTfaSubmitting] = useState(false);
   const [tfaError, setTfaError] = useState("");
   const [showWaiting, setShowWaiting] = useState(true);
+  const [deferEnabled, setDeferEnabled] = useState(false);
+  const [deferred, setDeferred] = useState(false);
+  const [showTfaBubble, setShowTfaBubble] = useState(false);
 
 
   // Countdown timer effect for 2FA resend
@@ -124,8 +127,16 @@ const ConnectSportsbooks = () => {
       setResendCountdown(30);
       setCanResend(false);
       setShowWaiting(true);
+      setDeferEnabled(false);
     }
   }, [show2FAModal]);
+
+  // Enable "later" option when countdown finishes
+  useEffect(() => {
+    if (show2FAModal && resendCountdown === 0) {
+      setDeferEnabled(true);
+    }
+  }, [show2FAModal, resendCountdown]);
 
   const getStatus = (sportsbookId: string): SportsbookStatus => {
     return accounts[sportsbookId]?.status || 'DISCONNECTED';
@@ -303,13 +314,20 @@ const ConnectSportsbooks = () => {
     setActiveLinkingBook(null);
   };
 
+  const doLater = () => {
+    if (!deferEnabled) return;
+    setDeferred(true);
+    setShow2FAModal(false);
+    setShowTfaBubble(true);
+  };
+
   const handleContinue = () => {
     localStorage.setItem('biometricEnabled', faceIdEnabled.toString());
     navigate('/onboarding');
   };
 
   const anyLinked = Object.values(accounts).some(account => account.status === 'LINKED');
-  const canProceed = anyLinked && faceIdEnabled;
+  const canProceed = (anyLinked || deferred) && faceIdEnabled;
 
   return (
     <div className="bg-black min-h-screen">
@@ -538,13 +556,15 @@ const ConnectSportsbooks = () => {
               >
                 {tfaSubmitting ? 'Submitting…' : 'Submit'}
               </Button>
-              <Button 
-                variant="ghost" 
-                onClick={() => setShow2FAModal(false)}
-                className="flex-1"
-              >
-                I'll do this later
-              </Button>
+              {deferEnabled && (
+                <Button 
+                  variant="ghost" 
+                  onClick={doLater}
+                  className="flex-1"
+                >
+                  I'll do this later
+                </Button>
+              )}
             </div>
 
             {tfaError && (
@@ -602,9 +622,23 @@ const ConnectSportsbooks = () => {
             </div>
           </div>
         </DialogContent>
-      </Dialog>
-    </div>
-  );
-};
+          </Dialog>
 
-export default ConnectSportsbooks;
+          {/* Floating TFA Bubble */}
+          {showTfaBubble && (
+            <button
+              onClick={() => {
+                setShow2FAModal(true);
+                setShowTfaBubble(false);
+              }}
+              className="fixed right-4 bottom-4 z-50 bg-[#6b66ff] hover:bg-[#6b66ff]/90 text-white border border-[#6b66ff] rounded-full px-4 py-3 shadow-lg font-semibold transition-all duration-300"
+              aria-label="Enter verification code"
+            >
+              Enter Code
+            </button>
+          )}
+        </div>
+      );
+    };
+
+    export default ConnectSportsbooks;
