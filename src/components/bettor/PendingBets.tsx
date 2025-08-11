@@ -1,6 +1,7 @@
 
 import React, { useState } from "react";
 import { BettorBet, BettorProfile } from "@/types/bettor";
+import { analyzeBettorWeaknesses, getStrongestWeaknessDescription } from "@/utils/weakness-analyzer";
 import { cn } from "@/lib/utils";
 import { format } from "date-fns";
 import { Badge } from "@/components/ui/badge";
@@ -69,7 +70,6 @@ const PendingBets: React.FC<PendingBetsProps> = ({ pendingBets, profile, classNa
 
   // Function to generate sport-specific statlines using weakness analysis
   const getSportStatline = (sport: string, bettorName: string, betDescription: string) => {
-    const { analyzeBettorWeaknesses, getStrongestWeaknessDescription } = require('../../utils/weakness-analyzer');
     const weaknesses = analyzeBettorWeaknesses(bettorName, betDescription, sport);
     return getStrongestWeaknessDescription(weaknesses);
   };

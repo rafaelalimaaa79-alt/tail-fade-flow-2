@@ -1,5 +1,6 @@
 
 import { getRandomGame, realGames } from "@/data/realGamesData";
+import { analyzeBettorWeaknesses, getStrongestWeaknessDescription } from "./weakness-analyzer";
 
 // Function to get fade confidence (mock data for now)
 export const getFadeConfidence = () => {
@@ -66,7 +67,6 @@ export const getBetLine = (teams: string[], sport?: string) => {
 export const getSportStatline = (sport: string, bettorName?: string, betDescription?: string) => {
   // If we have enough info, use the weakness analyzer
   if (bettorName && betDescription) {
-    const { analyzeBettorWeaknesses, getStrongestWeaknessDescription } = require('./weakness-analyzer');
     const weaknesses = analyzeBettorWeaknesses(bettorName, betDescription, sport);
     return getStrongestWeaknessDescription(weaknesses);
   }
