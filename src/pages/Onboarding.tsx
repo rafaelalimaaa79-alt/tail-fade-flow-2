@@ -12,6 +12,7 @@ import OnboardingStep5 from "@/components/onboarding/OnboardingStep5";
 import OnboardingStep6 from "@/components/onboarding/OnboardingStep6";
 import OnboardingStep7 from "@/components/onboarding/OnboardingStep7";
 import OnboardingTfaModal from "@/components/onboarding/OnboardingTfaModal";
+import OnboardingEnterCodeButton from "@/components/onboarding/OnboardingEnterCodeButton";
 
 interface OnboardingData {
   averageBet: string;
@@ -66,6 +67,7 @@ const Onboarding = () => {
   
   return (
     <OnboardingProvider>
+      <OnboardingEnterCodeButton />
       <div className="bg-black min-h-screen flex flex-col">
         <div className="flex-1 flex flex-col justify-center items-center px-4">
           <div className="w-full max-w-md">

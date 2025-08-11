@@ -2,43 +2,23 @@
 import React from "react";
 import { motion } from "framer-motion";
 import { User } from "lucide-react";
-import { Button } from "@/components/ui/button";
-import { useOnboarding } from "@/contexts/OnboardingContext";
 
 const OnboardingHeader: React.FC = () => {
-  const { pendingTFA, setShowTfaModal } = useOnboarding();
-
   return (
-    <>
-      {pendingTFA && (
-        <motion.div
-          initial={{ opacity: 0, y: -20 }}
-          animate={{ opacity: 1, y: 0 }}
-          className="fixed top-4 left-1/2 transform -translate-x-1/2 z-50"
-        >
-          <Button
-            onClick={() => setShowTfaModal(true)}
-            className="bg-[#AEE3F5]/90 hover:bg-[#AEE3F5] text-black px-4 py-2 rounded-lg shadow-lg font-medium"
-          >
-            Enter Code
-          </Button>
-        </motion.div>
-      )}
-
+    <motion.div
+      initial={{ opacity: 0, y: 20 }}
+      animate={{ opacity: 1, y: 0 }}
+      transition={{ delay: 0.1 }}
+      className="mb-6"
+    >
       <motion.div
-        initial={{ opacity: 0, y: 20 }}
-        animate={{ opacity: 1, y: 0 }}
-        transition={{ delay: 0.1 }}
-        className="mb-6"
+        initial={{ scale: 0 }}
+        animate={{ scale: 1 }}
+        transition={{ delay: 0.3, type: "spring", stiffness: 200 }}
+        className="w-12 h-12 bg-[#AEE3F5]/20 rounded-full flex items-center justify-center mx-auto mb-4"
       >
-        <motion.div
-          initial={{ scale: 0 }}
-          animate={{ scale: 1 }}
-          transition={{ delay: 0.3, type: "spring", stiffness: 200 }}
-          className="w-12 h-12 bg-[#AEE3F5]/20 rounded-full flex items-center justify-center mx-auto mb-4"
-        >
-          <User className="w-6 h-6 text-[#AEE3F5]" />
-        </motion.div>
+        <User className="w-6 h-6 text-[#AEE3F5]" />
+      </motion.div>
         
         <motion.h2
           initial={{ opacity: 0 }}
@@ -64,7 +44,6 @@ const OnboardingHeader: React.FC = () => {
           </div>
         </motion.div>
       </motion.div>
-    </>
   );
 };
 
