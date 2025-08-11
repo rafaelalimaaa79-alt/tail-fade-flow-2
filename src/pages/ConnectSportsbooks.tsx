@@ -77,25 +77,14 @@ interface SportsbookAccount {
 
 const ConnectSportsbooks = () => {
   const navigate = useNavigate();
+  // All sportsbooks start as DISCONNECTED - no localStorage loading on this onboarding page
   const [accounts, setAccounts] = useState<Record<string, SportsbookAccount>>({});
   const [faceIdEnabled, setFaceIdEnabled] = useState(false);
   const [show2FAModal, setShow2FAModal] = useState(false);
   const [tfaCode, setTfaCode] = useState("");
   const [currentTfaBookId, setCurrentTfaBookId] = useState<string | null>(null);
+  const [activeLinkingBook, setActiveLinkingBook] = useState<string | null>(null);
 
-  useEffect(() => {
-    const initAccounts = async () => {
-      try {
-        const saved = localStorage.getItem('sportsbookAccounts');
-        if (saved) {
-          setAccounts(JSON.parse(saved));
-        }
-      } catch (e) {
-        console.error('Failed to load accounts:', e);
-      }
-    };
-    initAccounts();
-  }, []);
 
   const getStatus = (sportsbookId: string): SportsbookStatus => {
     return accounts[sportsbookId]?.status || 'DISCONNECTED';
@@ -143,29 +132,37 @@ const ConnectSportsbooks = () => {
 
   const startWebLink = async (sportsbook: any) => {
     setStatus(sportsbook.id, 'LINKING');
+    setActiveLinkingBook(sportsbook.id);
     
     try {
-      // Simulate API call delay
+      // Simulate opening SharpSports popup and user entering credentials
       await new Promise(resolve => setTimeout(resolve, 1500));
       
-      // Simulate different outcomes
-      const outcomes = ['SUCCESS', 'NEEDS_2FA', 'ERROR'];
+      // Simulate realistic outcomes - 2FA is much less common than successful linking
+      const outcomes = ['SUCCESS', 'SUCCESS', 'SUCCESS', 'NEEDS_2FA', 'ERROR'];
       const outcome = outcomes[Math.floor(Math.random() * outcomes.length)];
       
       if (outcome === 'SUCCESS') {
         setStatus(sportsbook.id, 'LINKED');
         toast.success(`${sportsbook.name} connected successfully!`);
+        setActiveLinkingBook(null);
       } else if (outcome === 'NEEDS_2FA') {
-        setStatus(sportsbook.id, 'NEEDS_2FA');
-        setCurrentTfaBookId(sportsbook.id);
-        setShow2FAModal(true);
+        // Only set NEEDS_2FA during active linking when provider specifically requests it
+        if (activeLinkingBook === sportsbook.id) {
+          setStatus(sportsbook.id, 'NEEDS_2FA');
+          setCurrentTfaBookId(sportsbook.id);
+          setShow2FAModal(true);
+          toast.info(`${sportsbook.name} requires 2FA verification to complete linking.`);
+        }
       } else {
         setStatus(sportsbook.id, 'ERROR');
         toast.error('Connection failed. Please try again.');
+        setActiveLinkingBook(null);
       }
     } catch (e) {
       setStatus(sportsbook.id, 'ERROR');
       toast.error('Connection failed. Please try again.');
+      setActiveLinkingBook(null);
     }
   };
 
@@ -182,6 +179,7 @@ const ConnectSportsbooks = () => {
         setShow2FAModal(false);
         setTfaCode('');
         setCurrentTfaBookId(null);
+        setActiveLinkingBook(null);
       } else {
         toast.error('Invalid code. Please try again.');
       }
