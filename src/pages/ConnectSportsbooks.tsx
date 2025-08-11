@@ -133,6 +133,7 @@ const ConnectSportsbooks = () => {
   };
 
   const startWebLink = async (sportsbook: any) => {
+    console.log(`Starting link process for ${sportsbook.name}`);
     setStatus(sportsbook.id, 'LINKING');
     setActiveLinkingBook(sportsbook.id);
     
@@ -143,6 +144,8 @@ const ConnectSportsbooks = () => {
       // Simulate realistic outcomes - 2FA is much less common than successful linking
       const outcomes = ['SUCCESS', 'SUCCESS', 'SUCCESS', 'NEEDS_2FA', 'ERROR'];
       const outcome = outcomes[Math.floor(Math.random() * outcomes.length)];
+      
+      console.log(`Link outcome for ${sportsbook.name}: ${outcome}`);
       
       if (outcome === 'SUCCESS') {
         setStatus(sportsbook.id, 'LINKED');
@@ -162,6 +165,7 @@ const ConnectSportsbooks = () => {
         setActiveLinkingBook(null);
       }
     } catch (e) {
+      console.error(`Link error for ${sportsbook.name}:`, e);
       setStatus(sportsbook.id, 'ERROR');
       toast.error('Connection failed. Please try again.');
       setActiveLinkingBook(null);
