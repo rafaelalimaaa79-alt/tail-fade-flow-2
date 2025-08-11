@@ -223,20 +223,7 @@ const ConnectSportsbooks = () => {
                     value={sportsbook.id}
                     className="text-white hover:bg-card focus:bg-card cursor-pointer"
                   >
-                    <div className="flex items-center gap-3">
-                      <div className="w-6 h-6 rounded bg-black border border-white/20 flex items-center justify-center overflow-hidden">
-                        {sportsbook.icon ? (
-                          <img 
-                            src={sportsbook.icon} 
-                            alt={`${sportsbook.name} logo`}
-                            className="w-full h-full object-contain"
-                          />
-                        ) : (
-                          <span className="text-xs font-medium text-white">{sportsbook.logoText}</span>
-                        )}
-                      </div>
-                      <span>{sportsbook.name}</span>
-                    </div>
+                    {sportsbook.name}
                   </SelectItem>
                 ))}
               </SelectContent>
