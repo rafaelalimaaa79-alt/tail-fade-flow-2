@@ -7,6 +7,7 @@ import { Alert, AlertDescription } from "@/components/ui/alert";
 import { Dialog, DialogContent, DialogHeader, DialogTitle } from "@/components/ui/dialog";
 import { Input } from "@/components/ui/input";
 import { Badge } from "@/components/ui/badge";
+import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
 import { toast } from "sonner";
 
 const sportsbooks = [
@@ -84,6 +85,7 @@ const ConnectSportsbooks = () => {
   const [tfaCode, setTfaCode] = useState("");
   const [currentTfaBookId, setCurrentTfaBookId] = useState<string | null>(null);
   const [activeLinkingBook, setActiveLinkingBook] = useState<string | null>(null);
+  const [selectedSportsbookId, setSelectedSportsbookId] = useState<string>("");
 
 
   const getStatus = (sportsbookId: string): SportsbookStatus => {
@@ -206,31 +208,72 @@ const ConnectSportsbooks = () => {
           </p>
         </div>
 
-        <div className="space-y-3 mb-8">
-          {sportsbooks.map((sportsbook) => {
-            const status = getStatus(sportsbook.id);
-            const statusLabel = getStatusLabel(status, sportsbook.requiresSdk);
+        <div className="space-y-6 mb-8">
+          {/* Sportsbook Selection Dropdown */}
+          <div className="space-y-2">
+            <label className="text-sm font-medium text-white">Select a Sportsbook</label>
+            <Select value={selectedSportsbookId} onValueChange={setSelectedSportsbookId}>
+              <SelectTrigger className="w-full bg-card border-white/20 text-white">
+                <SelectValue placeholder="Choose a sportsbook to connect..." />
+              </SelectTrigger>
+              <SelectContent className="bg-black border-white/20 z-50">
+                {sportsbooks.map((sportsbook) => (
+                  <SelectItem 
+                    key={sportsbook.id} 
+                    value={sportsbook.id}
+                    className="text-white hover:bg-card focus:bg-card cursor-pointer"
+                  >
+                    <div className="flex items-center gap-3">
+                      <div className="w-6 h-6 rounded bg-black border border-white/20 flex items-center justify-center overflow-hidden">
+                        {sportsbook.icon ? (
+                          <img 
+                            src={sportsbook.icon} 
+                            alt={`${sportsbook.name} logo`}
+                            className="w-full h-full object-contain"
+                          />
+                        ) : (
+                          <span className="text-xs font-medium text-white">{sportsbook.logoText}</span>
+                        )}
+                      </div>
+                      <span>{sportsbook.name}</span>
+                      {sportsbook.requiresSdk && (
+                        <Badge variant="secondary" className="text-xs ml-auto">SDK Required</Badge>
+                      )}
+                    </div>
+                  </SelectItem>
+                ))}
+              </SelectContent>
+            </Select>
+          </div>
+
+          {/* Selected Sportsbook Card */}
+          {selectedSportsbookId && (() => {
+            const selectedSportsbook = sportsbooks.find(sb => sb.id === selectedSportsbookId);
+            if (!selectedSportsbook) return null;
+            
+            const status = getStatus(selectedSportsbook.id);
+            const statusLabel = getStatusLabel(status, selectedSportsbook.requiresSdk);
             const isLinked = status === 'LINKED';
             
             return (
-              <Card key={sportsbook.id} className="p-4 bg-card border border-white/10">
+              <Card className="p-6 bg-card border border-white/10">
                 <div className="flex items-center justify-between">
-                  <div className="flex items-center gap-3">
-                    <div className="w-10 h-10 rounded-lg bg-black border border-white/20 flex items-center justify-center overflow-hidden">
-                      {sportsbook.icon ? (
+                  <div className="flex items-center gap-4">
+                    <div className="w-12 h-12 rounded-lg bg-black border border-white/20 flex items-center justify-center overflow-hidden">
+                      {selectedSportsbook.icon ? (
                         <img 
-                          src={sportsbook.icon} 
-                          alt={`${sportsbook.name} logo`}
+                          src={selectedSportsbook.icon} 
+                          alt={`${selectedSportsbook.name} logo`}
                           className="w-full h-full object-contain"
                         />
                       ) : (
-                        <span className="text-xs font-medium text-white">{sportsbook.logoText}</span>
+                        <span className="text-sm font-medium text-white">{selectedSportsbook.logoText}</span>
                       )}
                     </div>
                     <div>
-                      <div className="flex items-center gap-2">
-                        <span className="font-medium text-white">{sportsbook.name}</span>
-                        {sportsbook.requiresSdk && (
+                      <div className="flex items-center gap-2 mb-1">
+                        <h3 className="text-lg font-semibold text-white">{selectedSportsbook.name}</h3>
+                        {selectedSportsbook.requiresSdk && (
                           <Badge variant="secondary" className="text-xs">SDK Required</Badge>
                         )}
                       </div>
@@ -243,7 +286,7 @@ const ConnectSportsbooks = () => {
                   <div className="flex items-center gap-3">
                     {isLinked ? (
                       <Button
-                        onClick={() => handleAction(sportsbook, 'fixSync')}
+                        onClick={() => handleAction(selectedSportsbook, 'fixSync')}
                         variant="outline"
                         size="sm"
                       >
@@ -251,7 +294,7 @@ const ConnectSportsbooks = () => {
                       </Button>
                     ) : status === 'NEEDS_2FA' ? (
                       <Button
-                        onClick={() => handleAction(sportsbook, 'enter2fa')}
+                        onClick={() => handleAction(selectedSportsbook, 'enter2fa')}
                         className="bg-primary hover:bg-primary/90 text-white"
                         size="sm"
                       >
@@ -261,9 +304,9 @@ const ConnectSportsbooks = () => {
                       <Button disabled size="sm">
                         Linking…
                       </Button>
-                    ) : sportsbook.requiresSdk ? (
+                    ) : selectedSportsbook.requiresSdk ? (
                       <Button
-                        onClick={() => handleAction(sportsbook, 'mobileInfo')}
+                        onClick={() => handleAction(selectedSportsbook, 'mobileInfo')}
                         variant="outline"
                         size="sm"
                       >
@@ -271,7 +314,7 @@ const ConnectSportsbooks = () => {
                       </Button>
                     ) : (
                       <Button
-                        onClick={() => handleAction(sportsbook, 'connect')}
+                        onClick={() => handleAction(selectedSportsbook, 'connect')}
                         className="bg-primary hover:bg-primary/90 text-white"
                         size="sm"
                       >
@@ -282,7 +325,7 @@ const ConnectSportsbooks = () => {
                 </div>
               </Card>
             );
-          })}
+          })()}
         </div>
 
         <div className="bg-card/50 border border-white/10 rounded-lg p-4 mb-6">
