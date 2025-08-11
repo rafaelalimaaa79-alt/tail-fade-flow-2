@@ -466,16 +466,27 @@ const ConnectSportsbooks = () => {
             </div>
           </div>
           
-          <button
-            onClick={() => setFaceIdEnabled(!faceIdEnabled)}
-            className={`w-full py-3 px-4 rounded-lg font-medium transition-all duration-300 ${
-              !faceIdEnabled 
-                ? 'bg-[#AEE3F5] text-black hover:bg-[#AEE3F5]/90 shadow-[0_0_15px_rgba(174,227,245,0.4)]' 
-                : 'bg-gray-600/50 text-gray-400 cursor-default'
-            }`}
-          >
-            {!faceIdEnabled ? 'Enable Face ID' : 'Face ID Enabled'}
-          </button>
+          <div className="space-y-3">
+            <button
+              onClick={() => setFaceIdEnabled(!faceIdEnabled)}
+              className={`w-full py-3 px-4 rounded-lg font-medium transition-all duration-300 ${
+                !faceIdEnabled 
+                  ? 'bg-[#AEE3F5] text-black hover:bg-[#AEE3F5]/90 shadow-[0_0_15px_rgba(174,227,245,0.4)]' 
+                  : 'bg-gray-600/50 text-gray-400 cursor-default'
+              }`}
+            >
+              {!faceIdEnabled ? 'Enable Face ID' : 'Face ID Enabled'}
+            </button>
+            
+            {!faceIdEnabled && (
+              <button
+                onClick={() => setFaceIdEnabled(false)}
+                className="w-full py-3 px-4 rounded-lg font-medium transition-all duration-300 bg-transparent border border-white/20 text-white/80 hover:border-white/40 hover:text-white"
+              >
+                Don't Enable Face ID
+              </button>
+            )}
+          </div>
         </div>
 
         {!canProceed && (
