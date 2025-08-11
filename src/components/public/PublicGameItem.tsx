@@ -76,10 +76,13 @@ const PublicGameItem = ({ game, rank, isInitialized = false }: PublicGameItemPro
             isInitialized && "hover:border-[#AEE3F5]/50 hover:shadow-lg hover:shadow-[#AEE3F5]/10",
             !isMostVisible && "grayscale"
           )}>
-            {/* Header with Game - Centered */}
+            {/* Header with Game - Trend Style */}
             <div className="flex justify-center items-center px-4 py-3 bg-black/20 border-b border-white/10">
-              <div className="text-white font-bold text-sm text-center uppercase tracking-wide font-mono drop-shadow-[0_0_8px_rgba(255,255,255,0.3)] bg-gradient-to-r from-white via-white/90 to-white bg-clip-text">
-                {game.team} vs {game.opponent}
+              <div className="text-center pb-1">
+                <h3 className="text-2xl font-bold text-white relative inline-block">
+                  {game.team} vs {game.opponent}
+                  <div className="absolute bottom-0 left-0 w-full h-1 bg-[#AEE3F5] opacity-90"></div>
+                </h3>
               </div>
             </div>
             
