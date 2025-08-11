@@ -1,5 +1,5 @@
 import React, { useState, useEffect, useRef } from "react";
-import { X, Send, Smile } from "lucide-react";
+import { Send, Smile } from "lucide-react";
 import { supabase } from "@/integrations/supabase/client";
 import { useToast } from "@/hooks/use-toast";
 import { Textarea } from "@/components/ui/textarea";
@@ -245,31 +245,30 @@ const FullScreenChat = ({ isOpen, onClose }: FullScreenChatProps) => {
 
   return (
     <div 
-      className={cn(
-        "fixed inset-0 z-50 bg-black flex flex-col",
-        "animate-in slide-in-from-bottom-full duration-300"
-      )}
+      className="fixed inset-0 z-50 bg-black/50 flex items-center justify-center p-4"
+      onClick={onClose}
     >
-      {/* Header */}
-      <div className="flex items-center justify-between p-4 border-b border-[#AEE3F5]/20 bg-black">
-        <div className="flex items-center gap-3">
-          <div className="text-lg">💬</div>
-          <h1 className="text-[#AEE3F5] font-semibold text-lg">Chat</h1>
-          <div className="w-2 h-2 bg-green-500 rounded-full animate-pulse"></div>
-        </div>
-        <button
-          onClick={onClose}
-          className="p-2 rounded-full text-[#AEE3F5]/60 hover:text-[#AEE3F5] hover:bg-[#AEE3F5]/10 transition-colors"
-        >
-          <X className="h-6 w-6" />
-        </button>
-      </div>
-
-      {/* Messages */}
-      <ScrollArea 
-        ref={scrollAreaRef}
-        className="flex-1 px-4 py-3 bg-black"
+      <div 
+        className={cn(
+          "bg-black border border-[#AEE3F5]/30 rounded-3xl flex flex-col max-w-md w-full h-[85vh] max-h-[600px]",
+          "animate-in slide-in-from-bottom-full duration-300 shadow-2xl"
+        )}
+        onClick={(e) => e.stopPropagation()}
       >
+        {/* Header */}
+        <div className="flex items-center justify-center p-4 border-b border-[#AEE3F5]/20">
+          <div className="flex items-center gap-3">
+            <div className="text-lg">💬</div>
+            <h1 className="text-[#AEE3F5] font-semibold text-lg">Chat</h1>
+            <div className="w-2 h-2 bg-green-500 rounded-full animate-pulse"></div>
+          </div>
+        </div>
+
+        {/* Messages */}
+        <ScrollArea 
+          ref={scrollAreaRef}
+          className="flex-1 px-4 py-3"
+        >
         {isLoading ? (
           <div className="text-center text-[#AEE3F5]/60 py-8">
             <div className="text-sm">Loading messages...</div>
@@ -303,9 +302,9 @@ const FullScreenChat = ({ isOpen, onClose }: FullScreenChatProps) => {
         )}
       </ScrollArea>
 
-      {/* User suggestions */}
-      {showUserSuggestions && suggestedUsers.length > 0 && (
-        <div className="mx-4 mb-2 bg-black border border-[#AEE3F5]/30 rounded-lg overflow-hidden">
+        {/* User suggestions */}
+        {showUserSuggestions && suggestedUsers.length > 0 && (
+          <div className="mx-4 mb-2 bg-black border border-[#AEE3F5]/30 rounded-lg overflow-hidden">
           {suggestedUsers.map((username, index) => (
             <button
               key={index}
@@ -315,12 +314,12 @@ const FullScreenChat = ({ isOpen, onClose }: FullScreenChatProps) => {
               @{username}
             </button>
           ))}
-        </div>
-      )}
+          </div>
+        )}
 
-      {/* Emoji picker */}
-      {showEmojiPicker && (
-        <div className="mx-4 mb-2 bg-black border border-[#AEE3F5]/30 rounded-lg p-3">
+        {/* Emoji picker */}
+        {showEmojiPicker && (
+          <div className="mx-4 mb-2 bg-black border border-[#AEE3F5]/30 rounded-lg p-3">
           <div className="grid grid-cols-5 gap-2">
             {emojis.map((emoji, index) => (
               <button
@@ -332,11 +331,11 @@ const FullScreenChat = ({ isOpen, onClose }: FullScreenChatProps) => {
               </button>
             ))}
           </div>
-        </div>
-      )}
+          </div>
+        )}
 
-      {/* Input */}
-      <div className="border-t border-[#AEE3F5]/20 p-4 bg-black">
+        {/* Input */}
+        <div className="border-t border-[#AEE3F5]/20 p-4">
         <div className="flex gap-2 items-end">
           <div className="flex-1 relative">
             <Textarea
@@ -379,6 +378,7 @@ const FullScreenChat = ({ isOpen, onClose }: FullScreenChatProps) => {
           )}
         </div>
       </div>
+    </div>
     </div>
   );
 };
