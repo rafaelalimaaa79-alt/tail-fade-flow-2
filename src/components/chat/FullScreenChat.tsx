@@ -248,6 +248,15 @@ const FullScreenChat = ({ isOpen, onClose }: FullScreenChatProps) => {
       className="fixed inset-0 z-50 bg-black/50 flex items-center justify-center p-4"
       onClick={onClose}
     >
+      <style>{`
+        .hide-scrollbar::-webkit-scrollbar {
+          display: none !important;
+        }
+        .hide-scrollbar {
+          -ms-overflow-style: none !important;
+          scrollbar-width: none !important;
+        }
+      `}</style>
       <div 
         className={cn(
           "bg-black border border-[#AEE3F5]/30 rounded-3xl flex flex-col max-w-md w-full h-[85vh] max-h-[600px]",
@@ -267,7 +276,7 @@ const FullScreenChat = ({ isOpen, onClose }: FullScreenChatProps) => {
         {/* Messages */}
         <div 
           ref={scrollAreaRef}
-          className="flex-1 px-4 py-3 overflow-y-auto [&::-webkit-scrollbar]:hidden [-ms-overflow-style:none] [scrollbar-width:none]"
+          className="flex-1 px-4 py-3 overflow-y-auto hide-scrollbar"
         >
         {isLoading ? (
           <div className="text-center text-[#AEE3F5]/60 py-8">
