@@ -217,12 +217,6 @@ const ConnectSportsbooks = () => {
                 <SelectValue placeholder="Choose a sportsbook to connect..." />
               </SelectTrigger>
               <SelectContent className="bg-black border-white/20 z-50">
-                <SelectItem 
-                  value="no-sportsbook"
-                  className="text-white hover:bg-card focus:bg-card cursor-pointer"
-                >
-                  No Sportsbook
-                </SelectItem>
                 {sportsbooks.map((sportsbook) => (
                   <SelectItem 
                     key={sportsbook.id} 
@@ -232,6 +226,12 @@ const ConnectSportsbooks = () => {
                     {sportsbook.name}
                   </SelectItem>
                 ))}
+                <SelectItem 
+                  value="no-sportsbook"
+                  className="text-white hover:bg-card focus:bg-card cursor-pointer"
+                >
+                  No Sportsbook
+                </SelectItem>
               </SelectContent>
             </Select>
           </div>
