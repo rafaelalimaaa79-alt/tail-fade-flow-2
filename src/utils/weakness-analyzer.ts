@@ -7,16 +7,15 @@ export interface WeaknessSignal {
 }
 
 export interface BettorWeaknesses {
-  coldStreak: WeaknessSignal;
-  propHitRate: WeaknessSignal;
-  teamBias: WeaknessSignal;
-  sportPerformance: WeaknessSignal;
-  betTypeWeakness: WeaknessSignal;
-  timeBasedPattern: WeaknessSignal;
-  favoriteUnderdogBias: WeaknessSignal;
-  totalsPerformance: WeaknessSignal;
-  spreadAccuracy: WeaknessSignal;
-  largeSpreadFails: WeaknessSignal;
+  recentForm: WeaknessSignal;
+  sportWinRateLifetime: WeaknessSignal;
+  sportWinRateCurrentSeason: WeaknessSignal;
+  timeSlotRecord: WeaknessSignal;
+  marketTypeRecord: WeaknessSignal;
+  bigBetRecord: WeaknessSignal;
+  teamSpecificRecord: WeaknessSignal;
+  chasingLossesPerformance: WeaknessSignal;
+  marketTypeByBetSize: WeaknessSignal;
 }
 
 // Generate comprehensive weakness analysis for a bettor
@@ -28,16 +27,15 @@ export const analyzeBettorWeaknesses = (
   const seed = hashString(bettorName + betDescription); // Create consistent data per bettor/bet
   
   return {
-    coldStreak: generateColdStreakSignal(seed),
-    propHitRate: generatePropHitRateSignal(seed, sport),
-    teamBias: generateTeamBiasSignal(seed, betDescription),
-    sportPerformance: generateSportPerformanceSignal(seed, sport),
-    betTypeWeakness: generateBetTypeWeaknessSignal(seed, betDescription),
-    timeBasedPattern: generateTimeBasedPatternSignal(seed),
-    favoriteUnderdogBias: generateFavoriteUnderdogBiasSignal(seed, betDescription),
-    totalsPerformance: generateTotalsPerformanceSignal(seed, betDescription),
-    spreadAccuracy: generateSpreadAccuracySignal(seed, betDescription),
-    largeSpreadFails: generateLargeSpreadFailsSignal(seed, betDescription)
+    recentForm: generateRecentFormSignal(seed),
+    sportWinRateLifetime: generateSportWinRateLifetimeSignal(seed, sport),
+    sportWinRateCurrentSeason: generateSportWinRateCurrentSeasonSignal(seed, sport),
+    timeSlotRecord: generateTimeSlotRecordSignal(seed),
+    marketTypeRecord: generateMarketTypeRecordSignal(seed, betDescription),
+    bigBetRecord: generateBigBetRecordSignal(seed),
+    teamSpecificRecord: generateTeamSpecificRecordSignal(seed, betDescription),
+    chasingLossesPerformance: generateChasingLossesPerformanceSignal(seed),
+    marketTypeByBetSize: generateMarketTypeByBetSizeSignal(seed, betDescription)
   };
 };
 
@@ -69,166 +67,143 @@ function seededRandom(seed: number, min: number = 0, max: number = 100): number 
   return Math.floor(random * (max - min + 1)) + min;
 }
 
-// Generate different weakness signals
-function generateColdStreakSignal(seed: number): WeaknessSignal {
-  const wins = seededRandom(seed * 2, 1, 4);
-  const losses = seededRandom(seed * 3, 8, 16);
-  const total = wins + losses;
-  const strength = seededRandom(seed * 4, 60, 90);
+// Generate fade confidence algorithm weakness signals
+
+// 1. Recent Form (last 10 bets)
+function generateRecentFormSignal(seed: number): WeaknessSignal {
+  const wins = seededRandom(seed * 2, 1, 3);
+  const total = 10;
+  const strength = seededRandom(seed * 3, 70, 95);
   
   return {
-    type: "coldStreak",
+    type: "recentForm",
     strength,
-    description: `He is ${wins} for ${total} in his last ${total} bets`
+    description: `He's ${wins}–${total - wins} in his last ${total} bets`
   };
 }
 
-function generatePropHitRateSignal(seed: number, sport: string): WeaknessSignal {
-  const hitRate = seededRandom(seed * 5, 15, 35);
-  const propTypes = {
-    "NBA": ["rebounds", "assists", "points", "three-pointers"],
-    "NFL": ["receiving yards", "rushing yards", "touchdown", "completion"],
-    "MLB": ["strikeouts", "hits", "runs", "home run"],
-    "NHL": ["saves", "goals", "assists", "penalty minutes"]
-  };
-  
-  const props = propTypes[sport as keyof typeof propTypes] || ["player performance"];
-  const propType = props[seededRandom(seed * 6, 0, props.length - 1)];
-  const strength = seededRandom(seed * 7, 70, 95);
+// 2. Sport Win Rate (lifetime)
+function generateSportWinRateLifetimeSignal(seed: number, sport: string): WeaknessSignal {
+  const winRate = seededRandom(seed * 4, 25, 40);
+  const strength = seededRandom(seed * 5, 65, 88);
   
   return {
-    type: "propHitRate",
+    type: "sportWinRateLifetime",
     strength,
-    description: `He only hits ${hitRate}% of ${propType} props`
+    description: `${winRate}% lifetime win rate in ${sport}`
   };
 }
 
-function generateTeamBiasSignal(seed: number, betDescription: string): WeaknessSignal {
-  const teams = ["Steelers", "Cowboys", "Lakers", "Patriots", "Chiefs", "49ers", "Celtics", "Yankees"];
-  const team = teams[seededRandom(seed * 8, 0, teams.length - 1)];
-  const wins = seededRandom(seed * 9, 2, 4);
-  const losses = seededRandom(seed * 10, 7, 12);
-  const strength = seededRandom(seed * 11, 75, 92);
+// 3. Sport Win Rate (current season)
+function generateSportWinRateCurrentSeasonSignal(seed: number, sport: string): WeaknessSignal {
+  const wins = seededRandom(seed * 6, 2, 6);
+  const total = seededRandom(seed * 7, 15, 25);
+  const strength = seededRandom(seed * 8, 75, 92);
   
   return {
-    type: "teamBias",
+    type: "sportWinRateCurrentSeason",
     strength,
-    description: `He is ${wins}–${losses + wins} betting on the ${team}`
+    description: `He's ${wins}–${total - wins} in ${sport} this season`
   };
 }
 
-function generateSportPerformanceSignal(seed: number, sport: string): WeaknessSignal {
-  const winRate = seededRandom(seed * 12, 18, 32);
-  const strength = seededRandom(seed * 13, 65, 88);
-  
-  return {
-    type: "sportPerformance",
-    strength,
-    description: `Only ${winRate}% win rate in ${sport} this season`
-  };
-}
-
-function generateBetTypeWeaknessSignal(seed: number, betDescription: string): WeaknessSignal {
-  let betType = "spread";
-  if (betDescription.includes("ML") || betDescription.includes("moneyline")) {
-    betType = "moneyline";
-  } else if (betDescription.includes("Over") || betDescription.includes("Under")) {
-    betType = "totals";
-  }
-  
-  const wins = seededRandom(seed * 14, 1, 3);
-  const total = seededRandom(seed * 15, 9, 15);
-  const strength = seededRandom(seed * 16, 68, 89);
-  
-  return {
-    type: "betTypeWeakness",
-    strength,
-    description: `Terrible ${wins}-${total - wins} record on ${betType} bets`
-  };
-}
-
-function generateTimeBasedPatternSignal(seed: number): WeaknessSignal {
-  const patterns = [
+// 4. Time Slot Record
+function generateTimeSlotRecordSignal(seed: number): WeaknessSignal {
+  const timeSlots = [
     "prime time games",
     "Monday night games", 
     "weekend games",
-    "road team favorites",
-    "divisional matchups"
+    "afternoon games",
+    "late games"
   ];
   
-  const pattern = patterns[seededRandom(seed * 17, 0, patterns.length - 1)];
-  const winRate = seededRandom(seed * 18, 12, 28);
-  const strength = seededRandom(seed * 19, 72, 91);
+  const timeSlot = timeSlots[seededRandom(seed * 9, 0, timeSlots.length - 1)];
+  const wins = seededRandom(seed * 10, 1, 4);
+  const total = seededRandom(seed * 11, 12, 20);
+  const strength = seededRandom(seed * 12, 68, 89);
   
   return {
-    type: "timeBasedPattern",
+    type: "timeSlotRecord",
     strength,
-    description: `${winRate}% win rate on ${pattern}`
+    description: `He's ${wins}–${total - wins} on ${timeSlot}`
   };
 }
 
-function generateFavoriteUnderdogBiasSignal(seed: number, betDescription: string): WeaknessSignal {
-  const isFavorite = betDescription.includes("-");
-  const type = isFavorite ? "favorites" : "underdogs";
-  const wins = seededRandom(seed * 20, 2, 5);
-  const total = seededRandom(seed * 21, 11, 18);
-  const strength = seededRandom(seed * 22, 69, 87);
-  
-  return {
-    type: "favoriteUnderdogBias",
-    strength,
-    description: `${wins}-${total - wins} when betting ${type}`
-  };
-}
-
-function generateTotalsPerformanceSignal(seed: number, betDescription: string): WeaknessSignal {
-  const isTotal = betDescription.includes("Over") || betDescription.includes("Under");
-  if (!isTotal) {
-    return { type: "totals", strength: 0, description: "" };
+// 5. Market Type Record (moneyline, spread, totals)
+function generateMarketTypeRecordSignal(seed: number, betDescription: string): WeaknessSignal {
+  let marketType = "spread";
+  if (betDescription.includes("ML") || betDescription.includes("moneyline")) {
+    marketType = "moneyline";
+  } else if (betDescription.includes("Over") || betDescription.includes("Under")) {
+    marketType = "totals";
   }
   
-  const direction = betDescription.includes("Over") ? "overs" : "unders";
-  const hitRate = seededRandom(seed * 23, 16, 29);
-  const strength = seededRandom(seed * 24, 73, 94);
+  const wins = seededRandom(seed * 13, 2, 5);
+  const total = seededRandom(seed * 14, 14, 22);
+  const strength = seededRandom(seed * 15, 72, 90);
   
   return {
-    type: "totalsPerformance",
+    type: "marketTypeRecord",
     strength,
-    description: `${hitRate}% hit rate on ${direction} this month`
+    description: `He's ${wins}–${total - wins} on ${marketType} bets`
   };
 }
 
-function generateSpreadAccuracySignal(seed: number, betDescription: string): WeaknessSignal {
-  const hasSpread = betDescription.match(/-?\d+\.?5?/);
-  if (!hasSpread) {
-    return { type: "spread", strength: 0, description: "" };
-  }
-  
-  const accuracy = seededRandom(seed * 25, 19, 33);
-  const strength = seededRandom(seed * 26, 66, 86);
+// 6. Big Bet Record (>2 units)
+function generateBigBetRecordSignal(seed: number): WeaknessSignal {
+  const lossRate = seededRandom(seed * 16, 65, 85);
+  const strength = seededRandom(seed * 17, 78, 95);
   
   return {
-    type: "spreadAccuracy",
+    type: "bigBetRecord",
     strength,
-    description: `Covers spread only ${accuracy}% of the time`
+    description: `He loses ${lossRate}% of bets over 2 units`
   };
 }
 
-function generateLargeSpreadFailsSignal(seed: number, betDescription: string): WeaknessSignal {
-  const spreadMatch = betDescription.match(/-?(\d+\.?5?)/);
-  const spread = spreadMatch ? parseFloat(spreadMatch[1]) : 0;
-  
-  if (spread < 6) {
-    return { type: "largeSpread", strength: 0, description: "" };
-  }
-  
-  const wins = seededRandom(seed * 27, 0, 2);
-  const total = seededRandom(seed * 28, 8, 13);
-  const strength = seededRandom(seed * 29, 78, 96);
+// 7. Team-Specific Record
+function generateTeamSpecificRecordSignal(seed: number, betDescription: string): WeaknessSignal {
+  const teams = ["Steelers", "Cowboys", "Lakers", "Patriots", "Chiefs", "49ers", "Celtics", "Yankees", "Rams", "Dodgers"];
+  const team = teams[seededRandom(seed * 18, 0, teams.length - 1)];
+  const wins = seededRandom(seed * 19, 1, 4);
+  const total = seededRandom(seed * 20, 11, 18);
+  const strength = seededRandom(seed * 21, 80, 96);
   
   return {
-    type: "largeSpreadFails",
+    type: "teamSpecificRecord",
     strength,
-    description: `${wins}-${total - wins} on spreads larger than 6 points`
+    description: `He's ${wins}–${total - wins} betting on the ${team}`
+  };
+}
+
+// 8. Chasing Losses Performance
+function generateChasingLossesPerformanceSignal(seed: number): WeaknessSignal {
+  const wins = seededRandom(seed * 22, 1, 3);
+  const total = seededRandom(seed * 23, 10, 16);
+  const strength = seededRandom(seed * 24, 73, 91);
+  
+  return {
+    type: "chasingLossesPerformance",
+    strength,
+    description: `He's ${wins}–${total - wins} when chasing losses`
+  };
+}
+
+// 9. Market Type by Bet Size
+function generateMarketTypeByBetSizeSignal(seed: number, betDescription: string): WeaknessSignal {
+  let marketType = "spread";
+  if (betDescription.includes("ML") || betDescription.includes("moneyline")) {
+    marketType = "moneyline";
+  } else if (betDescription.includes("Over") || betDescription.includes("Under")) {
+    marketType = "totals";
+  }
+  
+  const winRate = seededRandom(seed * 25, 18, 32);
+  const strength = seededRandom(seed * 26, 70, 87);
+  
+  return {
+    type: "marketTypeByBetSize",
+    strength,
+    description: `${winRate}% win rate on large ${marketType} bets`
   };
 }
