@@ -23,22 +23,13 @@ const OnboardingEnterCodeButton: React.FC = () => {
       animate={{ 
         opacity: 1, 
         scale: 1, 
-        y: 0,
-        boxShadow: [
-          "0 0 20px rgba(174, 227, 245, 0.4)",
-          "0 0 30px rgba(174, 227, 245, 0.6)", 
-          "0 0 20px rgba(174, 227, 245, 0.4)"
-        ]
+        y: 0
       }}
       transition={{ 
-        duration: 0.5,
-        boxShadow: {
-          duration: 2,
-          repeat: Infinity,
-          ease: "easeInOut"
-        }
+        duration: 0.5
       }}
-      className="fixed top-6 left-1/2 transform -translate-x-1/2 z-50"
+      className="fixed top-6 left-1/2 transform -translate-x-1/2 z-50 bg-transparent"
+      style={{ background: 'transparent' }}
     >
       <div
         onClick={() => setShowTfaModal(true)}
