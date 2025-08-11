@@ -493,7 +493,10 @@ const ConnectSportsbooks = () => {
           </DialogHeader>
           <div className="space-y-4">
             <p className="text-muted-foreground text-sm">
-              We're sending a code <span className="text-white/80">(this may take ~10–30s)</span>.
+              {(() => {
+                const sportsbook = sportsbooks.find(sb => sb.id === currentTfaBookId);
+                return `${sportsbook?.name || 'Your sportsbook'} is sending you a verification code.`;
+              })()}
             </p>
             
             {showWaiting && (
