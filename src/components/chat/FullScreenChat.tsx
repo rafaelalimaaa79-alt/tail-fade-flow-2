@@ -278,7 +278,7 @@ const FullScreenChat = ({ isOpen, onClose }: FullScreenChatProps) => {
           <div className="flex items-center gap-3 mb-1">
             <Users className="text-[#AEE3F5] h-5 w-5" />
             <h1 className="text-[#AEE3F5] font-semibold text-lg">NoShot Message Boards</h1>
-            <div className="w-2 h-2 bg-green-500 rounded-full animate-pulse"></div>
+            <Users className="text-[#AEE3F5] h-5 w-5" />
           </div>
           <p className="text-[#AEE3F5]/60 text-xs">Public chat for all users</p>
         </div>
