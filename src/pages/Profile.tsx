@@ -104,19 +104,7 @@ const ProfilePage = () => {
           rankChange={userProfile.rankChange} 
         />
 
-        <PerformanceSection 
-          winRate={userProfile.winRate}
-          roi={userProfile.roi}
-          profit={userProfile.profit}
-          chartData={userProfile.chartData}
-          timeframe={timeframe}
-          setTimeframe={setTimeframe}
-          performanceByTimeframe={userProfile.performanceByTimeframe}
-        />
-
         <PendingBetsSection />
-
-        <BiggestWinsSection wins={userProfile.tailingFadingWins} />
       </div>
       <BottomNav />
     </div>
