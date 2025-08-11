@@ -98,6 +98,7 @@ const ConnectSportsbooks = () => {
   const [deferEnabled, setDeferEnabled] = useState(false);
   const [deferred, setDeferred] = useState(false);
   const [showTfaBubble, setShowTfaBubble] = useState(false);
+  const [faceIdChoiceMade, setFaceIdChoiceMade] = useState(false);
 
 
   // Countdown timer effect for 2FA resend
@@ -329,11 +330,12 @@ const ConnectSportsbooks = () => {
 
   const handleContinue = () => {
     localStorage.setItem('biometricEnabled', faceIdEnabled.toString());
+    localStorage.setItem('faceIdChoiceMade', 'true');
     navigate('/onboarding');
   };
 
   const anyLinked = Object.values(accounts).some(account => account.status === 'LINKED');
-  const canProceed = (anyLinked || deferred) && faceIdEnabled;
+  const canProceed = (anyLinked || deferred) && (faceIdEnabled || faceIdChoiceMade);
 
   return (
     <div className="bg-black min-h-screen">
@@ -468,7 +470,10 @@ const ConnectSportsbooks = () => {
           
           <div className="space-y-3">
             <button
-              onClick={() => setFaceIdEnabled(!faceIdEnabled)}
+              onClick={() => {
+                setFaceIdEnabled(!faceIdEnabled);
+                if (!faceIdEnabled) setFaceIdChoiceMade(true);
+              }}
               className={`w-full py-3 px-4 rounded-lg font-medium transition-all duration-300 ${
                 !faceIdEnabled 
                   ? 'bg-[#AEE3F5] text-black hover:bg-[#AEE3F5]/90 shadow-[0_0_15px_rgba(174,227,245,0.4)]' 
@@ -480,7 +485,10 @@ const ConnectSportsbooks = () => {
             
             {!faceIdEnabled && (
               <button
-                onClick={() => setFaceIdEnabled(false)}
+                onClick={() => {
+                  setFaceIdEnabled(false);
+                  setFaceIdChoiceMade(true);
+                }}
                 className="w-full py-3 px-4 rounded-lg font-medium transition-all duration-300 bg-transparent border border-white/20 text-white/80 hover:border-white/40 hover:text-white"
               >
                 Don't Enable Face ID
@@ -493,7 +501,7 @@ const ConnectSportsbooks = () => {
           <Alert className="mb-6 border-orange-500/50 bg-orange-500/10">
             <AlertCircle className="h-4 w-4 text-orange-500" />
             <AlertDescription className="text-orange-200">
-              Please connect at least one sportsbook and enable Face ID to continue.
+              Please connect at least one sportsbook and make a Face ID choice to continue.
             </AlertDescription>
           </Alert>
         )}
@@ -503,7 +511,7 @@ const ConnectSportsbooks = () => {
             onClick={handleContinue}
             disabled={!canProceed}
             className={`w-full transition-all duration-500 ${
-              canProceed && faceIdEnabled 
+              canProceed && (faceIdEnabled || faceIdChoiceMade)
                 ? 'bg-[#AEE3F5] hover:bg-[#AEE3F5]/90 text-black shadow-[0_0_30px_rgba(174,227,245,0.9)] animate-pulse brightness-150' 
                 : canProceed
                 ? 'bg-[#AEE3F5] hover:bg-[#AEE3F5]/90 text-black'
