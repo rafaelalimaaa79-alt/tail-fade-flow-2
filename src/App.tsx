@@ -5,6 +5,7 @@ import { TooltipProvider } from "@/components/ui/tooltip";
 import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
 import { BrowserRouter, Routes, Route } from "react-router-dom";
 import { AuthProvider } from "@/contexts/AuthContext";
+import { ChatProvider } from "@/contexts/ChatContext";
 import ProtectedRoute from "@/components/ProtectedRoute";
 
 import Index from "./pages/Index";
@@ -32,7 +33,8 @@ const App = () => (
       <Sonner position="top-center" />
       <BrowserRouter>
         <AuthProvider>
-          <Routes>
+          <ChatProvider>
+            <Routes>
             {/* Root route always goes to sign in - no authentication check */}
             <Route path="/" element={<SignIn />} />
             
@@ -56,7 +58,8 @@ const App = () => (
             
             {/* Catch-all Route */}
             <Route path="*" element={<NotFound />} />
-          </Routes>
+            </Routes>
+          </ChatProvider>
         </AuthProvider>
       </BrowserRouter>
     </TooltipProvider>

@@ -1,7 +1,7 @@
 import React from "react";
 import { MessageSquare } from "lucide-react";
 import { cn } from "@/lib/utils";
-import { useInlineSmackTalk } from "@/hooks/useInlineSmackTalk";
+import { useChatContext } from "@/contexts/ChatContext";
 import {
   Tooltip,
   TooltipContent,
@@ -14,10 +14,10 @@ interface HeaderChatIconProps {
 }
 
 const HeaderChatIcon = ({ className }: HeaderChatIconProps) => {
-  const { isOpen, toggleSmackTalk } = useInlineSmackTalk();
+  const { isOpen, toggleChat } = useChatContext();
 
   const handleChatClick = () => {
-    toggleSmackTalk("global-chat", "General Discussion");
+    toggleChat();
   };
 
   return (
