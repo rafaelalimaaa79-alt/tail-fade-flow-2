@@ -6,10 +6,14 @@ import { useIsMobile } from "@/hooks/use-mobile";
 import { useNavigate } from "react-router-dom";
 import BriefcaseButton from "@/components/common/BriefcaseButton";
 import ProfileIcon from "@/components/common/ProfileIcon";
+import HeaderChatIcon from "@/components/common/HeaderChatIcon";
+import InlineSmackTalk from "@/components/InlineSmackTalk";
+import { useInlineSmackTalk } from "@/hooks/useInlineSmackTalk";
 
 const ColdPage = () => {
   const isMobile = useIsMobile();
   const navigate = useNavigate();
+  const { isOpen, smackTalkData, closeSmackTalk } = useInlineSmackTalk();
   
   return (
     <div className="flex min-h-screen flex-col bg-background">
@@ -21,6 +25,7 @@ const ColdPage = () => {
             className="h-24"
           />
           <div className="flex items-center gap-2">
+            <HeaderChatIcon />
             <BriefcaseButton className="mr-2" />
             <ProfileIcon />
           </div>
@@ -36,6 +41,15 @@ const ColdPage = () => {
             <ColdestBettors />
           </div>
         </div>
+        
+        {isOpen && (
+          <InlineSmackTalk
+            isOpen={isOpen}
+            onClose={closeSmackTalk}
+            itemId={smackTalkData?.itemId || ""}
+            itemTitle={smackTalkData?.itemTitle}
+          />
+        )}
       </div>
       <BottomNav />
     </div>

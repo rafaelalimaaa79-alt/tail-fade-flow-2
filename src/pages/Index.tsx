@@ -8,6 +8,9 @@ import DashboardHeader from "@/components/dashboard/DashboardHeader";
 import NotificationHandler from "@/components/dashboard/NotificationHandler";
 import BadgeAnimationHandler from "@/components/dashboard/BadgeAnimationHandler";
 import ProfileIcon from "@/components/common/ProfileIcon";
+import HeaderChatIcon from "@/components/common/HeaderChatIcon";
+import InlineSmackTalk from "@/components/InlineSmackTalk";
+import { useInlineSmackTalk } from "@/hooks/useInlineSmackTalk";
 import { useCarouselRotation } from "@/hooks/useCarouselRotation";
 import { usePortfolioStore } from "@/utils/portfolio-state";
 import { useNavigate } from "react-router-dom";
@@ -17,6 +20,7 @@ const Dashboard = () => {
   const navigate = useNavigate();
   const portfolioButtonRef = useRef<HTMLButtonElement>(null);
   const { resetViewedState } = usePortfolioStore();
+  const { isOpen, smackTalkData, closeSmackTalk } = useInlineSmackTalk();
   
   // Set up carousel rotations with custom hook
   const { 
@@ -68,7 +72,10 @@ const Dashboard = () => {
             className="h-40 cursor-pointer"
             onClick={handleLogoClick}
           />
-          <ProfileIcon />
+          <div className="flex items-center gap-2">
+            <HeaderChatIcon />
+            <ProfileIcon />
+          </div>
         </div>
 
         <div className="w-full mb-4">
@@ -82,7 +89,16 @@ const Dashboard = () => {
           <LeaderboardCarousel 
             currentIndex={bottomCarouselIndex}
             onIndexChange={handleBottomCarouselChange}
+        />
+        
+        {isOpen && (
+          <InlineSmackTalk
+            isOpen={isOpen}
+            onClose={closeSmackTalk}
+            itemId={smackTalkData?.itemId || ""}
+            itemTitle={smackTalkData?.itemTitle}
           />
+        )}
         </div>
       </div>
       

@@ -6,6 +6,9 @@ import PendingBetsSection from "@/components/profile/PendingBetsSection";
 import PerformanceSection from "@/components/profile/PerformanceSection";
 import BiggestWinsSection from "@/components/profile/BiggestWinsSection";
 import ProfileIcon from "@/components/common/ProfileIcon";
+import HeaderChatIcon from "@/components/common/HeaderChatIcon";
+import InlineSmackTalk from "@/components/InlineSmackTalk";
+import { useInlineSmackTalk } from "@/hooks/useInlineSmackTalk";
 
 // Mock data
 const userProfile = {
@@ -84,6 +87,7 @@ const userProfile = {
 const ProfilePage = () => {
   const [timeframe, setTimeframe] = useState<'1D' | '1W' | '1M' | '3M' | '1Y'>('1M');
   const navigate = useNavigate();
+  const { isOpen, smackTalkData, closeSmackTalk } = useInlineSmackTalk();
 
   return (
     <div className="bg-black min-h-screen pb-20">
@@ -95,7 +99,10 @@ const ProfilePage = () => {
             className="h-40 cursor-pointer"
             onClick={() => navigate("/dashboard")}
           />
-          <ProfileIcon />
+          <div className="flex items-center gap-2">
+            <HeaderChatIcon />
+            <ProfileIcon />
+          </div>
         </div>
 
         <UserHeader 
@@ -105,6 +112,15 @@ const ProfilePage = () => {
         />
 
         <PendingBetsSection />
+        
+        {isOpen && (
+          <InlineSmackTalk
+            isOpen={isOpen}
+            onClose={closeSmackTalk}
+            itemId={smackTalkData?.itemId || ""}
+            itemTitle={smackTalkData?.itemTitle}
+          />
+        )}
       </div>
       <BottomNav />
     </div>

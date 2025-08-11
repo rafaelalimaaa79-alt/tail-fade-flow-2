@@ -8,6 +8,9 @@ import TournamentList from "@/components/compete/TournamentList";
 import FixedMatchesList from "@/components/compete/FixedMatchesList";
 import CustomMatchesList from "@/components/compete/custom-matches/CustomMatchesList";
 import ProfileIcon from "@/components/common/ProfileIcon";
+import HeaderChatIcon from "@/components/common/HeaderChatIcon";
+import InlineSmackTalk from "@/components/InlineSmackTalk";
+import { useInlineSmackTalk } from "@/hooks/useInlineSmackTalk";
 import { supabase } from "@/integrations/supabase/client";
 import { toast } from "sonner";
 import { Card } from "@/components/ui/card";
@@ -47,6 +50,7 @@ const Compete = () => {
   const [loading, setLoading] = useState(true);
   const [bypassAuth, setBypassAuth] = useState(true); // Set to true by default now
   const isMobile = useIsMobile();
+  const { isOpen, smackTalkData, closeSmackTalk } = useInlineSmackTalk();
 
   useEffect(() => {
     const checkUser = async () => {
@@ -90,7 +94,10 @@ const Compete = () => {
             alt="ONE TIME logo" 
             className="h-24"
           />
-          <ProfileIcon />
+          <div className="flex items-center gap-2">
+            <HeaderChatIcon />
+            <ProfileIcon />
+          </div>
         </div>
         
         <PageHeader />
@@ -154,6 +161,15 @@ const Compete = () => {
               <CustomMatchesList />
             </TabsContent>
           </Tabs>
+        )}
+        
+        {isOpen && (
+          <InlineSmackTalk
+            isOpen={isOpen}
+            onClose={closeSmackTalk}
+            itemId={smackTalkData?.itemId || ""}
+            itemTitle={smackTalkData?.itemTitle}
+          />
         )}
       </div>
       <BottomNav />
