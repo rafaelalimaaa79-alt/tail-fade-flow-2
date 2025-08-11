@@ -320,7 +320,7 @@ const ConnectSportsbooks = () => {
     setDeferred(true);
     setShow2FAModal(false);
     setShowTfaBubble(true);
-    // Store TFA state for onboarding
+    // Store TFA state for onboarding - this will be picked up by the onboarding context
     const sportsbook = sportsbooks.find(sb => sb.id === activeLinkingBook);
     localStorage.setItem('pendingTFA', JSON.stringify({ 
       accountIdTemp: activeLinkingBook,

@@ -2,6 +2,7 @@
 import React, { useState } from "react";
 import { useNavigate } from "react-router-dom";
 import { Button } from "@/components/ui/button";
+import { OnboardingProvider } from "@/contexts/OnboardingContext";
 import OnboardingProgress from "@/components/onboarding/OnboardingProgress";
 import OnboardingStep1 from "@/components/onboarding/OnboardingStep1";
 import OnboardingStep2 from "@/components/onboarding/OnboardingStep2";
@@ -10,6 +11,7 @@ import OnboardingStep4 from "@/components/onboarding/OnboardingStep4";
 import OnboardingStep5 from "@/components/onboarding/OnboardingStep5";
 import OnboardingStep6 from "@/components/onboarding/OnboardingStep6";
 import OnboardingStep7 from "@/components/onboarding/OnboardingStep7";
+import OnboardingTfaModal from "@/components/onboarding/OnboardingTfaModal";
 
 interface OnboardingData {
   averageBet: string;
@@ -63,68 +65,72 @@ const Onboarding = () => {
   };
   
   return (
-    <div className="bg-black min-h-screen flex flex-col">
-      <div className="flex-1 flex flex-col justify-center items-center px-4">
-        <div className="w-full max-w-md">
-          <OnboardingProgress currentStep={currentStep} totalSteps={totalSteps} />
-          
-          <div className="mt-8">
-            {currentStep === 1 && (
-              <OnboardingStep1 
-                value={formData.averageBet}
-                onSelect={(value) => handleStepSelect('averageBet', value)}
-              />
-            )}
-            {currentStep === 2 && (
-              <OnboardingStep2 
-                value={formData.bettingFrequency}
-                onSelect={(value) => handleStepSelect('bettingFrequency', value)}
-              />
-            )}
-            {currentStep === 3 && (
-              <OnboardingStep3 
-                value={formData.fadedBuddy}
-                onSelect={(value) => handleStepSelect('fadedBuddy', value)}
-              />
-            )}
-            {currentStep === 4 && (
-              <OnboardingStep4 
-                value={formData.accountBalance}
-                onSelect={(value) => handleStepSelect('accountBalance', value)}
-              />
-            )}
-            {currentStep === 5 && (
-              <OnboardingStep5 
-                value={formData.throwingBombs}
-                onSelect={(value) => handleStepSelect('throwingBombs', value)}
-              />
-            )}
-            {currentStep === 6 && (
-              <OnboardingStep6 
-                value={formData.favoriteSport}
-                onSelect={(value) => handleStepSelect('favoriteSport', value)}
-              />
-            )}
-            {currentStep === 7 && (
-              <OnboardingStep7 onComplete={handleComplete} />
+    <OnboardingProvider>
+      <div className="bg-black min-h-screen flex flex-col">
+        <div className="flex-1 flex flex-col justify-center items-center px-4">
+          <div className="w-full max-w-md">
+            <OnboardingProgress currentStep={currentStep} totalSteps={totalSteps} />
+            
+            <div className="mt-8">
+              {currentStep === 1 && (
+                <OnboardingStep1 
+                  value={formData.averageBet}
+                  onSelect={(value) => handleStepSelect('averageBet', value)}
+                />
+              )}
+              {currentStep === 2 && (
+                <OnboardingStep2 
+                  value={formData.bettingFrequency}
+                  onSelect={(value) => handleStepSelect('bettingFrequency', value)}
+                />
+              )}
+              {currentStep === 3 && (
+                <OnboardingStep3 
+                  value={formData.fadedBuddy}
+                  onSelect={(value) => handleStepSelect('fadedBuddy', value)}
+                />
+              )}
+              {currentStep === 4 && (
+                <OnboardingStep4 
+                  value={formData.accountBalance}
+                  onSelect={(value) => handleStepSelect('accountBalance', value)}
+                />
+              )}
+              {currentStep === 5 && (
+                <OnboardingStep5 
+                  value={formData.throwingBombs}
+                  onSelect={(value) => handleStepSelect('throwingBombs', value)}
+                />
+              )}
+              {currentStep === 6 && (
+                <OnboardingStep6 
+                  value={formData.favoriteSport}
+                  onSelect={(value) => handleStepSelect('favoriteSport', value)}
+                />
+              )}
+              {currentStep === 7 && (
+                <OnboardingStep7 onComplete={handleComplete} />
+              )}
+            </div>
+            
+            {/* Only show back button for steps 2-6 */}
+            {currentStep > 1 && currentStep < 7 && (
+              <div className="mt-8 flex gap-4">
+                <Button 
+                  onClick={handlePrevious}
+                  variant="outline"
+                  className="flex-1"
+                >
+                  Back
+                </Button>
+              </div>
             )}
           </div>
-          
-          {/* Only show back button for steps 2-6 */}
-          {currentStep > 1 && currentStep < 7 && (
-            <div className="mt-8 flex gap-4">
-              <Button 
-                onClick={handlePrevious}
-                variant="outline"
-                className="flex-1"
-              >
-                Back
-              </Button>
-            </div>
-          )}
         </div>
+        
+        <OnboardingTfaModal />
       </div>
-    </div>
+    </OnboardingProvider>
   );
 };
 
