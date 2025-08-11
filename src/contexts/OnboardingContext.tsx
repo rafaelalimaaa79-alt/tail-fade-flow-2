@@ -36,7 +36,12 @@ export const OnboardingProvider: React.FC<{ children: React.ReactNode }> = ({ ch
   useEffect(() => {
     const pending = localStorage.getItem('pendingTFA');
     if (pending) {
-      setPendingTFA(JSON.parse(pending));
+      try {
+        setPendingTFA(JSON.parse(pending));
+      } catch (error) {
+        console.error('Error parsing pendingTFA:', error);
+        localStorage.removeItem('pendingTFA');
+      }
     }
   }, []);
 
