@@ -116,6 +116,8 @@ const ConnectSportsbooks = () => {
   };
 
   const handleAction = async (sportsbook: any, action: string) => {
+    console.log(`handleAction called with sportsbook: ${sportsbook.name}, action: ${action}`);
+    
     if (action === 'mobileInfo') {
       toast.info('This sportsbook must be linked on the iOS/Android app.');
       return;
@@ -128,6 +130,7 @@ const ConnectSportsbooks = () => {
     }
     
     if (action === 'fixSync' || action === 'connect') {
+      console.log(`About to call startWebLink for ${sportsbook.name}`);
       await startWebLink(sportsbook);
     }
   };
@@ -192,6 +195,18 @@ const ConnectSportsbooks = () => {
     } catch (e) {
       toast.error('Could not submit code. Try again.');
     }
+  };
+
+  
+  // Debug function to reset stuck state
+  const resetSportsbookState = (sportsbookId: string) => {
+    console.log(`Resetting state for ${sportsbookId}`);
+    setAccounts(prev => {
+      const updated = { ...prev };
+      delete updated[sportsbookId];
+      return updated;
+    });
+    setActiveLinkingBook(null);
   };
 
   const handleContinue = () => {
