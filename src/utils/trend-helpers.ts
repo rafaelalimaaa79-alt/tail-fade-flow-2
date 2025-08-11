@@ -1,6 +1,6 @@
 
 import { getRandomGame, realGames } from "@/data/realGamesData";
-import { analyzeBettorWeaknesses, getStrongestWeaknessDescription } from "./weakness-analyzer";
+import { analyzeBettorWeaknesses, getStrongestWeaknessDescription } from "@/utils/weakness-analyzer";
 
 // Function to get fade confidence (mock data for now)
 export const getFadeConfidence = () => {
