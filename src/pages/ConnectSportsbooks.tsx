@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from "react";
 import { useNavigate } from "react-router-dom";
-import { Check, Fingerprint, AlertCircle } from "lucide-react";
+import { Fingerprint, AlertCircle } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Card } from "@/components/ui/card";
 import { Alert, AlertDescription } from "@/components/ui/alert";
@@ -82,14 +82,10 @@ const ConnectSportsbooks = () => {
   const [show2FAModal, setShow2FAModal] = useState(false);
   const [tfaCode, setTfaCode] = useState("");
   const [currentTfaBookId, setCurrentTfaBookId] = useState<string | null>(null);
-  const [pendingBookId, setPendingBookId] = useState<string | null>(null);
 
   useEffect(() => {
-    // Initialize accounts from API or localStorage
     const initAccounts = async () => {
       try {
-        // In a real app, this would be an API call
-        // For now, simulate with localStorage
         const saved = localStorage.getItem('sportsbookAccounts');
         if (saved) {
           setAccounts(JSON.parse(saved));
@@ -147,7 +143,6 @@ const ConnectSportsbooks = () => {
 
   const startWebLink = async (sportsbook: any) => {
     setStatus(sportsbook.id, 'LINKING');
-    setPendingBookId(sportsbook.id);
     
     try {
       // Simulate API call delay
@@ -171,8 +166,6 @@ const ConnectSportsbooks = () => {
     } catch (e) {
       setStatus(sportsbook.id, 'ERROR');
       toast.error('Connection failed. Please try again.');
-    } finally {
-      setPendingBookId(null);
     }
   };
 
@@ -211,8 +204,7 @@ const ConnectSportsbooks = () => {
         <div className="text-center mb-8">
           <h1 className="text-2xl font-bold text-white mb-2">Link Your Sportsbooks</h1>
           <p className="text-muted-foreground text-sm px-4">
-            Security Promise
-            Your credentials are encrypted and never stored. We use secure methods to read your confirmed bets — nothing else.
+            Security Promise: Your credentials are encrypted and never stored. We use secure methods to read your confirmed bets — nothing else.
           </p>
         </div>
 
