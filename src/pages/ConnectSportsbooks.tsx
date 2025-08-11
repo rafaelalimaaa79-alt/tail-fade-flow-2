@@ -82,8 +82,12 @@ const ConnectSportsbooks = () => {
   const [accounts, setAccounts] = useState<Record<string, SportsbookAccount>>({});
   const [faceIdEnabled, setFaceIdEnabled] = useState(false);
   const [show2FAModal, setShow2FAModal] = useState(false);
+  const [showCredentialsModal, setShowCredentialsModal] = useState(false);
   const [tfaCode, setTfaCode] = useState("");
+  const [username, setUsername] = useState("");
+  const [password, setPassword] = useState("");
   const [currentTfaBookId, setCurrentTfaBookId] = useState<string | null>(null);
+  const [currentCredentialsBookId, setCurrentCredentialsBookId] = useState<string | null>(null);
   const [activeLinkingBook, setActiveLinkingBook] = useState<string | null>(null);
   const [selectedSportsbookId, setSelectedSportsbookId] = useState<string>("");
 
@@ -130,9 +134,27 @@ const ConnectSportsbooks = () => {
     }
     
     if (action === 'fixSync' || action === 'connect') {
-      console.log(`About to call startWebLink for ${sportsbook.name}`);
-      await startWebLink(sportsbook);
+      console.log(`About to show credentials modal for ${sportsbook.name}`);
+      setCurrentCredentialsBookId(sportsbook.id);
+      setShowCredentialsModal(true);
     }
+  };
+
+  const submitCredentials = async () => {
+    if (!username.trim() || !password.trim() || !currentCredentialsBookId) return;
+    
+    const sportsbook = sportsbooks.find(sb => sb.id === currentCredentialsBookId);
+    if (!sportsbook) return;
+    
+    console.log(`Credentials submitted for ${sportsbook.name}: ${username}/${password}`);
+    
+    // Hide credentials modal and start linking process
+    setShowCredentialsModal(false);
+    setUsername('');
+    setPassword('');
+    
+    // Now proceed with the actual linking
+    await startWebLink(sportsbook);
   };
 
   const startWebLink = async (sportsbook: any) => {
@@ -421,6 +443,54 @@ const ConnectSportsbooks = () => {
               <Button 
                 variant="ghost" 
                 onClick={() => setShow2FAModal(false)}
+                className="flex-1"
+              >
+                Cancel
+              </Button>
+            </div>
+          </div>
+        </DialogContent>
+      </Dialog>
+
+      <Dialog open={showCredentialsModal} onOpenChange={setShowCredentialsModal}>
+        <DialogContent className="sm:max-w-md bg-black border border-white/20">
+          <DialogHeader>
+            <DialogTitle className="text-white">Enter Sportsbook Credentials</DialogTitle>
+          </DialogHeader>
+          <div className="space-y-4">
+            <p className="text-muted-foreground text-sm">
+              Enter your sportsbook username and password to connect.
+            </p>
+            <Input
+              placeholder="Username"
+              value={username}
+              onChange={(e) => setUsername(e.target.value)}
+              className="bg-black border-white/20 text-white"
+            />
+            <Input
+              type="password"
+              placeholder="Password"
+              value={password}
+              onChange={(e) => setPassword(e.target.value)}
+              className="bg-black border-white/20 text-white"
+              onKeyDown={(e) => e.key === 'Enter' && submitCredentials()}
+            />
+            <div className="flex gap-3">
+              <Button 
+                onClick={submitCredentials} 
+                className="flex-1"
+                disabled={!username.trim() || !password.trim()}
+              >
+                Connect
+              </Button>
+              <Button 
+                variant="ghost" 
+                onClick={() => {
+                  setShowCredentialsModal(false);
+                  setUsername('');
+                  setPassword('');
+                  setCurrentCredentialsBookId(null);
+                }}
                 className="flex-1"
               >
                 Cancel
