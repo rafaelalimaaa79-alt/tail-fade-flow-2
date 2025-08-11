@@ -82,22 +82,6 @@ const BettorDetail = () => {
         
         {/* Pending Bets Section */}
         <PendingBets pendingBets={pendingBets} profile={summary.profile} className="my-4" />
-        
-        <div className="my-4 rounded-xl bg-black border border-white/10 p-4 shadow-md">
-          {/* Performance Section */}
-          <BettorPerformanceSection 
-            summary={summary}
-            timeframe={timeframe}
-            onTimeframeChange={setTimeframe}
-          />
-        </div>
-        
-        {/* Best Bets Section */}
-        <BettorBetList
-          biggestWinners={summary.biggestWinners}
-          largestBets={summary.largestBets}
-          className="my-4"
-        />
       </div>
       
       {/* Keep existing modal and notification components */}
