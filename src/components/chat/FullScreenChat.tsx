@@ -265,9 +265,9 @@ const FullScreenChat = ({ isOpen, onClose }: FullScreenChatProps) => {
         </div>
 
         {/* Messages */}
-        <ScrollArea 
+        <div 
           ref={scrollAreaRef}
-          className="flex-1 px-4 py-3"
+          className="flex-1 px-4 py-3 overflow-y-auto [&::-webkit-scrollbar]:hidden [-ms-overflow-style:none] [scrollbar-width:none]"
         >
         {isLoading ? (
           <div className="text-center text-[#AEE3F5]/60 py-8">
@@ -300,7 +300,7 @@ const FullScreenChat = ({ isOpen, onClose }: FullScreenChatProps) => {
             ))}
           </div>
         )}
-      </ScrollArea>
+        </div>
 
         {/* User suggestions */}
         {showUserSuggestions && suggestedUsers.length > 0 && (
@@ -344,6 +344,11 @@ const FullScreenChat = ({ isOpen, onClose }: FullScreenChatProps) => {
               onChange={(e) => {
                 setNewMessage(e.target.value);
                 handleAtMention(e.target.value);
+                // Auto-resize textarea
+                if (inputRef.current) {
+                  inputRef.current.style.height = 'auto';
+                  inputRef.current.style.height = Math.min(inputRef.current.scrollHeight, 100) + 'px';
+                }
               }}
               onKeyPress={handleKeyPress}
               placeholder="Type a message... Use @ to mention someone"
