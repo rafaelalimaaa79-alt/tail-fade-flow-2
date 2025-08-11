@@ -217,6 +217,12 @@ const ConnectSportsbooks = () => {
                 <SelectValue placeholder="Choose a sportsbook to connect..." />
               </SelectTrigger>
               <SelectContent className="bg-black border-white/20 z-50">
+                <SelectItem 
+                  value="no-sportsbook"
+                  className="text-white hover:bg-card focus:bg-card cursor-pointer"
+                >
+                  No Sportsbook
+                </SelectItem>
                 {sportsbooks.map((sportsbook) => (
                   <SelectItem 
                     key={sportsbook.id} 
@@ -232,6 +238,31 @@ const ConnectSportsbooks = () => {
 
           {/* Selected Sportsbook Card */}
           {selectedSportsbookId && (() => {
+            // Handle "No Sportsbook" selection
+            if (selectedSportsbookId === "no-sportsbook") {
+              return (
+                <Card className="p-6 bg-card border border-white/10">
+                  <div className="flex flex-col items-center text-center space-y-4">
+                    <div className="text-xl font-semibold text-white">
+                      No Sportsbook
+                    </div>
+                    
+                    <div className="text-sm text-muted-foreground">
+                      You can continue without connecting a sportsbook for now
+                    </div>
+                    
+                    <div className="w-full">
+                      <button
+                        className="w-full py-3 px-4 rounded-lg font-medium transition-all duration-300 bg-gray-600/50 text-gray-400 cursor-default"
+                      >
+                        No Connection Needed
+                      </button>
+                    </div>
+                  </div>
+                </Card>
+              );
+            }
+
             const selectedSportsbook = sportsbooks.find(sb => sb.id === selectedSportsbookId);
             if (!selectedSportsbook) return null;
             
