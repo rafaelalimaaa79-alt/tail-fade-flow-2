@@ -255,16 +255,8 @@ const ConnectSportsbooks = () => {
             return (
               <Card className="p-6 bg-card border border-white/10">
                 <div className="flex flex-col items-center text-center space-y-4">
-                  <div className="w-16 h-16 rounded-lg bg-black border border-white/20 flex items-center justify-center overflow-hidden">
-                    {selectedSportsbook.icon ? (
-                      <img 
-                        src={selectedSportsbook.icon} 
-                        alt={`${selectedSportsbook.name} logo`}
-                        className="w-full h-full object-contain"
-                      />
-                    ) : (
-                      <span className="text-lg font-medium text-white">{selectedSportsbook.logoText}</span>
-                    )}
+                  <div className="text-xl font-semibold text-white">
+                    {selectedSportsbook.name}
                   </div>
                   
                   <div className={`text-sm ${isLinked ? 'text-green-400' : 'text-muted-foreground'}`}>
