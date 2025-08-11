@@ -256,6 +256,15 @@ const FullScreenChat = ({ isOpen, onClose }: FullScreenChatProps) => {
           -ms-overflow-style: none !important;
           scrollbar-width: none !important;
         }
+        .no-scroll-textarea {
+          overflow: hidden !important;
+          resize: none !important;
+          scrollbar-width: none !important;
+          -ms-overflow-style: none !important;
+        }
+        .no-scroll-textarea::-webkit-scrollbar {
+          display: none !important;
+        }
       `}</style>
       <div 
         className={cn(
@@ -361,7 +370,7 @@ const FullScreenChat = ({ isOpen, onClose }: FullScreenChatProps) => {
               }}
               onKeyPress={handleKeyPress}
               placeholder="Type a message... Use @ to mention someone"
-              className="bg-black border-[#AEE3F5]/30 text-[#AEE3F5] placeholder-[#AEE3F5]/50 resize-none min-h-[40px] max-h-[100px] text-sm focus:border-[#AEE3F5]/60 pr-12"
+              className="bg-black border-[#AEE3F5]/30 text-[#AEE3F5] placeholder-[#AEE3F5]/50 resize-none min-h-[40px] max-h-[100px] text-sm focus:border-[#AEE3F5]/60 pr-12 no-scroll-textarea"
               rows={1}
               maxLength={500}
               disabled={isSubmitting}
