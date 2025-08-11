@@ -65,7 +65,7 @@ const LeaderboardTable: React.FC<LeaderboardTableProps> = ({
         </TableCell>
         <TableCell className="w-16 text-right py-3 px-3">
           <span className="group-hover:text-white group-hover:font-bold transition-all duration-200 text-sm font-semibold">
-            {bettor.winRate}%
+            {100 - bettor.winRate}%
           </span>
         </TableCell>
       </TableRow>
@@ -83,7 +83,7 @@ const LeaderboardTable: React.FC<LeaderboardTableProps> = ({
               <TableHead className="w-20 text-muted-foreground py-3 px-3 text-xs font-bold uppercase tracking-wider text-right">
                 Down
               </TableHead>
-              <TableHead className="w-16 text-muted-foreground py-3 px-3 text-xs font-bold uppercase tracking-wider text-right">Win %</TableHead>
+              <TableHead className="w-16 text-muted-foreground py-3 px-3 text-xs font-bold uppercase tracking-wider text-right">Lose %</TableHead>
             </TableRow>
           </TableHeader>
           <TableBody>
