@@ -42,9 +42,11 @@ const OnboardingEnterCodeButton: React.FC = () => {
     >
       <Button
         onClick={() => setShowTfaModal(true)}
-        className="bg-gradient-to-r from-[#AEE3F5] to-[#85D4F0] hover:from-[#85D4F0] hover:to-[#AEE3F5] text-black px-6 py-3 rounded-full shadow-2xl font-semibold border border-white/20 backdrop-blur-sm transform hover:scale-105 transition-all duration-300"
+        className="bg-gradient-to-r from-[#AEE3F5] to-[#85D4F0] hover:from-[#85D4F0] hover:to-[#AEE3F5] text-black px-6 py-3 rounded-full shadow-2xl font-semibold border border-white/20 backdrop-blur-sm transform hover:scale-105 transition-all duration-300 ring-0 ring-offset-0 focus-visible:ring-0 focus-visible:ring-offset-0"
         style={{
-          boxShadow: "0 0 25px rgba(174, 227, 245, 0.7), 0 0 50px rgba(174, 227, 245, 0.4), inset 0 1px 0 rgba(255, 255, 255, 0.3)"
+          boxShadow: "0 0 25px rgba(174, 227, 245, 0.7), 0 0 50px rgba(174, 227, 245, 0.4), inset 0 1px 0 rgba(255, 255, 255, 0.3)",
+          background: "linear-gradient(135deg, #AEE3F5, #85D4F0)",
+          border: "1px solid rgba(255, 255, 255, 0.2)"
         }}
       >
         <span className="relative z-10">Enter Code</span>
