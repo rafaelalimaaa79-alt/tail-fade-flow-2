@@ -54,7 +54,7 @@ const TrendItem = ({
     : getBetLine(matchup.teams, matchup.sport);
   const sportStatline = name === "ProPicker"
     ? "He is 4 for 20 in his last 20 NCAAFB bets"
-    : getSportStatline(matchup.sport);
+    : getSportStatline(matchup.sport, name, betDescription);
   
   // Get the opponent team for the bet conversion
   const opponentTeam = matchup.teams.find(team => !betLine.includes(team));

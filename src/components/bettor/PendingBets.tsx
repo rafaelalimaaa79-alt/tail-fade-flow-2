@@ -67,20 +67,11 @@ const PendingBets: React.FC<PendingBetsProps> = ({ pendingBets, profile, classNa
     return `${team} ${betType}`;
   };
 
-  // Function to generate sport-specific statlines
-  const getSportStatline = (sport: string) => {
-    const wins = Math.floor(Math.random() * 10) + 1; // 1-10 wins
-    const totalBets = wins + Math.floor(Math.random() * 15) + 3; // Add 3-17 more bets
-    
-    const sportStatlines = {
-      "NBA": `He is ${wins} for ${totalBets} in his last ${totalBets} NBA bets`,
-      "NFL": `He is ${wins} for ${totalBets} in his last ${totalBets} NFL bets`,
-      "MLB": `He is ${wins} for ${totalBets} in his last ${totalBets} MLB bets`,
-      "NHL": `He is ${wins} for ${totalBets} in his last ${totalBets} NHL bets`,
-      "UFC": `He is ${wins} for ${totalBets} in his last ${totalBets} UFC fights`
-    };
-    
-    return sportStatlines[sport as keyof typeof sportStatlines] || `He is ${wins} for ${totalBets} in his last ${totalBets} bets`;
+  // Function to generate sport-specific statlines using weakness analysis
+  const getSportStatline = (sport: string, bettorName: string, betDescription: string) => {
+    const { analyzeBettorWeaknesses, getStrongestWeaknessDescription } = require('../../utils/weakness-analyzer');
+    const weaknesses = analyzeBettorWeaknesses(bettorName, betDescription, sport);
+    return getStrongestWeaknessDescription(weaknesses);
   };
 
   // Create bets with fade confidence and sort by highest confidence
@@ -94,7 +85,7 @@ const PendingBets: React.FC<PendingBetsProps> = ({ pendingBets, profile, classNa
     })(),
     sportStatline: (() => {
       const matchup = getMatchup();
-      return getSportStatline(matchup.sport);
+      return getSportStatline(matchup.sport, profile.username, bet.teams);
     })()
   })).sort((a, b) => b.fadeConfidence - a.fadeConfidence);
 

@@ -62,10 +62,18 @@ export const getBetLine = (teams: string[], sport?: string) => {
   return `${team} ML`;
 };
 
-// Function to generate sport-specific statlines
-export const getSportStatline = (sport: string) => {
-  const wins = Math.floor(Math.random() * 10) + 1; // 1-10 wins
-  const totalBets = wins + Math.floor(Math.random() * 15) + 3; // Add 3-17 more bets
+// Function to generate sport-specific statlines using weakness analysis
+export const getSportStatline = (sport: string, bettorName?: string, betDescription?: string) => {
+  // If we have enough info, use the weakness analyzer
+  if (bettorName && betDescription) {
+    const { analyzeBettorWeaknesses, getStrongestWeaknessDescription } = require('./weakness-analyzer');
+    const weaknesses = analyzeBettorWeaknesses(bettorName, betDescription, sport);
+    return getStrongestWeaknessDescription(weaknesses);
+  }
+  
+  // Fallback to old method if not enough info
+  const wins = Math.floor(Math.random() * 10) + 1;
+  const totalBets = wins + Math.floor(Math.random() * 15) + 3;
   
   const sportStatlines = {
     "NBA": `He is ${wins} for ${totalBets} in his last ${totalBets} NBA bets`,
