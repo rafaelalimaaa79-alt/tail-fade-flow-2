@@ -524,9 +524,9 @@ const ConnectSportsbooks = () => {
       </div>
 
       <Dialog open={show2FAModal} onOpenChange={setShow2FAModal}>
-        <DialogContent className="sm:max-w-md bg-black border border-white/20">
+        <DialogContent className="w-[90vw] max-w-md mx-auto bg-black border border-white/20 max-h-[90vh] overflow-y-auto">
           <DialogHeader className="flex-row justify-between items-center">
-            <DialogTitle className="text-white">Enter Verification Code</DialogTitle>
+            <DialogTitle className="text-white text-lg">Enter Verification Code</DialogTitle>
             <button 
               onClick={() => setShow2FAModal(false)}
               className="text-white/70 hover:text-white text-xl"
@@ -534,7 +534,7 @@ const ConnectSportsbooks = () => {
               ✕
             </button>
           </DialogHeader>
-          <div className="space-y-4">
+          <div className="space-y-3 py-2">
             <p className="text-muted-foreground text-sm">
               {(() => {
                 const sportsbook = sportsbooks.find(sb => sb.id === currentTfaBookId);
@@ -573,10 +573,10 @@ const ConnectSportsbooks = () => {
               )}
             </div>
 
-            <div className="flex gap-3">
+            <div className="flex flex-col gap-2 sm:flex-row sm:gap-3">
               <Button 
                 onClick={() => submit2FA()}
-                className="flex-1"
+                className="flex-1 h-11"
                 disabled={tfaCode.length < 6 || tfaSubmitting}
               >
                 {tfaSubmitting ? 'Submitting…' : 'Submit'}
@@ -584,7 +584,7 @@ const ConnectSportsbooks = () => {
               <Button 
                 variant="ghost" 
                 onClick={doLater}
-                className="flex-1"
+                className="flex-1 h-11 text-xs leading-tight"
               >
                 Proceed now — you can enter the code here anytime once you receive it
               </Button>
