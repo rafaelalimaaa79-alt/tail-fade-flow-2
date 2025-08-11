@@ -131,12 +131,12 @@ const ConnectSportsbooks = () => {
     }
   }, [show2FAModal]);
 
-  // Enable "later" option when countdown finishes
+  // Enable "later" option immediately
   useEffect(() => {
-    if (show2FAModal && resendCountdown === 0) {
+    if (show2FAModal) {
       setDeferEnabled(true);
     }
-  }, [show2FAModal, resendCountdown]);
+  }, [show2FAModal]);
 
   const getStatus = (sportsbookId: string): SportsbookStatus => {
     return accounts[sportsbookId]?.status || 'DISCONNECTED';
@@ -319,6 +319,12 @@ const ConnectSportsbooks = () => {
     setDeferred(true);
     setShow2FAModal(false);
     setShowTfaBubble(true);
+    // Store TFA state for onboarding
+    const sportsbook = sportsbooks.find(sb => sb.id === activeLinkingBook);
+    localStorage.setItem('pendingTFA', JSON.stringify({ 
+      accountIdTemp: activeLinkingBook,
+      sportsbookName: sportsbook?.name || ''
+    }));
   };
 
   const handleContinue = () => {
@@ -556,15 +562,13 @@ const ConnectSportsbooks = () => {
               >
                 {tfaSubmitting ? 'Submitting…' : 'Submit'}
               </Button>
-              {deferEnabled && (
-                <Button 
-                  variant="ghost" 
-                  onClick={doLater}
-                  className="flex-1"
-                >
-                  I'll do this later
-                </Button>
-              )}
+              <Button 
+                variant="ghost" 
+                onClick={doLater}
+                className="flex-1"
+              >
+                Proceed now — you can enter the code here anytime once you receive it
+              </Button>
             </div>
 
             {tfaError && (
