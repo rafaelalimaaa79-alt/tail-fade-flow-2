@@ -9,6 +9,9 @@ import TrendsNotificationHandler from "@/components/trends/TrendsNotificationHan
 import BadgeAnimationHandler from "@/components/dashboard/BadgeAnimationHandler";
 import TopTenReveal from "@/components/trends/TopTenReveal";
 import ProfileIcon from "@/components/common/ProfileIcon";
+import HeaderChatIcon from "@/components/common/HeaderChatIcon";
+import InlineSmackTalk from "@/components/InlineSmackTalk";
+import { useInlineSmackTalk } from "@/hooks/useInlineSmackTalk";
 import { trendData } from "@/data/trendData";
 import { useNavigate } from "react-router-dom";
 
@@ -16,6 +19,7 @@ const Trends = () => {
   const isMobile = useIsMobile();
   const navigate = useNavigate();
   const [showTopTen, setShowTopTen] = useState(false);
+  const { isOpen, smackTalkData, closeSmackTalk } = useInlineSmackTalk();
   
   const handleLogoClick = () => {
     navigate("/dashboard");
@@ -31,7 +35,10 @@ const Trends = () => {
             className="h-40 cursor-pointer"
             onClick={handleLogoClick}
           />
-          <ProfileIcon />
+          <div className="flex items-center gap-2">
+            <HeaderChatIcon />
+            <ProfileIcon />
+          </div>
         </div>
         
         <TrendsTitle />
@@ -40,6 +47,15 @@ const Trends = () => {
           <TopTenReveal isRevealed={showTopTen} />
         ) : (
           <TrendsList trendData={trendData} />
+        )}
+        
+        {isOpen && (
+          <InlineSmackTalk
+            isOpen={isOpen}
+            onClose={closeSmackTalk}
+            itemId={smackTalkData?.itemId || ""}
+            itemTitle={smackTalkData?.itemTitle}
+          />
         )}
       </div>
       
