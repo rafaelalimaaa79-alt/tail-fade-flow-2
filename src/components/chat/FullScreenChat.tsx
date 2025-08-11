@@ -369,7 +369,7 @@ const FullScreenChat = ({ isOpen, onClose }: FullScreenChatProps) => {
                 }
               }}
               onKeyPress={handleKeyPress}
-              placeholder="Type a message... Use @ to mention someone"
+              placeholder="Enter Trash Talk Here"
               className="bg-black border-[#AEE3F5]/30 text-[#AEE3F5] placeholder-[#AEE3F5]/50 resize-none min-h-[40px] max-h-[100px] text-sm focus:border-[#AEE3F5]/60 pr-12 no-scroll-textarea"
               rows={1}
               maxLength={500}
