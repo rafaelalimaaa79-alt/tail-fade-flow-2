@@ -144,7 +144,18 @@ const ConnectSportsbooks = () => {
       // Simulate opening SharpSports popup and user entering credentials
       await new Promise(resolve => setTimeout(resolve, 1500));
       
-      // Simulate realistic outcomes - 2FA is much less common than successful linking
+      // Force 2FA for Hard Rock Bet to demo the flow
+      if (sportsbook.id === 'hardrock') {
+        console.log(`Forcing 2FA for ${sportsbook.name}`);
+        setStatus(sportsbook.id, 'NEEDS_2FA');
+        setCurrentTfaBookId(sportsbook.id);
+        setShow2FAModal(true);
+        toast.info(`${sportsbook.name} requires 2FA verification to complete linking.`);
+        setActiveLinkingBook(null);
+        return;
+      }
+      
+      // Simulate realistic outcomes for other sportsbooks
       const outcomes = ['SUCCESS', 'SUCCESS', 'SUCCESS', 'NEEDS_2FA', 'ERROR'];
       const outcome = outcomes[Math.floor(Math.random() * outcomes.length)];
       
@@ -182,7 +193,7 @@ const ConnectSportsbooks = () => {
       // Simulate 2FA verification
       await new Promise(resolve => setTimeout(resolve, 1000));
       
-      if (tfaCode === '123456' || Math.random() > 0.5) {
+      if (tfaCode === '12345' || tfaCode === '123456' || Math.random() > 0.5) {
         setStatus(currentTfaBookId, 'LINKED');
         toast.success('Successfully verified and connected!');
         setShow2FAModal(false);
