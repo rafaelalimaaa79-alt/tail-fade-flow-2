@@ -303,13 +303,6 @@ const ConnectSportsbooks = () => {
                       >
                         Linking…
                       </button>
-                    ) : selectedSportsbook.requiresSdk ? (
-                      <button
-                        onClick={() => handleAction(selectedSportsbook, 'mobileInfo')}
-                        className="w-full py-3 px-4 rounded-lg font-medium transition-all duration-300 bg-gray-600/50 text-gray-400 cursor-default"
-                      >
-                        Coming Soon
-                      </button>
                     ) : (
                       <button
                         onClick={() => handleAction(selectedSportsbook, 'connect')}
