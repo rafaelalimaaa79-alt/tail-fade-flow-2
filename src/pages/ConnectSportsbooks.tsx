@@ -90,7 +90,42 @@ const ConnectSportsbooks = () => {
   const [currentCredentialsBookId, setCurrentCredentialsBookId] = useState<string | null>(null);
   const [activeLinkingBook, setActiveLinkingBook] = useState<string | null>(null);
   const [selectedSportsbookId, setSelectedSportsbookId] = useState<string>("");
+  const [resendCountdown, setResendCountdown] = useState(30);
+  const [canResend, setCanResend] = useState(false);
+  const [tfaSubmitting, setTfaSubmitting] = useState(false);
+  const [tfaError, setTfaError] = useState("");
+  const [showWaiting, setShowWaiting] = useState(true);
 
+
+  // Countdown timer effect for 2FA resend
+  useEffect(() => {
+    let timer: NodeJS.Timeout;
+    if (show2FAModal && resendCountdown > 0) {
+      timer = setInterval(() => {
+        setResendCountdown(prev => {
+          if (prev <= 1) {
+            setCanResend(true);
+            setShowWaiting(false);
+            return 0;
+          }
+          return prev - 1;
+        });
+      }, 1000);
+    }
+    return () => clearInterval(timer);
+  }, [show2FAModal, resendCountdown]);
+
+  // Reset 2FA modal state when opened
+  useEffect(() => {
+    if (show2FAModal) {
+      setTfaCode('');
+      setTfaError('');
+      setTfaSubmitting(false);
+      setResendCountdown(30);
+      setCanResend(false);
+      setShowWaiting(true);
+    }
+  }, [show2FAModal]);
 
   const getStatus = (sportsbookId: string): SportsbookStatus => {
     return accounts[sportsbookId]?.status || 'DISCONNECTED';
@@ -208,14 +243,30 @@ const ConnectSportsbooks = () => {
     }
   };
 
-  const submit2FA = async () => {
-    if (!tfaCode.trim() || !currentTfaBookId) return;
+  // Handle 2FA code input with auto-submit and digit-only filtering
+  const handleTfaCodeChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    const value = e.target.value.replace(/\D/g, '').slice(0, 8); // Only digits, max 8
+    setTfaCode(value);
+    setTfaError('');
+    
+    // Auto-submit at 6 digits
+    if (value.length === 6 && !tfaSubmitting) {
+      submit2FA(value);
+    }
+  };
+
+  const submit2FA = async (code?: string) => {
+    const codeToSubmit = code || tfaCode.trim();
+    if (!codeToSubmit || codeToSubmit.length < 6 || !currentTfaBookId || tfaSubmitting) return;
+    
+    setTfaSubmitting(true);
+    setTfaError('');
     
     try {
       // Simulate 2FA verification
       await new Promise(resolve => setTimeout(resolve, 1000));
       
-      if (tfaCode === '12345' || tfaCode === '123456' || Math.random() > 0.5) {
+      if (codeToSubmit === '12345' || codeToSubmit === '123456' || Math.random() > 0.5) {
         setStatus(currentTfaBookId, 'LINKED');
         toast.success('Successfully verified and connected!');
         setShow2FAModal(false);
@@ -223,11 +274,21 @@ const ConnectSportsbooks = () => {
         setCurrentTfaBookId(null);
         setActiveLinkingBook(null);
       } else {
-        toast.error('Invalid code. Please try again.');
+        setTfaError('Invalid code. Double‑check and try again.');
       }
     } catch (e) {
-      toast.error('Could not submit code. Try again.');
+      setTfaError('Network issue. Try again.');
+    } finally {
+      setTfaSubmitting(false);
     }
+  };
+
+  const handleResend = async () => {
+    if (!canResend) return;
+    setResendCountdown(15); // Shorter countdown on resend
+    setCanResend(false);
+    setShowWaiting(true);
+    toast.info('Verification code resent!');
   };
 
   
@@ -421,33 +482,73 @@ const ConnectSportsbooks = () => {
 
       <Dialog open={show2FAModal} onOpenChange={setShow2FAModal}>
         <DialogContent className="sm:max-w-md bg-black border border-white/20">
-          <DialogHeader>
+          <DialogHeader className="flex-row justify-between items-center">
             <DialogTitle className="text-white">Enter Verification Code</DialogTitle>
+            <button 
+              onClick={() => setShow2FAModal(false)}
+              className="text-white/70 hover:text-white text-xl"
+            >
+              ✕
+            </button>
           </DialogHeader>
           <div className="space-y-4">
             <p className="text-muted-foreground text-sm">
-              Paste the code your sportsbook just sent.
+              We're sending a code <span className="text-white/80">(this may take ~10–30s)</span>.
             </p>
+            
+            {showWaiting && (
+              <div className="text-muted-foreground text-sm flex items-center gap-2">
+                <div className="w-2.5 h-2.5 border-2 border-[#AEE3F5] border-r-transparent rounded-full animate-spin"></div>
+                Waiting for the code…
+              </div>
+            )}
+
             <Input
+              inputMode="numeric"
+              autoComplete="one-time-code"
               placeholder="123456"
               value={tfaCode}
-              onChange={(e) => setTfaCode(e.target.value)}
+              onChange={handleTfaCodeChange}
               maxLength={8}
-              className="bg-black border-white/20 text-white"
-              onKeyDown={(e) => e.key === 'Enter' && submit2FA()}
+              className="bg-black border-white/20 text-white text-center text-lg tracking-widest"
+              autoFocus
             />
+
+            <div className="text-muted-foreground text-sm">
+              Didn't get it? {!canResend ? (
+                <span>Resend available in <strong>{resendCountdown}s</strong></span>
+              ) : (
+                <button 
+                  onClick={handleResend}
+                  className="text-[#AEE3F5] hover:underline"
+                >
+                  Resend now
+                </button>
+              )}
+            </div>
+
             <div className="flex gap-3">
-              <Button onClick={submit2FA} className="flex-1">
-                Submit
+              <Button 
+                onClick={() => submit2FA()}
+                className="flex-1"
+                disabled={tfaCode.length < 6 || tfaSubmitting}
+              >
+                {tfaSubmitting ? 'Submitting…' : 'Submit'}
               </Button>
               <Button 
                 variant="ghost" 
                 onClick={() => setShow2FAModal(false)}
                 className="flex-1"
               >
-                Cancel
+                I'll do this later
               </Button>
             </div>
+
+            {tfaError && (
+              <div className="text-red-400 text-sm mt-2">
+                {tfaError}
+              </div>
+            )}
           </div>
         </DialogContent>
       </Dialog>
