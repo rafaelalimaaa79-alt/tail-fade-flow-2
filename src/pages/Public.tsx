@@ -3,6 +3,9 @@ import React, { useState, useEffect } from "react";
 import BottomNav from "@/components/BottomNav";
 import { useIsMobile } from "@/hooks/use-mobile";
 import ProfileIcon from "@/components/common/ProfileIcon";
+import HeaderChatIcon from "@/components/common/HeaderChatIcon";
+import InlineSmackTalk from "@/components/InlineSmackTalk";
+import { useInlineSmackTalk } from "@/hooks/useInlineSmackTalk";
 import PublicGamesList from "@/components/public/PublicGamesList";
 import TrendsNotificationHandler from "@/components/trends/TrendsNotificationHandler";
 import { useNavigate } from "react-router-dom";
@@ -10,6 +13,7 @@ import { useNavigate } from "react-router-dom";
 const Public = () => {
   const isMobile = useIsMobile();
   const navigate = useNavigate();
+  const { isOpen, smackTalkData, closeSmackTalk } = useInlineSmackTalk();
   
   const handleLogoClick = () => {
     navigate("/dashboard");
@@ -25,7 +29,10 @@ const Public = () => {
             className="h-40 cursor-pointer"
             onClick={handleLogoClick}
           />
-          <ProfileIcon />
+          <div className="flex items-center gap-2">
+            <HeaderChatIcon />
+            <ProfileIcon />
+          </div>
         </div>
         
         <div className="mb-6 text-center">
@@ -35,6 +42,15 @@ const Public = () => {
         </div>
         
         <PublicGamesList />
+        
+        {isOpen && (
+          <InlineSmackTalk
+            isOpen={isOpen}
+            onClose={closeSmackTalk}
+            itemId={smackTalkData?.itemId || ""}
+            itemTitle={smackTalkData?.itemTitle}
+          />
+        )}
       </div>
       
       <BottomNav />

@@ -4,7 +4,6 @@ import { Separator } from "@/components/ui/separator";
 import ActionButton from "@/components/ActionButton";
 import { showFadeNotification } from "@/utils/betting-notifications";
 import PublicGameVisibilityWrapper from "./PublicGameVisibilityWrapper";
-import PublicGameItemWithInlineChat from "./PublicGameItemWithInlineChat";
 import { cn } from "@/lib/utils";
 import { getOppositeBet } from "@/utils/bet-conversion";
 
@@ -66,11 +65,7 @@ const PublicGameItem = ({ game, rank, isInitialized = false }: PublicGameItemPro
   return (
     <PublicGameVisibilityWrapper>
       {(isVisible, isMostVisible) => (
-        <PublicGameItemWithInlineChat
-          gameId={game.id}
-          gameTitle={`${game.team} vs ${game.opponent}`}
-          isMostVisible={isMostVisible}
-        >
+        <div className="max-w-sm mx-auto mb-4">
           <div className={cn(
             "relative bg-black border-2 border-[#AEE3F5]/30 rounded-xl overflow-hidden transition-all duration-300",
             isInitialized && "hover:border-[#AEE3F5]/50 hover:shadow-lg hover:shadow-[#AEE3F5]/10",
@@ -142,7 +137,7 @@ const PublicGameItem = ({ game, rank, isInitialized = false }: PublicGameItemPro
             {/* Bottom Glow Effect */}
             <div className="absolute bottom-0 left-0 right-0 h-px bg-gradient-to-r from-transparent via-[#AEE3F5]/50 to-transparent"></div>
           </div>
-        </PublicGameItemWithInlineChat>
+        </div>
       )}
     </PublicGameVisibilityWrapper>
   );
