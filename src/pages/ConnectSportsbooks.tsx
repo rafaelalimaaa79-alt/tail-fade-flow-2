@@ -351,7 +351,7 @@ const ConnectSportsbooks = () => {
         <div className="space-y-6 mb-8">
           {/* Sportsbook Selection Dropdown */}
           <div className="space-y-2">
-            <label className="text-sm font-medium text-white">Select a Sportsbook</label>
+            <label className="text-xl font-bold text-white text-center block">Select a Sportsbook</label>
             <Select value={selectedSportsbookId} onValueChange={setSelectedSportsbookId}>
               <SelectTrigger className="w-full bg-card border-white/20 text-white">
                 <SelectValue placeholder="Choose a sportsbook to connect..." />
