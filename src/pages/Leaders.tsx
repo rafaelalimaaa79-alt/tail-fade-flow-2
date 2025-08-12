@@ -8,6 +8,7 @@ import InlineSmackTalk from "@/components/InlineSmackTalk";
 import { useInlineSmackTalk } from "@/hooks/useInlineSmackTalk";
 import { coldestBettors } from "@/components/leaders/mockData";
 import { useNavigate } from "react-router-dom";
+import FloatingSyncButton from "@/components/common/FloatingSyncButton";
 
 const Leaders = () => {
   const isMobile = useIsMobile();
@@ -56,6 +57,7 @@ const Leaders = () => {
           />
         )}
       </div>
+      <FloatingSyncButton />
       <BottomNav />
     </div>
   );

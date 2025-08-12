@@ -14,6 +14,7 @@ import { useInlineSmackTalk } from "@/hooks/useInlineSmackTalk";
 import { useCarouselRotation } from "@/hooks/useCarouselRotation";
 import { usePortfolioStore } from "@/utils/portfolio-state";
 import { useNavigate } from "react-router-dom";
+import FloatingSyncButton from "@/components/common/FloatingSyncButton";
 
 const Dashboard = () => {
   const isMobile = useIsMobile();
@@ -104,6 +105,7 @@ const Dashboard = () => {
       
       <BadgeAnimationHandler />
       <NotificationHandler getPortfolioRect={getPortfolioRect} />
+      <FloatingSyncButton />
       <BottomNav />
     </div>
   );

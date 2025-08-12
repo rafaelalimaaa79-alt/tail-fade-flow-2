@@ -14,6 +14,7 @@ import InlineSmackTalk from "@/components/InlineSmackTalk";
 import { useInlineSmackTalk } from "@/hooks/useInlineSmackTalk";
 import { trendData } from "@/data/trendData";
 import { useNavigate } from "react-router-dom";
+import FloatingSyncButton from "@/components/common/FloatingSyncButton";
 
 const Trends = () => {
   const isMobile = useIsMobile();
@@ -61,6 +62,7 @@ const Trends = () => {
       
       <TrendsNotificationHandler />
       <BadgeAnimationHandler />
+      <FloatingSyncButton />
       <BottomNav />
     </div>
   );

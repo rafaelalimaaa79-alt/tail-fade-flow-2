@@ -9,6 +9,7 @@ import { useInlineSmackTalk } from "@/hooks/useInlineSmackTalk";
 import PublicGamesList from "@/components/public/PublicGamesList";
 import TrendsNotificationHandler from "@/components/trends/TrendsNotificationHandler";
 import { useNavigate } from "react-router-dom";
+import FloatingSyncButton from "@/components/common/FloatingSyncButton";
 
 const Public = () => {
   const isMobile = useIsMobile();
@@ -53,6 +54,7 @@ const Public = () => {
         )}
       </div>
       
+      <FloatingSyncButton />
       <BottomNav />
       <TrendsNotificationHandler />
     </div>
