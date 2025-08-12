@@ -26,8 +26,15 @@ const SignUp = () => {
       return;
     }
     
-    if (password.length < 6) {
-      toast.error("Password must be at least 6 characters");
+    if (password.length < 8) {
+      toast.error("Password must be at least 8 characters");
+      return;
+    }
+    
+    // Validate phone number has correct number of digits
+    const phoneDigits = phone.replace(/[^\d]/g, '');
+    if (phoneDigits.length !== 11 || !phoneDigits.startsWith('1')) {
+      toast.error("Please enter a valid US phone number");
       return;
     }
     
