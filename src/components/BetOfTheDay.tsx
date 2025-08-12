@@ -11,6 +11,7 @@ import {
   CarouselItem,
   type CarouselApi,
 } from "@/components/ui/carousel";
+import { triggerHaptic } from "@/utils/haptic-feedback";
 
 interface BetOfTheDayProps {
   currentIndex: number;
@@ -45,12 +46,14 @@ const BetOfTheDay = ({ currentIndex, onIndexChange }: BetOfTheDayProps) => {
   
   // Navigation functions
   const goToPrevious = () => {
+    triggerHaptic('selectionChanged');
     if (api) {
       api.scrollPrev();
     }
   };
   
   const goToNext = () => {
+    triggerHaptic('selectionChanged');
     if (api) {
       api.scrollNext();
     }

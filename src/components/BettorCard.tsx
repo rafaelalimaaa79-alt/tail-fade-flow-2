@@ -2,6 +2,7 @@
 import React from "react";
 import { ChevronRight } from "lucide-react";
 import { Link } from "react-router-dom";
+import { triggerHaptic } from "@/utils/haptic-feedback";
 
 type BettorProps = {
   id: string;
@@ -27,7 +28,11 @@ const BettorCard = ({
   const absStreak = Math.abs(streak);
 
   return (
-    <Link to={`/bettor/${id}`} className="block">
+    <Link 
+      to={`/bettor/${id}`} 
+      className="block"
+      onClick={() => triggerHaptic('impactLight')}
+    >
       <div className="bettor-card mb-4">
         {hot && (
           <div className="absolute -right-6 -top-6 flex h-12 w-12 items-center justify-center rounded-full bg-onetime-orange shadow-lg">

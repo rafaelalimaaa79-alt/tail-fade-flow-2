@@ -3,6 +3,7 @@ import React, { memo, useMemo } from "react";
 import { useNavigate } from "react-router-dom";
 import { Table, TableHeader, TableRow, TableHead, TableBody, TableCell } from "@/components/ui/table";
 import { Award, Crown, Star, Zap } from "lucide-react";
+import { triggerHaptic } from "@/utils/haptic-feedback";
 
 interface BettorData {
   id: string;
@@ -45,7 +46,10 @@ const LeaderboardTable: React.FC<LeaderboardTableProps> = ({
       <TableRow 
         key={bettor.id} 
         className="cursor-pointer hover:bg-muted/30 transition-all duration-300 group border-b border-white/10"
-        onClick={() => navigate(`/bettor/${bettor.id}`)}
+        onClick={() => {
+          triggerHaptic('impactLight');
+          navigate(`/bettor/${bettor.id}`);
+        }}
       >
         <TableCell className="font-medium w-16 py-3 px-3">
           {getRankIcon(index)}

@@ -2,6 +2,7 @@
 import React, { forwardRef } from "react";
 import { Button } from "@/components/ui/button";
 import { cn } from "@/lib/utils";
+import { triggerHaptic } from "@/utils/haptic-feedback";
 
 type ActionButtonProps = {
   children: React.ReactNode;
@@ -29,7 +30,10 @@ const ActionButton = forwardRef<HTMLButtonElement, ActionButtonProps>(({
   return (
     <Button
       ref={ref}
-      onClick={onClick}
+      onClick={() => {
+        triggerHaptic('impactMedium');
+        onClick?.();
+      }}
       className={cn(
         "h-12 w-full rounded-xl font-bold border border-white/10 text-lg",
         variant === "fade" && isMostVisible && "bg-[#AEE3F5]/90 hover:bg-[#AEE3F5] shadow-[0_0_15px_rgba(174,227,245,0.4)] text-black",
