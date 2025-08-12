@@ -18,6 +18,34 @@ const OnboardingStep7: React.FC<OnboardingStep7Props> = ({ onComplete }) => {
   const [isAvailable, setIsAvailable] = useState<boolean | null>(null);
   const [error, setError] = useState("");
   const [showNotification, setShowNotification] = useState(false);
+  const [hasPendingTFA, setHasPendingTFA] = useState(false);
+
+  useEffect(() => {
+    // Check for pending 2FA initially and set up listener
+    const checkPendingTFA = () => {
+      const pendingTFA = localStorage.getItem('pendingTFA');
+      setHasPendingTFA(!!pendingTFA);
+    };
+    
+    checkPendingTFA();
+    
+    // Listen for storage changes to update when 2FA is completed
+    const handleStorageChange = (e: StorageEvent) => {
+      if (e.key === 'pendingTFA') {
+        checkPendingTFA();
+      }
+    };
+    
+    window.addEventListener('storage', handleStorageChange);
+    
+    // Also check periodically in case localStorage is changed in the same tab
+    const interval = setInterval(checkPendingTFA, 1000);
+    
+    return () => {
+      window.removeEventListener('storage', handleStorageChange);
+      clearInterval(interval);
+    };
+  }, []);
 
   const handleUsernameChange = async (e: React.ChangeEvent<HTMLInputElement>) => {
     const value = e.target.value;
@@ -42,6 +70,11 @@ const OnboardingStep7: React.FC<OnboardingStep7Props> = ({ onComplete }) => {
   };
 
   const handleSubmit = () => {
+    if (hasPendingTFA) {
+      setError("Please complete your 2FA verification by clicking 'Enter Code' above before proceeding.");
+      return;
+    }
+    
     if (!username.trim()) {
       setError("You gotta pick a name to enter the Zone.");
       return;
@@ -90,10 +123,14 @@ const OnboardingStep7: React.FC<OnboardingStep7Props> = ({ onComplete }) => {
           >
             <Button
               onClick={handleSubmit}
-              disabled={!username || !isAvailable || isChecking}
-              className="w-full h-11 text-base bg-[#AEE3F5] hover:bg-[#AEE3F5]/90 text-black font-medium shadow-[0_0_20px_rgba(174,227,245,0.4)] hover:shadow-[0_0_30px_rgba(174,227,245,0.6)] hover:scale-[1.02] transition-all duration-300 disabled:opacity-50 disabled:shadow-none disabled:hover:scale-100"
+              disabled={!username || !isAvailable || isChecking || hasPendingTFA}
+              className={`w-full h-11 text-base font-medium shadow-[0_0_20px_rgba(174,227,245,0.4)] hover:shadow-[0_0_30px_rgba(174,227,245,0.6)] hover:scale-[1.02] transition-all duration-300 disabled:opacity-50 disabled:shadow-none disabled:hover:scale-100 ${
+                hasPendingTFA 
+                  ? 'bg-gray-600 hover:bg-gray-600 text-gray-300' 
+                  : 'bg-[#AEE3F5] hover:bg-[#AEE3F5]/90 text-black'
+              }`}
             >
-              Lock In Username
+              {hasPendingTFA ? "Complete 2FA First" : "Lock In Username"}
             </Button>
           </motion.div>
         </div>
