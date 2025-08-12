@@ -71,7 +71,20 @@ const OnboardingStep7: React.FC<OnboardingStep7Props> = ({ onComplete }) => {
 
   const handleSubmit = () => {
     if (hasPendingTFA) {
-      setError("Please complete your 2FA verification by clicking 'Enter Code' above before proceeding.");
+      // Get sportsbook name from pendingTFA data
+      const pendingTFAData = localStorage.getItem('pendingTFA');
+      let sportsbookName = "your sportsbook";
+      
+      if (pendingTFAData) {
+        try {
+          const tfaData = JSON.parse(pendingTFAData);
+          sportsbookName = tfaData.sportsbookName || "your sportsbook";
+        } catch (error) {
+          console.error('Error parsing pendingTFA data:', error);
+        }
+      }
+      
+      setError(`Please enter the verification code that ${sportsbookName} texted to you. Use the 'Enter Code' button above to continue.`);
       return;
     }
     
@@ -130,7 +143,7 @@ const OnboardingStep7: React.FC<OnboardingStep7Props> = ({ onComplete }) => {
                   : 'bg-[#AEE3F5] hover:bg-[#AEE3F5]/90 text-black'
               }`}
             >
-              {hasPendingTFA ? "Complete 2FA First" : "Lock In Username"}
+              {hasPendingTFA ? "Enter Verification Code" : "Lock In Username"}
             </Button>
           </motion.div>
         </div>
