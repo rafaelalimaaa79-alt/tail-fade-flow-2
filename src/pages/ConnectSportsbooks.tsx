@@ -99,6 +99,7 @@ const ConnectSportsbooks = () => {
   const [deferred, setDeferred] = useState(false);
   const [showTfaBubble, setShowTfaBubble] = useState(false);
   const [faceIdChoiceMade, setFaceIdChoiceMade] = useState(false);
+  const [deferredSportsbooks, setDeferredSportsbooks] = useState<Set<string>>(new Set());
 
 
   // Countdown timer effect for 2FA resend
@@ -316,14 +317,18 @@ const ConnectSportsbooks = () => {
   };
 
   const doLater = () => {
-    if (!deferEnabled) return;
+    if (!deferEnabled || !currentTfaBookId) return;
+    
+    // Add this sportsbook to the deferred set
+    setDeferredSportsbooks(prev => new Set([...prev, currentTfaBookId]));
+    
     setDeferred(true);
     setShow2FAModal(false);
     setShowTfaBubble(true);
     // Store TFA state for onboarding - this will be picked up by the onboarding context
-    const sportsbook = sportsbooks.find(sb => sb.id === activeLinkingBook);
+    const sportsbook = sportsbooks.find(sb => sb.id === currentTfaBookId);
     localStorage.setItem('pendingTFA', JSON.stringify({ 
-      accountIdTemp: activeLinkingBook,
+      accountIdTemp: currentTfaBookId,
       sportsbookName: sportsbook?.name || ''
     }));
   };
@@ -433,8 +438,12 @@ const ConnectSportsbooks = () => {
                       </button>
                     ) : status === 'NEEDS_2FA' ? (
                       <button
-                        onClick={() => handleAction(selectedSportsbook, 'enter2fa')}
-                        className="w-full py-3 px-4 rounded-lg font-medium transition-all duration-300 bg-[#AEE3F5] text-black hover:bg-[#AEE3F5]/90 shadow-[0_0_15px_rgba(174,227,245,0.4)]"
+                        onClick={() => deferredSportsbooks.has(selectedSportsbook.id) ? null : handleAction(selectedSportsbook, 'enter2fa')}
+                        className={`w-full py-3 px-4 rounded-lg font-medium transition-all duration-300 ${
+                          deferredSportsbooks.has(selectedSportsbook.id)
+                            ? 'bg-gray-600/50 text-gray-400 cursor-default'
+                            : 'bg-[#AEE3F5] text-black hover:bg-[#AEE3F5]/90 shadow-[0_0_15px_rgba(174,227,245,0.4)]'
+                        }`}
                       >
                         Enter Code
                       </button>
