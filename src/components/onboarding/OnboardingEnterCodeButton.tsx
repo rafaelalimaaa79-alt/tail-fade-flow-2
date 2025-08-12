@@ -12,9 +12,12 @@ const OnboardingEnterCodeButton: React.FC = () => {
     const pending = localStorage.getItem('pendingTFA');
     if (pending && !pendingTFA) {
       setForceShow(true);
+    } else if (!pending) {
+      setForceShow(false);
     }
   }, [pendingTFA]);
 
+  // Don't show if there's no pending TFA
   if (!pendingTFA && !forceShow) return null;
 
   return (
