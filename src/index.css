@@ -40,6 +40,9 @@
     --onetime-orange: #F97316;
     --onetime-green: #10B981;
     --onetime-red: #AEE3F5; /* Changed from #EF4444 to icy blue */
+
+    /* Semantic custom color tokens (HSL) */
+    --icy: 195 78% 82%; /* Icy blue */
   }
 
   .dark {

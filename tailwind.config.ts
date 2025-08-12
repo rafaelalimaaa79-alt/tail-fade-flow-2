@@ -80,8 +80,9 @@ export default {
           dark: '#0F172A',
           // New neutral color for "W" indicators
           neutral: '#000000', // Black background for W indicators
-        }
-			},
+        },
+        icy: 'hsl(var(--icy))'
+				},
 			borderRadius: {
 				lg: 'var(--radius)',
 				md: 'calc(var(--radius) - 2px)',
