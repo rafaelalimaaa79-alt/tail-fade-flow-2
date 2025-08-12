@@ -90,21 +90,6 @@ const SignUp = () => {
     }
   };
 
-  const handleAppleSignUp = async () => {
-    try {
-      const { error } = await supabase.auth.signInWithOAuth({
-        provider: 'apple',
-        options: {
-          redirectTo: `${window.location.origin}/connect-sportsbooks`
-        }
-      });
-      
-      if (error) throw error;
-    } catch (error: any) {
-      console.error("Apple sign up error:", error);
-      toast.error("Failed to sign up with Apple");
-    }
-  };
 
   return (
     <div className="flex flex-col min-h-screen bg-background">
@@ -122,7 +107,6 @@ const SignUp = () => {
           onSubmit={handleSignUp}
           onSignIn={handleSignIn}
           onGoogleSignUp={handleGoogleSignUp}
-          onAppleSignUp={handleAppleSignUp}
         />
       </div>
     </div>
