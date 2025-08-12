@@ -538,18 +538,12 @@ const ConnectSportsbooks = () => {
       </div>
 
       <Dialog open={show2FAModal} onOpenChange={setShow2FAModal}>
-        <DialogContent className="w-[90vw] max-w-md mx-auto bg-black border border-white/20 max-h-[90vh] overflow-y-auto">
-          <DialogHeader className="flex-row justify-between items-center">
-            <DialogTitle className="text-white text-lg">Enter Verification Code</DialogTitle>
-            <button 
-              onClick={() => setShow2FAModal(false)}
-              className="text-white/70 hover:text-white text-xl"
-            >
-              ✕
-            </button>
+        <DialogContent className="w-[90vw] max-w-sm mx-auto bg-background border border-white/20 p-4">
+          <DialogHeader className="pb-2">
+            <DialogTitle className="text-white text-lg text-center">Enter Verification Code</DialogTitle>
           </DialogHeader>
-          <div className="space-y-3 py-2">
-            <p className="text-muted-foreground text-sm">
+          <div className="space-y-4">
+            <p className="text-muted-foreground text-sm text-center">
               {(() => {
                 const sportsbook = sportsbooks.find(sb => sb.id === currentTfaBookId);
                 return `${sportsbook?.name || 'Your sportsbook'} is sending you a verification code.`;
@@ -557,8 +551,8 @@ const ConnectSportsbooks = () => {
             </p>
             
             {showWaiting && (
-              <div className="text-muted-foreground text-sm flex items-center gap-2">
-                <div className="w-2.5 h-2.5 border-2 border-[#AEE3F5] border-r-transparent rounded-full animate-spin"></div>
+              <div className="text-muted-foreground text-sm flex items-center justify-center gap-2">
+                <div className="w-2 h-2 border-2 border-[#AEE3F5] border-r-transparent rounded-full animate-spin"></div>
                 Waiting for the code…
               </div>
             )}
@@ -570,11 +564,11 @@ const ConnectSportsbooks = () => {
               value={tfaCode}
               onChange={handleTfaCodeChange}
               maxLength={8}
-              className="bg-black border-white/20 text-white text-center text-lg tracking-widest"
+              className="bg-background border-white/20 text-white text-center text-lg tracking-widest h-12"
               autoFocus
             />
 
-            <div className="text-muted-foreground text-sm">
+            <div className="text-muted-foreground text-xs text-center">
               Didn't get it? {!canResend ? (
                 <span>Resend available in <strong>{resendCountdown}s</strong></span>
               ) : (
@@ -587,25 +581,25 @@ const ConnectSportsbooks = () => {
               )}
             </div>
 
-            <div className="flex flex-col gap-2 sm:flex-row sm:gap-3">
+            <div className="space-y-2">
               <Button 
                 onClick={() => submit2FA()}
-                className="flex-1 h-11"
+                className="w-full h-11 bg-[#AEE3F5] hover:bg-[#AEE3F5]/90 text-black font-medium"
                 disabled={tfaCode.length < 6 || tfaSubmitting}
               >
                 {tfaSubmitting ? 'Submitting…' : 'Submit'}
               </Button>
               <Button 
-                variant="ghost" 
+                variant="outline" 
                 onClick={doLater}
-                className="flex-1 h-11 text-xs leading-tight"
+                className="w-full h-11 text-xs border-white/20 text-white/80 hover:bg-white/5"
               >
-                Proceed now — you can enter the code here anytime once you receive it
+                I'll Enter Code Later
               </Button>
             </div>
 
             {tfaError && (
-              <div className="text-red-400 text-sm mt-2">
+              <div className="text-red-400 text-sm text-center">
                 {tfaError}
               </div>
             )}
@@ -614,52 +608,53 @@ const ConnectSportsbooks = () => {
       </Dialog>
 
       <Dialog open={showCredentialsModal} onOpenChange={setShowCredentialsModal}>
-        <DialogContent className="sm:max-w-md bg-black border border-white/20">
-          <DialogHeader>
-            <DialogTitle className="text-white">Enter Sportsbook Credentials</DialogTitle>
+        <DialogContent className="w-[90vw] max-w-sm mx-auto bg-background border border-white/20 p-4">
+          <DialogHeader className="pb-2">
+            <DialogTitle className="text-white text-lg text-center">Enter Sportsbook Credentials</DialogTitle>
           </DialogHeader>
           <div className="space-y-4">
-            <p className="text-muted-foreground text-sm">
+            <p className="text-muted-foreground text-sm text-center">
               Enter your sportsbook username and password to connect.
             </p>
             <Input
               placeholder="Username"
               value={username}
               onChange={(e) => setUsername(e.target.value)}
-              className="bg-black border-white/20 text-white"
+              className="bg-background border-white/20 text-white h-12"
+              autoFocus
             />
             <Input
               type="password"
               placeholder="Password"
               value={password}
               onChange={(e) => setPassword(e.target.value)}
-              className="bg-black border-white/20 text-white"
+              className="bg-background border-white/20 text-white h-12"
               onKeyDown={(e) => e.key === 'Enter' && submitCredentials()}
             />
-            <div className="flex gap-3">
+            <div className="space-y-2">
               <Button 
                 onClick={submitCredentials} 
-                className="flex-1"
+                className="w-full h-11 bg-[#AEE3F5] hover:bg-[#AEE3F5]/90 text-black font-medium"
                 disabled={!username.trim() || !password.trim()}
               >
                 Connect
               </Button>
               <Button 
-                variant="ghost" 
+                variant="outline" 
                 onClick={() => {
                   setShowCredentialsModal(false);
                   setUsername('');
                   setPassword('');
                   setCurrentCredentialsBookId(null);
                 }}
-                className="flex-1"
+                className="w-full h-11 border-white/20 text-white/80 hover:bg-white/5"
               >
                 Cancel
               </Button>
             </div>
           </div>
         </DialogContent>
-          </Dialog>
+      </Dialog>
 
           {/* Floating TFA Bubble */}
           {showTfaBubble && (
