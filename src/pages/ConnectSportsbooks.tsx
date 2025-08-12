@@ -592,7 +592,7 @@ const ConnectSportsbooks = () => {
               <Button 
                 variant="outline" 
                 onClick={doLater}
-                className="w-full h-11 text-xs border-white/20 text-white/80 hover:bg-white/5"
+                className="w-full h-11 font-medium border-white/20 text-white/80 hover:bg-white/5"
               >
                 I'll Enter Code Later
               </Button>
