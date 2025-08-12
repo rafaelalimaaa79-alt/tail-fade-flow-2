@@ -585,7 +585,7 @@ const ConnectSportsbooks = () => {
               <Button 
                 onClick={() => submit2FA()}
                 className="w-full h-11 bg-[#AEE3F5] hover:bg-[#AEE3F5]/90 text-black font-medium"
-                disabled={tfaCode.length < 6 || tfaSubmitting}
+                disabled={tfaCode.length === 0 || tfaSubmitting}
               >
                 {tfaSubmitting ? 'Submitting…' : 'Submit'}
               </Button>
