@@ -336,6 +336,8 @@ const ConnectSportsbooks = () => {
 
   const anyLinked = Object.values(accounts).some(account => account.status === 'LINKED');
   const hasSportsbookSelection = selectedSportsbookId !== "";
+  const selectedSportsbookStatus = selectedSportsbookId && selectedSportsbookId !== "no-sportsbook" ? getStatus(selectedSportsbookId) : null;
+  const canEnableFaceId = selectedSportsbookId === "no-sportsbook" || (selectedSportsbookStatus && (selectedSportsbookStatus === 'LINKED' || selectedSportsbookStatus === 'NEEDS_2FA'));
   const canProceed = (anyLinked || deferred) && (faceIdEnabled || faceIdChoiceMade);
 
   return (
@@ -459,18 +461,18 @@ const ConnectSportsbooks = () => {
         </div>
 
         <div className={`bg-card/50 border border-white/10 rounded-lg p-4 mb-6 transition-all duration-300 ${
-          !hasSportsbookSelection ? 'opacity-50 pointer-events-none grayscale' : ''
+          !canEnableFaceId ? 'opacity-50 pointer-events-none grayscale' : ''
         }`}>
           <div className="flex items-start gap-3 mb-4">
-            <Fingerprint className={`h-5 w-5 mt-0.5 ${hasSportsbookSelection ? 'text-[#AEE3F5]' : 'text-gray-500'}`} />
+            <Fingerprint className={`h-5 w-5 mt-0.5 ${canEnableFaceId ? 'text-[#AEE3F5]' : 'text-gray-500'}`} />
             <div>
-              <h3 className={`font-medium mb-1 ${hasSportsbookSelection ? 'text-white' : 'text-gray-500'}`}>
+              <h3 className={`font-medium mb-1 ${canEnableFaceId ? 'text-white' : 'text-gray-500'}`}>
                 Enable Face ID for Quick Access
               </h3>
               <p className="text-sm text-muted-foreground mb-2">
-                {hasSportsbookSelection 
+                {canEnableFaceId 
                   ? 'Log in instantly next time with Face ID. It\'s secure, private, and faster.'
-                  : 'Please select a sportsbook first to enable Face ID options.'
+                  : 'Please complete the sportsbook connection process first.'
                 }
               </p>
             </div>
@@ -479,13 +481,13 @@ const ConnectSportsbooks = () => {
           <div className="space-y-3">
             <button
               onClick={() => {
-                if (!hasSportsbookSelection) return;
+                if (!canEnableFaceId) return;
                 setFaceIdEnabled(!faceIdEnabled);
                 if (!faceIdEnabled) setFaceIdChoiceMade(true);
               }}
-              disabled={!hasSportsbookSelection}
+              disabled={!canEnableFaceId}
               className={`w-full py-3 px-4 rounded-lg font-medium transition-all duration-300 ${
-                !hasSportsbookSelection
+                !canEnableFaceId
                   ? 'bg-gray-600/30 text-gray-500 cursor-not-allowed'
                   : !faceIdEnabled 
                     ? 'bg-[#AEE3F5] text-black hover:bg-[#AEE3F5]/90 shadow-[0_0_15px_rgba(174,227,245,0.4)]' 
@@ -495,7 +497,7 @@ const ConnectSportsbooks = () => {
               {!faceIdEnabled ? 'Enable Face ID' : 'Face ID Enabled'}
             </button>
             
-            {!faceIdEnabled && hasSportsbookSelection && (
+            {!faceIdEnabled && canEnableFaceId && (
               <button
                 onClick={() => {
                   setFaceIdEnabled(false);
