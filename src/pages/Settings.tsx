@@ -4,11 +4,9 @@ import { useNavigate } from "react-router-dom";
 import { ArrowLeft } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import BottomNav from "@/components/BottomNav";
-import AccountSettingsSection from "@/components/settings/AccountSettingsSection";
 import SubscriptionSection from "@/components/settings/SubscriptionSection";
-import NotificationsSection from "@/components/settings/NotificationsSection";
 import ConnectedSportsbooksSection from "@/components/settings/ConnectedSportsbooksSection";
-import PrivacySection from "@/components/settings/PrivacySection";
+import SignOutSection from "@/components/settings/SignOutSection";
 
 const Settings = () => {
   const navigate = useNavigate();
@@ -32,11 +30,9 @@ const Settings = () => {
         </div>
 
         <div className="space-y-8">
-          <AccountSettingsSection />
-          <SubscriptionSection />
-          <NotificationsSection />
           <ConnectedSportsbooksSection />
-          <PrivacySection />
+          <SubscriptionSection />
+          <SignOutSection />
         </div>
       </div>
       <BottomNav />
