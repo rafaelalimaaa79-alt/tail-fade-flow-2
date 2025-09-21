@@ -4,6 +4,7 @@ import { useNavigate } from "react-router-dom";
 import { toast } from "sonner";
 import { supabase } from "@/integrations/supabase/client";
 import SignUpForm from "@/components/auth/SignUpForm";
+import { postAuthSuccessMessage } from "@/utils/ios-bridge";
 
 const SignUp = () => {
   const navigate = useNavigate();
@@ -64,6 +65,16 @@ const SignUp = () => {
         toast.success("Check your phone for a verification code!");
       } else {
         toast.success("Account created successfully!");
+        
+        // Notify iOS app of successful signup
+        if (data.user) {
+          postAuthSuccessMessage({
+            userId: data.user.id,
+            email: data.user.email,
+            event: 'signup'
+          });
+        }
+        
         navigate('/connect-sportsbooks');
       }
       
@@ -91,6 +102,9 @@ const SignUp = () => {
       });
       
       if (error) throw error;
+      
+      // Note: For OAuth, the auth success message will be sent by the AuthContext
+      // when the auth state changes after the redirect
     } catch (error: any) {
       console.error("Google sign up error:", error);
       toast.error("Failed to sign up with Google");

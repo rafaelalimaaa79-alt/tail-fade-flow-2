@@ -4,6 +4,7 @@ import { supabase } from '@/integrations/supabase/client';
 import { toast } from 'sonner';
 import { useAuth } from '@/contexts/AuthContext';
 import { useNavigate } from 'react-router-dom';
+import { postAuthSuccessMessage } from '@/utils/ios-bridge';
 
 export const useBiometricAuth = () => {
   const [isAuthenticating, setIsAuthenticating] = useState(false);
@@ -39,6 +40,14 @@ export const useBiometricAuth = () => {
         // If we have a session, biometric authentication is successful
         console.log("Biometric authentication successful - valid session found");
         toast.success('Biometric authentication successful');
+        
+        // Notify iOS app of successful biometric authentication
+        postAuthSuccessMessage({
+          userId: data.session.user.id,
+          email: data.session.user.email,
+          event: 'biometric_auth'
+        });
+        
         return true;
       } else {
         // If no session exists, biometric authentication failed

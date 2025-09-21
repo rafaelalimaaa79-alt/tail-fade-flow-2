@@ -4,6 +4,7 @@ import { supabase } from '@/integrations/supabase/client';
 import { Session, User } from '@supabase/supabase-js';
 import { useNavigate } from 'react-router-dom';
 import { toast } from 'sonner';
+import { postAuthSuccessMessage } from '@/utils/ios-bridge';
 
 type AuthContextType = {
   session: Session | null;
@@ -39,6 +40,15 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
         setSession(session);
         setUser(session?.user ?? null);
         
+        if (event === 'SIGNED_IN' && session?.user) {
+          // Notify iOS app of successful authentication
+          postAuthSuccessMessage({
+            userId: session.user.id,
+            email: session.user.email,
+            event: 'signin'
+          });
+        }
+        
         if (event === 'SIGNED_OUT') {
           // Clear any local state that should be reset on sign out
           setBiometricEnabled(false);
@@ -55,6 +65,15 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
       setSession(session);
       setUser(session?.user ?? null);
       setLoading(false);
+      
+      // If there's an existing valid session, notify iOS
+      if (session?.user) {
+        postAuthSuccessMessage({
+          userId: session.user.id,
+          email: session.user.email,
+          event: 'session_restored'
+        });
+      }
     });
 
     return () => subscription.unsubscribe();
