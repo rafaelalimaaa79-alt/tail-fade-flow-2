@@ -44,9 +44,7 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
           // Notify iOS app of successful authentication
           console.log('postAuthSuccessMessage', session?.user);
           postAuthSuccessMessage({
-            userId: session.user.id,
-            email: session.user.email,
-            event: 'signin'
+            user: session.user
           });
         }
         
@@ -70,9 +68,7 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
       // If there's an existing valid session, notify iOS
       if (session?.user) {
         postAuthSuccessMessage({
-          userId: session.user.id,
-          email: session.user.email,
-          event: 'session_restored'
+          user: session.user
         });
       }
     });

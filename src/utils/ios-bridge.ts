@@ -1,8 +1,6 @@
 // iOS WebKit message handler utilities
 export const postAuthSuccessMessage = (data: {
-  userId?: string;
-  email?: string;
-  event: 'signin' | 'signup' | 'session_restored' | 'biometric_auth';
+  user: any;
 }) => {
   try {
     if (window.webkit?.messageHandlers?.authHandler) {

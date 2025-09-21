@@ -43,9 +43,7 @@ export const useBiometricAuth = () => {
         
         // Notify iOS app of successful biometric authentication
         postAuthSuccessMessage({
-          userId: data.session.user.id,
-          email: data.session.user.email,
-          event: 'biometric_auth'
+          user: data.session.user
         });
         
         return true;
