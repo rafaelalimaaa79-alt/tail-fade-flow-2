@@ -70,6 +70,7 @@ const SignUp = () => {
         if (error) {
           console.log("Email signup also failed:", error);
           toast.error("Failed to create account. Please try again.");
+          toast.error(`${error.message || error}`);
           return;
         }
         
