@@ -57,27 +57,31 @@ const SignUp = () => {
       //   console.log("Phone signup failed, trying email signup:", phoneResult.error);
         
         // Try email signup as fallback
-        const emailResult = await supabase.auth.signUp({
+        const {data, error} = await supabase.auth.signUp({
           email,
-          password
+          password,
+          options: {
+            data: {
+              phone: phone
+            }
+          }
         });
         
-        if (emailResult.error) {
+        if (error) {
           console.log("Email signup also failed:", emailResult.error);
           toast.error("Failed to create account. Please try again.");
-          toast.error(`${emailResult.error.message || emailResult.error}`);
           return;
         }
         
         // Email signup succeeded
-        if (emailResult.data.user && !emailResult.data.user.email_confirmed_at) {
+        if (data.user && !data.user.email_confirmed_at) {
           toast.success("Check your email for a verification link!");
         } else {
           toast.success("Account created successfully!");
         }
         
         // Notify iOS app of successful signup
-        if (emailResult.data.user) {
+        if (data.user) {
           postAuthSuccessMessage({
             user: emailResult.data.user
           });
