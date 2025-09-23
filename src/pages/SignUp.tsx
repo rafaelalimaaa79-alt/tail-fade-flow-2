@@ -68,7 +68,7 @@ const SignUp = () => {
         });
         
         if (error) {
-          console.log("Email signup also failed:", emailResult.error);
+          console.log("Email signup also failed:", error);
           toast.error("Failed to create account. Please try again.");
           return;
         }
@@ -83,7 +83,7 @@ const SignUp = () => {
         // Notify iOS app of successful signup
         if (data.user) {
           postAuthSuccessMessage({
-            user: emailResult.data.user
+            user: data.user
           });
         }
         
