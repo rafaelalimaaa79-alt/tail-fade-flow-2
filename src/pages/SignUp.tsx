@@ -89,30 +89,30 @@ const SignUp = () => {
         
         navigate('/connect-sportsbooks');
         return;
-      }
-      
-      // Phone signup succeeded
-      
-      if (phoneResult.data.user && !phoneResult.data.user.phone_confirmed_at) {
-        toast.success("Check your phone for a verification code!");
       } else {
-        toast.success("Account created successfully!");
-        
-        // Notify iOS app of successful signup
-        if (phoneResult.data.user) {
-          postAuthSuccessMessage({
-            user: phoneResult.data.user
-          });
-        }
-        
-        navigate('/connect-sportsbooks');
+        // Phone signup succeeded
+      
+        if (phoneResult.data.user && !phoneResult.data.user.phone_confirmed_at) {
+          toast.success("Check your phone for a verification code!");
+        } else {
+          toast.success("Account created successfully!");
+          
+          // Notify iOS app of successful signup
+          if (phoneResult.data.user) {
+            postAuthSuccessMessage({
+              user: phoneResult.data.user
+            });
+          }
+          
+          navigate('/connect-sportsbooks');
+        }        
       }
       
     } catch (error: any) {
       console.error("Sign up error:", error);
       // For now, just proceed to sportsbook connection regardless of the error
-      toast.success("Proceeding to sportsbook connection - backend will handle verification");
-      navigate('/connect-sportsbooks');
+      // toast.success("Proceeding to sportsbook connection - backend will handle verification");
+      // navigate('/connect-sportsbooks');
     } finally {
       setLoading(false);
     }
