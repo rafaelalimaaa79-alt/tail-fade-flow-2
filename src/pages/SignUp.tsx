@@ -59,12 +59,13 @@ const SignUp = () => {
         // Try email signup as fallback
         const emailResult = await supabase.auth.signUp({
           email,
-          password 
+          password
         });
         
         if (emailResult.error) {
           console.log("Email signup also failed:", emailResult.error);
           toast.error("Failed to create account. Please try again.");
+          toast.error(`${emailResult.error.message || emailResult.error}`);
           return;
         }
         
