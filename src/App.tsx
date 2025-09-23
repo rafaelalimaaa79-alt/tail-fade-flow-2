@@ -7,7 +7,6 @@ import { BrowserRouter, Routes, Route } from "react-router-dom";
 import { AuthProvider } from "@/contexts/AuthContext";
 import { ChatProvider } from "@/contexts/ChatContext";
 import ProtectedRoute from "@/components/ProtectedRoute";
-import RootRedirect from "@/components/RootRedirect";
 
 import Index from "./pages/Index";
 import Trends from "./pages/Trends";
@@ -36,8 +35,8 @@ const App = () => (
         <AuthProvider>
           <ChatProvider>
             <Routes>
-            {/* Root route redirects based on auth status */}
-            <Route path="/" element={<RootRedirect />} />
+            {/* Root route always goes to sign in - no authentication check */}
+            <Route path="/" element={<SignIn />} />
             
             {/* Auth Routes */}
             <Route path="/signin" element={<SignIn />} />
