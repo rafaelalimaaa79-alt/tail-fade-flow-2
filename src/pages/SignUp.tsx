@@ -61,6 +61,7 @@ const SignUp = () => {
           email,
           password,
           options: {
+            emailRedirectTo: `${window.location.origin}/connect-sportsbooks`,
             data: {
               phone: phone
             }
