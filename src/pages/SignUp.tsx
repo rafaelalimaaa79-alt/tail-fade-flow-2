@@ -8,7 +8,7 @@ import { postAuthSuccessMessage } from "@/utils/ios-bridge";
 
 const SignUp = () => {
   const navigate = useNavigate();
-  const [email, setEmail] = useState("");
+  const [email, setEmail] = useState("adriamooney1@gmail.com");
   const [phone, setPhone] = useState("");
   const [password, setPassword] = useState("");
   const [confirmPassword, setConfirmPassword] = useState("");
