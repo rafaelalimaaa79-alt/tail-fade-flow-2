@@ -182,6 +182,20 @@ const ConnectSportsbooks = () => {
     }
     
     if (action === 'fixSync' || action === 'connect') {
+      // Call iOS bridge when user clicks "Connect Now"
+      if (action === 'connect') {
+        try {
+          if (window.webkit?.messageHandlers?.sharpsportHandler) {
+            window.webkit.messageHandlers.sharpsportHandler.postMessage({
+              book: sportsbook
+            });
+            console.log('Posted sportsbook message to iOS:', sportsbook);
+          }
+        } catch (error) {
+          console.log('iOS bridge not available or failed:', error);
+        }
+      }
+      
       console.log(`About to show credentials modal for ${sportsbook.name}`);
       setCurrentCredentialsBookId(sportsbook.id);
       setShowCredentialsModal(true);

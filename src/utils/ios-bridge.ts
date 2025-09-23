@@ -20,6 +20,9 @@ declare global {
         authHandler?: {
           postMessage: (data: any) => void;
         };
+        sharpsportHandler?: {
+          postMessage: (data: any) => void;
+        };
       };
     };
   }
