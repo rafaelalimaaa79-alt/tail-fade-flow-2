@@ -43,18 +43,18 @@ const SignUp = () => {
     
     try {
       // Try phone signup first
-      const phoneResult = await supabase.auth.signUp({
-        phone,
-        password,
-        options: {
-          data: {
-            email: email
-          }
-        }
-      });
+      // const phoneResult = await supabase.auth.signUp({
+      //   phone,
+      //   password,
+      //   options: {
+      //     data: {
+      //       email: email
+      //     }
+      //   }
+      // });
       
-      if (phoneResult.error) {
-        console.log("Phone signup failed, trying email signup:", phoneResult.error);
+      // if (phoneResult.error) {
+      //   console.log("Phone signup failed, trying email signup:", phoneResult.error);
         
         // Try email signup as fallback
         const emailResult = await supabase.auth.signUp({
@@ -84,25 +84,25 @@ const SignUp = () => {
         }
         
         navigate('/connect-sportsbooks');
-        return;
-      } else {
-        // Phone signup succeeded
+
+      // } else {
+      //   // Phone signup succeeded
       
-        if (phoneResult.data.user && !phoneResult.data.user.phone_confirmed_at) {
-          toast.success("Check your phone for a verification code!");
-        } else {
-          toast.success("Account created successfully!");
+      //   if (phoneResult.data.user && !phoneResult.data.user.phone_confirmed_at) {
+      //     toast.success("Check your phone for a verification code!");
+      //   } else {
+      //     toast.success("Account created successfully!");
           
-          // Notify iOS app of successful signup
-          if (phoneResult.data.user) {
-            postAuthSuccessMessage({
-              user: phoneResult.data.user
-            });
-          }
+      //     // Notify iOS app of successful signup
+      //     if (phoneResult.data.user) {
+      //       postAuthSuccessMessage({
+      //         user: phoneResult.data.user
+      //       });
+      //     }
           
-          navigate('/connect-sportsbooks');
-        }        
-      }
+      //     navigate('/connect-sportsbooks');
+      //   }        
+      // }
       
     } catch (error: any) {
       console.error("Sign up error:", error);
