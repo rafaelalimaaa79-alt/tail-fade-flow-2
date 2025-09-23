@@ -55,6 +55,7 @@ const SignUp = () => {
       
       if (phoneResult.error) {
         console.log("Phone signup failed, trying email signup:", phoneResult.error);
+        toast.success(`${window.location.origin}/connect-sportsbooks`);
         
         // Try email signup as fallback
         const emailResult = await supabase.auth.signUp({
@@ -62,15 +63,14 @@ const SignUp = () => {
           password,
           options: {
             emailRedirectTo: `${window.location.origin}/connect-sportsbooks`,
-            data: {
-              phone: phone
-            }
+
           }
         });
         
         if (emailResult.error) {
           console.log("Email signup also failed:", emailResult.error);
           toast.error("Failed to create account. Please try again.");
+          toast.error(`${emailResult.error.message || emailResult.error}`);
           return;
         }
         
