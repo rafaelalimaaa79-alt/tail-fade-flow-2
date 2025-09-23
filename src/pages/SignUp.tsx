@@ -43,7 +43,7 @@ const SignUp = () => {
     
     try {
       // Try phone signup first
-      const { data, error } = await supabase.auth.signUp({
+      const phoneResult = await supabase.auth.signUp({
         phone,
         password,
         options: {
@@ -53,23 +53,55 @@ const SignUp = () => {
         }
       });
       
-      if (error) {
-        // If phone signup fails, proceed anyway for now
-        console.log("Phone signup not available, proceeding to sportsbook connection:", error);
-        toast.success("Account setup initiated - proceeding to sportsbook connection");
+      if (phoneResult.error) {
+        console.log("Phone signup failed, trying email signup:", phoneResult.error);
+        
+        // Try email signup as fallback
+        const emailResult = await supabase.auth.signUp({
+          email,
+          password,
+          options: {
+            data: {
+              phone: phone
+            }
+          }
+        });
+        
+        if (emailResult.error) {
+          console.log("Email signup also failed:", emailResult.error);
+          toast.error("Failed to create account. Please try again.");
+          return;
+        }
+        
+        // Email signup succeeded
+        if (emailResult.data.user && !emailResult.data.user.email_confirmed_at) {
+          toast.success("Check your email for a verification link!");
+        } else {
+          toast.success("Account created successfully!");
+        }
+        
+        // Notify iOS app of successful signup
+        if (emailResult.data.user) {
+          postAuthSuccessMessage({
+            user: emailResult.data.user
+          });
+        }
+        
         navigate('/connect-sportsbooks');
         return;
       }
       
-      if (data.user && !data.user.phone_confirmed_at) {
+      // Phone signup succeeded
+      
+      if (phoneResult.data.user && !phoneResult.data.user.phone_confirmed_at) {
         toast.success("Check your phone for a verification code!");
       } else {
         toast.success("Account created successfully!");
         
         // Notify iOS app of successful signup
-        if (data.user) {
+        if (phoneResult.data.user) {
           postAuthSuccessMessage({
-            user: data.user
+            user: phoneResult.data.user
           });
         }
         
