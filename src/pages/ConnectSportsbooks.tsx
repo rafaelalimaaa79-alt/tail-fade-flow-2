@@ -198,7 +198,7 @@ const ConnectSportsbooks = () => {
       
       console.log(`About to show credentials modal for ${sportsbook.name}`);
       setCurrentCredentialsBookId(sportsbook.id);
-      setShowCredentialsModal(true);
+      // setShowCredentialsModal(true);
     }
   };
 
