@@ -2,22 +2,8 @@
 import { getRandomGame, realGames } from "@/data/realGamesData";
 import { analyzeBettorWeaknesses, getStrongestWeaknessDescription } from "@/utils/weakness-analyzer";
 
-// Function to get fade confidence and fetch betslips
+// Function to get fade confidence (mock data for now)
 export const getFadeConfidence = () => {
-  // Fetch all betslips from API
-  const options = {
-    method: 'GET',
-    headers: {
-      accept: 'application/json',
-      Authorization: 'Token 969e890a2542ae09830c54c7c5c0eadb29138c00'
-    }
-  };
-
-  fetch('https://api.sharpsports.io/v1/bettors/b3ee8956-c455-4ae8-8410-39df182326dc/betSlips?status=pending&limit=50', options)
-    .then(res => res.json())
-    .then(res => console.log(res))
-    .catch(err => console.error(err));
-
   return Math.floor(Math.random() * 30) + 70; // Random between 70-99%
 };
 
