@@ -15,12 +15,15 @@ import { useInlineSmackTalk } from "@/hooks/useInlineSmackTalk";
 import { trendData } from "@/data/trendData";
 import { useNavigate } from "react-router-dom";
 import FloatingSyncButton from "@/components/common/FloatingSyncButton";
+import { supabase } from "@/integrations/supabase/client";
+import { useAuth } from "@/contexts/AuthContext";
 
 const Trends = () => {
   const isMobile = useIsMobile();
   const navigate = useNavigate();
   const [showTopTen, setShowTopTen] = useState(false);
   const { isOpen, smackTalkData, closeSmackTalk } = useInlineSmackTalk();
+  const { session } = useAuth();
   
   const handleLogoClick = () => {
     navigate("/dashboard");
@@ -28,25 +31,30 @@ const Trends = () => {
 
   useEffect(() => {
     const fetchBetslips = async () => {
-      const options = {
-        method: 'GET',
-        headers: {
-          accept: 'application/json',
-          Authorization: 'Token 969e890a2542ae09830c54c7c5c0eadb29138c00'
-        }
-      };
+      if (!session?.access_token) {
+        console.log('No session available for fetching betslips');
+        return;
+      }
 
       try {
-        const response = await fetch('https://api.sharpsports.io/v1/bettors/b3ee8956-c455-4ae8-8410-39df182326dc/betSlips?status=pending&limit=50', options);
-        const data = await response.json();
-        console.log('Betslips data:', data);
+        const { data, error } = await supabase.functions.invoke('fetch-betslips', {
+          headers: {
+            Authorization: `Bearer ${session.access_token}`,
+          },
+        });
+
+        if (error) {
+          console.error('Error fetching betslips:', error);
+        } else {
+          console.log('Betslips data:', data);
+        }
       } catch (error) {
         console.error('Error fetching betslips:', error);
       }
     };
 
     fetchBetslips();
-  }, []);
+  }, [session]);
   
   return (
     <div className="flex min-h-screen flex-col bg-background font-rajdhani">
