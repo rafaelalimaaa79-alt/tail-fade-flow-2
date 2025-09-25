@@ -41,10 +41,7 @@ export const useBiometricAuth = () => {
         console.log("Biometric authentication successful - valid session found");
         toast.success('Biometric authentication successful');
         
-        // Notify iOS app of successful biometric authentication
-        postAuthSuccessMessage({
-          user: data.session.user
-        });
+        // Don't notify iOS for existing sessions, only for new authentications
         
         return true;
       } else {

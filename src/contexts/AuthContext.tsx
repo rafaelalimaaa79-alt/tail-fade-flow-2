@@ -65,12 +65,7 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
       setUser(session?.user ?? null);
       setLoading(false);
       
-      // If there's an existing valid session, notify iOS
-      if (session?.user) {
-        postAuthSuccessMessage({
-          user: session.user
-        });
-      }
+      // Don't notify iOS for existing sessions, only for new sign-ins
     });
 
     return () => subscription.unsubscribe();
