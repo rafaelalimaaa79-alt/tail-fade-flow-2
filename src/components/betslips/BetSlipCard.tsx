@@ -71,6 +71,9 @@ const BetSlipCard = ({ betSlip }: BetSlipCardProps) => {
           <p className="text-gray-400 text-xs">
             Placed: {new Date(betSlip.timePlaced).toLocaleDateString()}
           </p>
+          <p className="text-gray-400 text-xs">
+            {new Date(betSlip.timePlaced).toLocaleTimeString()}
+          </p>
         </div>
       </div>
     </div>
