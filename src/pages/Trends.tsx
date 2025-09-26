@@ -55,7 +55,6 @@ const Trends = () => {
         setBetSlips(data.betSlips || []);
       } catch (err: any) {
         console.error("Fetch error:", err);
-        setError(err.message);
       } finally {
         setLoading(false);
       }
