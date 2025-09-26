@@ -55,7 +55,14 @@ const Trends = () => {
 
         const data: BetSlip[] = await response.json();
         console.log("BetSlips Response:", data);
-        setBetSlips(data || []);
+        
+        // Filter for pending bet slips with all pending bets
+        const filteredData = (data || []).filter(slip => 
+          slip.status === "pending" && 
+          slip.bets.every(bet => bet.status === "pending")
+        );
+        
+        setBetSlips(filteredData);
       } catch (err: any) {
         console.error("Fetch error:", err);
       } finally {
