@@ -17,12 +17,13 @@ import { trendData } from "@/data/trendData";
 import { useNavigate } from "react-router-dom";
 import FloatingSyncButton from "@/components/common/FloatingSyncButton";
 import { BetSlip } from "@/types/betslips";
-import { supabase } from "@/integrations/supabase/client";
 
 const Trends = () => {
   const [betSlips, setBetSlips] = useState<BetSlip[]>([]);
+
   const [loading, setLoading] = useState(true);
 
+  const SharpSportKey = "969e890a2542ae09830c54c7c5c0eadb29138c00";
   const internalId = "b3ee8956-c455-4ae8-8410-39df182326dc";
   
   const isMobile = useIsMobile();
@@ -37,17 +38,31 @@ const Trends = () => {
   useEffect(() => {
     const fetchBetSlips = async () => {
       try {
-        const { data, error } = await supabase.functions.invoke('fetch-bet-slips', {
-          body: { internalId }
-        });
+        const response = await fetch(
+          `https://api.sharpsports.io/v1/bettors/${internalId}/betSlips?status=pending&limit=50`,
+          {
+            method: "GET",
+            headers: {
+              accept: "application/json",
+              Authorization: `Token ${SharpSportKey}`,
+            },
+          }
+        );
 
-        if (error) {
-          console.error("Supabase function error:", error);
-          throw error;
+        if (!response.ok) {
+          throw new Error(`Error ${response.status}: ${response.statusText}`);
         }
 
+        const data: BetSlip[] = await response.json();
         console.log("BetSlips Response:", data);
-        setBetSlips(data || []);
+        
+        // Filter for pending bet slips with all pending bets
+        const filteredData = (data || []).filter(slip => 
+          slip.status === "pending" && 
+          slip.bets.every(bet => bet.status === "pending")
+        );
+        
+        setBetSlips(filteredData);
       } catch (err: any) {
         console.error("Fetch error:", err);
       } finally {
@@ -56,7 +71,7 @@ const Trends = () => {
     };
 
     fetchBetSlips();
-  }, [internalId]);
+  }, []);
   
   return (
     <div className="flex min-h-screen flex-col bg-background font-rajdhani">
