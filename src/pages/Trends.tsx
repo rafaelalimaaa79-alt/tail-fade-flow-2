@@ -24,7 +24,7 @@ const Trends = () => {
   const [loading, setLoading] = useState(true);
 
   const SharpSportKey = "969e890a2542ae09830c54c7c5c0eadb29138c00";
-  const internalId = "b3ee8956-c455-4ae8-8410-39df182326dc";
+  // const internalId = "b3ee8956-c455-4ae8-8410-39df182326dc";
   
   const isMobile = useIsMobile();
   const navigate = useNavigate();
@@ -38,6 +38,10 @@ const Trends = () => {
   useEffect(() => {
     const fetchBetSlips = async () => {
       try {
+        const { data } = await supabase.auth.getSession();
+        const internalId = data.session?.user.id;
+        console.log("internalId: ", internalId);
+        
         const response = await fetch(
           `https://api.sharpsports.io/v1/bettors/${internalId}/betSlips?status=pending&limit=50`,
           {
