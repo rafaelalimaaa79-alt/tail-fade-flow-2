@@ -1,5 +1,5 @@
 
-import React, { useEffect, useState } from "react";
+import React, { useState } from "react";
 import BottomNav from "@/components/BottomNav";
 import { useIsMobile } from "@/hooks/use-mobile";
 import TrendsHeader from "@/components/trends/TrendsHeader";
@@ -17,6 +17,12 @@ import { useNavigate } from "react-router-dom";
 import FloatingSyncButton from "@/components/common/FloatingSyncButton";
 
 const Trends = () => {
+  const [betSlips, setBetSlips] = useState<any[]>([]);
+  const [loading, setLoading] = useState(true);
+
+  const SharpSportKey = "969e890a2542ae09830c54c7c5c0eadb29138c00";
+  const internalId = "b3ee8956-c455-4ae8-8410-39df182326dc";
+  
   const isMobile = useIsMobile();
   const navigate = useNavigate();
   const [showTopTen, setShowTopTen] = useState(false);
@@ -25,6 +31,38 @@ const Trends = () => {
   const handleLogoClick = () => {
     navigate("/dashboard");
   };
+
+  useEffect(() => {
+    const fetchBetSlips = async () => {
+      try {
+        const response = await fetch(
+          `https://api.sharpsports.io/v1/bettors/${internalId}/betSlips?status=pending&limit=50`,
+          {
+            method: "GET",
+            headers: {
+              accept: "application/json",
+              Authorization: `Token ${SharpSportKey}`,
+            },
+          }
+        );
+
+        if (!response.ok) {
+          throw new Error(`Error ${response.status}: ${response.statusText}`);
+        }
+
+        const data = await response.json();
+        console.log("BetSlips Response:", data);
+        setBetSlips(data.betSlips || []);
+      } catch (err: any) {
+        console.error("Fetch error:", err);
+        setError(err.message);
+      } finally {
+        setLoading(false);
+      }
+    };
+
+    fetchBetSlips();
+  }, []);
   
   return (
     <div className="flex min-h-screen flex-col bg-background font-rajdhani">
