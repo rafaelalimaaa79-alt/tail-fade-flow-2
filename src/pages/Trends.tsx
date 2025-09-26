@@ -1,5 +1,5 @@
 
-import React, { useState, useEffect } from "react";
+import React, { useEffect, useState } from "react";
 import BottomNav from "@/components/BottomNav";
 import { useIsMobile } from "@/hooks/use-mobile";
 import TrendsHeader from "@/components/trends/TrendsHeader";
@@ -25,28 +25,6 @@ const Trends = () => {
   const handleLogoClick = () => {
     navigate("/dashboard");
   };
-
-  useEffect(() => {
-    const fetchBetslips = async () => {
-      const options = {
-        method: 'GET',
-        headers: {
-          accept: 'application/json',
-          Authorization: 'Token 969e890a2542ae09830c54c7c5c0eadb29138c00'
-        }
-      };
-
-      try {
-        const response = await fetch('https://api.sharpsports.io/v1/bettors/b3ee8956-c455-4ae8-8410-39df182326dc/betSlips?status=pending&limit=50', options);
-        const data = await response.json();
-        console.log('Betslips data:', data);
-      } catch (error) {
-        console.error('Error fetching betslips:', error);
-      }
-    };
-
-    fetchBetslips();
-  }, []);
   
   return (
     <div className="flex min-h-screen flex-col bg-background font-rajdhani">
