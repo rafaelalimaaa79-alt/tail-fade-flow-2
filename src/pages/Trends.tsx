@@ -5,6 +5,7 @@ import { useIsMobile } from "@/hooks/use-mobile";
 import TrendsHeader from "@/components/trends/TrendsHeader";
 import TrendsTitle from "@/components/trends/TrendsTitle";
 import TrendsList from "@/components/trends/TrendsList";
+import BetSlipsList from "@/components/betslips/BetSlipsList";
 import TrendsNotificationHandler from "@/components/trends/TrendsNotificationHandler";
 import BadgeAnimationHandler from "@/components/dashboard/BadgeAnimationHandler";
 import TopTenReveal from "@/components/trends/TopTenReveal";
@@ -86,7 +87,8 @@ const Trends = () => {
         {showTopTen ? (
           <TopTenReveal isRevealed={showTopTen} />
         ) : (
- <TrendsList trendData={trendData} />
+ // <TrendsList trendData={trendData} />
+      <BetSlipsList betSlips={betSlips} />
       // <div style={{ padding: "1rem" }}>
       //   <h2>Bet Slips</h2>
       //   {betSlips.map((slip) => (
