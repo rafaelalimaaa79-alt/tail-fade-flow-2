@@ -58,11 +58,11 @@ const Trends = () => {
           throw new Error(`Error ${response.status}: ${response.statusText}`);
         }
 
-        const data: BetSlip[] = await response.json();
-        console.log("BetSlips Response:", data);
+        const betSlipData: BetSlip[] = await response.json();
+        console.log("BetSlips Response:", betSlipData);
         
         // Filter for pending bet slips with all pending bets
-        const filteredData = (data || []).filter(slip => 
+        const filteredData = (betSlipData || []).filter(slip => 
           slip.status === "pending" && 
           slip.bets.every(bet => bet.status === "pending")
         );
