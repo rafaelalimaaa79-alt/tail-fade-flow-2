@@ -399,8 +399,8 @@ const Trends = () => {
       "atRisk": null
     }
   }
-]"
-        setBetSlips(data.betSlips || []);
+];
+        setBetSlips(data || []);
       } catch (err: any) {
         console.error("Fetch error:", err);
       } finally {
