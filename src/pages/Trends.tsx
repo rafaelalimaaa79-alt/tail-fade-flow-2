@@ -15,6 +15,7 @@ import { useInlineSmackTalk } from "@/hooks/useInlineSmackTalk";
 import { trendData } from "@/data/trendData";
 import { useNavigate } from "react-router-dom";
 import FloatingSyncButton from "@/components/common/FloatingSyncButton";
+import { BetSlip } from "@/types/betslips";
 
 const Trends = () => {
   const [betSlips, setBetSlips] = useState<BetSlip[]>([]);
@@ -51,7 +52,7 @@ const Trends = () => {
           throw new Error(`Error ${response.status}: ${response.statusText}`);
         }
 
-        const data: betSlips[] = await response.json();
+        const data: BetSlip[] = await response.json();
         console.log("BetSlips Response:", data);
         setBetSlips(data || []);
       } catch (err: any) {
@@ -85,7 +86,7 @@ const Trends = () => {
         {showTopTen ? (
           <TopTenReveal isRevealed={showTopTen} />
         ) : (
-          // <TrendsList trendData={trendData} />
+          <div>{/* <TrendsList trendData={trendData} /> */}</div>
         )}
         
         {isOpen && (
