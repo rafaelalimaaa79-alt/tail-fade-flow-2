@@ -50,7 +50,7 @@ const BetSlipCard = ({ betSlip }: BetSlipCardProps) => {
         <p className="text-gray-400 text-xs">
           Risk: {formatCurrency(betSlip.atRisk)} • Win: {formatCurrency(betSlip.toWin)}
         </p>
-        {betSlip.bets.length > 1 && (
+        {betSlip.bets.length > 0 && (
           <p className="text-gray-400 text-xs">
             {betSlip.bets.length} leg {betSlip.type}
           </p>
