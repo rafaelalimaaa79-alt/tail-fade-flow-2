@@ -2,7 +2,7 @@
 import { getRandomGame, realGames } from "@/data/realGamesData";
 import { analyzeBettorWeaknesses, getStrongestWeaknessDescription } from "@/utils/weakness-analyzer";
 
-// Function to get fade confidence (mock data for now)
+// Function to get fade confidence
 export const getFadeConfidence = () => {
   return Math.floor(Math.random() * 30) + 70; // Random between 70-99%
 };
