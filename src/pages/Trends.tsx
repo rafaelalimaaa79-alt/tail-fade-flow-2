@@ -17,6 +17,7 @@ import { trendData } from "@/data/trendData";
 import { useNavigate } from "react-router-dom";
 import FloatingSyncButton from "@/components/common/FloatingSyncButton";
 import { BetSlip } from "@/types/betslips";
+import { supabase } from "@/integrations/supabase/client";
 
 const Trends = () => {
   const [betSlips, setBetSlips] = useState<BetSlip[]>([]);
