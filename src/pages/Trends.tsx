@@ -41,7 +41,9 @@ const Trends = () => {
       try {
         const { data } = await supabase.auth.getSession();
         const internalId = data.session?.user.id;
-        console.log("internalId: ", internalId);
+        const username = data.session?.user.email;
+        
+        console.log("username: ", username);
         
         const response = await fetch(
           `https://api.sharpsports.io/v1/bettors/${internalId}/betSlips?status=pending&limit=50`,
@@ -72,18 +74,18 @@ const Trends = () => {
         // Convert betSlips to TrendData
         const converted: TrendData[] = filteredData.map((slip, index) => ({
           id: slip.id,
-          name: slip.bets[0]?.event?.name || `${slip.bets[0]?.event?.contestantAway?.fullName} vs ${slip.bets[0]?.event?.contestantHome?.fullName}` || `Bet ${index + 1}`,
-          betDescription: slip.bets[0]?.bookDescription || `${slip.bets[0]?.type} ${slip.bets[0]?.line ? `(${slip.bets[0].line})` : ''} @ ${slip.bets[0]?.oddsAmerican}`,
+          name: username,
+          betDescription: slip.bets[0]?.bookDescription || `${slip.bets[0]?.position} ${slip.bets[0]?.line}`,
           betType: slip.bets[0]?.type || slip.type,
-          isTailRecommendation: Math.random() > 0.5, // Random for now
+          isTailRecommendation: slip.toWin > slip.atRisk,
           reason: `${slip.book.name} bet placed on ${new Date(slip.timePlaced).toLocaleDateString()}`,
           recentBets: [1, 1, 0, 1, 0, 1, 1, 0, 1, 1], // Mock data
-          unitPerformance: slip.toWin - slip.atRisk,
-          tailScore: Math.floor(Math.random() * 30) + 70,
-          fadeScore: Math.floor(Math.random() * 30) + 70,
-          userCount: Math.floor(Math.random() * 50) + 10,
+          unitPerformance: slip.toWin * 10/(slip.toWin + slip.atRisk),
+          tailScore: slip.toWin * 100/(slip.toWin + slip.atRisk),
+          fadeScore: slip.atRisk * 100/(slip.toWin + slip.atRisk),
+          userCount: slip.oddsAmerican,
           categoryBets: [1, 1, 0, 1, 0],
-          categoryName: slip.bets[0]?.event?.sport || 'General'
+          categoryName: `${slip.bets[0]?.event?.league} ${slip.bets[0]?.proposition?}`,
         }));
         
         setConvertedTrends(converted);
@@ -118,7 +120,7 @@ const Trends = () => {
         {showTopTen ? (
           <TopTenReveal isRevealed={showTopTen} />
         ) : (
-          <TrendsList trendData={[...trendData, ...convertedTrends]} />
+          <TrendsList trendData={convertedTrends} />
         )}
         {isOpen && (
           <InlineSmackTalk
