@@ -2,7 +2,7 @@
 import React from "react";
 import TrendItem from "@/components/TrendItem";
 
-type TrendData = {
+export type TrendData = {
   id: string;
   name: string;
   betDescription: string;

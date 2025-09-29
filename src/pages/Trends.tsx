@@ -21,6 +21,7 @@ import { supabase } from "@/integrations/supabase/client";
 
 const Trends = () => {
   const [betSlips, setBetSlips] = useState<BetSlip[]>([]);
+  const [trendData, setTrendData] = useState<BetSlip[]>([]);
 
   const [loading, setLoading] = useState(true);
 
