@@ -67,9 +67,9 @@ const Trends = () => {
         const filteredData = (betSlipData || []).filter(slip => 
           slip.status === "pending" && 
           slip.bets.every(bet => 
-            bet.status === "pending" && 
-            bet.event?.startTime && 
-            new Date(bet.event.startTime) > new Date()
+            bet.status === "pending" 
+            && bet.event?.startTime 
+            && new Date(bet.event.startTime) > new Date()
           )
         );
         
