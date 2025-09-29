@@ -5,6 +5,7 @@ import { useIsMobile } from "@/hooks/use-mobile";
 import TrendsHeader from "@/components/trends/TrendsHeader";
 import TrendsTitle from "@/components/trends/TrendsTitle";
 import TrendsList from "@/components/trends/TrendsList";
+import Thre
 import BetSlipsList from "@/components/betslips/BetSlipsList";
 import TrendsNotificationHandler from "@/components/trends/TrendsNotificationHandler";
 import BadgeAnimationHandler from "@/components/dashboard/BadgeAnimationHandler";
@@ -21,7 +22,6 @@ import { supabase } from "@/integrations/supabase/client";
 
 const Trends = () => {
   const [betSlips, setBetSlips] = useState<BetSlip[]>([]);
-  const [trendData, setTrendData] = useState<BetSlip[]>([]);
 
   const [loading, setLoading] = useState(true);
 
