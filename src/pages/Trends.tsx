@@ -63,10 +63,14 @@ const Trends = () => {
         const betSlipData: BetSlip[] = await response.json();
         console.log("BetSlips Response:", betSlipData);
         
-        // Filter for pending bet slips with all pending bets
+        // Filter for pending bet slips with all pending bets and future start times
         const filteredData = (betSlipData || []).filter(slip => 
           slip.status === "pending" && 
-          slip.bets.every(bet => bet.status === "pending")
+          slip.bets.every(bet => 
+            bet.status === "pending" && 
+            bet.event?.startTime && 
+            new Date(bet.event.startTime) > new Date()
+          )
         );
         
         setBetSlips(filteredData);
