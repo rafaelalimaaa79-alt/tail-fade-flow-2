@@ -85,7 +85,7 @@ const Trends = () => {
           fadeScore: slip.atRisk * 100/(slip.toWin + slip.atRisk),
           userCount: slip.oddsAmerican,
           categoryBets: [1, 1, 0, 1, 0],
-          categoryName: `${slip.bets[0]?.event?.league} ${slip.bets[0]?.proposition?}`,
+          categoryName: `${slip.bets[0]?.event?.league || ''} ${slip.bets[0]?.proposition || ''}`,
         }));
         
         setConvertedTrends(converted);
