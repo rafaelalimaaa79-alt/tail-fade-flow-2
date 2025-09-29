@@ -4,8 +4,7 @@ import BottomNav from "@/components/BottomNav";
 import { useIsMobile } from "@/hooks/use-mobile";
 import TrendsHeader from "@/components/trends/TrendsHeader";
 import TrendsTitle from "@/components/trends/TrendsTitle";
-import TrendsList from "@/components/trends/TrendsList";
-import Thre
+import TrendsList, { TrendData } from "@/components/trends/TrendsList";
 import BetSlipsList from "@/components/betslips/BetSlipsList";
 import TrendsNotificationHandler from "@/components/trends/TrendsNotificationHandler";
 import BadgeAnimationHandler from "@/components/dashboard/BadgeAnimationHandler";
@@ -22,7 +21,7 @@ import { supabase } from "@/integrations/supabase/client";
 
 const Trends = () => {
   const [betSlips, setBetSlips] = useState<BetSlip[]>([]);
-
+  const [convertedTrends, setConvertedTrends] = useState<TrendData[]>([]);
   const [loading, setLoading] = useState(true);
 
   const SharpSportKey = "969e890a2542ae09830c54c7c5c0eadb29138c00";
@@ -69,6 +68,25 @@ const Trends = () => {
         );
         
         setBetSlips(filteredData);
+        
+        // Convert betSlips to TrendData
+        const converted: TrendData[] = filteredData.map((slip, index) => ({
+          id: slip.id,
+          name: slip.bets[0]?.event?.name || `${slip.bets[0]?.event?.contestantAway?.fullName} vs ${slip.bets[0]?.event?.contestantHome?.fullName}` || `Bet ${index + 1}`,
+          betDescription: slip.bets[0]?.bookDescription || `${slip.bets[0]?.type} ${slip.bets[0]?.line ? `(${slip.bets[0].line})` : ''} @ ${slip.bets[0]?.oddsAmerican}`,
+          betType: slip.bets[0]?.type || slip.type,
+          isTailRecommendation: Math.random() > 0.5, // Random for now
+          reason: `${slip.book.name} bet placed on ${new Date(slip.timePlaced).toLocaleDateString()}`,
+          recentBets: [1, 1, 0, 1, 0, 1, 1, 0, 1, 1], // Mock data
+          unitPerformance: slip.toWin - slip.atRisk,
+          tailScore: Math.floor(Math.random() * 30) + 70,
+          fadeScore: Math.floor(Math.random() * 30) + 70,
+          userCount: Math.floor(Math.random() * 50) + 10,
+          categoryBets: [1, 1, 0, 1, 0],
+          categoryName: slip.bets[0]?.event?.sport || 'General'
+        }));
+        
+        setConvertedTrends(converted);
       } catch (err: any) {
         console.error("Fetch error:", err);
       } finally {
@@ -100,9 +118,8 @@ const Trends = () => {
         {showTopTen ? (
           <TopTenReveal isRevealed={showTopTen} />
         ) : (
-           <TrendsList trendData={trendData} />
-        // <BetSlipsList betSlips={betSlips} />    
-        )}        
+          <TrendsList trendData={[...trendData, ...convertedTrends]} />
+        )}
         {isOpen && (
           <InlineSmackTalk
             isOpen={isOpen}
