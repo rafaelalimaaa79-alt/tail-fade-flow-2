@@ -133,6 +133,10 @@ export const realGames = [
 // Helper function to get random game
 export const getRandomGame = (sport?: string) => {
   const filteredGames = sport ? realGames.filter(game => game.sport === sport) : realGames;
+  if (filteredGames.length === 0) {
+    // Fallback to a random game from all games if no sport-specific games found
+    return realGames[Math.floor(Math.random() * realGames.length)];
+  }
   return filteredGames[Math.floor(Math.random() * filteredGames.length)];
 };
 
