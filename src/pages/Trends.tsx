@@ -41,7 +41,7 @@ const Trends = () => {
       try {
         const { data } = await supabase.auth.getSession();
         const internalId = data.session?.user.id;
-        const username = data.session?.user.email?.replace('@emailhosting', '');
+        const username = data.session?.user.email?.split('@')[0];
         
         console.log("username: ", username);
         
