@@ -99,44 +99,9 @@ const Trends = () => {
         {showTopTen ? (
           <TopTenReveal isRevealed={showTopTen} />
         ) : (
- // <TrendsList trendData={trendData} />
-      <BetSlipsList betSlips={betSlips} />
-      // <div style={{ padding: "1rem" }}>
-      //   <h2>Bet Slips</h2>
-      //   {betSlips.map((slip) => (
-      //     <div
-      //       key={slip.id}
-      //       style={{
-      //         border: "1px solid #ccc",
-      //         borderRadius: "8px",
-      //         padding: "1rem",
-      //         marginBottom: "1rem",
-      //         backgroundColor: "#fafafa",
-      //       }}
-      //     >
-      //       <h3>{slip.book.name} ({slip.type})</h3>
-      //       <p><strong>Slip ID:</strong> {slip.id}</p>
-      //       <p><strong>At Risk:</strong> ${slip.atRisk}</p>
-      //       <p><strong>To Win:</strong> ${slip.toWin}</p>
-      //       <p><strong>Status:</strong> {slip.status}</p>
-      //       <p><strong>Placed:</strong> {new Date(slip.timePlaced).toLocaleString()}</p>
-  
-      //       <h4>Bets</h4>
-      //       <ul>
-      //         {slip.bets.map((bet) => (
-      //           <li key={bet.id}>
-      //             <strong>{bet.bookDescription}</strong> <br />
-      //             Event: {bet.event.name} <br />
-      //             Odds: {bet.oddsAmerican} <br />
-      //             Status: {bet.status}
-      //           </li>
-      //         ))}
-      //       </ul>
-      //     </div>
-      //   ))}
-      //   </div>      
-        )}
-        
+           <TrendsList trendData={trendData} />
+        // <BetSlipsList betSlips={betSlips} />    
+        )}        
         {isOpen && (
           <InlineSmackTalk
             isOpen={isOpen}
