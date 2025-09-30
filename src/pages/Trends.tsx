@@ -69,7 +69,7 @@ const Trends = () => {
           slip.bets.every(bet => 
             bet.status === "pending" 
             && bet.event?.startTime 
-            // && new Date(bet.event.startTime) > new Date()
+            && new Date(bet.event.startTime) > new Date()
           )
         );
         
