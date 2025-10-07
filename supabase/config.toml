@@ -1,1 +1,4 @@
 project_id = "suisrrsmangoaadjoovj"
+
+[functions.sync-bets]
+verify_jwt = false

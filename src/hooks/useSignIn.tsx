@@ -50,6 +50,25 @@ export const useSignIn = () => {
       // If authentication succeeds
       toast.success("Signed in successfully");
       
+      // Sync bets from SharpSports (requires internalId - for now using user.id)
+      // TODO: Store and retrieve actual SharpSports internalId
+      if (data.session) {
+        try {
+          await fetch('https://suisrrsmangoaadjoovj.supabase.co/functions/v1/sync-bets', {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify({ 
+              internalId: data.session.user.id, 
+              userId: data.session.user.id 
+            }),
+          });
+          console.log("Bets synced successfully");
+        } catch (syncError) {
+          console.error("Error syncing bets:", syncError);
+          // Don't block login on sync failure
+        }
+      }
+      
       // Check if this is the user's first time logging in (no biometric preference set)
       const biometricEnabled = localStorage.getItem('biometricEnabled');
       const supportsBiometrics = 'FaceID' in window || 'TouchID' in window || 'webauthn' in navigator;

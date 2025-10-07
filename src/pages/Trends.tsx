@@ -36,58 +36,49 @@ const Trends = () => {
   };
 
   useEffect(() => {
-    const fetchBetSlips = async () => {
+    const fetchBetsFromDatabase = async () => {
       try {
         const { data } = await supabase.auth.getSession();
-        const internalId = data.session?.user.id;
+        const userId = data.session?.user.id;
         const username = data.session?.user.email?.split("@")[0];
 
-        console.log("username: ", username);
-
-        const response = await fetch(
-          `https://api.sharpsports.io/v1/bettors/${internalId}/betSlips?status=pending&limit=50`,
-          {
-            method: "GET",
-            headers: {
-              accept: "application/json",
-              Authorization: `Token ${SharpSportKey}`,
-            },
-          },
-        );
-
-        if (!response.ok) {
-          throw new Error(`Error ${response.status}: ${response.statusText}`);
+        if (!userId) {
+          setLoading(false);
+          return;
         }
 
-        const betSlipData: BetSlip[] = await response.json();
-        console.log("BetSlips Response:", betSlipData);
+        // Read bets from Supabase database
+        const { data: bets, error } = await supabase
+          .from('bets')
+          .select('*')
+          .eq('user_id', userId)
+          .eq('result', 'Pending')
+          .gte('event_start_time', new Date().toISOString())
+          .order('event_start_time', { ascending: true });
 
-        // Filter for pending bet slips with all pending bets and future start times
-        const filteredData = (betSlipData || []).filter(
-          (slip) =>
-            slip.status === "pending" &&
-            slip.bets.every(
-              (bet) => bet.status === "pending" && bet.event?.startTime && new Date(bet.event.startTime) > new Date(),
-            ),
-        );
+        if (error) {
+          console.error("Error fetching bets:", error);
+          setLoading(false);
+          return;
+        }
 
-        setBetSlips(filteredData);
+        console.log("Bets from database:", bets);
 
-        // Convert betSlips to TrendData
-        const converted: TrendData[] = filteredData.map((slip, index) => ({
-          id: slip.id,
-          name: username,
-          betDescription: slip.bets[0]?.bookDescription || `${slip.bets[0]?.position} ${slip.bets[0]?.line}`,
-          betType: slip.bets[0]?.type || slip.type,
-          isTailRecommendation: slip.toWin > slip.atRisk,
-          reason: `${slip.book.name} bet placed on ${new Date(slip.timePlaced).toLocaleDateString()}`,
+        // Convert bets to TrendData
+        const converted: TrendData[] = (bets || []).map((bet: any) => ({
+          id: bet.id,
+          name: username || 'Unknown',
+          betDescription: bet.event || 'Unknown Event',
+          betType: bet.bet_type || 'straight',
+          isTailRecommendation: parseFloat(bet.odds) > 0,
+          reason: `Sportsbook bet placed`,
           recentBets: [1, 1, 0, 1, 0, 1, 1, 0, 1, 1], // Mock data
-          unitPerformance: (slip.toWin * 10) / (slip.toWin + slip.atRisk),
-          tailScore: (slip.toWin * 100) / (slip.toWin + slip.atRisk),
-          fadeScore: (slip.atRisk * 100) / (slip.toWin + slip.atRisk),
-          userCount: slip.oddsAmerican,
+          unitPerformance: bet.units_risked || 0,
+          tailScore: Math.abs(parseFloat(bet.odds || '100')),
+          fadeScore: Math.abs(parseFloat(bet.odds || '100')) / 2,
+          userCount: parseFloat(bet.odds || '0'),
           categoryBets: [1, 1, 0, 1, 0],
-          categoryName: `${slip.bets[0]?.event?.league || ""} ${slip.bets[0]?.proposition || ""}`,
+          categoryName: bet.bet_type || 'Unknown',
         }));
 
         setConvertedTrends(converted);
@@ -98,7 +89,7 @@ const Trends = () => {
       }
     };
 
-    fetchBetSlips();
+    fetchBetsFromDatabase();
   }, []);
 
   return (
