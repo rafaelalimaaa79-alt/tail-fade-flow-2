@@ -1,4 +1,1 @@
 project_id = "suisrrsmangoaadjoovj"
-
-[functions.fetch-bet-slips]
-verify_jwt = true

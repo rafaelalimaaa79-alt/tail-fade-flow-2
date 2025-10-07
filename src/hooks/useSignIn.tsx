@@ -50,19 +50,6 @@ export const useSignIn = () => {
       // If authentication succeeds
       toast.success("Signed in successfully");
       
-      // Fetch and sync bet slips from SharpSports
-      try {
-        await supabase.functions.invoke('fetch-bet-slips', {
-          headers: {
-            Authorization: `Bearer ${data.session.access_token}`
-          }
-        });
-        console.log("Bet slips synced successfully");
-      } catch (error) {
-        console.error("Error syncing bet slips:", error);
-        // Don't block login if sync fails
-      }
-      
       // Check if this is the user's first time logging in (no biometric preference set)
       const biometricEnabled = localStorage.getItem('biometricEnabled');
       const supportsBiometrics = 'FaceID' in window || 'TouchID' in window || 'webauthn' in navigator;

@@ -39,48 +39,55 @@ const Trends = () => {
     const fetchBetSlips = async () => {
       try {
         const { data } = await supabase.auth.getSession();
-        const userId = data.session?.user.id;
+        const internalId = data.session?.user.id;
         const username = data.session?.user.email?.split("@")[0];
 
         console.log("username: ", username);
 
-        if (!userId) {
-          console.log("No user session found");
-          setLoading(false);
-          return;
+        const response = await fetch(
+          `https://api.sharpsports.io/v1/bettors/${internalId}/betSlips?status=pending&limit=50`,
+          {
+            method: "GET",
+            headers: {
+              accept: "application/json",
+              Authorization: `Token ${SharpSportKey}`,
+            },
+          },
+        );
+
+        if (!response.ok) {
+          throw new Error(`Error ${response.status}: ${response.statusText}`);
         }
 
-        // Fetch bets from Supabase
-        const { data: betsData, error } = await supabase
-          .from("bets")
-          .select("*")
-          .eq("user_id", userId)
-          .eq("result", "Pending")
-          .gte("timestamp", new Date().toISOString())
-          .order("timestamp", { ascending: true });
+        const betSlipData: BetSlip[] = await response.json();
+        console.log("BetSlips Response:", betSlipData);
 
-        if (error) {
-          console.error("Error fetching bets:", error);
-          throw error;
-        }
+        // Filter for pending bet slips with all pending bets and future start times
+        const filteredData = (betSlipData || []).filter(
+          (slip) =>
+            slip.status === "pending" &&
+            slip.bets.every(
+              (bet) => bet.status === "pending" && bet.event?.startTime && new Date(bet.event.startTime) > new Date(),
+            ),
+        );
 
-        console.log("Bets from Supabase:", betsData);
+        setBetSlips(filteredData);
 
-        // Convert Supabase bets to TrendData
-        const converted: TrendData[] = (betsData || []).map((bet) => ({
-          id: bet.id,
+        // Convert betSlips to TrendData
+        const converted: TrendData[] = filteredData.map((slip, index) => ({
+          id: slip.id,
           name: username,
-          betDescription: bet.event,
-          betType: bet.bet_type,
-          isTailRecommendation: true,
-          reason: `Bet placed on ${new Date(bet.created_at).toLocaleDateString()}`,
+          betDescription: slip.bets[0]?.bookDescription || `${slip.bets[0]?.position} ${slip.bets[0]?.line}`,
+          betType: slip.bets[0]?.type || slip.type,
+          isTailRecommendation: slip.toWin > slip.atRisk,
+          reason: `${slip.book.name} bet placed on ${new Date(slip.timePlaced).toLocaleDateString()}`,
           recentBets: [1, 1, 0, 1, 0, 1, 1, 0, 1, 1], // Mock data
-          unitPerformance: 0,
-          tailScore: 75,
-          fadeScore: 25,
-          userCount: parseInt(bet.odds) || 0,
+          unitPerformance: (slip.toWin * 10) / (slip.toWin + slip.atRisk),
+          tailScore: (slip.toWin * 100) / (slip.toWin + slip.atRisk),
+          fadeScore: (slip.atRisk * 100) / (slip.toWin + slip.atRisk),
+          userCount: slip.oddsAmerican,
           categoryBets: [1, 1, 0, 1, 0],
-          categoryName: bet.bet_type,
+          categoryName: `${slip.bets[0]?.event?.league || ""} ${slip.bets[0]?.proposition || ""}`,
         }));
 
         setConvertedTrends(converted);
