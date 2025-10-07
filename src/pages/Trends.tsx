@@ -110,6 +110,33 @@ const Trends = () => {
     };
 
     fetchBetsFromDatabase();
+
+    // Set up realtime subscription for live bet updates
+    supabase.auth.getSession().then(({ data }) => {
+      const userId = data.session?.user.id;
+      if (!userId) return;
+
+      const channel = supabase
+        .channel('bets-changes')
+        .on(
+          'postgres_changes',
+          {
+            event: '*',
+            schema: 'public',
+            table: 'bets',
+            filter: `user_id=eq.${userId}`
+          },
+          (payload) => {
+            console.log('Bet change detected:', payload);
+            fetchBetsFromDatabase();
+          }
+        )
+        .subscribe();
+
+      return () => {
+        supabase.removeChannel(channel);
+      };
+    });
   }, []);
 
   return (

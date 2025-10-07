@@ -15,22 +15,36 @@ const FloatingSyncButton: React.FC<FloatingSyncButtonProps> = ({ className, onSy
 
   const handleClick = async () => {
     try {
-      triggerHaptic('impactMedium'); // Initial press feedback
+      triggerHaptic('impactMedium');
       setSpinning(true);
       toast.message("Refreshing bets...");
       
       if (onSync) {
         await onSync();
       } else {
-        // Simulate a short refresh for UI feedback only
-        await new Promise((r) => setTimeout(r, 1200));
+        // Default: Call sync-bets edge function
+        const { supabase } = await import("@/integrations/supabase/client");
+        const { data: session } = await supabase.auth.getSession();
+        
+        if (session?.session?.user) {
+          const { error } = await supabase.functions.invoke('sync-bets', {
+            body: { 
+              internalId: session.session.user.id, 
+              userId: session.session.user.id 
+            }
+          });
+          
+          if (error) throw error;
+        } else {
+          throw new Error("Not authenticated");
+        }
       }
       
       toast.success("Bets refreshed");
-      triggerRefreshHaptic('success'); // Success feedback
+      triggerRefreshHaptic('success');
     } catch (e) {
       toast.error("Refresh failed");
-      triggerRefreshHaptic('error'); // Error feedback
+      triggerRefreshHaptic('error');
       console.error(e);
     } finally {
       setSpinning(false);

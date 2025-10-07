@@ -50,19 +50,21 @@ export const useSignIn = () => {
       // If authentication succeeds
       toast.success("Signed in successfully");
       
-      // Sync bets from SharpSports (requires internalId - for now using user.id)
-      // TODO: Store and retrieve actual SharpSports internalId
+      // Sync bets from SharpSports automatically on login
       if (data.session) {
         try {
-          await fetch('https://suisrrsmangoaadjoovj.supabase.co/functions/v1/sync-bets', {
-            method: 'POST',
-            headers: { 'Content-Type': 'application/json' },
-            body: JSON.stringify({ 
+          const { data: syncData, error: syncError } = await supabase.functions.invoke('sync-bets', {
+            body: { 
               internalId: data.session.user.id, 
               userId: data.session.user.id 
-            }),
+            }
           });
-          console.log("Bets synced successfully");
+          
+          if (syncError) {
+            console.error("Error syncing bets:", syncError);
+          } else {
+            console.log("Bets synced successfully:", syncData);
+          }
         } catch (syncError) {
           console.error("Error syncing bets:", syncError);
           // Don't block login on sync failure

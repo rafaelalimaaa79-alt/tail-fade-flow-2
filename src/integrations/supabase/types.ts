@@ -7,7 +7,7 @@ export type Json =
   | Json[]
 
 export type Database = {
-  // Allows to automatically instanciate createClient with right options
+  // Allows to automatically instantiate createClient with right options
   // instead of createClient<Database, { PostgrestVersion: 'XX' }>(URL, KEY)
   __InternalSupabase: {
     PostgrestVersion: "13.0.4"
@@ -16,15 +16,19 @@ export type Database = {
     Tables: {
       bets: {
         Row: {
+          bet_id: string | null
           bet_type: string
           created_at: string
           event: string
+          event_start_time: string | null
           id: string
           is_processed: boolean | null
           odds: string
           parsed_email_id: string | null
           result: string | null
+          slip_id: string | null
           sportsbook_id: string | null
+          sportsbook_name: string | null
           timestamp: string
           units_risked: number
           units_won_lost: number | null
@@ -32,15 +36,19 @@ export type Database = {
           user_id: string
         }
         Insert: {
+          bet_id?: string | null
           bet_type: string
           created_at?: string
           event: string
+          event_start_time?: string | null
           id?: string
           is_processed?: boolean | null
           odds: string
           parsed_email_id?: string | null
           result?: string | null
+          slip_id?: string | null
           sportsbook_id?: string | null
+          sportsbook_name?: string | null
           timestamp?: string
           units_risked: number
           units_won_lost?: number | null
@@ -48,15 +56,19 @@ export type Database = {
           user_id: string
         }
         Update: {
+          bet_id?: string | null
           bet_type?: string
           created_at?: string
           event?: string
+          event_start_time?: string | null
           id?: string
           is_processed?: boolean | null
           odds?: string
           parsed_email_id?: string | null
           result?: string | null
+          slip_id?: string | null
           sportsbook_id?: string | null
+          sportsbook_name?: string | null
           timestamp?: string
           units_risked?: number
           units_won_lost?: number | null
@@ -65,126 +77,13 @@ export type Database = {
         }
         Relationships: [
           {
-            foreignKeyName: "bets_parsed_email_id_fkey"
-            columns: ["parsed_email_id"]
-            isOneToOne: false
-            referencedRelation: "parsed_emails"
-            referencedColumns: ["id"]
-          },
-          {
             foreignKeyName: "bets_sportsbook_id_fkey"
             columns: ["sportsbook_id"]
             isOneToOne: false
             referencedRelation: "sportsbooks"
             referencedColumns: ["id"]
           },
-          {
-            foreignKeyName: "bets_user_id_fkey"
-            columns: ["user_id"]
-            isOneToOne: false
-            referencedRelation: "leaderboard_fade"
-            referencedColumns: ["user_id"]
-          },
-          {
-            foreignKeyName: "bets_user_id_fkey"
-            columns: ["user_id"]
-            isOneToOne: false
-            referencedRelation: "leaderboard_tail"
-            referencedColumns: ["user_id"]
-          },
         ]
-      }
-      challenge_participants: {
-        Row: {
-          bets_placed: number | null
-          challenge_id: string
-          id: string
-          is_eliminated: boolean | null
-          is_winner: boolean | null
-          joined_at: string
-          team: string | null
-          units_gained: number | null
-          user_id: string
-        }
-        Insert: {
-          bets_placed?: number | null
-          challenge_id: string
-          id?: string
-          is_eliminated?: boolean | null
-          is_winner?: boolean | null
-          joined_at?: string
-          team?: string | null
-          units_gained?: number | null
-          user_id: string
-        }
-        Update: {
-          bets_placed?: number | null
-          challenge_id?: string
-          id?: string
-          is_eliminated?: boolean | null
-          is_winner?: boolean | null
-          joined_at?: string
-          team?: string | null
-          units_gained?: number | null
-          user_id?: string
-        }
-        Relationships: [
-          {
-            foreignKeyName: "challenge_participants_challenge_id_fkey"
-            columns: ["challenge_id"]
-            isOneToOne: false
-            referencedRelation: "challenges"
-            referencedColumns: ["id"]
-          },
-        ]
-      }
-      challenges: {
-        Row: {
-          created_at: string
-          creator_user_id: string
-          duration_days: number
-          end_time: string | null
-          entry_fee: number
-          format: string
-          id: string
-          min_bets_required: number
-          pot_total_cents: number
-          rake_cents: number
-          start_time: string | null
-          status: string
-          type: string
-        }
-        Insert: {
-          created_at?: string
-          creator_user_id: string
-          duration_days: number
-          end_time?: string | null
-          entry_fee: number
-          format: string
-          id?: string
-          min_bets_required?: number
-          pot_total_cents?: number
-          rake_cents?: number
-          start_time?: string | null
-          status?: string
-          type: string
-        }
-        Update: {
-          created_at?: string
-          creator_user_id?: string
-          duration_days?: number
-          end_time?: string | null
-          entry_fee?: number
-          format?: string
-          id?: string
-          min_bets_required?: number
-          pot_total_cents?: number
-          rake_cents?: number
-          start_time?: string | null
-          status?: string
-          type?: string
-        }
-        Relationships: []
       }
       comment_likes: {
         Row: {
@@ -212,20 +111,6 @@ export type Database = {
             isOneToOne: false
             referencedRelation: "comments"
             referencedColumns: ["id"]
-          },
-          {
-            foreignKeyName: "comment_likes_user_id_fkey"
-            columns: ["user_id"]
-            isOneToOne: false
-            referencedRelation: "leaderboard_fade"
-            referencedColumns: ["user_id"]
-          },
-          {
-            foreignKeyName: "comment_likes_user_id_fkey"
-            columns: ["user_id"]
-            isOneToOne: false
-            referencedRelation: "leaderboard_tail"
-            referencedColumns: ["user_id"]
           },
         ]
       }
@@ -257,22 +142,7 @@ export type Database = {
           user_id?: string
           username?: string
         }
-        Relationships: [
-          {
-            foreignKeyName: "comments_user_id_fkey"
-            columns: ["user_id"]
-            isOneToOne: false
-            referencedRelation: "leaderboard_fade"
-            referencedColumns: ["user_id"]
-          },
-          {
-            foreignKeyName: "comments_user_id_fkey"
-            columns: ["user_id"]
-            isOneToOne: false
-            referencedRelation: "leaderboard_tail"
-            referencedColumns: ["user_id"]
-          },
-        ]
+        Relationships: []
       }
       confidence_scores: {
         Row: {
@@ -296,171 +166,7 @@ export type Database = {
           sport_specific_score?: Json | null
           user_id?: string
         }
-        Relationships: [
-          {
-            foreignKeyName: "confidence_scores_user_id_fkey"
-            columns: ["user_id"]
-            isOneToOne: true
-            referencedRelation: "leaderboard_fade"
-            referencedColumns: ["user_id"]
-          },
-          {
-            foreignKeyName: "confidence_scores_user_id_fkey"
-            columns: ["user_id"]
-            isOneToOne: true
-            referencedRelation: "leaderboard_tail"
-            referencedColumns: ["user_id"]
-          },
-        ]
-      }
-      match_bets: {
-        Row: {
-          bet_id: string
-          created_at: string
-          id: string
-          match_id: string
-          participant_id: string
-        }
-        Insert: {
-          bet_id: string
-          created_at?: string
-          id?: string
-          match_id: string
-          participant_id: string
-        }
-        Update: {
-          bet_id?: string
-          created_at?: string
-          id?: string
-          match_id?: string
-          participant_id?: string
-        }
-        Relationships: [
-          {
-            foreignKeyName: "match_bets_bet_id_fkey"
-            columns: ["bet_id"]
-            isOneToOne: false
-            referencedRelation: "bets"
-            referencedColumns: ["id"]
-          },
-          {
-            foreignKeyName: "match_bets_match_id_fkey"
-            columns: ["match_id"]
-            isOneToOne: false
-            referencedRelation: "matches"
-            referencedColumns: ["id"]
-          },
-          {
-            foreignKeyName: "match_bets_participant_id_fkey"
-            columns: ["participant_id"]
-            isOneToOne: false
-            referencedRelation: "match_participants"
-            referencedColumns: ["id"]
-          },
-        ]
-      }
-      match_participants: {
-        Row: {
-          created_at: string
-          id: string
-          is_winner: boolean | null
-          match_id: string
-          payment_id: string | null
-          units_gained: number | null
-          user_id: string
-        }
-        Insert: {
-          created_at?: string
-          id?: string
-          is_winner?: boolean | null
-          match_id: string
-          payment_id?: string | null
-          units_gained?: number | null
-          user_id: string
-        }
-        Update: {
-          created_at?: string
-          id?: string
-          is_winner?: boolean | null
-          match_id?: string
-          payment_id?: string | null
-          units_gained?: number | null
-          user_id?: string
-        }
-        Relationships: [
-          {
-            foreignKeyName: "match_participants_match_id_fkey"
-            columns: ["match_id"]
-            isOneToOne: false
-            referencedRelation: "matches"
-            referencedColumns: ["id"]
-          },
-          {
-            foreignKeyName: "match_participants_user_id_fkey"
-            columns: ["user_id"]
-            isOneToOne: false
-            referencedRelation: "leaderboard_fade"
-            referencedColumns: ["user_id"]
-          },
-          {
-            foreignKeyName: "match_participants_user_id_fkey"
-            columns: ["user_id"]
-            isOneToOne: false
-            referencedRelation: "leaderboard_tail"
-            referencedColumns: ["user_id"]
-          },
-        ]
-      }
-      matches: {
-        Row: {
-          buy_in: number
-          created_at: string
-          created_by: string
-          duration_days: number
-          end_time: string | null
-          id: string
-          match_type: string
-          start_time: string | null
-          status: string
-        }
-        Insert: {
-          buy_in?: number
-          created_at?: string
-          created_by: string
-          duration_days: number
-          end_time?: string | null
-          id?: string
-          match_type: string
-          start_time?: string | null
-          status?: string
-        }
-        Update: {
-          buy_in?: number
-          created_at?: string
-          created_by?: string
-          duration_days?: number
-          end_time?: string | null
-          id?: string
-          match_type?: string
-          start_time?: string | null
-          status?: string
-        }
-        Relationships: [
-          {
-            foreignKeyName: "matches_created_by_fkey"
-            columns: ["created_by"]
-            isOneToOne: false
-            referencedRelation: "leaderboard_fade"
-            referencedColumns: ["user_id"]
-          },
-          {
-            foreignKeyName: "matches_created_by_fkey"
-            columns: ["created_by"]
-            isOneToOne: false
-            referencedRelation: "leaderboard_tail"
-            referencedColumns: ["user_id"]
-          },
-        ]
+        Relationships: []
       }
       notifications: {
         Row: {
@@ -490,67 +196,7 @@ export type Database = {
           type?: string
           user_id?: string
         }
-        Relationships: [
-          {
-            foreignKeyName: "notifications_user_id_fkey"
-            columns: ["user_id"]
-            isOneToOne: false
-            referencedRelation: "leaderboard_fade"
-            referencedColumns: ["user_id"]
-          },
-          {
-            foreignKeyName: "notifications_user_id_fkey"
-            columns: ["user_id"]
-            isOneToOne: false
-            referencedRelation: "leaderboard_tail"
-            referencedColumns: ["user_id"]
-          },
-        ]
-      }
-      parsed_emails: {
-        Row: {
-          email_source: string
-          error_message: string | null
-          id: string
-          parsed_at: string
-          parsed_successfully: boolean | null
-          raw_content: string
-          user_id: string
-        }
-        Insert: {
-          email_source: string
-          error_message?: string | null
-          id?: string
-          parsed_at?: string
-          parsed_successfully?: boolean | null
-          raw_content: string
-          user_id: string
-        }
-        Update: {
-          email_source?: string
-          error_message?: string | null
-          id?: string
-          parsed_at?: string
-          parsed_successfully?: boolean | null
-          raw_content?: string
-          user_id?: string
-        }
-        Relationships: [
-          {
-            foreignKeyName: "parsed_emails_user_id_fkey"
-            columns: ["user_id"]
-            isOneToOne: false
-            referencedRelation: "leaderboard_fade"
-            referencedColumns: ["user_id"]
-          },
-          {
-            foreignKeyName: "parsed_emails_user_id_fkey"
-            columns: ["user_id"]
-            isOneToOne: false
-            referencedRelation: "leaderboard_tail"
-            referencedColumns: ["user_id"]
-          },
-        ]
+        Relationships: []
       }
       sportsbooks: {
         Row: {
@@ -569,113 +215,6 @@ export type Database = {
           name?: string
         }
         Relationships: []
-      }
-      tail_fade_actions: {
-        Row: {
-          bet_id: string | null
-          created_at: string
-          id: string
-          portfolio_id: string
-          result: string | null
-          units_result: number | null
-          units_risked: number
-          updated_at: string
-        }
-        Insert: {
-          bet_id?: string | null
-          created_at?: string
-          id?: string
-          portfolio_id: string
-          result?: string | null
-          units_result?: number | null
-          units_risked: number
-          updated_at?: string
-        }
-        Update: {
-          bet_id?: string | null
-          created_at?: string
-          id?: string
-          portfolio_id?: string
-          result?: string | null
-          units_result?: number | null
-          units_risked?: number
-          updated_at?: string
-        }
-        Relationships: [
-          {
-            foreignKeyName: "tail_fade_actions_bet_id_fkey"
-            columns: ["bet_id"]
-            isOneToOne: false
-            referencedRelation: "bets"
-            referencedColumns: ["id"]
-          },
-          {
-            foreignKeyName: "tail_fade_actions_portfolio_id_fkey"
-            columns: ["portfolio_id"]
-            isOneToOne: false
-            referencedRelation: "user_portfolio"
-            referencedColumns: ["id"]
-          },
-        ]
-      }
-      user_portfolio: {
-        Row: {
-          active: boolean | null
-          bettor_id: string
-          created_at: string
-          id: string
-          updated_at: string
-          user_id: string
-          variant: string
-        }
-        Insert: {
-          active?: boolean | null
-          bettor_id: string
-          created_at?: string
-          id?: string
-          updated_at?: string
-          user_id: string
-          variant: string
-        }
-        Update: {
-          active?: boolean | null
-          bettor_id?: string
-          created_at?: string
-          id?: string
-          updated_at?: string
-          user_id?: string
-          variant?: string
-        }
-        Relationships: [
-          {
-            foreignKeyName: "user_portfolio_bettor_id_fkey"
-            columns: ["bettor_id"]
-            isOneToOne: false
-            referencedRelation: "leaderboard_fade"
-            referencedColumns: ["user_id"]
-          },
-          {
-            foreignKeyName: "user_portfolio_bettor_id_fkey"
-            columns: ["bettor_id"]
-            isOneToOne: false
-            referencedRelation: "leaderboard_tail"
-            referencedColumns: ["user_id"]
-          },
-          {
-            foreignKeyName: "user_portfolio_user_id_fkey"
-            columns: ["user_id"]
-            isOneToOne: false
-            referencedRelation: "leaderboard_fade"
-            referencedColumns: ["user_id"]
-          },
-          {
-            foreignKeyName: "user_portfolio_user_id_fkey"
-            columns: ["user_id"]
-            isOneToOne: false
-            referencedRelation: "leaderboard_tail"
-            referencedColumns: ["user_id"]
-          },
-        ]
       }
       user_profiles: {
         Row: {
@@ -714,22 +253,7 @@ export type Database = {
           username?: string | null
           win_rate?: number | null
         }
-        Relationships: [
-          {
-            foreignKeyName: "user_profiles_id_fkey"
-            columns: ["id"]
-            isOneToOne: true
-            referencedRelation: "leaderboard_fade"
-            referencedColumns: ["user_id"]
-          },
-          {
-            foreignKeyName: "user_profiles_id_fkey"
-            columns: ["id"]
-            isOneToOne: true
-            referencedRelation: "leaderboard_tail"
-            referencedColumns: ["user_id"]
-          },
-        ]
+        Relationships: []
       }
       user_trend_history: {
         Row: {
@@ -753,111 +277,24 @@ export type Database = {
           units_balance?: number
           user_id?: string
         }
-        Relationships: [
-          {
-            foreignKeyName: "user_trend_history_user_id_fkey"
-            columns: ["user_id"]
-            isOneToOne: false
-            referencedRelation: "leaderboard_fade"
-            referencedColumns: ["user_id"]
-          },
-          {
-            foreignKeyName: "user_trend_history_user_id_fkey"
-            columns: ["user_id"]
-            isOneToOne: false
-            referencedRelation: "leaderboard_tail"
-            referencedColumns: ["user_id"]
-          },
-        ]
-      }
-      user_win_milestones: {
-        Row: {
-          bet_id: string
-          created_at: string
-          id: string
-          milestone_type: string
-          units_won: number
-          user_id: string
-        }
-        Insert: {
-          bet_id: string
-          created_at?: string
-          id?: string
-          milestone_type: string
-          units_won: number
-          user_id: string
-        }
-        Update: {
-          bet_id?: string
-          created_at?: string
-          id?: string
-          milestone_type?: string
-          units_won?: number
-          user_id?: string
-        }
-        Relationships: [
-          {
-            foreignKeyName: "user_win_milestones_bet_id_fkey"
-            columns: ["bet_id"]
-            isOneToOne: false
-            referencedRelation: "bets"
-            referencedColumns: ["id"]
-          },
-          {
-            foreignKeyName: "user_win_milestones_user_id_fkey"
-            columns: ["user_id"]
-            isOneToOne: false
-            referencedRelation: "leaderboard_fade"
-            referencedColumns: ["user_id"]
-          },
-          {
-            foreignKeyName: "user_win_milestones_user_id_fkey"
-            columns: ["user_id"]
-            isOneToOne: false
-            referencedRelation: "leaderboard_tail"
-            referencedColumns: ["user_id"]
-          },
-        ]
+        Relationships: []
       }
     }
     Views: {
-      leaderboard_fade: {
-        Row: {
-          losses: number | null
-          total_faded: number | null
-          units_gained: number | null
-          user_id: string | null
-          username: string | null
-          win_rate: number | null
-          wins: number | null
-        }
-        Relationships: []
-      }
-      leaderboard_tail: {
-        Row: {
-          losses: number | null
-          total_tailed: number | null
-          units_gained: number | null
-          user_id: string | null
-          username: string | null
-          win_rate: number | null
-          wins: number | null
-        }
-        Relationships: []
-      }
+      [_ in never]: never
     }
     Functions: {
       get_comments_with_likes: {
-        Args: { target_item_id: string; requesting_user_id?: string }
+        Args: { requesting_user_id?: string; target_item_id: string }
         Returns: {
-          id: string
-          item_id: string
-          user_id: string
-          username: string
           content: string
           created_at: string
+          id: string
+          item_id: string
           likes_count: number
           user_has_liked: boolean
+          user_id: string
+          username: string
         }[]
       }
     }
