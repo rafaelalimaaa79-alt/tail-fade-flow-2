@@ -11,6 +11,10 @@ export const useSignIn = () => {
   const [password, setPassword] = useState("");
   const [loading, setLoading] = useState(false);
   const [showBiometricPrompt, setShowBiometricPrompt] = useState(false);
+  const [showTfaModal, setShowTfaModal] = useState(false);
+  const [tfaCode, setTfaCode] = useState("");
+  const [tfaError, setTfaError] = useState("");
+  const [pendingSession, setPendingSession] = useState<any>(null);
   
   // Get the redirect path from location state or default to dashboard
   const from = location.state?.from || '/dashboard';
@@ -43,33 +47,19 @@ export const useSignIn = () => {
       });
       
       if (error) {
+        // Check if error is MFA required
+        if (error.message?.includes('MFA') || error.message?.includes('factor')) {
+          setPendingSession(data);
+          setShowTfaModal(true);
+          toast.info("Please enter your verification code");
+          return;
+        }
         toast.error(error.message);
         return;
       }
       
       // If authentication succeeds
-      toast.success("Signed in successfully");
-      
-      // Sync bets from SharpSports automatically on login
-      if (data.session) {
-        try {
-          const { data: syncData, error: syncError } = await supabase.functions.invoke('sync-bets', {
-            body: { 
-              internalId: data.session.user.id, 
-              userId: data.session.user.id 
-            }
-          });
-          
-          if (syncError) {
-            console.error("Error syncing bets:", syncError);
-          } else {
-            console.log("Bets synced successfully:", syncData);
-          }
-        } catch (syncError) {
-          console.error("Error syncing bets:", syncError);
-          // Don't block login on sync failure
-        }
-      }
+      await completeSyncAndRedirect(data.session);
       
       // Check if this is the user's first time logging in (no biometric preference set)
       const biometricEnabled = localStorage.getItem('biometricEnabled');
@@ -99,6 +89,84 @@ export const useSignIn = () => {
     navigate('/forgot-password');
   };
   
+  const completeSyncAndRedirect = async (session: any) => {
+    toast.success("Signed in successfully");
+    
+    // Sync bets from SharpSports automatically on login
+    if (session) {
+      try {
+        toast.message("Syncing your bets...");
+        const { data: syncData, error: syncError } = await supabase.functions.invoke('sync-bets', {
+          body: { 
+            internalId: session.user.id, 
+            userId: session.user.id 
+          }
+        });
+        
+        if (syncError) {
+          console.error("Error syncing bets:", syncError);
+          toast.warning("Bets sync failed, please refresh manually");
+        } else {
+          console.log("Bets synced successfully:", syncData);
+          toast.success("Bets synced successfully");
+        }
+      } catch (syncError) {
+        console.error("Error syncing bets:", syncError);
+        // Don't block login on sync failure
+      }
+    }
+    
+    // Check if this is the user's first time logging in (no biometric preference set)
+    const biometricEnabled = localStorage.getItem('biometricEnabled');
+    const supportsBiometrics = 'FaceID' in window || 'TouchID' in window || 'webauthn' in navigator;
+    
+    if (!biometricEnabled && supportsBiometrics) {
+      setShowBiometricPrompt(true);
+    } else {
+      // Always redirect if biometrics aren't available or already configured
+      console.log("Redirecting after successful login to:", from);
+      navigate(from);
+    }
+  };
+
+  const handleTfaSubmit = async () => {
+    if (!tfaCode || tfaCode.length < 6) {
+      setTfaError("Please enter a valid 6-digit code");
+      return;
+    }
+    
+    setLoading(true);
+    setTfaError("");
+    
+    try {
+      // Verify MFA code
+      const { data, error } = await supabase.auth.verifyOtp({
+        email,
+        token: tfaCode,
+        type: 'email'
+      });
+      
+      if (error) {
+        setTfaError("Invalid verification code. Please try again.");
+        setLoading(false);
+        return;
+      }
+      
+      // Close TFA modal
+      setShowTfaModal(false);
+      setTfaCode("");
+      
+      // Complete sync and redirect
+      await completeSyncAndRedirect(data.session);
+      
+    } catch (error: any) {
+      console.error("TFA verification error:", error);
+      setTfaError("Verification failed. Please try again.");
+    } finally {
+      setLoading(false);
+    }
+  };
+
   const closeBiometricPrompt = () => {
     setShowBiometricPrompt(false);
     // Redirect to dashboard when biometric prompt is closed
@@ -114,9 +182,14 @@ export const useSignIn = () => {
     loading,
     from,
     showBiometricPrompt,
+    showTfaModal,
+    tfaCode,
+    setTfaCode,
+    tfaError,
     handleSignIn,
     handleCreateAccount,
     handleForgotPassword,
+    handleTfaSubmit,
     closeBiometricPrompt
   };
 };
