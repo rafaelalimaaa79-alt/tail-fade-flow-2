@@ -22,8 +22,35 @@ serve(async (req) => {
 
     console.log(`Syncing bets for bettor ${internalId}, user ${userId}`);
 
-    // Fetch slips with William's specified filters
-    // Format date as YYYY-MM-DDTHH:MM:SS (without milliseconds or Z)
+    // Step 1: Get bettorAccount to retrieve refreshResponse
+    const accountsUrl = `https://api.sharpsports.io/v1/bettorAccounts?bettor=${internalId}`;
+    console.log('Fetching bettorAccounts from:', accountsUrl);
+
+    const accountsRes = await fetch(accountsUrl, {
+      headers: { 
+        accept: "application/json", 
+        Authorization: `Token ${SHARP_KEY}` 
+      }
+    });
+
+    let refreshResponse = null;
+    if (accountsRes.ok) {
+      const accounts = await accountsRes.json();
+      console.log(`Found ${accounts.length} bettor accounts`);
+      
+      if (accounts.length > 0) {
+        refreshResponse = accounts[0].refreshResponse;
+        if (refreshResponse) {
+          console.log('Using refreshResponse from bettorAccount');
+        } else {
+          console.log('No refreshResponse available in bettorAccount');
+        }
+      }
+    } else {
+      console.log('Failed to fetch bettorAccounts, proceeding without refreshResponse');
+    }
+
+    // Step 2: Fetch bet slips using the filters
     const now = new Date();
     const nowFormatted = now.toISOString().split('.')[0]; // Remove milliseconds and Z
     
@@ -92,7 +119,10 @@ serve(async (req) => {
     }
 
     console.log(`Successfully synced ${rows.length} bets`);
-    return json({ inserted: rows.length });
+    return json({ 
+      inserted: rows.length,
+      refreshResponse: refreshResponse ? 'available' : 'not_available'
+    });
   } catch (e) {
     console.error("Sync error:", e);
     return json({ error: (e as Error).message ?? "unknown" }, 500);
