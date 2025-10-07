@@ -1,4 +1,3 @@
-
 import React, { useEffect, useState } from "react";
 import BottomNav from "@/components/BottomNav";
 import { useIsMobile } from "@/hooks/use-mobile";
@@ -26,12 +25,12 @@ const Trends = () => {
 
   const SharpSportKey = "969e890a2542ae09830c54c7c5c0eadb29138c00";
   // const internalId = "b3ee8956-c455-4ae8-8410-39df182326dc";
-  
+
   const isMobile = useIsMobile();
   const navigate = useNavigate();
   const [showTopTen, setShowTopTen] = useState(false);
   const { isOpen, smackTalkData, closeSmackTalk } = useInlineSmackTalk();
-  
+
   const handleLogoClick = () => {
     navigate("/dashboard");
   };
@@ -41,10 +40,10 @@ const Trends = () => {
       try {
         const { data } = await supabase.auth.getSession();
         const internalId = data.session?.user.id;
-        const username = data.session?.user.email?.split('@')[0];
-        
+        const username = data.session?.user.email?.split("@")[0];
+
         console.log("username: ", username);
-        
+
         const response = await fetch(
           `https://api.sharpsports.io/v1/bettors/${internalId}/betSlips?status=pending&limit=50`,
           {
@@ -53,7 +52,7 @@ const Trends = () => {
               accept: "application/json",
               Authorization: `Token ${SharpSportKey}`,
             },
-          }
+          },
         );
 
         if (!response.ok) {
@@ -62,19 +61,18 @@ const Trends = () => {
 
         const betSlipData: BetSlip[] = await response.json();
         console.log("BetSlips Response:", betSlipData);
-        
+
         // Filter for pending bet slips with all pending bets and future start times
-        const filteredData = (betSlipData || []).filter(slip => 
-          slip.status === "pending" && 
-          slip.bets.every(bet => 
-            bet.status === "pending" 
-            && bet.event?.startTime 
-            && new Date(bet.event.startTime) > new Date()
-          )
+        const filteredData = (betSlipData || []).filter(
+          (slip) =>
+            slip.status === "pending" &&
+            slip.bets.every(
+              (bet) => bet.status === "pending" && bet.event?.startTime && new Date(bet.event.startTime) > new Date(),
+            ),
         );
-        
+
         setBetSlips(filteredData);
-        
+
         // Convert betSlips to TrendData
         const converted: TrendData[] = filteredData.map((slip, index) => ({
           id: slip.id,
@@ -84,14 +82,14 @@ const Trends = () => {
           isTailRecommendation: slip.toWin > slip.atRisk,
           reason: `${slip.book.name} bet placed on ${new Date(slip.timePlaced).toLocaleDateString()}`,
           recentBets: [1, 1, 0, 1, 0, 1, 1, 0, 1, 1], // Mock data
-          unitPerformance: slip.toWin * 10/(slip.toWin + slip.atRisk),
-          tailScore: slip.toWin * 100/(slip.toWin + slip.atRisk),
-          fadeScore: slip.atRisk * 100/(slip.toWin + slip.atRisk),
+          unitPerformance: (slip.toWin * 10) / (slip.toWin + slip.atRisk),
+          tailScore: (slip.toWin * 100) / (slip.toWin + slip.atRisk),
+          fadeScore: (slip.atRisk * 100) / (slip.toWin + slip.atRisk),
           userCount: slip.oddsAmerican,
           categoryBets: [1, 1, 0, 1, 0],
-          categoryName: `${slip.bets[0]?.event?.league || ''} ${slip.bets[0]?.proposition || ''}`,
+          categoryName: `${slip.bets[0]?.event?.league || ""} ${slip.bets[0]?.proposition || ""}`,
         }));
-        
+
         setConvertedTrends(converted);
       } catch (err: any) {
         console.error("Fetch error:", err);
@@ -102,14 +100,14 @@ const Trends = () => {
 
     fetchBetSlips();
   }, []);
-  
+
   return (
     <div className="flex min-h-screen flex-col bg-background font-rajdhani">
       <div className={`max-w-md mx-auto w-full px-2 ${isMobile ? "pb-24" : ""}`}>
         <div className="flex justify-between items-center pt-2 mb-4">
-          <img 
-            src="/lovable-uploads/7b63dfa5-820d-4bd0-82f2-9e01001a0364.png" 
-            alt="NoShot logo" 
+          <img
+            src="/lovable-uploads/7b63dfa5-820d-4bd0-82f2-9e01001a0364.png"
+            alt="NoShot logo"
             className="h-40 cursor-pointer"
             onClick={handleLogoClick}
           />
@@ -118,14 +116,10 @@ const Trends = () => {
             <ProfileIcon />
           </div>
         </div>
-        
+
         <TrendsTitle />
-        
-        {showTopTen ? (
-          <TopTenReveal isRevealed={showTopTen} />
-        ) : (
-          <TrendsList trendData={convertedTrends} />
-        )}
+
+        {showTopTen ? <TopTenReveal isRevealed={showTopTen} /> : <TrendsList trendData={trendData} />}
         {isOpen && (
           <InlineSmackTalk
             isOpen={isOpen}
@@ -135,7 +129,7 @@ const Trends = () => {
           />
         )}
       </div>
-      
+
       <TrendsNotificationHandler />
       <BadgeAnimationHandler />
       <FloatingSyncButton />
