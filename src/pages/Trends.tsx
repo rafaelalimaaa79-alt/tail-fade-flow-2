@@ -119,7 +119,7 @@ const Trends = () => {
 
         <TrendsTitle />
 
-        {showTopTen ? <TopTenReveal isRevealed={showTopTen} /> : <TrendsList trendData={trendData} />}
+        {showTopTen ? <TopTenReveal isRevealed={showTopTen} /> : <TrendsList trendData={convertedTrends} />}
         {isOpen && (
           <InlineSmackTalk
             isOpen={isOpen}
