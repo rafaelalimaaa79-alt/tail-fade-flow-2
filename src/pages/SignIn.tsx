@@ -6,9 +6,6 @@ import { useBiometricAuth } from "@/hooks/useBiometricAuth";
 import { useSignIn } from "@/hooks/useSignIn";
 import SignInForm from "@/components/auth/SignInForm";
 import BiometricPrompt from "@/components/auth/BiometricPrompt";
-import { Dialog, DialogContent, DialogHeader, DialogTitle } from "@/components/ui/dialog";
-import { Input } from "@/components/ui/input";
-import { Button } from "@/components/ui/button";
 
 const SignIn = () => {
   const location = useLocation();
@@ -21,14 +18,9 @@ const SignIn = () => {
     loading, 
     from, 
     showBiometricPrompt,
-    showTfaModal,
-    tfaCode,
-    setTfaCode,
-    tfaError,
     handleSignIn, 
     handleCreateAccount, 
     handleForgotPassword,
-    handleTfaSubmit,
     closeBiometricPrompt
   } = useSignIn();
   
@@ -104,51 +96,6 @@ const SignIn = () => {
         redirectPath={from}
         onClose={closeBiometricPrompt}
       />
-      
-      <Dialog open={showTfaModal} onOpenChange={() => {}}>
-        <DialogContent className="w-[90vw] max-w-md mx-auto bg-background border border-border">
-          <DialogHeader>
-            <DialogTitle className="text-center text-xl font-medium">
-              Enter Verification Code
-            </DialogTitle>
-          </DialogHeader>
-
-          <div className="space-y-4 mt-4">
-            <p className="text-muted-foreground text-sm text-center">
-              Please enter the verification code sent to your device.
-            </p>
-            
-            <Input
-              value={tfaCode}
-              onChange={(e) => {
-                const digits = e.target.value.replace(/\D/g, '').slice(0, 8);
-                setTfaCode(digits);
-                if (digits.length === 6) {
-                  handleTfaSubmit();
-                }
-              }}
-              placeholder="123456"
-              className="h-12 text-center text-lg tracking-widest"
-              maxLength={8}
-              inputMode="numeric"
-              autoComplete="one-time-code"
-              autoFocus
-            />
-
-            {tfaError && (
-              <p className="text-destructive text-sm text-center">{tfaError}</p>
-            )}
-
-            <Button
-              onClick={handleTfaSubmit}
-              disabled={tfaCode.length < 6 || loading}
-              className="w-full h-12"
-            >
-              {loading ? "Verifying..." : "Submit"}
-            </Button>
-          </div>
-        </DialogContent>
-      </Dialog>
     </div>
   );
 };
