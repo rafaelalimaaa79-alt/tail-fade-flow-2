@@ -23,15 +23,12 @@ serve(async (req) => {
     console.log(`Syncing bets for bettor ${internalId}, user ${userId}`);
 
     // Fetch slips with William's specified filters
-    // Format date as YYYY-MM-DDTHH:MM:SS (without milliseconds or Z)
-    const now = new Date();
-    const nowFormatted = now.toISOString().split('.')[0]; // Remove milliseconds and Z
-    
+    const nowISO = new Date().toISOString();
     const qs = new URLSearchParams({
       status: "pending",
       type: "single",
       betType: "straight",
-      eventStartTimeStart: nowFormatted,
+      eventStartTimeStart: nowISO,
       limit: "200",
     });
 
