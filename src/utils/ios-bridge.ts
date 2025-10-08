@@ -1,14 +1,12 @@
 // iOS WebKit message handler utilities
-export const postAuthSuccessMessage = (data: {
-  user: any;
-}) => {
+export const postAuthSuccessMessage = (data: { user: any; type: string }) => {
   try {
     if (window.webkit?.messageHandlers?.authHandler) {
       window.webkit.messageHandlers.authHandler.postMessage(data);
-      console.log('Posted auth success message to iOS:', data);
+      console.log("Posted auth success message to iOS:", data);
     }
   } catch (error) {
-    console.log('iOS bridge not available or failed:', error);
+    console.log("iOS bridge not available or failed:", error);
   }
 };
 

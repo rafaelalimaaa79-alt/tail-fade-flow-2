@@ -1,4 +1,3 @@
-
 import React, { useState } from "react";
 import { useNavigate } from "react-router-dom";
 import { toast } from "sonner";
@@ -16,31 +15,31 @@ const SignUp = () => {
 
   const handleSignUp = async (e: React.FormEvent) => {
     e.preventDefault();
-    
+
     if (!email || !phone || !password || !confirmPassword) {
       toast.error("Please fill in all fields");
       return;
     }
-    
+
     if (password !== confirmPassword) {
       toast.error("Passwords do not match");
       return;
     }
-    
+
     if (password.length < 8) {
       toast.error("Password must be at least 8 characters");
       return;
     }
-    
+
     // Validate phone number has correct number of digits
-    const phoneDigits = phone.replace(/[^\d]/g, '');
-    if (phoneDigits.length !== 11 || !phoneDigits.startsWith('1')) {
+    const phoneDigits = phone.replace(/[^\d]/g, "");
+    if (phoneDigits.length !== 11 || !phoneDigits.startsWith("1")) {
       toast.error("Please enter a valid US phone number");
       return;
     }
-    
+
     setLoading(true);
-    
+
     try {
       // Try phone signup first
       // const phoneResult = await supabase.auth.signUp({
@@ -52,63 +51,63 @@ const SignUp = () => {
       //     }
       //   }
       // });
-      
+
       // if (phoneResult.error) {
       //   console.log("Phone signup failed, trying email signup:", phoneResult.error);
-        
-        // Try email signup as fallback
-        const {data, error} = await supabase.auth.signUp({
-          email,
-          password,
-          options: {
-            data: {
-              phone: phone
-            }
-          }
+
+      // Try email signup as fallback
+      const { data, error } = await supabase.auth.signUp({
+        email,
+        password,
+        options: {
+          data: {
+            phone: phone,
+          },
+        },
+      });
+
+      if (error) {
+        console.log("Email signup also failed:", error);
+        toast.error("Failed to create account. Please try again.");
+        toast.error(`${error.message || error}`);
+        return;
+      }
+
+      // Email signup succeeded
+      if (data.user && !data.user.email_confirmed_at) {
+        toast.success("Check your email for a verification link!");
+      } else {
+        toast.success("Account created successfully!");
+      }
+
+      // Notify iOS app of successful signup
+      if (data.user) {
+        postAuthSuccessMessage({
+          user: data.user,
+          type: "signUp",
         });
-        
-        if (error) {
-          console.log("Email signup also failed:", error);
-          toast.error("Failed to create account. Please try again.");
-          toast.error(`${error.message || error}`);
-          return;
-        }
-        
-        // Email signup succeeded
-        if (data.user && !data.user.email_confirmed_at) {
-          toast.success("Check your email for a verification link!");
-        } else {
-          toast.success("Account created successfully!");
-        }
-        
-        // Notify iOS app of successful signup
-        if (data.user) {
-          postAuthSuccessMessage({
-            user: data.user
-          });
-        }
-        
-        navigate('/connect-sportsbooks');
+      }
+
+      navigate("/connect-sportsbooks");
 
       // } else {
       //   // Phone signup succeeded
-      
+
       //   if (phoneResult.data.user && !phoneResult.data.user.phone_confirmed_at) {
       //     toast.success("Check your phone for a verification code!");
       //   } else {
       //     toast.success("Account created successfully!");
-          
+
       //     // Notify iOS app of successful signup
       //     if (phoneResult.data.user) {
       //       postAuthSuccessMessage({
       //         user: phoneResult.data.user
       //       });
       //     }
-          
+
       //     navigate('/connect-sportsbooks');
-      //   }        
+      //   }
       // }
-      
     } catch (error: any) {
       console.error("Sign up error:", error);
       // For now, just proceed to sportsbook connection regardless of the error
@@ -118,22 +117,22 @@ const SignUp = () => {
       setLoading(false);
     }
   };
-  
+
   const handleSignIn = () => {
-    navigate('/signin');
+    navigate("/signin");
   };
 
   const handleGoogleSignUp = async () => {
     try {
       const { error } = await supabase.auth.signInWithOAuth({
-        provider: 'google',
+        provider: "google",
         options: {
-          redirectTo: `${window.location.origin}/connect-sportsbooks`
-        }
+          redirectTo: `${window.location.origin}/connect-sportsbooks`,
+        },
       });
-      
+
       if (error) throw error;
-      
+
       // Note: For OAuth, the auth success message will be sent by the AuthContext
       // when the auth state changes after the redirect
     } catch (error: any) {
@@ -141,7 +140,6 @@ const SignUp = () => {
       toast.error("Failed to sign up with Google");
     }
   };
-
 
   return (
     <div className="flex flex-col min-h-screen bg-background">
