@@ -49,12 +49,12 @@ const Trends = () => {
 
         // Read bets from Supabase database
         const { data: bets, error } = await supabase
-          .from('bets')
-          .select('*')
-          .eq('user_id', userId)
-          .eq('result', 'Pending')
-          .gte('event_start_time', new Date().toISOString())
-          .order('event_start_time', { ascending: true });
+          .from("bets")
+          .select("*")
+          .eq("user_id", userId)
+          .eq("result", "Pending")
+          // .gte('event_start_time', new Date().toISOString())
+          .order("event_start_time", { ascending: true });
 
         if (error) {
           console.error("Error fetching bets:", error);
@@ -67,16 +67,16 @@ const Trends = () => {
         // Convert bets to TrendData
         const converted: TrendData[] = (bets || []).map((bet: any, index: number) => {
           // Parse event to get teams
-          let awayTeam = 'Away';
-          let homeTeam = 'Home';
-          
+          let awayTeam = "Away";
+          let homeTeam = "Home";
+
           if (bet.event) {
-            if (bet.event.includes(' vs ')) {
-              const parts = bet.event.split(' vs ');
+            if (bet.event.includes(" vs ")) {
+              const parts = bet.event.split(" vs ");
               awayTeam = parts[0]?.trim() || awayTeam;
               homeTeam = parts[1]?.trim() || homeTeam;
-            } else if (bet.event.includes(' @ ')) {
-              const parts = bet.event.split(' @ ');
+            } else if (bet.event.includes(" @ ")) {
+              const parts = bet.event.split(" @ ");
               awayTeam = parts[0]?.trim() || awayTeam;
               homeTeam = parts[1]?.trim() || homeTeam;
             } else {
@@ -86,18 +86,18 @@ const Trends = () => {
 
           return {
             id: bet.id,
-            name: username || 'You',
+            name: username || "You",
             betDescription: `${awayTeam} vs ${homeTeam}`,
-            betType: bet.bet_type || 'straight',
+            betType: bet.bet_type || "straight",
             isTailRecommendation: true,
-            reason: `${bet.sportsbook_name || 'Sportsbook'} - ${bet.bet_type || 'Bet'}`,
+            reason: `${bet.sportsbook_name || "Sportsbook"} - ${bet.bet_type || "Bet"}`,
             recentBets: [1, 1, 0, 1, 0, 1, 1, 0, 1, 1],
             unitPerformance: bet.units_risked || 0,
-            tailScore: Math.abs(parseFloat(bet.odds || '100')),
-            fadeScore: Math.abs(parseFloat(bet.odds || '100')) / 2,
-            userCount: parseFloat(bet.odds || '0'),
+            tailScore: Math.abs(parseFloat(bet.odds || "100")),
+            fadeScore: Math.abs(parseFloat(bet.odds || "100")) / 2,
+            userCount: parseFloat(bet.odds || "0"),
             categoryBets: [1, 1, 0, 1, 0],
-            categoryName: bet.bet_type || 'straight',
+            categoryName: bet.bet_type || "straight",
           };
         });
 
@@ -117,19 +117,19 @@ const Trends = () => {
       if (!userId) return;
 
       const channel = supabase
-        .channel('bets-changes')
+        .channel("bets-changes")
         .on(
-          'postgres_changes',
+          "postgres_changes",
           {
-            event: '*',
-            schema: 'public',
-            table: 'bets',
-            filter: `user_id=eq.${userId}`
+            event: "*",
+            schema: "public",
+            table: "bets",
+            filter: `user_id=eq.${userId}`,
           },
           (payload) => {
-            console.log('Bet change detected:', payload);
+            console.log("Bet change detected:", payload);
             fetchBetsFromDatabase();
-          }
+          },
         )
         .subscribe();
 
