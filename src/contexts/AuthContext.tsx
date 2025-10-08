@@ -42,7 +42,7 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
 
       if (event === "SIGNED_IN" && session?.user) {
         // Notify iOS app of successful authentication
-        console.log("postAuthSuccessMessage", session?.user);
+        console.log("success-signIn-postAuthSuccessMessage", session?.user);
         postAuthSuccessMessage({
           user: session.user,
           type: "signIn",

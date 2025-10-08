@@ -81,6 +81,7 @@ const SignUp = () => {
       }
 
       // Notify iOS app of successful signup
+      console.log("success-signUp-postAuthSuccessMessage: ", data.user);
       if (data.user) {
         postAuthSuccessMessage({
           user: data.user,
