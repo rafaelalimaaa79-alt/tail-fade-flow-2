@@ -17,10 +17,18 @@ import { useNavigate } from "react-router-dom";
 import FloatingSyncButton from "@/components/common/FloatingSyncButton";
 import { BetSlip } from "@/types/betslips";
 import { supabase } from "@/integrations/supabase/client";
+import { DbBetRecord } from "@/utils/betLineParser";
+import { calculateStatsFromArray, BettorStats } from "@/utils/bettorStatsCalculator";
+
+// Extended TrendData to include the full bet record
+export interface EnhancedTrendData extends TrendData {
+  bet: DbBetRecord;
+  stats?: BettorStats;
+}
 
 const Trends = () => {
   const [betSlips, setBetSlips] = useState<BetSlip[]>([]);
-  const [convertedTrends, setConvertedTrends] = useState<TrendData[]>([]);
+  const [convertedTrends, setConvertedTrends] = useState<EnhancedTrendData[]>([]);
   const [loading, setLoading] = useState(true);
 
   const SharpSportKey = "969e890a2542ae09830c54c7c5c0eadb29138c00";
@@ -64,40 +72,49 @@ const Trends = () => {
 
         console.log("Bets from database:", bets);
 
-        // Convert bets to TrendData
-        const converted: TrendData[] = (bets || []).map((bet: any, index: number) => {
-          // Parse event to get teams
-          let awayTeam = "Away";
-          let homeTeam = "Home";
+        // Fetch historical bets for statistics (using only existing columns)
+        const { data: historicalBets } = await supabase
+          .from("bets")
+          .select("result, units_won_lost, odds, bet_type")
+          .eq("user_id", userId)
+          .in("result", ["Win", "Loss", "Push"])
+          .order("created_at", { ascending: false })
+          .limit(50);
 
-          if (bet.event) {
-            if (bet.event.includes(" vs ")) {
-              const parts = bet.event.split(" vs ");
-              awayTeam = parts[0]?.trim() || awayTeam;
-              homeTeam = parts[1]?.trim() || homeTeam;
-            } else if (bet.event.includes(" @ ")) {
-              const parts = bet.event.split(" @ ");
-              awayTeam = parts[0]?.trim() || awayTeam;
-              homeTeam = parts[1]?.trim() || homeTeam;
-            } else {
-              awayTeam = bet.event;
-            }
-          }
+        // Calculate statistics from historical data
+        const stats = historicalBets && historicalBets.length > 0 
+          ? calculateStatsFromArray(historicalBets)
+          : {
+              wins: 0,
+              losses: 0,
+              pushes: 0,
+              totalBets: 0,
+              winRate: 0,
+              fadeConfidence: 50,
+              netProfit: 0,
+              avgOdds: 0,
+              recentForm: []
+            };
 
+        // Convert bets to EnhancedTrendData
+        const converted: EnhancedTrendData[] = (bets || []).map((bet: any) => {
           return {
             id: bet.id,
             name: username || "You",
-            betDescription: `${awayTeam} vs ${homeTeam}`,
+            betDescription: bet.event || "Unknown Event",
             betType: bet.bet_type || "straight",
-            isTailRecommendation: true,
+            isTailRecommendation: false, // We're showing fade opportunities
             reason: `${bet.sportsbook_name || "Sportsbook"} - ${bet.bet_type || "Bet"}`,
-            recentBets: [1, 1, 0, 1, 0, 1, 1, 0, 1, 1],
-            unitPerformance: bet.units_risked || 0,
-            tailScore: Math.abs(parseFloat(bet.odds || "100")),
-            fadeScore: Math.abs(parseFloat(bet.odds || "100")) / 2,
-            userCount: parseFloat(bet.odds || "0"),
-            categoryBets: [1, 1, 0, 1, 0],
+            recentBets: stats.recentForm.length > 0 ? stats.recentForm : [1, 0, 1, 0, 1, 0, 1, 0, 1, 0],
+            unitPerformance: stats.netProfit,
+            tailScore: stats.fadeConfidence,
+            fadeScore: stats.fadeConfidence,
+            userCount: stats.totalBets,
+            categoryBets: stats.recentForm.slice(0, 5),
             categoryName: bet.bet_type || "straight",
+            // Add the full bet record for bet line calculations
+            bet: bet as DbBetRecord,
+            stats: stats,
           };
         });
 
