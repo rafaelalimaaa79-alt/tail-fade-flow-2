@@ -34,6 +34,12 @@ export type Database = {
           units_won_lost: number | null
           updated_at: string
           user_id: string
+          sport: string | null
+          line: number | null
+          units_to_win: number | null
+          away_team: string | null
+          home_team: string | null
+          position: string | null
         }
         Insert: {
           bet_id?: string | null

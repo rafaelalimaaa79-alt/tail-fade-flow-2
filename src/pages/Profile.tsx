@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import BottomNav from "@/components/BottomNav";
 import { useNavigate } from "react-router-dom";
 import UserHeader from "@/components/profile/UserHeader";
@@ -9,85 +9,60 @@ import ProfileIcon from "@/components/common/ProfileIcon";
 import HeaderChatIcon from "@/components/common/HeaderChatIcon";
 import InlineSmackTalk from "@/components/InlineSmackTalk";
 import { useInlineSmackTalk } from "@/hooks/useInlineSmackTalk";
-
-// Mock data
-const userProfile = {
-  username: "BetterBettor",
-  joinDate: "May 2024",
-  winRate: 59,
-  roi: 14.7,
-  profit: 780,
-  totalBets: 67,
-  rank: 76,
-  rankChange: 22, // positive number means they've gone up
-  chartData: [
-    { timestamp: "2024-01-01", units: 120 },
-    { timestamp: "2024-02-01", units: 200 },
-    { timestamp: "2024-03-01", units: 150 },
-    { timestamp: "2024-04-01", units: 300 },
-    { timestamp: "2024-05-01", units: 400 },
-  ],
-  performanceByTimeframe: {
-    '1D': 25,
-    '1W': 120,
-    '1M': 380,
-    '3M': 560,
-    '1Y': 780
-  },
-  stats: {
-    betsWon: 37,
-    betsLost: 30,
-    avgOdds: "+110",
-    favorites: ["NBA", "NFL", "UFC"],
-  },
-  tailingFadingWins: [
-    {
-      id: "1",
-      bet: "Lakers -4.5",
-      bettorName: "FadeMaster",
-      action: "tailed",
-      unitsGained: 3.3,
-      outcome: "W"
-    },
-    {
-      id: "2",
-      bet: "Celtics +7",
-      bettorName: "SportsWizard",
-      action: "faded",
-      unitsGained: 2.1,
-      outcome: "W"
-    },
-    {
-      id: "3",
-      bet: "Chiefs -3",
-      bettorName: "GridironGuru",
-      action: "tailed",
-      unitsGained: 4.5,
-      outcome: "W"
-    },
-    {
-      id: "4",
-      bet: "Knicks ML",
-      bettorName: "CourtKing",
-      action: "tailed",
-      unitsGained: 1.8,
-      outcome: "W"
-    },
-    {
-      id: "5",
-      bet: "Warriors +5.5",
-      bettorName: "BetExpert",
-      action: "faded",
-      unitsGained: 2.7,
-      outcome: "W"
-    }
-  ]
-};
+import { useAuth } from "@/contexts/AuthContext";
+import { calculateBettorStats } from "@/utils/bettorStatsCalculator";
+import { BetHistoryPoint } from "@/types/bettor";
 
 const ProfilePage = () => {
   const [timeframe, setTimeframe] = useState<'1D' | '1W' | '1M' | '3M' | '1Y'>('1M');
   const navigate = useNavigate();
   const { isOpen, smackTalkData, closeSmackTalk } = useInlineSmackTalk();
+  const { user } = useAuth();
+  
+  // State for real user stats
+  const [userStats, setUserStats] = useState({
+    username: user?.email?.split('@')[0] || "User",
+    rank: 0,
+    rankChange: 0,
+    winRate: 0,
+    roi: 0,
+    profit: 0,
+    totalBets: 0,
+    chartData: [] as BetHistoryPoint[],
+    performanceByTimeframe: {
+      '1D': 0,
+      '1W': 0,
+      '1M': 0,
+      '3M': 0,
+      '1Y': 0
+    }
+  });
+
+  // Fetch real user statistics
+  useEffect(() => {
+    if (!user?.id) return;
+
+    const fetchUserStats = async () => {
+      try {
+        // Fetch stats for the selected timeframe
+        const stats = await calculateBettorStats(user.id, undefined, undefined, 50);
+
+        setUserStats(prev => ({
+          ...prev,
+          winRate: stats.winRate,
+          roi: stats.winRate > 0 ? ((stats.netProfit / stats.totalBets) * 100) : 0,
+          profit: stats.netProfit,
+          totalBets: stats.totalBets,
+          chartData: [],
+        }));
+      } catch (error) {
+        console.error("Error fetching user stats:", error);
+      }
+    };
+
+    fetchUserStats();
+  }, [user?.id, timeframe]);
+
 
   return (
     <div className="bg-black min-h-screen pb-20">
@@ -106,9 +81,9 @@ const ProfilePage = () => {
         </div>
 
         <UserHeader 
-          username={userProfile.username} 
-          rank={userProfile.rank} 
-          rankChange={userProfile.rankChange} 
+          username={userStats.username} 
+          rank={userStats.rank} 
+          rankChange={userStats.rankChange} 
         />
 
         <PendingBetsSection />

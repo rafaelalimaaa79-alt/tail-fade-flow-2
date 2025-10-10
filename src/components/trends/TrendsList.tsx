@@ -1,6 +1,8 @@
 
 import React from "react";
 import TrendItem from "@/components/TrendItem";
+import { DbBetRecord } from "@/utils/betLineParser";
+import { BettorStats } from "@/utils/bettorStatsCalculator";
 
 export type TrendData = {
   id: string;
@@ -16,6 +18,8 @@ export type TrendData = {
   userCount?: number;
   categoryBets?: number[]; // Added for category-specific bets
   categoryName?: string;   // Added for the category name
+  bet?: DbBetRecord;       // Full bet record from database
+  stats?: BettorStats;     // Bettor statistics
 };
 
 type TrendsListProps = {
@@ -25,31 +29,32 @@ type TrendsListProps = {
 const TrendsList = ({ trendData }: TrendsListProps) => {
   // Sort the trend data by confidence score (either tailScore or fadeScore)
   const sortedTrendData = [...trendData].sort((a, b) => {
-    const scoreA = a.isTailRecommendation ? a.tailScore : a.fadeScore;
-    const scoreB = b.isTailRecommendation ? b.tailScore : b.fadeScore;
+    const scoreA = a.isTailRecommendation ? (a.tailScore || 0) : (a.fadeScore || 0);
+    const scoreB = b.isTailRecommendation ? (b.tailScore || 0) : (b.fadeScore || 0);
     return scoreB - scoreA; // Sort in descending order
   });
   
   return (
     <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-3 mx-auto">
-      {sortedTrendData.map((trend) => (
-        <TrendItem
-          key={trend.id}
-          id={trend.id}
-          name={trend.name}
-          betDescription={trend.betDescription}
-          betType={trend.betType}
-          reason={trend.reason}
-          isTailRecommendation={trend.isTailRecommendation}
-          recentBets={trend.recentBets}
-          unitPerformance={trend.unitPerformance}
-          tailScore={trend.tailScore}
-          fadeScore={trend.fadeScore}
-          userCount={trend.userCount}
-          categoryBets={trend.categoryBets}
-          categoryName={trend.categoryName}
-        />
-      ))}
+      {sortedTrendData.map((trend) => {
+        // Skip if no bet record
+        if (!trend.bet) {
+          console.warn("Skipping trend without bet record:", trend.id);
+          return null;
+        }
+
+        return (
+          <TrendItem
+            key={trend.id}
+            id={trend.id}
+            name={trend.name}
+            bet={trend.bet}
+            stats={trend.stats}
+            fadeConfidence={trend.fadeScore}
+            unitPerformance={trend.unitPerformance}
+          />
+        );
+      })}
     </div>
   );
 };

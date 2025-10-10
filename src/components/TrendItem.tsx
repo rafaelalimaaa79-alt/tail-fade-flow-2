@@ -5,59 +5,40 @@ import TrendVisibilityWrapper from "./trend/TrendVisibilityWrapper";
 import TrendItemContent from "./trend/TrendItemContent";
 import { getOppositeBet } from "@/utils/bet-conversion";
 import { showFadeNotification } from "@/utils/betting-notifications";
-import { getFadeConfidence, getMatchup, getBetLine, getSportStatline } from "@/utils/trend-helpers";
+import { DbBetRecord, calculateBetLine, getOppositeBetLine, getMatchupInfo } from "@/utils/betLineParser";
+import { BettorStats, generateStatline } from "@/utils/bettorStatsCalculator";
 
 type TrendItemProps = {
   id: string;
   name: string;
-  betDescription: string;
-  betType: string;
-  reason: string;
-  isTailRecommendation: boolean;
-  recentBets: number[];
-  unitPerformance: number;
-  tailScore?: number;
-  fadeScore?: number;
-  userCount?: number;
-  categoryBets?: number[];
-  categoryName?: string;
+  bet: DbBetRecord;
+  stats?: BettorStats;
+  fadeConfidence?: number;
+  sportStatline?: string;
+  unitPerformance?: number;
 };
 
 const TrendItem = ({
   id,
   name,
-  betDescription,
-  betType,
-  reason,
-  isTailRecommendation,
-  recentBets,
-  unitPerformance,
-  tailScore = 75,
-  fadeScore = 80,
-  userCount = 210,
-  categoryBets,
-  categoryName,
+  bet,
+  stats,
+  fadeConfidence,
+  sportStatline = "Loading...",
+  unitPerformance = 0,
 }: TrendItemProps) => {
-  // Calculate win-loss record
-  const wins = recentBets.filter(bet => bet === 1).length;
-  const losses = recentBets.filter(bet => bet === 0).length;
-  const score = isTailRecommendation ? tailScore : fadeScore;
+  // Generate statline using the utility function
+  const calculatedStatline = stats && stats.totalBets > 0
+    ? `He is ${generateStatline(stats)}`
+    : sportStatline; // Fallback to provided statline if no stats data
   
-  // Use specific data for ProPicker trend, otherwise use random helpers
-  const fadeConfidence = name === "ProPicker" ? 98 : getFadeConfidence();
-  const matchup = name === "ProPicker" 
-    ? { game: "LSU vs Ole Miss", teams: ["LSU", "Ole Miss"], sport: "NCAAFB" }
-    : getMatchup(betType);
-  const betLine = name === "ProPicker" 
-    ? "Ole Miss ML"
-    : getBetLine(matchup.teams, matchup.sport);
-  const sportStatline = name === "ProPicker"
-    ? "He is 4 for 20 in his last 20 NCAAFB bets"
-    : getSportStatline(matchup.sport, name, betDescription);
+  // Use fadeConfidence from stats if not explicitly provided
+  const finalFadeConfidence = fadeConfidence ?? stats?.fadeConfidence ?? 75;
   
-  // Get the opponent team for the bet conversion
-  const opponentTeam = matchup.teams.find(team => !betLine.includes(team));
-  const oppositeBet = getOppositeBet(betLine, opponentTeam);
+  // Calculate bet lines from database record
+  const betLine = calculateBetLine(bet);
+  const oppositeBet = getOppositeBetLine(bet);
+  const matchup = getMatchupInfo(bet);
   
   // Handle bet button click
   const handleBetClick = () => {
@@ -82,8 +63,8 @@ const TrendItem = ({
             matchup={matchup}
             name={name}
             betLine={betLine}
-            sportStatline={sportStatline}
-            fadeConfidence={fadeConfidence}
+            sportStatline={calculatedStatline}
+            fadeConfidence={finalFadeConfidence}
             oppositeBet={oppositeBet}
             onBetClick={handleBetClick}
             isMostVisible={isMostVisible}
