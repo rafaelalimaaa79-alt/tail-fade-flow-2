@@ -43,58 +43,60 @@ const Trends = () => {
     navigate("/dashboard");
   };
 
-  useEffect(() => {
-    const fetchBetsFromDatabase = async () => {
-      try {
-        const { data } = await supabase.auth.getSession();
-        const userId = data.session?.user.id;
-        const username = data.session?.user.email?.split("@")[0];
+  // Extract fetchBetsFromDatabase so it can be called from event listener
+  const fetchBetsFromDatabase = async () => {
+    try {
+      const { data } = await supabase.auth.getSession();
+      const userId = data.session?.user.id;
+      const username = data.session?.user.email?.split("@")[0];
 
-        if (!userId) {
-          setLoading(false);
-          return;
-        }
+      if (!userId) {
+        setLoading(false);
+        return;
+      }
 
-        // Read bets from Supabase database
-        const { data: bets, error } = await supabase
-          .from("bets")
-          .select("*")
-          .eq("user_id", userId)
-          .eq("result", "Pending")
-          // .gte('event_start_time', new Date().toISOString())
-          .order("event_start_time", { ascending: true });
+      console.log("Fetching bets from database...");
 
-        if (error) {
-          console.error("Error fetching bets:", error);
-          setLoading(false);
-          return;
-        }
+      // Read bets from Supabase database
+      const { data: bets, error } = await supabase
+        .from("bets")
+        .select("*")
+        .eq("user_id", userId)
+        .eq("result", "Pending")
+        // .gte('event_start_time', new Date().toISOString())
+        .order("event_start_time", { ascending: true });
 
-        console.log("Bets from database:", bets);
+      if (error) {
+        console.error("Error fetching bets:", error);
+        setLoading(false);
+        return;
+      }
 
-        // Fetch historical bets for statistics (using only existing columns)
-        const { data: historicalBets } = await supabase
-          .from("bets")
-          .select("result, units_won_lost, odds, bet_type")
-          .eq("user_id", userId)
-          .in("result", ["Win", "Loss", "Push"])
-          .order("created_at", { ascending: false })
-          .limit(50);
+      console.log("Bets from database:", bets);
 
-        // Calculate statistics from historical data
-        const stats = historicalBets && historicalBets.length > 0 
-          ? calculateStatsFromArray(historicalBets)
-          : {
-              wins: 0,
-              losses: 0,
-              pushes: 0,
-              totalBets: 0,
-              winRate: 0,
-              fadeConfidence: 50,
-              netProfit: 0,
-              avgOdds: 0,
-              recentForm: []
-            };
+      // Fetch historical bets for statistics (using only existing columns)
+      const { data: historicalBets } = await supabase
+        .from("bets")
+        .select("result, units_won_lost, odds, bet_type")
+        .eq("user_id", userId)
+        .in("result", ["Win", "Loss", "Push"])
+        .order("created_at", { ascending: false })
+        .limit(50);
+
+      // Calculate statistics from historical data
+      const stats = historicalBets && historicalBets.length > 0
+        ? calculateStatsFromArray(historicalBets)
+        : {
+            wins: 0,
+            losses: 0,
+            pushes: 0,
+            totalBets: 0,
+            winRate: 0,
+            fadeConfidence: 50,
+            netProfit: 0,
+            avgOdds: 0,
+            recentForm: []
+          };
 
         // Convert bets to EnhancedTrendData
         const converted: EnhancedTrendData[] = (bets || []).map((bet: any) => {
@@ -126,7 +128,16 @@ const Trends = () => {
       }
     };
 
+  useEffect(() => {
     fetchBetsFromDatabase();
+
+    // Listen for sync completion events
+    const handleBetsSynced = (event: Event) => {
+      console.log('Bets synced event received, refetching data...');
+      fetchBetsFromDatabase();
+    };
+
+    window.addEventListener('bets-synced', handleBetsSynced);
 
     // Set up realtime subscription for live bet updates
     supabase.auth.getSession().then(({ data }) => {
@@ -154,6 +165,10 @@ const Trends = () => {
         supabase.removeChannel(channel);
       };
     });
+
+    return () => {
+      window.removeEventListener('bets-synced', handleBetsSynced);
+    };
   }, []);
 
   return (

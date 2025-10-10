@@ -1,77 +1,69 @@
-import React, { useState } from "react";
+import React from "react";
 import { Button } from "@/components/ui/button";
 import { RotateCw } from "lucide-react";
-import { toast } from "sonner";
 import { cn } from "@/lib/utils";
 import { triggerHaptic, triggerRefreshHaptic } from "@/utils/haptic-feedback";
+import { useSyncBets } from "@/hooks/useSyncBets";
+import { SharpSportsModal } from "@/components/SharpSportsModal";
 
 interface FloatingSyncButtonProps {
   className?: string;
-  onSync?: () => Promise<void> | void;
 }
 
-const FloatingSyncButton: React.FC<FloatingSyncButtonProps> = ({ className, onSync }) => {
-  const [spinning, setSpinning] = useState(false);
+const FloatingSyncButton: React.FC<FloatingSyncButtonProps> = ({ className }) => {
+  const {
+    syncBets,
+    isSyncing,
+    sharpSportsModal,
+    handleModalComplete,
+    handleModalClose
+  } = useSyncBets();
 
   const handleClick = async () => {
-    try {
-      triggerHaptic('impactMedium');
-      setSpinning(true);
-      toast.message("Refreshing bets...");
-      
-      if (onSync) {
-        await onSync();
-      } else {
-        // Default: Call sync-bets edge function
-        const { supabase } = await import("@/integrations/supabase/client");
-        const { data: session } = await supabase.auth.getSession();
-        
-        if (session?.session?.user) {
-          const { error } = await supabase.functions.invoke('sync-bets', {
-            body: { 
-              internalId: session.session.user.id, 
-              userId: session.session.user.id 
-            }
-          });
-          
-          if (error) throw error;
-        } else {
-          throw new Error("Not authenticated");
-        }
-      }
-      
-      toast.success("Bets refreshed");
+    triggerHaptic('impactMedium');
+    await syncBets();
+
+    // Haptic feedback is now handled by the hook's toast messages
+    if (!isSyncing) {
       triggerRefreshHaptic('success');
-    } catch (e) {
-      toast.error("Refresh failed");
-      triggerRefreshHaptic('error');
-      console.error(e);
-    } finally {
-      setSpinning(false);
     }
   };
 
   return (
-    <div
-      className={cn(
-        "fixed bottom-24 right-4 z-50", // sits above BottomNav
-        className
-      )}
-      aria-label="Sync button"
-    >
-      <Button
-        variant="secondary"
-        size="icon"
+    <>
+      <div
         className={cn(
-          "rounded-full shadow-xl hover:shadow-2xl border border-white/10",
-          "bg-icy text-background hover:bg-icy/90"
+          "fixed bottom-24 right-4 z-50", // sits above BottomNav
+          className
         )}
-        onClick={handleClick}
-        aria-label="Sync bets"
+        aria-label="Sync button"
       >
-        <RotateCw className={cn("h-5 w-5", spinning && "animate-spin")} />
-      </Button>
-    </div>
+        <Button
+          variant="secondary"
+          size="icon"
+          className={cn(
+            "rounded-full shadow-xl hover:shadow-2xl border border-white/10",
+            "bg-icy text-background hover:bg-icy/90",
+            isSyncing && "opacity-75"
+          )}
+          onClick={handleClick}
+          disabled={isSyncing}
+          aria-label="Sync bets"
+        >
+          <RotateCw className={cn("h-5 w-5", isSyncing && "animate-spin")} />
+        </Button>
+      </div>
+
+      {sharpSportsModal && (
+        <SharpSportsModal
+          url={sharpSportsModal.url}
+          title={sharpSportsModal.title}
+          message={sharpSportsModal.message}
+          onComplete={handleModalComplete}
+          onClose={handleModalClose}
+        />
+      )}
+    </>
   );
 };
 

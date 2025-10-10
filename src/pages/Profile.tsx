@@ -10,7 +10,6 @@ import HeaderChatIcon from "@/components/common/HeaderChatIcon";
 import InlineSmackTalk from "@/components/InlineSmackTalk";
 import { useInlineSmackTalk } from "@/hooks/useInlineSmackTalk";
 import { useAuth } from "@/contexts/AuthContext";
-import { calculateBettorStats } from "@/utils/bettorStatsCalculator";
 import { BetHistoryPoint } from "@/types/bettor";
 
 const ProfilePage = () => {
@@ -44,16 +43,18 @@ const ProfilePage = () => {
 
     const fetchUserStats = async () => {
       try {
-        // Fetch stats for the selected timeframe
-        const stats = await calculateBettorStats(user.id, undefined, undefined, 50);
+        // Fetch complete bettor summary which includes graph data and timeframe performance
+        const { fetchBettorSummary } = await import('@/services/bettor/bettorService');
+        const summary = await fetchBettorSummary(user.id, timeframe);
 
         setUserStats(prev => ({
           ...prev,
-          winRate: stats.winRate,
-          roi: stats.winRate > 0 ? ((stats.netProfit / stats.totalBets) * 100) : 0,
-          profit: stats.netProfit,
-          totalBets: stats.totalBets,
-          chartData: [],
+          winRate: summary.profile.stats.winRate,
+          roi: summary.profile.stats.roi,
+          profit: summary.profile.stats.unitsGained,
+          totalBets: summary.profile.stats.totalBets,
+          chartData: summary.graphData.data,
+          performanceByTimeframe: summary.profile.stats.performanceByTimeframe || prev.performanceByTimeframe
         }));
       } catch (error) {
         console.error("Error fetching user stats:", error);
