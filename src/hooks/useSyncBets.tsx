@@ -122,14 +122,11 @@ export const useSyncBets = () => {
    * Handle modal completion (2FA or relink completed)
    */
   const handleModalComplete = useCallback(() => {
-    console.log('SharpSports modal completed, closing and retrying sync...');
+    console.log('SharpSports modal completed, closing...');
     setSharpSportsModal(null);
-    
-    // Wait a moment for SharpSports to process, then retry sync
-    setTimeout(() => {
-      syncBets();
-    }, 1500);
-  }, [syncBets]);
+
+    toast.success('Verification completed! You can now sync your bets manually.');
+  }, []);
 
   /**
    * Handle modal close without completion
