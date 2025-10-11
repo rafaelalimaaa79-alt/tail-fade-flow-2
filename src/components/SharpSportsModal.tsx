@@ -97,7 +97,7 @@ export const SharpSportsModal = ({
 
   return (
     <Dialog open={isOpen} onOpenChange={(open) => !open && handleClose(false)}>
-      <DialogContent className="max-w-lg h-[600px] p-0 bg-background">
+      <DialogContent className="max-w-lg h-[600px] p-0 bg-background flex flex-col gap-0">
         <DialogHeader className="p-4 pb-2 border-b border-white/10">
           <DialogTitle className="text-white">{title}</DialogTitle>
           {message && (

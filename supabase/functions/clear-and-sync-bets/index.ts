@@ -26,56 +26,38 @@ function json(body: any, status = 200) {
   });
 }
 
-// Fetch all bettors from the SharpSports organization
-async function fetchAllBettors(): Promise<any[]> {
-  console.log("📋 Fetching all bettors from organization...");
-  
-  // Correct endpoint: /bettors (not /bettorAccounts)
-  const url = "https://api.sharpsports.io/v1/bettors";
-  
-  const res = await fetch(url, {
-    headers: {
-      accept: "application/json",
-      // Use PRIVATE key for listing bettors
-      Authorization: `Token ${SHARP_PRIVATE_KEY}`
-    }
-  });
+// Fetch all users from auth.users table
+async function fetchAllAuthUsers(supabase: any): Promise<any[]> {
+  console.log("📋 Fetching all users from auth.users...");
 
-  if (!res.ok) {
-    const errorText = await res.text();
-    throw new Error(`Failed to fetch bettors: ${res.status} ${errorText}`);
+  const { data: users, error } = await supabase.auth.admin.listUsers();
+
+  if (error) {
+    throw new Error(`Failed to fetch auth users: ${error.message}`);
   }
 
-  const data = await res.json();
-  // API returns array directly or { results: [...] }
-  const bettors = Array.isArray(data) ? data : data.results || [];
-  
-  console.log(`✅ Found ${bettors.length} bettors in organization`);
-  return bettors;
+  console.log(`✅ Found ${users.users?.length || 0} users in auth.users`);
+  return users.users || [];
 }
 
-// Get or create user profile for a bettor (initial creation only)
-async function getOrCreateUserProfile(supabase: any, bettor: any): Promise<string> {
-  // Bettor object has: id (BTTR_*), internalId (your custom ID)
-  const bettorId = bettor.id; // BTTR_* format
-  const internalId = bettor.internalId; // Your custom ID
-  
-  // Use internalId if available, otherwise use bettor ID
-  const userId = internalId || `bettor-${bettorId}`;
-  
-  console.log(`  👤 Processing bettor: ${bettorId} (userId: ${userId})`);
-  
+// Get or create user profile for an auth user
+async function getOrCreateUserProfile(supabase: any, authUser: any): Promise<void> {
+  const userId = authUser.id; // auth.users.id
+  const email = authUser.email;
+
+  console.log(`  👤 Processing user: ${email} (${userId})`);
+
   // Check if profile already exists to preserve existing data
   const { data: existingProfile } = await supabase
     .from('user_profiles')
-    .select('avatar_url, bio, created_at')
+    .select('username, avatar_url, bio, created_at')
     .eq('id', userId)
     .single();
-  
-  // Generate username from internalId or bettor ID
-  const username = internalId || `Bettor${bettorId.substring(5, 11)}`;
-  
-  // Upsert user_profiles (preserving avatar_url and bio if they exist)
+
+  // Generate username from email or existing username
+  const username = existingProfile?.username || email?.split('@')[0] || `User${userId.substring(0, 8)}`;
+
+  // Upsert user_profiles (preserving existing data)
   const { error: profileError } = await supabase
     .from('user_profiles')
     .upsert({
@@ -89,12 +71,10 @@ async function getOrCreateUserProfile(supabase: any, bettor: any): Promise<strin
       onConflict: 'id',
       ignoreDuplicates: false
     });
-  
+
   if (profileError) {
-    console.error(`  ⚠️  Error creating profile for ${bettorId}:`, profileError);
+    console.error(`  ⚠️  Error creating profile for ${userId}:`, profileError);
   }
-  
-  return userId;
 }
 
 // Calculate stats from bet rows (similar to calculateStatsFromArray)
@@ -162,15 +142,10 @@ async function updateUserProfileStats(supabase: any, userId: string): Promise<vo
       return;
     }
 
-    if (!bets || bets.length === 0) {
-      console.log(`  📊 No completed bets to calculate stats from`);
-      return;
-    }
+    // Calculate stats (will return zeros if no bets)
+    const stats = calculateBettorStats(bets || []);
 
-    // Calculate stats
-    const stats = calculateBettorStats(bets);
-
-    // Update user profile with stats
+    // Update user profile with stats (even if zero)
     const { error: updateError } = await supabase
       .from('user_profiles')
       .update({
@@ -192,12 +167,12 @@ async function updateUserProfileStats(supabase: any, userId: string): Promise<vo
   }
 }
 
-// Trigger refresh for a bettor
-async function triggerRefresh({ bettorId }: { 
-  bettorId: string;
+// Trigger refresh for a user (using their internalId = auth.users.id)
+async function triggerRefresh({ internalId }: {
+  internalId: string;
 }) {
-  // Use bettor refresh endpoint (refreshes all bettorAccounts for this bettor)
-  const endpoint = `https://api.sharpsports.io/v1/bettors/${bettorId}/refresh`;
+  // SharpSports API accepts internalId in place of bettor ID
+  const endpoint = `https://api.sharpsports.io/v1/bettors/${internalId}/refresh`;
 
   const res = await fetch(endpoint, {
     method: "POST",
@@ -212,7 +187,7 @@ async function triggerRefresh({ bettorId }: {
 
   const text = await res.text();
   const detail = `status=${res.status} endpoint=${endpoint} body=${text}`;
-  
+
   if (res.status === 401) {
     throw new Error(`refresh_unauthorized: Check API key. ${detail}`);
   }
@@ -220,26 +195,24 @@ async function triggerRefresh({ bettorId }: {
     throw new Error(`refresh_forbidden: Permission denied. ${detail}`);
   }
   if (res.status === 404) {
-    console.warn(`  ⚠️  Bettor ${bettorId} not found, skipping refresh`);
+    console.warn(`  ⚠️  User ${internalId} not found in SharpSports, skipping refresh`);
     return; // Don't fail the entire process
   }
   if (res.status === 429) {
-    console.warn(`  ⚠️  Rate limited on ${bettorId}, waiting...`);
+    console.warn(`  ⚠️  Rate limited on ${internalId}, waiting...`);
     await sleep(5000);
     return;
   }
-  
-  console.warn(`  ⚠️  Refresh failed for ${bettorId}: ${detail}`);
+
+  console.warn(`  ⚠️  Refresh failed for ${internalId}: ${detail}`);
 }
 
-// Wait for data freshness after refresh (removed - not reliable indicator)
-async function waitForFreshness({ 
-  bettorId,
+// Wait for data freshness after refresh
+async function waitForFreshness({
   timeoutMs = 10_000
-}: { 
-  bettorId: string;
+}: {
   timeoutMs?: number;
-}) {
+} = {}) {
   // Simple wait after refresh to allow data to propagate
   console.log(`  ⏳ Waiting for data freshness...`);
   await sleep(timeoutMs);
@@ -247,7 +220,7 @@ async function waitForFreshness({
 
 // Fetch bet slips with pagination support
 async function fetchAllBetSlips(
-  bettorId: string,  // BTTR_* format
+  internalId: string,  // auth.users.id (SharpSports accepts this as internalId)
   status: "pending" | "completed" = "completed",
   maxPages: number = 10
 ): Promise<any[]> {
@@ -264,9 +237,9 @@ async function fetchAllBetSlips(
       page: String(page)
     });
 
-    // Correct endpoint uses bettor ID (BTTR_*)
-    const url = `https://api.sharpsports.io/v1/bettors/${bettorId}/betSlips?${qs.toString()}`;
-    
+    // SharpSports API accepts internalId in place of bettor ID
+    const url = `https://api.sharpsports.io/v1/bettors/${internalId}/betSlips?${qs.toString()}`;
+
     try {
       const res = await fetch(url, {
         headers: {
@@ -278,7 +251,7 @@ async function fetchAllBetSlips(
 
       if (!res.ok) {
         if (res.status === 404) {
-          console.warn(`  ℹ️  No ${status} bet slips found for bettor ${bettorId}`);
+          console.warn(`  ℹ️  No ${status} bet slips found for user ${internalId}`);
           break;
         }
         const errorText = await res.text();
@@ -288,13 +261,13 @@ async function fetchAllBetSlips(
 
       const data = await res.json();
       const slips = Array.isArray(data) ? data : data.results || [];
-      
+
       if (slips.length === 0) break;
-      
+
       allSlips.push(...slips);
-      
+
       if (slips.length < limit) break;
-      
+
       page++;
       await sleep(300); // Rate limiting
     } catch (error) {
@@ -418,30 +391,30 @@ function transformSlipToRows(slip: any, userId: string, isPending = true) {
   return slipRows;
 }
 
-// Sync a single bettor's data
-async function syncBettorData(supabase: any, bettor: any): Promise<any> {
-  const bettorId = bettor.id; // BTTR_* format
-  const bettorName = bettor.internalId || bettorId;
-  
-  console.log(`\n🔄 Syncing bettor: ${bettorName} (${bettorId})`);
-  
+// Sync a single user's data
+async function syncUserData(supabase: any, authUser: any): Promise<any> {
+  const userId = authUser.id; // auth.users.id (also used as internalId in SharpSports)
+  const userEmail = authUser.email || userId;
+
+  console.log(`\n🔄 Syncing user: ${userEmail} (${userId})`);
+
   try {
     // Get or create user profile
-    const userId = await getOrCreateUserProfile(supabase, bettor);
-    
-    // Trigger refresh for this bettor
-    await triggerRefresh({ bettorId: bettorId });
-    await waitForFreshness({ bettorId: bettorId });
-    
-    // Fetch bet slips using bettor ID
+    await getOrCreateUserProfile(supabase, authUser);
+
+    // Trigger refresh for this user (using their auth.users.id as internalId)
+    await triggerRefresh({ internalId: userId });
+    await waitForFreshness();
+
+    // Fetch bet slips using user ID as internalId
     console.log(`  📥 Fetching bet slips...`);
     const [pendingSlips, completedSlips] = await Promise.all([
-      fetchAllBetSlips(bettorId, "pending", 5),
-      fetchAllBetSlips(bettorId, "completed", 10)
+      fetchAllBetSlips(userId, "pending", 5),
+      fetchAllBetSlips(userId, "completed", 10)
     ]);
-    
+
     console.log(`  📊 Found ${pendingSlips.length} pending + ${completedSlips.length} completed slips`);
-    
+
     // Transform to rows
     const pendingRows = [];
     for (const slip of pendingSlips) {
@@ -449,32 +422,32 @@ async function syncBettorData(supabase: any, bettor: any): Promise<any> {
         pendingRows.push(...transformSlipToRows(slip, userId, true));
       }
     }
-    
+
     const completedRows = [];
     for (const slip of completedSlips) {
       if (slip.status !== "pending") {
         completedRows.push(...transformSlipToRows(slip, userId, false));
       }
     }
-    
+
     const allRows = [...pendingRows, ...completedRows];
-    
+
     if (allRows.length === 0) {
-      console.log(`  ⚠️  No bets to insert for ${bettorName}`);
+      console.log(`  ⚠️  No bets to insert for ${userEmail}`);
       // Still update profile stats (will set to 0)
       await updateUserProfileStats(supabase, userId);
       return {
-        bettorId,
-        bettorName,
+        userId,
+        userEmail,
         success: true,
         inserted: 0
       };
     }
-    
+
     // Insert in batches
     const batchSize = 1000;
     let totalInserted = 0;
-    
+
     for (let i = 0; i < allRows.length; i += batchSize) {
       const batch = allRows.slice(i, i + batchSize);
       const { error: insertError } = await supabase
@@ -482,38 +455,38 @@ async function syncBettorData(supabase: any, bettor: any): Promise<any> {
         .insert(batch);
 
       if (insertError) {
-        console.error(`  ❌ Insert error for ${bettorName}:`, insertError.message);
+        console.error(`  ❌ Insert error for ${userEmail}:`, insertError.message);
         return {
-          bettorId,
-          bettorName,
+          userId,
+          userEmail,
           success: false,
           error: insertError.message,
           inserted: totalInserted
         };
       }
-      
+
       totalInserted += batch.length;
     }
-    
-    console.log(`  ✅ Inserted ${totalInserted} bets for ${bettorName}`);
-    
+
+    console.log(`  ✅ Inserted ${totalInserted} bets for ${userEmail}`);
+
     // Calculate and update user profile stats based on inserted bets
     await updateUserProfileStats(supabase, userId);
-    
+
     return {
-      bettorId,
-      bettorName,
+      userId,
+      userEmail,
       success: true,
       inserted: totalInserted,
       pending: pendingRows.length,
       completed: completedRows.length
     };
-    
+
   } catch (error: any) {
-    console.error(`  ❌ Error syncing ${bettorName}:`, error.message);
+    console.error(`  ❌ Error syncing ${userEmail}:`, error.message);
     return {
-      bettorId,
-      bettorName,
+      userId,
+      userEmail,
       success: false,
       error: error.message
     };
@@ -537,8 +510,8 @@ serve(async (req) => {
     }
 
     console.log("🔐 Admin authenticated");
-    console.log("�️  Starting clear and sync for ALL bettors...");
-    
+    console.log("🚀 Starting clear and sync for ALL users...");
+
     // Initialize Supabase client
     const supabase = createClient(SUPABASE_URL!, SERVICE_ROLE_KEY!, {
       auth: { persistSession: false }
@@ -553,38 +526,38 @@ serve(async (req) => {
 
     if (deleteError) {
       console.error("❌ Delete error:", deleteError);
-      return json({ 
-        error: "delete_failed", 
-        detail: deleteError.message 
+      return json({
+        error: "delete_failed",
+        detail: deleteError.message
       }, 500);
     }
 
     console.log(`✅ Deleted ${deletedCount ?? 0} existing bets`);
 
-    // STEP 2: FETCH ALL BETTORS
-    const bettors = await fetchAllBettors();
-    
-    if (bettors.length === 0) {
+    // STEP 2: FETCH ALL AUTH USERS
+    const authUsers = await fetchAllAuthUsers(supabase);
+
+    if (authUsers.length === 0) {
       return json({
-        message: "No bettors found in organization",
+        message: "No users found in auth.users",
         deleted: deletedCount ?? 0,
-        bettors: []
+        users: []
       });
     }
 
-    // STEP 3: SYNC EACH BETTOR
-    console.log(`\n� Syncing ${bettors.length} bettors...`);
-    
+    // STEP 3: SYNC EACH USER
+    console.log(`\n🔄 Syncing ${authUsers.length} users...`);
+
     const results = [];
-    for (let i = 0; i < bettors.length; i++) {
-      const bettor = bettors[i];
-      console.log(`\n[${i + 1}/${bettors.length}]`);
-      
-      const result = await syncBettorData(supabase, bettor);
+    for (let i = 0; i < authUsers.length; i++) {
+      const user = authUsers[i];
+      console.log(`\n[${i + 1}/${authUsers.length}]`);
+
+      const result = await syncUserData(supabase, user);
       results.push(result);
-      
-      // Rate limiting between bettors
-      if (i < bettors.length - 1) {
+
+      // Rate limiting between users
+      if (i < authUsers.length - 1) {
         await sleep(1000);
       }
     }
@@ -597,8 +570,8 @@ serve(async (req) => {
     console.log("\n" + "=".repeat(50));
     console.log("🎉 SYNC COMPLETE");
     console.log("=".repeat(50));
-    console.log(`✅ Successful: ${successCount}/${results.length} bettors`);
-    console.log(`❌ Failed: ${failedCount}/${results.length} bettors`);
+    console.log(`✅ Successful: ${successCount}/${results.length} users`);
+    console.log(`❌ Failed: ${failedCount}/${results.length} users`);
     console.log(`📊 Total bets inserted: ${totalInserted}`);
     console.log(`🗑️  Bets deleted: ${deletedCount ?? 0}`);
     console.log("=".repeat(50));
@@ -606,9 +579,9 @@ serve(async (req) => {
     return json({
       message: "Clear and sync completed",
       deleted: deletedCount ?? 0,
-      totalBettors: bettors.length,
-      successfulBettors: successCount,
-      failedBettors: failedCount,
+      totalUsers: authUsers.length,
+      successfulUsers: successCount,
+      failedUsers: failedCount,
       totalBetsInserted: totalInserted,
       results: results
     });

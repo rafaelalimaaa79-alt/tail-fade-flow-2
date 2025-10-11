@@ -1,11 +1,11 @@
-import { useState, useCallback } from 'react';
+import { useState, useCallback, useEffect } from 'react';
 import { useAuth } from '@/contexts/AuthContext';
 import { supabase } from '@/integrations/supabase/client';
 import { toast } from 'sonner';
-import { 
-  handleSyncResponse, 
-  SyncResponse, 
-  formatSyncSuccessMessage 
+import {
+  handleSyncResponse,
+  SyncResponse,
+  formatSyncSuccessMessage
 } from '@/utils/syncResponseHandler';
 
 interface SharpSportsModalState {
@@ -143,12 +143,29 @@ export const useSyncBets = () => {
   /**
    * Get last sync time from localStorage on mount
    */
-  useState(() => {
+  useEffect(() => {
     const stored = localStorage.getItem('lastSyncTime');
     if (stored) {
       setLastSyncTime(new Date(stored));
     }
-  });
+  }, []);
+
+  /**
+   * Listen for auth-sync-trigger event from AuthContext
+   * This handles auto-sync for biometric and other non-password logins
+   */
+  useEffect(() => {
+    const handleAuthSyncTrigger = (event: CustomEvent) => {
+      console.log('Auth sync trigger received:', event.detail);
+      syncBets();
+    };
+
+    window.addEventListener('auth-sync-trigger', handleAuthSyncTrigger as EventListener);
+
+    return () => {
+      window.removeEventListener('auth-sync-trigger', handleAuthSyncTrigger as EventListener);
+    };
+  }, [syncBets]);
 
   return {
     syncBets,

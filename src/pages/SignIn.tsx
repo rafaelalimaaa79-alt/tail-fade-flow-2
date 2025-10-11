@@ -6,24 +6,30 @@ import { useBiometricAuth } from "@/hooks/useBiometricAuth";
 import { useSignIn } from "@/hooks/useSignIn";
 import SignInForm from "@/components/auth/SignInForm";
 import BiometricPrompt from "@/components/auth/BiometricPrompt";
+import { SharpSportsModal } from "@/components/SharpSportsModal";
 
 const SignIn = () => {
   const location = useLocation();
   const navigate = useNavigate();
-  const { 
-    email, 
-    setEmail, 
-    password, 
-    setPassword, 
-    loading, 
-    from, 
+  const {
+    email,
+    setEmail,
+    password,
+    setPassword,
+    loading,
+    from,
     showBiometricPrompt,
-    handleSignIn, 
-    handleCreateAccount, 
+    handleSignIn,
+    handleCreateAccount,
     handleForgotPassword,
-    closeBiometricPrompt
+    closeBiometricPrompt,
+    // Sync-related state for 2FA modal
+    isSyncing,
+    sharpSportsModal,
+    handleModalComplete,
+    handleModalClose
   } = useSignIn();
-  
+
   const { attemptBiometricAuth } = useBiometricAuth();
   
   // Only redirect if user is logged in AND we have a specific redirect location that's not root
@@ -84,18 +90,36 @@ const SignIn = () => {
           setEmail={setEmail}
           password={password}
           setPassword={setPassword}
-          loading={loading}
+          loading={loading || isSyncing}
           onSubmit={handleSignIn}
           onCreateAccount={handleCreateAccount}
           onForgotPassword={handleForgotPassword}
         />
+
+        {/* Show syncing indicator */}
+        {isSyncing && !sharpSportsModal && (
+          <div className="mt-4 text-center">
+            <p className="text-sm text-muted-foreground">Syncing your bets...</p>
+          </div>
+        )}
       </div>
-      
+
       <BiometricPrompt
         open={showBiometricPrompt}
         redirectPath={from}
         onClose={closeBiometricPrompt}
       />
+
+      {/* SharpSports Modal for 2FA/Re-linking during login */}
+      {sharpSportsModal && (
+        <SharpSportsModal
+          url={sharpSportsModal.url}
+          title={sharpSportsModal.title}
+          message={sharpSportsModal.message}
+          onComplete={handleModalComplete}
+          onClose={handleModalClose}
+        />
+      )}
     </div>
   );
 };

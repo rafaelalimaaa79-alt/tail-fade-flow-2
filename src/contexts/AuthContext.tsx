@@ -47,6 +47,25 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
           user: session.user,
           type: "signIn",
         });
+
+        // Trigger auto-sync on sign in (for biometric/token-based logins)
+        // Note: Regular password login already triggers sync in useSignIn hook
+        // This ensures sync happens for all login methods
+        const lastSyncTime = localStorage.getItem('lastSyncTime');
+        const now = Date.now();
+        const fiveMinutes = 5 * 60 * 1000;
+
+        // Only auto-sync if last sync was more than 5 minutes ago
+        if (!lastSyncTime || (now - new Date(lastSyncTime).getTime() > fiveMinutes)) {
+          console.log("Triggering auto-sync from AuthContext for user:", session.user.id);
+
+          // Dispatch custom event that components can listen to
+          window.dispatchEvent(new CustomEvent('auth-sync-trigger', {
+            detail: { userId: session.user.id }
+          }));
+        } else {
+          console.log("Skipping auto-sync, last sync was recent");
+        }
       }
 
       if (event === "SIGNED_OUT") {
