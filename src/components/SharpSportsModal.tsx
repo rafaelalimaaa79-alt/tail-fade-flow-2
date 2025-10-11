@@ -1,6 +1,7 @@
 import { Dialog, DialogContent, DialogHeader, DialogTitle } from '@/components/ui/dialog';
-import { useEffect, useState } from 'react';
+import { useEffect, useState, useRef } from 'react';
 import { Loader2 } from 'lucide-react';
+import { Button } from '@/components/ui/button';
 
 interface SharpSportsModalProps {
   url: string | null;
@@ -14,20 +15,25 @@ interface SharpSportsModalProps {
  * Modal component for displaying SharpSports UI (2FA, account linking)
  * Handles iframe communication and completion detection
  */
-export const SharpSportsModal = ({ 
-  url, 
-  title, 
-  message, 
+export const SharpSportsModal = ({
+  url,
+  title,
+  message,
   onComplete,
-  onClose 
+  onClose
 }: SharpSportsModalProps) => {
   const [isOpen, setIsOpen] = useState(!!url);
   const [isLoading, setIsLoading] = useState(true);
+  const [showManualClose, setShowManualClose] = useState(false);
+  const iframeRef = useRef<HTMLIFrameElement>(null);
+  const loadCountRef = useRef(0);
 
   useEffect(() => {
     setIsOpen(!!url);
     if (url) {
       setIsLoading(true);
+      setShowManualClose(false);
+      loadCountRef.current = 0; // Reset load counter for new URL
     }
   }, [url]);
 
@@ -42,10 +48,10 @@ export const SharpSportsModal = ({
       }
 
       console.log('SharpSports message received:', event.data);
-      
+
       // Check for completion signals
       if (
-        event.data === 'complete' || 
+        event.data === 'complete' ||
         event.data === 'done' ||
         event.data === 'success' ||
         (typeof event.data === 'object' && event.data?.type === 'complete')
@@ -64,15 +70,23 @@ export const SharpSportsModal = ({
       }
     };
 
+    // Show manual close button after 15 seconds as fallback
+    // (in case the load event doesn't fire for some reason)
+    const manualCloseTimer = setTimeout(() => {
+      console.log('Showing manual close button as fallback');
+      setShowManualClose(true);
+    }, 15000);
+
     // Check hash immediately and on change
     checkHash();
     window.addEventListener('message', handleMessage);
     window.addEventListener('hashchange', checkHash);
-    
+
     // Cleanup
     return () => {
       window.removeEventListener('message', handleMessage);
       window.removeEventListener('hashchange', checkHash);
+      clearTimeout(manualCloseTimer);
     };
   }, [isOpen]);
 
@@ -89,8 +103,25 @@ export const SharpSportsModal = ({
   };
 
   const handleIframeLoad = () => {
-    console.log('SharpSports iframe loaded');
+    loadCountRef.current += 1;
+    const loadCount = loadCountRef.current;
+
+    console.log(`SharpSports iframe loaded (count: ${loadCount})`);
     setIsLoading(false);
+
+    if (loadCount === 1) {
+      console.log('Initial OTP page loaded');
+      return;
+    }
+
+    if (loadCount >= 2) {
+      console.log('Iframe navigated to new page - likely /done (2FA completed)');
+      // Wait a moment to ensure the page is fully loaded, then close
+      setTimeout(() => {
+        console.log('Auto-closing modal after 2FA completion');
+        handleClose(true);
+      }, 500);
+    }
   };
 
   if (!url) return null;
@@ -116,6 +147,7 @@ export const SharpSportsModal = ({
           )}
           
           <iframe
+            ref={iframeRef}
             src={url}
             className="w-full h-full border-0"
             title={title}
@@ -124,11 +156,25 @@ export const SharpSportsModal = ({
             allow="clipboard-write"
           />
         </div>
-        
-        <div className="p-4 border-t border-white/10 text-center">
-          <p className="text-xs text-muted-foreground">
-            Complete the process above, then this window will close automatically
-          </p>
+
+        <div className="p-4 border-t border-white/10">
+          {showManualClose ? (
+            <div className="flex flex-col gap-2">
+              <p className="text-xs text-muted-foreground text-center">
+                Completed the verification?
+              </p>
+              <Button
+                onClick={() => handleClose(true)}
+                className="w-full bg-primary hover:bg-primary/90"
+              >
+                I'm Done - Continue
+              </Button>
+            </div>
+          ) : (
+            <p className="text-xs text-muted-foreground text-center">
+              Complete the process above, then this window will close automatically
+            </p>
+          )}
         </div>
       </DialogContent>
     </Dialog>

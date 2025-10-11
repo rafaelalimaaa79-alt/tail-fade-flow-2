@@ -242,6 +242,256 @@ async function updateUserProfileStats(supabase, userId) {
     console.error(`Error in updateUserProfileStats:`, error.message);
   }
 }
+
+// Calculate fade confidence score and statline
+async function calculateFadeConfidence(supabase, userId) {
+  try {
+    console.log(`Calculating fade confidence for user ${userId}...`);
+
+    // Fetch all completed bets with detailed info for fade confidence
+    const { data: allBets, error: fetchError } = await supabase
+      .from('bets')
+      .select('result, units_won_lost, units_risked, sport, bet_type, home_team, away_team, position, timestamp')
+      .eq('user_id', userId)
+      .eq('is_processed', true)
+      .order('timestamp', { ascending: true });
+
+    if (fetchError) {
+      console.error(`Error fetching bets for fade confidence:`, fetchError.message);
+      return;
+    }
+
+    if (!allBets || allBets.length === 0) {
+      console.log(`No bets to calculate fade confidence from`);
+      // Set default values for users with no bets
+      await supabase
+        .from('confidence_scores')
+        .upsert({
+          user_id: userId,
+          score: 0,
+          worst_bet_id: null,
+          statline: "No betting history yet",
+          last_calculated: new Date().toISOString()
+        }, { onConflict: 'user_id' });
+      return;
+    }
+
+    // Filter only graded bets (exclude pending/cancelled)
+    const gradedBets = allBets.filter(bet =>
+      bet.result === "Win" || bet.result === "Loss" || bet.result === "Push"
+    );
+
+    if (gradedBets.length === 0) {
+      console.log(`No graded bets for fade confidence`);
+      await supabase
+        .from('confidence_scores')
+        .upsert({
+          user_id: userId,
+          score: 0,
+          worst_bet_id: null,
+          statline: "No completed bets yet",
+          last_calculated: new Date().toISOString()
+        }, { onConflict: 'user_id' });
+      return;
+    }
+
+    // 1. RECENT FORM (last 10 bets) - 40% weight
+    const recentBets = gradedBets.slice(-10);
+    const recentWins = recentBets.filter(b => b.result === "Win").length;
+    const recentTotal = recentBets.filter(b => b.result !== "Push").length;
+    const recentFormScore = recentTotal > 0 ? (recentWins / recentTotal) * 100 : 0;
+
+    // 2. SPORT WIN RATE (lifetime) - 30% weight
+    // Calculate win rate for each sport
+    const sportStats = {};
+    gradedBets.forEach(bet => {
+      const sport = bet.sport || "Unknown";
+      if (!sportStats[sport]) {
+        sportStats[sport] = { wins: 0, losses: 0, total: 0 };
+      }
+      if (bet.result === "Win") sportStats[sport].wins++;
+      if (bet.result === "Loss") sportStats[sport].losses++;
+      if (bet.result !== "Push") sportStats[sport].total++;
+    });
+
+    // Find sport with most bets (primary sport)
+    let primarySport = null;
+    let maxBets = 0;
+    Object.entries(sportStats).forEach(([sport, stats]) => {
+      if (stats.total > maxBets) {
+        maxBets = stats.total;
+        primarySport = sport;
+      }
+    });
+
+    const sportLifetimeScore = primarySport && sportStats[primarySport].total > 0
+      ? (sportStats[primarySport].wins / sportStats[primarySport].total) * 100
+      : 0;
+
+    // 3. MARKET TYPE RECORD - 20% weight
+    // Calculate win rate by bet type (spread, total, moneyline)
+    const marketStats = {};
+    gradedBets.forEach(bet => {
+      const marketType = bet.bet_type || "Unknown";
+      if (!marketStats[marketType]) {
+        marketStats[marketType] = { wins: 0, losses: 0, total: 0 };
+      }
+      if (bet.result === "Win") marketStats[marketType].wins++;
+      if (bet.result === "Loss") marketStats[marketType].losses++;
+      if (bet.result !== "Push") marketStats[marketType].total++;
+    });
+
+    // Calculate average market type win rate
+    const marketWinRates = Object.values(marketStats)
+      .filter(stats => stats.total > 0)
+      .map(stats => (stats.wins / stats.total) * 100);
+    const marketTypeScore = marketWinRates.length > 0
+      ? marketWinRates.reduce((sum, rate) => sum + rate, 0) / marketWinRates.length
+      : 0;
+
+    // 4. BIG BET RECORD (>2 units) - 10% weight
+    const bigBets = gradedBets.filter(bet =>
+      bet.units_risked && parseFloat(bet.units_risked) > 2
+    );
+    const bigBetWins = bigBets.filter(b => b.result === "Win").length;
+    const bigBetTotal = bigBets.filter(b => b.result !== "Push").length;
+    const bigBetScore = bigBetTotal > 0 ? (bigBetWins / bigBetTotal) * 100 : 0;
+
+    // CALCULATE FADE CONFIDENCE (clamped between 0-100)
+    const fadeConfidence = Math.max(0, Math.min(100, 100 - (
+      (0.4 * recentFormScore) +
+      (0.3 * sportLifetimeScore) +
+      (0.2 * marketTypeScore) +
+      (0.1 * bigBetScore)
+    )));
+
+    // FIND WORST PERFORMING CATEGORY FOR STATLINE
+    const worstCategory = findWorstCategory(gradedBets, sportStats, marketStats);
+
+    console.log(`Fade confidence: ${fadeConfidence.toFixed(1)}, Statline: ${worstCategory.statline}`);
+
+    // Store in database
+    const { error: upsertError } = await supabase
+      .from('confidence_scores')
+      .upsert({
+        user_id: userId,
+        score: parseFloat(fadeConfidence.toFixed(1)),
+        worst_bet_id: worstCategory.id,
+        statline: worstCategory.statline,
+        last_calculated: new Date().toISOString()
+      }, { onConflict: 'user_id' });
+
+    if (upsertError) {
+      console.error(`Error upserting confidence score:`, upsertError.message);
+    } else {
+      console.log(`✅ Fade confidence calculated and stored`);
+    }
+
+  } catch (error) {
+    console.error(`Error in calculateFadeConfidence:`, error.message);
+  }
+}
+
+// Helper: Find worst performing category (sport, market type, or team)
+function findWorstCategory(gradedBets, sportStats, marketStats) {
+  const categories = [];
+
+  // 1. Check sports
+  Object.entries(sportStats).forEach(([sport, stats]) => {
+    if (stats.total >= 5) { // Only consider if at least 5 bets
+      const winRate = (stats.wins / stats.total) * 100;
+      categories.push({
+        type: "sport",
+        id: sport,
+        wins: stats.wins,
+        losses: stats.losses,
+        total: stats.total,
+        winRate: winRate,
+        statline: `He's ${stats.wins}-${stats.losses} betting on ${sport}`
+      });
+    }
+  });
+
+  // 2. Check market types
+  Object.entries(marketStats).forEach(([marketType, stats]) => {
+    if (stats.total >= 5) { // Only consider if at least 5 bets
+      const winRate = (stats.wins / stats.total) * 100;
+      categories.push({
+        type: "market",
+        id: marketType,
+        wins: stats.wins,
+        losses: stats.losses,
+        total: stats.total,
+        winRate: winRate,
+        statline: `He's ${stats.wins}-${stats.losses} on ${marketType} bets`
+      });
+    }
+  });
+
+  // 3. Check teams (both home and away)
+  const teamStats = {};
+  gradedBets.forEach(bet => {
+    // Determine which team the user bet on based on position field
+    let team = null;
+
+    if (bet.position) {
+      const pos = bet.position.toLowerCase();
+
+      // Check if position contains "home" or "away"
+      if (pos.includes("home") && bet.home_team) {
+        team = bet.home_team;
+      } else if (pos.includes("away") && bet.away_team) {
+        team = bet.away_team;
+      } else {
+        // For moneylines, position might be the team name directly
+        // Check if position matches either team name
+        if (bet.home_team && pos.includes(bet.home_team.toLowerCase())) {
+          team = bet.home_team;
+        } else if (bet.away_team && pos.includes(bet.away_team.toLowerCase())) {
+          team = bet.away_team;
+        }
+      }
+    }
+
+    // Only track if we successfully identified a team
+    if (team) {
+      if (!teamStats[team]) {
+        teamStats[team] = { wins: 0, losses: 0, total: 0 };
+      }
+      if (bet.result === "Win") teamStats[team].wins++;
+      if (bet.result === "Loss") teamStats[team].losses++;
+      if (bet.result !== "Push") teamStats[team].total++;
+    }
+  });
+
+  Object.entries(teamStats).forEach(([team, stats]) => {
+    if (stats.total >= 3) { // Only consider if at least 3 bets on this team
+      const winRate = (stats.wins / stats.total) * 100;
+      categories.push({
+        type: "team",
+        id: team,
+        wins: stats.wins,
+        losses: stats.losses,
+        total: stats.total,
+        winRate: winRate,
+        statline: `He's ${stats.wins}-${stats.losses} betting on the ${team}`
+      });
+    }
+  });
+
+  // Find the category with lowest win rate
+  if (categories.length === 0) {
+    return {
+      type: "none",
+      id: null,
+      statline: "Not enough data for analysis"
+    };
+  }
+
+  categories.sort((a, b) => a.winRate - b.winRate);
+  return categories[0];
+}
+
 serve(async (req)=>{
   if (req.method === "OPTIONS") return new Response(null, {
     headers: cors
@@ -426,7 +676,7 @@ serve(async (req)=>{
           sport: b.event?.league ?? null,
           position: b.position ?? null,
           line: b.line ?? null,
-          bet_type: b.proposition ?? "straight",
+          bet_type: b.proposition ?? "unknown",
           odds: String(b.oddsAmerican ?? b.oddsDecimal ?? ""),
           units_risked: slip.atRisk ?? null,
           units_to_win: slip.toWin ?? null,
@@ -504,6 +754,10 @@ serve(async (req)=>{
     // 18) UPDATE USER PROFILE STATS
     console.log("Updating user profile stats...");
     await updateUserProfileStats(supabase, userId);
+
+    // 19) CALCULATE FADE CONFIDENCE SCORE AND STATLINE
+    console.log("Calculating fade confidence...");
+    await calculateFadeConfidence(supabase, userId);
 
     return json({
       status: "success",
