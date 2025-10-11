@@ -130,7 +130,6 @@ export const useSyncBets = () => {
   const handleModalComplete = useCallback(() => {
     console.log('SharpSports modal completed, closing...');
     setSharpSportsModal(null);
-    setIsSyncing(false); // Release the sync lock
 
     toast.success('Verification completed! You can now sync your bets manually.');
   }, []);
