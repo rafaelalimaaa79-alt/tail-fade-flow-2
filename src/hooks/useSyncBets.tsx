@@ -61,20 +61,21 @@ export const useSyncBets = () => {
         onSuccess: (response) => {
           const message = formatSyncSuccessMessage(response);
           toast.success(message);
-          
+
           // Update last sync time
           const now = new Date();
           setLastSyncTime(now);
           localStorage.setItem('lastSyncTime', now.toISOString());
-          
+
           // Dispatch event for other components to listen
-          window.dispatchEvent(new CustomEvent('bets-synced', { 
-            detail: response 
+          window.dispatchEvent(new CustomEvent('bets-synced', {
+            detail: response
           }));
-          
+
           console.log('Sync completed successfully:', response);
+          setIsSyncing(false); // Only set false on success
         },
-        
+
         onOtpRequired: (otpUrl, cid, accounts) => {
           console.log('OTP required for accounts:', accounts);
           setSharpSportsModal({
@@ -82,8 +83,10 @@ export const useSyncBets = () => {
             title: '2FA Verification Required',
             message: 'Please enter the verification code sent to your sportsbook account.'
           });
+          // Keep isSyncing = true while modal is open
+          // Will be set to false when modal closes
         },
-        
+
         onRelinkRequired: (linkUrl, cid, accounts) => {
           console.log('Relink required for accounts:', accounts);
           setSharpSportsModal({
@@ -91,30 +94,33 @@ export const useSyncBets = () => {
             title: 'Re-link Your Account',
             message: 'Your account verification has expired. Please re-link your sportsbook account.'
           });
+          // Keep isSyncing = true while modal is open
+          // Will be set to false when modal closes
         },
-        
+
         onRateLimited: (retryAfter, message) => {
           console.log('Rate limited, retry after:', retryAfter);
           toast.error(message);
-          
+          setIsSyncing(false); // Set false on rate limit
+
           // Auto-retry after cooldown
           setTimeout(() => {
             console.log('Auto-retrying after rate limit...');
             syncBets();
           }, retryAfter * 1000);
         },
-        
+
         onError: (message, status) => {
           console.error('Sync error:', status, message);
           toast.error(message);
+          setIsSyncing(false); // Set false on error
         }
       });
-      
+
     } catch (error) {
       console.error('Unexpected sync error:', error);
       toast.error('Sync failed. Please try again.');
-    } finally {
-      setIsSyncing(false);
+      setIsSyncing(false); // Set false on exception
     }
   }, [user, isSyncing]);
 
@@ -122,14 +128,12 @@ export const useSyncBets = () => {
    * Handle modal completion (2FA or relink completed)
    */
   const handleModalComplete = useCallback(() => {
-    console.log('SharpSports modal completed, closing and retrying sync...');
+    console.log('SharpSports modal completed, closing...');
     setSharpSportsModal(null);
-    
-    // Wait a moment for SharpSports to process, then retry sync
-    setTimeout(() => {
-      syncBets();
-    }, 1500);
-  }, [syncBets]);
+    setIsSyncing(false); // Release the sync lock
+
+    toast.success('Verification completed! You can now sync your bets manually.');
+  }, []);
 
   /**
    * Handle modal close without completion
@@ -137,6 +141,7 @@ export const useSyncBets = () => {
   const handleModalClose = useCallback(() => {
     console.log('SharpSports modal closed without completion');
     setSharpSportsModal(null);
+    setIsSyncing(false); // Release the sync lock
     toast.info('Sync cancelled. You can retry later from the sync button.');
   }, []);
 
