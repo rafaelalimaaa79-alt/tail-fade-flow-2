@@ -1,134 +1,525 @@
 import "https://deno.land/x/xhr@0.1.0/mod.ts";
 import { serve } from "https://deno.land/std@0.168.0/http/server.ts";
 import { createClient } from "https://esm.sh/@supabase/supabase-js@2";
-
 const cors = {
   "Access-Control-Allow-Origin": "*",
-  "Access-Control-Allow-Headers": "authorization, x-client-info, apikey, content-type",
+  "Access-Control-Allow-Headers": "authorization, x-client-info, apikey, content-type"
 };
+const SHARP_KEY = Deno.env.get("SHARP_SPORT_API_KEY");
+const SHARP_PRIVATE_KEY = Deno.env.get("SHARP_SPORT_PRIVATE_API_KEY");
+const SUPABASE_URL = Deno.env.get("SUPABASE_URL");
+const SERVICE_ROLE_KEY = Deno.env.get("SUPABASE_SERVICE_ROLE_KEY");
+// --- helpers ---
+const sleep = (ms)=>new Promise((r)=>setTimeout(r, ms));
+function json(body, status = 200) {
+  return new Response(JSON.stringify(body), {
+    status,
+    headers: {
+      ...cors,
+      "Content-Type": "application/json"
+    }
+  });
+}
+// refresh scope: "bettor" (default) or "account"
+// Returns the parsed refresh response for status checking
+async function triggerRefresh({ internalId, bettorAccountId }) {
+  const endpoint = bettorAccountId
+    ? `https://api.sharpsports.io/v1/bettorAccounts/${bettorAccountId}/refresh`
+    : `https://api.sharpsports.io/v1/bettors/${internalId}/refresh`;
 
-const SHARP_KEY = Deno.env.get("SHARP_SPORT_API_KEY")!;
-const SUPABASE_URL = Deno.env.get("SUPABASE_URL")!;
-const SERVICE_ROLE_KEY = Deno.env.get("SUPABASE_SERVICE_ROLE_KEY")!;
+  const res = await fetch(endpoint, {
+    method: "POST",
+    headers: {
+      accept: "application/json",
+      "Content-Type": "application/json",
+      Authorization: `Token ${SHARP_KEY}`
+    }
+  });
 
-serve(async (req) => {
-  if (req.method === "OPTIONS") return new Response(null, { headers: cors });
-
+  // Parse response body for status checking
+  let responseData;
   try {
-    const { internalId, userId } = await req.json();
-    if (!internalId || !userId) {
-      return json({ error: "internalId and userId required" }, 400);
+    responseData = await res.json();
+  } catch (e) {
+    const text = await res.text();
+    throw new Error(`refresh_parse_failed: Could not parse response. status=${res.status} body=${text}`);
+  }
+
+  if (!res.ok) {
+    const detail = `status=${res.status} endpoint=${endpoint} body=${JSON.stringify(responseData)}`;
+    if (res.status === 401) {
+      throw new Error(`refresh_unauthorized: Check API key or auth scheme. ${detail}`);
     }
+    if (res.status === 403) {
+      throw new Error(`refresh_forbidden: Your key likely lacks refresh permission or does not own this bettor/account. ${detail}`);
+    }
+    if (res.status === 404) {
+      throw new Error(`refresh_not_found: Bettor or account id is invalid or not visible. ${detail}`);
+    }
+    if (res.status === 429) {
+      throw new Error(`refresh_rate_limited: Back off and retry later. ${detail}`);
+    }
+    throw new Error(`refresh_failed: ${detail}`);
+  }
 
-    console.log(`Syncing bets for bettor ${internalId}, user ${userId}`);
+  return responseData;
+}
 
-    // Step 1: Get bettorAccount to retrieve refreshResponse
+// Get a new context ID for account linking
+async function getBetSyncContext(internalId) {
+  const res = await fetch('https://api.sharpsports.io/v1/context', {
+    method: 'POST',
+    headers: {
+      accept: "application/json",
+      "Content-Type": "application/json",
+      Authorization: `Token ${SHARP_KEY}`
+    },
+    body: JSON.stringify({ internalId })
+  });
+
+  if (!res.ok) {
+    const text = await res.text();
+    throw new Error(`context_failed: status=${res.status} body=${text}`);
+  }
+
+  return res.json();
+}
+// quick poll to give the backend time to ingest new data
+async function waitForFreshness({ internalId, timeoutMs = 30_000, intervalMs = 1500 }) {
+  const deadline = Date.now() + timeoutMs;
+  while(Date.now() < deadline){
+    // lightweight “are we alive” check — re-list accounts
     const accountsUrl = `https://api.sharpsports.io/v1/bettorAccounts?bettor=${internalId}`;
-    console.log('Fetching bettorAccounts from:', accountsUrl);
-
-    const accountsRes = await fetch(accountsUrl, {
-      headers: { 
-        accept: "application/json", 
-        Authorization: `Token ${SHARP_KEY}` 
+    const res = await fetch(accountsUrl, {
+      headers: {
+        accept: "application/json",
+        Authorization: `Token ${SHARP_KEY}`
       }
     });
-
-    let refreshResponse = null;
-    if (accountsRes.ok) {
-      const accounts = await accountsRes.json();
-      console.log(`Found ${accounts.length} bettor accounts`);
-      
-      if (accounts.length > 0) {
-        refreshResponse = accounts[0].refreshResponse;
-        if (refreshResponse) {
-          console.log('Using refreshResponse from bettorAccount');
-        } else {
-          console.log('No refreshResponse available in bettorAccount');
-        }
+    if (res.ok) {
+      // You could inspect fields like updatedAt/lastSync if the API exposes them.
+      // For now, a single successful round-trip after refresh is a decent signal.
+      return;
+    }
+    await sleep(intervalMs);
+  }
+  // soft timeout; proceed anyway (don’t fail the whole sync)
+  console.warn("Freshness wait timed out; proceeding to fetch slips.");
+}
+// Generalized function to fetch bet slips with retry logic
+async function fetchBetSlips(internalId, status = "pending", limit = 200) {
+  const qs = new URLSearchParams({
+    status: status,
+    type: "single",
+    betType: "straight",
+    limit: String(limit)
+  });
+  const url = `https://api.sharpsports.io/v1/bettors/${internalId}/betSlips?${qs.toString()}`;
+  const attempt = async ()=>{
+    const res = await fetch(url, {
+      headers: {
+        accept: "application/json",
+        Authorization: `Token ${SHARP_PRIVATE_KEY}`
       }
+    });
+    if (!res.ok) throw new Error(await res.text());
+    return res.json();
+  };
+  // retry 3x with backoff
+  const backoffs = [
+    0,
+    1000,
+    2500
+  ];
+  let lastErr = null;
+  for (const wait of backoffs){
+    if (wait) await sleep(wait);
+    try {
+      return await attempt();
+    } catch (e) {
+      lastErr = e;
+    }
+  }
+  throw new Error(`sharpsports_failed: ${String(lastErr)}`);
+}
+
+// Fetch pending bets
+async function fetchPendingSingles(internalId) {
+  return fetchBetSlips(internalId, "pending", 200);
+}
+
+// Fetch historical/completed bets for statistics
+async function fetchHistoricalBets(internalId, limit = 50) {
+  return fetchBetSlips(internalId, "completed", limit);
+}
+
+// Calculate stats from bet rows
+function calculateBettorStats(completedBets) {
+  if (!completedBets || completedBets.length === 0) {
+    return {
+      total_bets: 0,
+      win_rate: 0,
+      roi: 0,
+      units_gained: 0
+    };
+  }
+
+  // Filter only graded bets (Win, Loss, Push)
+  const gradedBets = completedBets.filter(bet => 
+    bet.result === "Win" || bet.result === "Loss" || bet.result === "Push"
+  );
+
+  const wins = gradedBets.filter(bet => bet.result === "Win").length;
+  const losses = gradedBets.filter(bet => bet.result === "Loss").length;
+  const totalBets = wins + losses; // Exclude pushes from win rate
+
+  const winRate = totalBets > 0 ? (wins / totalBets) * 100 : 0;
+
+  // Calculate net profit (units gained/lost)
+  const unitsGained = gradedBets.reduce((sum, bet) => {
+    const wonLost = parseFloat(String(bet.units_won_lost)) || 0;
+    return sum + wonLost;
+  }, 0);
+
+  // Calculate total units risked for ROI
+  const totalRisked = gradedBets.reduce((sum, bet) => {
+    const risked = parseFloat(String(bet.units_risked)) || 0;
+    return sum + risked;
+  }, 0);
+
+  // ROI = (net profit / total risked) * 100
+  const roi = totalRisked > 0 ? (unitsGained / totalRisked) * 100 : 0;
+
+  return {
+    total_bets: totalBets,
+    win_rate: parseFloat(winRate.toFixed(1)),
+    roi: parseFloat(roi.toFixed(2)),
+    units_gained: parseFloat(unitsGained.toFixed(2))
+  };
+}
+
+// Update user profile with calculated stats
+async function updateUserProfileStats(supabase, userId) {
+  try {
+    // Fetch all completed bets for this user
+    const { data: bets, error: fetchError } = await supabase
+      .from('bets')
+      .select('result, units_won_lost, units_risked')
+      .eq('user_id', userId)
+      .eq('is_processed', true);
+
+    if (fetchError) {
+      console.error(`Error fetching bets for stats calculation:`, fetchError.message);
+      return;
+    }
+
+    if (!bets || bets.length === 0) {
+      console.log(`No completed bets to calculate stats from`);
+      return;
+    }
+
+    // Calculate stats
+    const stats = calculateBettorStats(bets);
+
+    // Update user profile with stats
+    const { error: updateError } = await supabase
+      .from('user_profiles')
+      .update({
+        total_bets: stats.total_bets,
+        win_rate: stats.win_rate,
+        roi: stats.roi,
+        units_gained: stats.units_gained,
+        updated_at: new Date().toISOString()
+      })
+      .eq('id', userId);
+
+    if (updateError) {
+      console.error(`Error updating profile stats:`, updateError.message);
     } else {
-      console.log('Failed to fetch bettorAccounts, proceeding without refreshResponse');
+      console.log(`Updated profile stats: ${stats.total_bets} bets, ${stats.win_rate}% WR, ${stats.units_gained} units`);
     }
+  } catch (error) {
+    console.error(`Error in updateUserProfileStats:`, error.message);
+  }
+}
+serve(async (req)=>{
+  if (req.method === "OPTIONS") return new Response(null, {
+    headers: cors
+  });
+  try {
+    const { internalId, userId, bettorAccountId } = await req.json();
+    if (!internalId || !userId) {
+      return json({
+        error: "internalId and userId required"
+      }, 400);
+    }
+    console.log(`Syncing bets for bettor ${internalId}, user ${userId}, scope: ${bettorAccountId ? `bettorAccount ${bettorAccountId}` : "bettor"}`);
 
-    // Step 2: Fetch bet slips using the filters
-    const now = new Date();
-    const nowFormatted = now.toISOString().split('.')[0]; // Remove milliseconds and Z
-    
-    const qs = new URLSearchParams({
-      status: "pending",
-      type: "single",
-      betType: "straight",
-      eventStartTimeStart: nowFormatted,
-      limit: "200",
+    // 1) REFRESH and parse response for status checking
+    const refreshResponse = await triggerRefresh({
+      internalId,
+      bettorAccountId
     });
 
-    const res = await fetch(
-      `https://api.sharpsports.io/v1/bettors/${internalId}/betSlips?${qs.toString()}`,
-      { headers: { accept: "application/json", Authorization: `Token ${SHARP_KEY}` } }
-    );
+    console.log("Refresh response:", JSON.stringify(refreshResponse));
 
-    if (!res.ok) {
-      const detail = await res.text();
-      console.error("SharpSports API error:", detail);
-      return json({ error: "sharpsports_failed", detail }, 502);
+    // 2) CHECK FOR 2FA/OTP REQUIRED
+    if (refreshResponse.otpRequired && refreshResponse.otpRequired.length > 0) {
+      console.log(`OTP required for accounts: ${refreshResponse.otpRequired.join(', ')}`);
+      return json({
+        status: "otp_required",
+        cid: refreshResponse.cid,
+        accounts: refreshResponse.otpRequired,
+        otpUrl: `https://ui.sharpsports.io/otp/${refreshResponse.cid}`,
+        message: "2FA verification required. Please enter the code sent to your sportsbook account."
+      });
     }
 
-    const slips = await res.json();
-    const rows: any[] = [];
+    // 3) CHECK FOR UNVERIFIED ACCOUNTS (need re-linking)
+    if (refreshResponse.unverified && refreshResponse.unverified.length > 0) {
+      console.log(`Unverified accounts detected: ${refreshResponse.unverified.join(', ')}`);
+      // Get a new context ID for re-linking
+      const contextData = await getBetSyncContext(internalId);
+      return json({
+        status: "relink_required",
+        cid: contextData.cid,
+        accounts: refreshResponse.unverified,
+        linkUrl: `https://ui.sharpsports.io/link/${contextData.cid}`,
+        message: "Account verification expired. Please re-link your sportsbook account."
+      });
+    }
 
-    for (const s of slips ?? []) {
-      if (s.status !== "pending") continue;
-      for (const b of s.bets ?? []) {
-        if (b.status !== "pending") continue;
-        rows.push({
-          user_id:         userId,
-          sportsbook_id:   s.sportsbook?.id ?? null,
-          sportsbook_name: s.sportsbook?.name ?? null,
-          slip_id:         String(s.id),
-          bet_id:          String(b.id),
+    // 4) CHECK FOR NO ACCESS (credentials invalid - need re-linking)
+    if (refreshResponse.noAccess && refreshResponse.noAccess.length > 0) {
+      console.log(`No access to accounts: ${refreshResponse.noAccess.join(', ')}`);
+      const contextData = await getBetSyncContext(internalId);
+      return json({
+        status: "relink_required",
+        cid: contextData.cid,
+        accounts: refreshResponse.noAccess,
+        linkUrl: `https://ui.sharpsports.io/link/${contextData.cid}`,
+        message: "Account access lost. Please re-link your sportsbook account."
+      });
+    }
+
+    // 5) CHECK FOR RATE LIMITING
+    if (refreshResponse.rateLimited && refreshResponse.rateLimited.length > 0) {
+      console.log(`Rate limited accounts: ${refreshResponse.rateLimited.join(', ')}`);
+      return json({
+        status: "rate_limited",
+        accounts: refreshResponse.rateLimited,
+        message: "Too many refresh requests. Please wait a moment and try again.",
+        retryAfter: 60
+      }, 429);
+    }
+
+    // 6) CHECK FOR UNVERIFIABLE ACCOUNTS
+    if (refreshResponse.isUnverifiable && refreshResponse.isUnverifiable.length > 0) {
+      console.log(`Unverifiable accounts: ${refreshResponse.isUnverifiable.join(', ')}`);
+      return json({
+        status: "unverifiable",
+        accounts: refreshResponse.isUnverifiable,
+        message: "These accounts cannot be verified. Please contact support."
+      }, 400);
+    }
+
+    // 7) CHECK FOR INACTIVE BOOKS/REGIONS
+    if (refreshResponse.bookInactive && refreshResponse.bookInactive.length > 0) {
+      console.log(`Inactive book accounts: ${refreshResponse.bookInactive.join(', ')}`);
+      return json({
+        status: "book_inactive",
+        accounts: refreshResponse.bookInactive,
+        message: "This sportsbook is currently inactive."
+      }, 400);
+    }
+
+    if (refreshResponse.bookRegionInactive && refreshResponse.bookRegionInactive.length > 0) {
+      console.log(`Inactive region accounts: ${refreshResponse.bookRegionInactive.join(', ')}`);
+      return json({
+        status: "region_inactive",
+        accounts: refreshResponse.bookRegionInactive,
+        message: "This sportsbook region is currently inactive."
+      }, 400);
+    }
+
+    // 8) CHECK FOR SDK/AUTH PARAMETER REQUIRED
+    if (refreshResponse.authParameterRequired && refreshResponse.authParameterRequired.length > 0) {
+      console.log(`Auth parameter required: ${refreshResponse.authParameterRequired.join(', ')}`);
+      return json({
+        status: "sdk_required",
+        accounts: refreshResponse.authParameterRequired,
+        message: "This sportsbook requires SDK authentication."
+      }, 400);
+    }
+
+    // 9) CHECK FOR EXTENSION UPDATE REQUIRED
+    if (refreshResponse.extensionUpdateRequired && refreshResponse.extensionUpdateRequired.length > 0) {
+      console.log(`Extension update required: ${refreshResponse.extensionUpdateRequired.join(', ')}`);
+      return json({
+        status: "extension_update_required",
+        accounts: refreshResponse.extensionUpdateRequired,
+        extensionDownloadUrl: refreshResponse.extensionDownloadUrl,
+        message: "Browser extension update required."
+      }, 400);
+    }
+
+    // 10) CHECK IF ANY ACCOUNTS SUCCESSFULLY REFRESHED
+    if (!refreshResponse.refresh || refreshResponse.refresh.length === 0) {
+      console.log("No accounts were successfully refreshed");
+      return json({
+        status: "no_accounts_refreshed",
+        message: "No accounts were available to refresh. Please check account status."
+      }, 400);
+    }
+
+    console.log(`Successfully refreshed accounts: ${refreshResponse.refresh.join(', ')}`);
+
+    // 11) WAIT FOR FRESHNESS
+    await waitForFreshness({
+      internalId
+    });
+
+    // 12) FETCH both pending and historical slips
+    console.log("Fetching pending and historical bets...");
+    const [pendingSlips, historicalSlips] = await Promise.all([
+      fetchPendingSingles(internalId),
+      fetchHistoricalBets(internalId, 50) // Fetch last 50 historical bets for statistics
+    ]);
+
+    // 13) Transform rows - helper function to avoid duplication
+    const transformSlipToRows = (slip, isPending = true) => {
+      const slipRows = [];
+
+      // Determine result based on outcome
+      let result = "Pending";
+      if (!isPending) {
+        if (slip.outcome === "win") result = "Win";
+        else if (slip.outcome === "loss") result = "Loss";
+        else if (slip.outcome === "push") result = "Push";
+        else if (slip.outcome === "void") result = "Cancelled";
+        else if (slip.outcome === "cashout") result = "Cancelled"; // Treat cashout as cancelled
+        else if (slip.outcome === "halfwin") result = "Win"; // Half win counts as win
+        else if (slip.outcome === "halfloss") result = "Loss"; // Half loss counts as loss
+        else result = "Pending"; // Fallback
+      }
+
+      for (const b of slip.bets ?? []) {
+        // Skip invalid bets
+        if (!slip.id || !b.id) {
+          console.warn("Skipping bet with missing ID", { slipId: slip.id, betId: b.id });
+          continue;
+        }
+
+        // Use timePlaced as timestamp, fallback to current time
+        const timestamp = slip.timePlaced
+          ? new Date(slip.timePlaced).toISOString()
+          : new Date().toISOString();
+
+        slipRows.push({
+          user_id: userId,
+          sportsbook_id: slip.book?.id ?? null,
+          sportsbook_name: slip.book?.name ?? null,
+          slip_id: String(slip.id),
+          bet_id: String(b.id),
           parsed_email_id: null,
-          event:           b.eventName ?? b.selectionName ?? null,
-          bet_type:        b.betType ?? "straight",
-          odds:            String(b.oddsAmerican ?? b.oddsDecimal ?? ""),
-          units_risked:    b.risk ?? null,
-          event_start_time:b.eventStartTime ? new Date(b.eventStartTime).toISOString() : null,
-          result:          "Pending",
-          units_won_lost:  0,
-          is_processed:    false,
-          timestamp:       new Date().toISOString(),
-          created_at:      new Date().toISOString(),
-          updated_at:      new Date().toISOString(),
+          event: b.event?.name ?? null,
+          sport: b.event?.league ?? null,
+          position: b.position ?? null,
+          line: b.line ?? null,
+          bet_type: b.proposition ?? "straight",
+          odds: String(b.oddsAmerican ?? b.oddsDecimal ?? ""),
+          units_risked: slip.atRisk ?? null,
+          units_to_win: slip.toWin ?? null,
+          units_won_lost: parseFloat(slip.netProfit ?? 0),
+          event_start_time: b.event?.startTime
+            ? new Date(b.event.startTime).toISOString()
+            : null,
+          away_team: b.event?.contestantAway?.fullName ?? null,
+          home_team: b.event?.contestantHome?.fullName ?? null,
+          result: result,
+          is_processed: !isPending,
+          timestamp: timestamp, // Add timestamp field
+          updated_at: new Date().toISOString()
         });
       }
+
+      return slipRows;
+    };
+
+    // 14) Process pending bets
+    const pendingRows = [];
+    for (const slip of pendingSlips ?? []) {
+      if (slip.status === "pending") {
+        pendingRows.push(...transformSlipToRows(slip, true));
+      }
     }
 
-    console.log(`Found ${rows.length} pending bets to sync`);
+    // 15) Process historical bets
+    const historicalRows = [];
+    for (const slip of historicalSlips ?? []) {
+      if (slip.status !== "pending") {
+        historicalRows.push(...transformSlipToRows(slip, false));
+      }
+    }
 
-    if (!rows.length) return json({ inserted: 0 });
+    // 16) Combine all rows
+    const rows = [...pendingRows, ...historicalRows];
 
-    const supabase = createClient(SUPABASE_URL, SERVICE_ROLE_KEY, { auth: { persistSession: false } });
+    console.log(`Found ${pendingRows.length} pending bets and ${historicalRows.length} historical bets to sync`);
 
-    // Upsert idempotently (avoids duplicates if user logs in twice)
-    const { error } = await supabase
-      .from("bets")
-      .upsert(rows, { onConflict: "user_id,slip_id,bet_id", ignoreDuplicates: false });
+    if (!rows.length) {
+      console.log("No bets to sync");
+      return json({
+        status: "success",
+        message: "No bets found to sync",
+        inserted: 0,
+        pending: 0,
+        historical: 0
+      });
+    }
+
+    // 17) UPSERT to database
+    const supabase = createClient(SUPABASE_URL, SERVICE_ROLE_KEY, {
+      auth: {
+        persistSession: false
+      }
+    });
+
+    const { error } = await supabase.from("bets").upsert(rows, {
+      onConflict: "user_id,slip_id,bet_id",
+      ignoreDuplicates: false
+    });
 
     if (error) {
       console.error("Database upsert error:", error);
-      return json({ error: "db_upsert_failed", detail: error.message }, 500);
+      return json({
+        status: "error",
+        error: "db_upsert_failed",
+        detail: error.message
+      }, 500);
     }
 
-    console.log(`Successfully synced ${rows.length} bets`);
-    return json({ 
+    console.log(`Successfully synced ${rows.length} bets (${pendingRows.length} pending, ${historicalRows.length} historical)`);
+
+    // 18) UPDATE USER PROFILE STATS
+    console.log("Updating user profile stats...");
+    await updateUserProfileStats(supabase, userId);
+
+    return json({
+      status: "success",
+      message: "Bets synced successfully",
       inserted: rows.length,
-      refreshResponse: refreshResponse ? 'available' : 'not_available'
+      pending: pendingRows.length,
+      historical: historicalRows.length,
+      scope: bettorAccountId ? "bettorAccount" : "bettor",
+      refreshedAccounts: refreshResponse.refresh
     });
   } catch (e) {
     console.error("Sync error:", e);
-    return json({ error: (e as Error).message ?? "unknown" }, 500);
+    const errorMessage = e instanceof Error ? e.message : "unknown";
+    return json({
+      status: "error",
+      error: errorMessage
+    }, 500);
   }
 });
-
-function json(body: unknown, status = 200) {
-  return new Response(JSON.stringify(body), { status, headers: { ...cors, "Content-Type": "application/json" } });
-}
