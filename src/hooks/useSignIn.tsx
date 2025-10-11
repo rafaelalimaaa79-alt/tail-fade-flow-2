@@ -64,6 +64,12 @@ export const useSignIn = () => {
       // This will show the SharpSportsModal if 2FA is required
       if (data.session) {
         console.log("Triggering auto-sync on login for user:", data.session.user.id);
+
+        // IMPORTANT: Clear OTP verification on login
+        // This ensures 2FA is ALWAYS required when user logs in
+        localStorage.removeItem('otpVerifiedAt');
+        console.log("Cleared otpVerifiedAt - 2FA will be required on login");
+
         // Don't await - let it run in background
         // If 2FA is needed, modal will appear automatically
         syncBets().catch(err => {

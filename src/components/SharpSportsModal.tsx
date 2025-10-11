@@ -1,7 +1,6 @@
 import { Dialog, DialogContent, DialogHeader, DialogTitle } from '@/components/ui/dialog';
 import { useEffect, useState, useRef } from 'react';
 import { Loader2 } from 'lucide-react';
-import { Button } from '@/components/ui/button';
 
 interface SharpSportsModalProps {
   url: string | null;
@@ -24,7 +23,7 @@ export const SharpSportsModal = ({
 }: SharpSportsModalProps) => {
   const [isOpen, setIsOpen] = useState(!!url);
   const [isLoading, setIsLoading] = useState(true);
-  const [showManualClose, setShowManualClose] = useState(false);
+  const [canClose, setCanClose] = useState(false);
   const iframeRef = useRef<HTMLIFrameElement>(null);
   const loadCountRef = useRef(0);
 
@@ -32,8 +31,15 @@ export const SharpSportsModal = ({
     setIsOpen(!!url);
     if (url) {
       setIsLoading(true);
-      setShowManualClose(false);
+      setCanClose(false); // Disable close for first 10 seconds
       loadCountRef.current = 0; // Reset load counter for new URL
+
+      // Enable close button after 10 seconds to prevent accidental early closure
+      const timer = setTimeout(() => {
+        setCanClose(true);
+      }, 10000);
+
+      return () => clearTimeout(timer);
     }
   }, [url]);
 
@@ -70,12 +76,7 @@ export const SharpSportsModal = ({
       }
     };
 
-    // Show manual close button after 15 seconds as fallback
-    // (in case the load event doesn't fire for some reason)
-    const manualCloseTimer = setTimeout(() => {
-      console.log('Showing manual close button as fallback');
-      setShowManualClose(true);
-    }, 15000);
+    // Note: Manual close button removed - users should wait for auto-close
 
     // Check hash immediately and on change
     checkHash();
@@ -86,7 +87,6 @@ export const SharpSportsModal = ({
     return () => {
       window.removeEventListener('message', handleMessage);
       window.removeEventListener('hashchange', checkHash);
-      clearTimeout(manualCloseTimer);
     };
   }, [isOpen]);
 
@@ -127,13 +127,27 @@ export const SharpSportsModal = ({
   if (!url) return null;
 
   return (
-    <Dialog open={isOpen} onOpenChange={(open) => !open && handleClose(false)}>
+    <Dialog open={isOpen} onOpenChange={(open) => {
+      // Only allow closing if canClose is true (after 10 seconds)
+      if (!open && canClose) {
+        handleClose(false);
+      }
+    }}>
       <DialogContent className="max-w-lg h-[600px] p-0 bg-background flex flex-col gap-0">
         <DialogHeader className="p-4 pb-2 border-b border-white/10">
           <DialogTitle className="text-white">{title}</DialogTitle>
           {message && (
             <p className="text-sm text-muted-foreground mt-1">{message}</p>
           )}
+          <div className="mt-3 space-y-2">
+            <p className="text-sm text-yellow-400 font-medium flex items-center gap-2">
+              <span className="text-lg">⏳</span>
+              Please wait - the modal will close automatically after verification succeeds.
+            </p>
+            <p className="text-xs text-gray-400">
+              Do not close this window manually.
+            </p>
+          </div>
         </DialogHeader>
         
         <div className="flex-1 relative">
@@ -158,22 +172,11 @@ export const SharpSportsModal = ({
         </div>
 
         <div className="p-4 border-t border-white/10">
-          {showManualClose ? (
-            <div className="flex flex-col gap-2">
-              <p className="text-xs text-muted-foreground text-center">
-                Completed the verification?
-              </p>
-              <Button
-                onClick={() => handleClose(true)}
-                className="w-full bg-primary hover:bg-primary/90"
-              >
-                I'm Done - Continue
-              </Button>
+          {!isLoading && (
+            <div className="flex items-center justify-center gap-2 text-sm text-gray-400">
+              <div className="animate-spin h-4 w-4 border-2 border-gray-400 border-t-transparent rounded-full" />
+              <span>Waiting for verification...</span>
             </div>
-          ) : (
-            <p className="text-xs text-muted-foreground text-center">
-              Complete the process above, then this window will close automatically
-            </p>
           )}
         </div>
       </DialogContent>
