@@ -251,7 +251,7 @@ async function calculateFadeConfidence(supabase, userId) {
     // Fetch all completed bets with detailed info for fade confidence
     const { data: allBets, error: fetchError } = await supabase
       .from('bets')
-      .select('result, units_won_lost, units_risked, sport, bet_type, home_team, away_team, position, timestamp')
+      .select('id, result, units_won_lost, units_risked, sport, bet_type, home_team, away_team, position, timestamp')
       .eq('user_id', userId)
       .eq('is_processed', true)
       .order('timestamp', { ascending: true });
@@ -330,9 +330,21 @@ async function calculateFadeConfidence(supabase, userId) {
 
     // 3. MARKET TYPE RECORD - 20% weight
     // Calculate win rate by bet type (spread, total, moneyline)
+    // For totals, separate into overs and unders
     const marketStats = {};
     gradedBets.forEach(bet => {
-      const marketType = bet.bet_type || "Unknown";
+      let marketType = bet.bet_type || "Unknown";
+
+      // For total bets, check if it's over or under
+      if (marketType === 'total' && bet.position) {
+        const pos = bet.position.toLowerCase();
+        if (pos.includes('over')) {
+          marketType = 'over';
+        } else if (pos.includes('under')) {
+          marketType = 'under';
+        }
+      }
+
       if (!marketStats[marketType]) {
         marketStats[marketType] = { wins: 0, losses: 0, total: 0 };
       }
@@ -368,7 +380,14 @@ async function calculateFadeConfidence(supabase, userId) {
     // FIND WORST PERFORMING CATEGORY FOR STATLINE
     const worstCategory = findWorstCategory(gradedBets, sportStats, marketStats);
 
-    console.log(`Fade confidence: ${fadeConfidence.toFixed(1)}, Statline: ${worstCategory.statline}`);
+    // FIND WORST BET (biggest loss)
+    const worstBet = gradedBets
+      .filter(bet => bet.result === 'Loss' && bet.units_won_lost < 0)
+      .sort((a, b) => a.units_won_lost - b.units_won_lost)[0]; // Sort ascending (most negative first)
+
+    const worstBetId = worstBet ? worstBet.id : null;
+
+    console.log(`Fade confidence: ${fadeConfidence.toFixed(1)}, Statline: ${worstCategory.statline}, Worst bet ID: ${worstBetId}`);
 
     // Store in database
     const { error: upsertError } = await supabase
@@ -376,7 +395,7 @@ async function calculateFadeConfidence(supabase, userId) {
       .upsert({
         user_id: userId,
         score: parseFloat(fadeConfidence.toFixed(1)),
-        worst_bet_id: worstCategory.id,
+        worst_bet_id: worstBetId,
         statline: worstCategory.statline,
         last_calculated: new Date().toISOString()
       }, { onConflict: 'user_id' });
@@ -416,6 +435,15 @@ function findWorstCategory(gradedBets, sportStats, marketStats) {
   Object.entries(marketStats).forEach(([marketType, stats]) => {
     if (stats.total >= 5) { // Only consider if at least 5 bets
       const winRate = (stats.wins / stats.total) * 100;
+
+      // Format market type for display
+      let displayType = marketType;
+      if (marketType === 'moneyline') displayType = 'moneylines';
+      else if (marketType === 'spread') displayType = 'spreads';
+      else if (marketType === 'over') displayType = 'Overs';
+      else if (marketType === 'under') displayType = 'Unders';
+      else if (marketType === 'total') displayType = 'totals'; // Fallback if position not detected
+
       categories.push({
         type: "market",
         id: marketType,
@@ -423,7 +451,7 @@ function findWorstCategory(gradedBets, sportStats, marketStats) {
         losses: stats.losses,
         total: stats.total,
         winRate: winRate,
-        statline: `He's ${stats.wins}-${stats.losses} on ${marketType} bets`
+        statline: `He's ${stats.wins}-${stats.losses} on ${displayType}`
       });
     }
   });
@@ -776,7 +804,7 @@ serve(async (req)=>{
       pending: pendingRows.length,
       historical: historicalRows.length,
       scope: bettorAccountId ? "bettorAccount" : "bettor",
-      refreshedAccounts: refreshResponse.refresh
+      refreshedAccounts: refreshResponse?.refresh ?? []
     });
   } catch (e) {
     console.error("Sync error:", e);
