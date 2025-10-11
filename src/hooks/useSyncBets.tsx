@@ -7,6 +7,7 @@ import {
   SyncResponse,
   formatSyncSuccessMessage
 } from '@/utils/syncResponseHandler';
+import { safeSetItem, safeGetItem, safeRemoveItem } from '@/utils/localStorage';
 
 interface SharpSportsModalState {
   url: string;
@@ -40,12 +41,33 @@ export const useSyncBets = () => {
 
     console.log('Starting bet sync for user:', user.id);
     setIsSyncing(true);
-    
+
+    // Check if OTP was verified within the last hour
+    const otpVerifiedAt = safeGetItem('otpVerifiedAt');
+    const oneHour = 60 * 60 * 1000; // 1 hour in milliseconds
+    let forceRefresh = true; // Default to true (requires 2FA)
+
+    if (otpVerifiedAt) {
+      const verifiedTime = new Date(otpVerifiedAt).getTime();
+      const now = Date.now();
+      const timeSinceVerification = Math.abs(now - verifiedTime); // Use abs to handle clock skew
+
+      if (timeSinceVerification < oneHour) {
+        forceRefresh = false; // Within 1 hour, skip refresh
+        console.log(`OTP verified ${Math.round(timeSinceVerification / 1000 / 60)} minutes ago - skipping refresh`);
+      } else {
+        console.log(`OTP verification expired (${Math.round(timeSinceVerification / 1000 / 60)} minutes ago) - refresh required`);
+      }
+    } else {
+      console.log('No OTP verification found - refresh required');
+    }
+
     try {
       const { data, error } = await supabase.functions.invoke('sync-bets', {
-        body: { 
-          internalId: user.id, 
-          userId: user.id 
+        body: {
+          internalId: user.id,
+          userId: user.id,
+          forceRefresh
         }
       });
 
@@ -65,7 +87,7 @@ export const useSyncBets = () => {
           // Update last sync time
           const now = new Date();
           setLastSyncTime(now);
-          localStorage.setItem('lastSyncTime', now.toISOString());
+          safeSetItem('lastSyncTime', now.toISOString());
 
           // Dispatch event for other components to listen
           window.dispatchEvent(new CustomEvent('bets-synced', {
@@ -127,12 +149,100 @@ export const useSyncBets = () => {
   /**
    * Handle modal completion (2FA or relink completed)
    */
-  const handleModalComplete = useCallback(() => {
-    console.log('SharpSports modal completed, closing...');
+  const handleModalComplete = useCallback(async () => {
+    console.log('SharpSports modal completed, closing and fetching data...');
     setSharpSportsModal(null);
 
-    toast.success('Verification completed! You can now sync your bets manually.');
-  }, []);
+    // IMPORTANT: Set OTP verification timestamp
+    // This allows subsequent syncs within 1 hour to skip 2FA
+    const now = new Date().toISOString();
+    const success = safeSetItem('otpVerifiedAt', now);
+
+    if (!success) {
+      console.error('Failed to save OTP verification - will require 2FA on next sync');
+      toast.warning('2FA verified, but could not save session. You may need to verify again.');
+    } else {
+      console.log('OTP verified at:', now);
+    }
+
+    // Show loading state
+    toast.info('2FA verified! Fetching your bets...');
+
+    // IMPORTANT: Wait 3 seconds for SharpSports to process 2FA
+    // This ensures the data is fresh and ready to fetch
+    console.log('Waiting 3 seconds for SharpSports to process 2FA...');
+    await new Promise(resolve => setTimeout(resolve, 3000));
+
+    // After 2FA completion, fetch data WITHOUT triggering refresh
+    // This prevents another 2FA prompt
+    try {
+      const { data, error } = await supabase.functions.invoke('sync-bets', {
+        body: {
+          internalId: user?.id,
+          userId: user?.id,
+          forceRefresh: false // Skip refresh, just fetch data
+        }
+      });
+
+      if (error) {
+        console.error('Post-2FA sync error:', error);
+        toast.error('Failed to fetch bets: ' + error.message);
+        setIsSyncing(false);
+        return;
+      }
+
+      console.log('Post-2FA sync response:', data);
+
+      handleSyncResponse(data as SyncResponse, {
+        onSuccess: (response) => {
+          const message = formatSyncSuccessMessage(response);
+          toast.success(message);
+
+          // Update last sync time
+          const now = new Date();
+          setLastSyncTime(now);
+          safeSetItem('lastSyncTime', now.toISOString());
+
+          // Dispatch event for other components to listen
+          window.dispatchEvent(new CustomEvent('bets-synced', {
+            detail: response
+          }));
+
+          console.log('Post-2FA sync completed successfully:', response);
+          setIsSyncing(false);
+        },
+
+        onOtpRequired: () => {
+          // This shouldn't happen since forceRefresh=false
+          console.error('Unexpected OTP required after 2FA completion');
+          toast.error('Unexpected error. Please try syncing again.');
+          setIsSyncing(false);
+        },
+
+        onRelinkRequired: () => {
+          // This shouldn't happen since forceRefresh=false
+          console.error('Unexpected relink required after 2FA completion');
+          toast.error('Unexpected error. Please try syncing again.');
+          setIsSyncing(false);
+        },
+
+        onRateLimited: (retryAfter, message) => {
+          toast.error(message);
+          setIsSyncing(false);
+        },
+
+        onError: (message) => {
+          toast.error(message);
+          setIsSyncing(false);
+        }
+      });
+
+    } catch (error) {
+      console.error('Unexpected post-2FA sync error:', error);
+      toast.error('Failed to fetch bets. Please try again.');
+      setIsSyncing(false);
+    }
+  }, [user]);
 
   /**
    * Handle modal close without completion
@@ -148,7 +258,7 @@ export const useSyncBets = () => {
    * Get last sync time from localStorage on mount
    */
   useEffect(() => {
-    const stored = localStorage.getItem('lastSyncTime');
+    const stored = safeGetItem('lastSyncTime');
     if (stored) {
       setLastSyncTime(new Date(stored));
     }

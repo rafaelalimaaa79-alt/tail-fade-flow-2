@@ -497,24 +497,30 @@ serve(async (req)=>{
     headers: cors
   });
   try {
-    const { internalId, userId, bettorAccountId } = await req.json();
+    const { internalId, userId, bettorAccountId, forceRefresh = true } = await req.json();
     if (!internalId || !userId) {
       return json({
         error: "internalId and userId required"
       }, 400);
     }
-    console.log(`Syncing bets for bettor ${internalId}, user ${userId}, scope: ${bettorAccountId ? `bettorAccount ${bettorAccountId}` : "bettor"}`);
+    console.log(`Syncing bets for bettor ${internalId}, user ${userId}, scope: ${bettorAccountId ? `bettorAccount ${bettorAccountId}` : "bettor"}, forceRefresh: ${forceRefresh}`);
 
-    // 1) REFRESH and parse response for status checking
-    const refreshResponse = await triggerRefresh({
-      internalId,
-      bettorAccountId
-    });
+    // 1) REFRESH (optional based on forceRefresh parameter)
+    let refreshResponse = null;
 
-    console.log("Refresh response:", JSON.stringify(refreshResponse));
+    if (forceRefresh) {
+      console.log("Triggering refresh...");
+      refreshResponse = await triggerRefresh({
+        internalId,
+        bettorAccountId
+      });
+      console.log("Refresh response:", JSON.stringify(refreshResponse));
+    } else {
+      console.log("Skipping refresh (forceRefresh=false)");
+    }
 
-    // 2) CHECK FOR 2FA/OTP REQUIRED
-    if (refreshResponse.otpRequired && refreshResponse.otpRequired.length > 0) {
+    // 2) CHECK FOR 2FA/OTP REQUIRED (only if refresh was triggered)
+    if (refreshResponse && refreshResponse.otpRequired && refreshResponse.otpRequired.length > 0) {
       console.log(`OTP required for accounts: ${refreshResponse.otpRequired.join(', ')}`);
       return json({
         status: "otp_required",
@@ -526,7 +532,7 @@ serve(async (req)=>{
     }
 
     // 3) CHECK FOR UNVERIFIED ACCOUNTS (need re-linking)
-    if (refreshResponse.unverified && refreshResponse.unverified.length > 0) {
+    if (refreshResponse && refreshResponse.unverified && refreshResponse.unverified.length > 0) {
       console.log(`Unverified accounts detected: ${refreshResponse.unverified.join(', ')}`);
       // Get a new context ID for re-linking
       const contextData = await getBetSyncContext(internalId);
@@ -540,7 +546,7 @@ serve(async (req)=>{
     }
 
     // 4) CHECK FOR NO ACCESS (credentials invalid - need re-linking)
-    if (refreshResponse.noAccess && refreshResponse.noAccess.length > 0) {
+    if (refreshResponse && refreshResponse.noAccess && refreshResponse.noAccess.length > 0) {
       console.log(`No access to accounts: ${refreshResponse.noAccess.join(', ')}`);
       const contextData = await getBetSyncContext(internalId);
       return json({
@@ -553,7 +559,7 @@ serve(async (req)=>{
     }
 
     // 5) CHECK FOR RATE LIMITING
-    if (refreshResponse.rateLimited && refreshResponse.rateLimited.length > 0) {
+    if (refreshResponse && refreshResponse.rateLimited && refreshResponse.rateLimited.length > 0) {
       console.log(`Rate limited accounts: ${refreshResponse.rateLimited.join(', ')}`);
       return json({
         status: "rate_limited",
@@ -564,7 +570,7 @@ serve(async (req)=>{
     }
 
     // 6) CHECK FOR UNVERIFIABLE ACCOUNTS
-    if (refreshResponse.isUnverifiable && refreshResponse.isUnverifiable.length > 0) {
+    if (refreshResponse && refreshResponse.isUnverifiable && refreshResponse.isUnverifiable.length > 0) {
       console.log(`Unverifiable accounts: ${refreshResponse.isUnverifiable.join(', ')}`);
       return json({
         status: "unverifiable",
@@ -574,7 +580,7 @@ serve(async (req)=>{
     }
 
     // 7) CHECK FOR INACTIVE BOOKS/REGIONS
-    if (refreshResponse.bookInactive && refreshResponse.bookInactive.length > 0) {
+    if (refreshResponse && refreshResponse.bookInactive && refreshResponse.bookInactive.length > 0) {
       console.log(`Inactive book accounts: ${refreshResponse.bookInactive.join(', ')}`);
       return json({
         status: "book_inactive",
@@ -583,7 +589,7 @@ serve(async (req)=>{
       }, 400);
     }
 
-    if (refreshResponse.bookRegionInactive && refreshResponse.bookRegionInactive.length > 0) {
+    if (refreshResponse && refreshResponse.bookRegionInactive && refreshResponse.bookRegionInactive.length > 0) {
       console.log(`Inactive region accounts: ${refreshResponse.bookRegionInactive.join(', ')}`);
       return json({
         status: "region_inactive",
@@ -593,7 +599,7 @@ serve(async (req)=>{
     }
 
     // 8) CHECK FOR SDK/AUTH PARAMETER REQUIRED
-    if (refreshResponse.authParameterRequired && refreshResponse.authParameterRequired.length > 0) {
+    if (refreshResponse && refreshResponse.authParameterRequired && refreshResponse.authParameterRequired.length > 0) {
       console.log(`Auth parameter required: ${refreshResponse.authParameterRequired.join(', ')}`);
       return json({
         status: "sdk_required",
@@ -603,7 +609,7 @@ serve(async (req)=>{
     }
 
     // 9) CHECK FOR EXTENSION UPDATE REQUIRED
-    if (refreshResponse.extensionUpdateRequired && refreshResponse.extensionUpdateRequired.length > 0) {
+    if (refreshResponse && refreshResponse.extensionUpdateRequired && refreshResponse.extensionUpdateRequired.length > 0) {
       console.log(`Extension update required: ${refreshResponse.extensionUpdateRequired.join(', ')}`);
       return json({
         status: "extension_update_required",
@@ -613,8 +619,8 @@ serve(async (req)=>{
       }, 400);
     }
 
-    // 10) CHECK IF ANY ACCOUNTS SUCCESSFULLY REFRESHED
-    if (!refreshResponse.refresh || refreshResponse.refresh.length === 0) {
+    // 10) CHECK IF ANY ACCOUNTS SUCCESSFULLY REFRESHED (only if refresh was triggered)
+    if (forceRefresh && (!refreshResponse || !refreshResponse.refresh || refreshResponse.refresh.length === 0)) {
       console.log("No accounts were successfully refreshed");
       return json({
         status: "no_accounts_refreshed",
@@ -622,12 +628,16 @@ serve(async (req)=>{
       }, 400);
     }
 
-    console.log(`Successfully refreshed accounts: ${refreshResponse.refresh.join(', ')}`);
+    if (refreshResponse && refreshResponse.refresh) {
+      console.log(`Successfully refreshed accounts: ${refreshResponse.refresh.join(', ')}`);
+    }
 
-    // 11) WAIT FOR FRESHNESS
-    await waitForFreshness({
-      internalId
-    });
+    // 11) WAIT FOR FRESHNESS (only if refresh was triggered)
+    if (forceRefresh) {
+      await waitForFreshness({
+        internalId
+      });
+    }
 
     // 12) FETCH both pending and historical slips
     console.log("Fetching pending and historical bets...");

@@ -4,6 +4,7 @@ import { Session, User } from "@supabase/supabase-js";
 import { useNavigate } from "react-router-dom";
 import { toast } from "sonner";
 import { postAuthSuccessMessage } from "@/utils/ios-bridge";
+import { safeRemoveItem } from "@/utils/localStorage";
 
 type AuthContextType = {
   session: Session | null;
@@ -59,6 +60,10 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
         if (!lastSyncTime || (now - new Date(lastSyncTime).getTime() > fiveMinutes)) {
           console.log("Triggering auto-sync from AuthContext for user:", session.user.id);
 
+          // Note: otpVerifiedAt is cleared in useSignIn.tsx for password logins
+          // For biometric/token logins, we don't clear it here to avoid race conditions
+          // The 5-minute check above already prevents frequent syncs
+
           // Dispatch custom event that components can listen to
           window.dispatchEvent(new CustomEvent('auth-sync-trigger', {
             detail: { userId: session.user.id }
@@ -71,6 +76,10 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
       if (event === "SIGNED_OUT") {
         // Clear any local state that should be reset on sign out
         setBiometricEnabled(false);
+        safeRemoveItem('otpVerifiedAt');
+        safeRemoveItem('lastSyncTime');
+        console.log("Cleared OTP verification and sync state on logout");
+
         // Always redirect to signin on sign out
         console.log("User signed out, redirecting to signin");
         navigate("/signin");
