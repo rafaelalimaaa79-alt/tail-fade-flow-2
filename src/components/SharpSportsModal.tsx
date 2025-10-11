@@ -6,6 +6,7 @@ interface SharpSportsModalProps {
   url: string | null;
   title: string;
   message?: string;
+  type?: '2fa' | 'relink';
   onComplete: () => void;
   onClose?: () => void;
 }
@@ -18,30 +19,44 @@ export const SharpSportsModal = ({
   url,
   title,
   message,
+  type = '2fa',
   onComplete,
   onClose
 }: SharpSportsModalProps) => {
   const [isOpen, setIsOpen] = useState(!!url);
   const [isLoading, setIsLoading] = useState(true);
   const [canClose, setCanClose] = useState(false);
+  const [showManualClose, setShowManualClose] = useState(false);
   const iframeRef = useRef<HTMLIFrameElement>(null);
   const loadCountRef = useRef(0);
+
+  const is2FA = type === '2fa';
 
   useEffect(() => {
     setIsOpen(!!url);
     if (url) {
       setIsLoading(true);
-      setCanClose(false); // Disable close for first 10 seconds
+      setShowManualClose(false);
       loadCountRef.current = 0; // Reset load counter for new URL
 
-      // Enable close button after 10 seconds to prevent accidental early closure
-      const timer = setTimeout(() => {
+      if (is2FA) {
+        // For 2FA: Disable close for first 10 seconds
+        setCanClose(false);
+        const timer = setTimeout(() => {
+          setCanClose(true);
+        }, 10000);
+        return () => clearTimeout(timer);
+      } else {
+        // For relinking: Always allow close
         setCanClose(true);
-      }, 10000);
-
-      return () => clearTimeout(timer);
+        // Show manual close button after 15 seconds for relinking
+        const timer = setTimeout(() => {
+          setShowManualClose(true);
+        }, 15000);
+        return () => clearTimeout(timer);
+      }
     }
-  }, [url]);
+  }, [url, is2FA]);
 
   useEffect(() => {
     if (!isOpen) return;
@@ -109,6 +124,12 @@ export const SharpSportsModal = ({
     console.log(`SharpSports iframe loaded (count: ${loadCount})`);
     setIsLoading(false);
 
+    // Auto-detection only for 2FA
+    if (!is2FA) {
+      console.log('Relinking modal - no auto-detection');
+      return;
+    }
+
     if (loadCount === 1) {
       console.log('Initial OTP page loaded');
       return;
@@ -128,7 +149,8 @@ export const SharpSportsModal = ({
 
   return (
     <Dialog open={isOpen} onOpenChange={(open) => {
-      // Only allow closing if canClose is true (after 10 seconds)
+      // For 2FA: Only allow closing if canClose is true (after 10 seconds)
+      // For relinking: Always allow closing
       if (!open && canClose) {
         handleClose(false);
       }
@@ -139,15 +161,17 @@ export const SharpSportsModal = ({
           {message && (
             <p className="text-sm text-muted-foreground mt-1">{message}</p>
           )}
-          <div className="mt-3 space-y-2">
-            <p className="text-sm text-yellow-400 font-medium flex items-center gap-2">
-              <span className="text-lg">⏳</span>
-              Please wait - the modal will close automatically after verification succeeds.
-            </p>
-            <p className="text-xs text-gray-400">
-              Do not close this window manually.
-            </p>
-          </div>
+          {is2FA && (
+            <div className="mt-3 space-y-2">
+              <p className="text-sm text-yellow-400 font-medium flex items-center gap-2">
+                <span className="text-lg">⏳</span>
+                Please wait - the modal will close automatically after verification succeeds.
+              </p>
+              <p className="text-xs text-gray-400">
+                Do not close this window manually.
+              </p>
+            </div>
+          )}
         </DialogHeader>
         
         <div className="flex-1 relative">
@@ -172,11 +196,33 @@ export const SharpSportsModal = ({
         </div>
 
         <div className="p-4 border-t border-white/10">
-          {!isLoading && (
-            <div className="flex items-center justify-center gap-2 text-sm text-gray-400">
-              <div className="animate-spin h-4 w-4 border-2 border-gray-400 border-t-transparent rounded-full" />
-              <span>Waiting for verification...</span>
-            </div>
+          {is2FA ? (
+            // 2FA: Show waiting indicator
+            !isLoading && (
+              <div className="flex items-center justify-center gap-2 text-sm text-gray-400">
+                <div className="animate-spin h-4 w-4 border-2 border-gray-400 border-t-transparent rounded-full" />
+                <span>Waiting for verification...</span>
+              </div>
+            )
+          ) : (
+            // Relinking: Show manual close button or instruction
+            showManualClose ? (
+              <div className="flex flex-col gap-2">
+                <p className="text-xs text-muted-foreground text-center">
+                  Completed the verification?
+                </p>
+                <button
+                  onClick={() => handleClose(true)}
+                  className="w-full bg-primary hover:bg-primary/90 text-white py-2 px-4 rounded-md transition-colors"
+                >
+                  I'm Done - Continue
+                </button>
+              </div>
+            ) : (
+              <p className="text-xs text-muted-foreground text-center">
+                Complete the process above, then this window will close automatically
+              </p>
+            )
           )}
         </div>
       </DialogContent>

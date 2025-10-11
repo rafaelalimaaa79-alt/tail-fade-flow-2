@@ -59,6 +59,7 @@ const FloatingSyncButton: React.FC<FloatingSyncButtonProps> = ({ className }) =>
           url={sharpSportsModal.url}
           title={sharpSportsModal.title}
           message={sharpSportsModal.message}
+          type={sharpSportsModal.type}
           onComplete={handleModalComplete}
           onClose={handleModalClose}
         />

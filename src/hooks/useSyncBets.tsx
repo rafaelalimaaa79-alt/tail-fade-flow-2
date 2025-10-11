@@ -13,6 +13,7 @@ interface SharpSportsModalState {
   url: string;
   title: string;
   message: string;
+  type: '2fa' | 'relink';
 }
 
 /**
@@ -74,6 +75,7 @@ export const useSyncBets = () => {
       if (error) {
         console.error('Sync error:', error);
         toast.error('Sync failed: ' + error.message);
+        setIsSyncing(false); // Reset loading state on error
         return;
       }
 
@@ -103,7 +105,8 @@ export const useSyncBets = () => {
           setSharpSportsModal({
             url: otpUrl,
             title: '2FA Verification Required',
-            message: 'Please enter the verification code sent to your sportsbook account.'
+            message: 'Please enter the verification code sent to your sportsbook account.',
+            type: '2fa'
           });
           // Keep isSyncing = true while modal is open
           // Will be set to false when modal closes
@@ -114,7 +117,8 @@ export const useSyncBets = () => {
           setSharpSportsModal({
             url: linkUrl,
             title: 'Re-link Your Account',
-            message: 'Your account verification has expired. Please re-link your sportsbook account.'
+            message: 'Your account verification has expired. Please re-link your sportsbook account.',
+            type: 'relink'
           });
           // Keep isSyncing = true while modal is open
           // Will be set to false when modal closes
@@ -150,39 +154,43 @@ export const useSyncBets = () => {
    * Handle modal completion (2FA or relink completed)
    */
   const handleModalComplete = useCallback(async () => {
-    console.log('SharpSports modal completed, closing and fetching data...');
+    const modalType = sharpSportsModal?.type;
+    console.log(`SharpSports modal completed (${modalType}), closing...`);
     setSharpSportsModal(null);
 
-    // IMPORTANT: Set OTP verification timestamp
-    // This allows subsequent syncs within 1 hour to skip 2FA
-    const now = new Date().toISOString();
-    const success = safeSetItem('otpVerifiedAt', now);
+    if (modalType === '2fa') {
+      // 2FA COMPLETION: Set timestamp, wait, and fetch data
 
-    if (!success) {
-      console.error('Failed to save OTP verification - will require 2FA on next sync');
-      toast.warning('2FA verified, but could not save session. You may need to verify again.');
-    } else {
-      console.log('OTP verified at:', now);
-    }
+      // IMPORTANT: Set OTP verification timestamp
+      // This allows subsequent syncs within 1 hour to skip 2FA
+      const now = new Date().toISOString();
+      const success = safeSetItem('otpVerifiedAt', now);
 
-    // Show loading state
-    toast.info('2FA verified! Fetching your bets...');
+      if (!success) {
+        console.error('Failed to save OTP verification - will require 2FA on next sync');
+        toast.warning('2FA verified, but could not save session. You may need to verify again.');
+      } else {
+        console.log('OTP verified at:', now);
+      }
 
-    // IMPORTANT: Wait 3 seconds for SharpSports to process 2FA
-    // This ensures the data is fresh and ready to fetch
-    console.log('Waiting 3 seconds for SharpSports to process 2FA...');
-    await new Promise(resolve => setTimeout(resolve, 3000));
+      // Show loading state
+      toast.info('2FA verified! Fetching your bets...');
 
-    // After 2FA completion, fetch data WITHOUT triggering refresh
-    // This prevents another 2FA prompt
-    try {
-      const { data, error } = await supabase.functions.invoke('sync-bets', {
-        body: {
-          internalId: user?.id,
-          userId: user?.id,
-          forceRefresh: false // Skip refresh, just fetch data
-        }
-      });
+      // IMPORTANT: Wait 3 seconds for SharpSports to process 2FA
+      // This ensures the data is fresh and ready to fetch
+      console.log('Waiting 3 seconds for SharpSports to process 2FA...');
+      await new Promise(resolve => setTimeout(resolve, 3000));
+
+      // After 2FA completion, fetch data WITHOUT triggering refresh
+      // This prevents another 2FA prompt
+      try {
+        const { data, error } = await supabase.functions.invoke('sync-bets', {
+          body: {
+            internalId: user?.id,
+            userId: user?.id,
+            forceRefresh: false // Skip refresh, just fetch data
+          }
+        });
 
       if (error) {
         console.error('Post-2FA sync error:', error);
@@ -237,12 +245,20 @@ export const useSyncBets = () => {
         }
       });
 
-    } catch (error) {
-      console.error('Unexpected post-2FA sync error:', error);
-      toast.error('Failed to fetch bets. Please try again.');
+      } catch (error) {
+        console.error('Unexpected post-2FA sync error:', error);
+        toast.error('Failed to fetch bets. Please try again.');
+        setIsSyncing(false);
+      }
+
+    } else if (modalType === 'relink') {
+      // RELINKING COMPLETION: Just close and release lock
+      // User will manually click sync button to fetch data
+      console.log('Account re-linked successfully');
+      toast.success('Account re-linked successfully! Click sync to fetch your bets.');
       setIsSyncing(false);
     }
-  }, [user]);
+  }, [user, sharpSportsModal]);
 
   /**
    * Handle modal close without completion
