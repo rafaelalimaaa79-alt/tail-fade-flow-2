@@ -873,9 +873,33 @@ serve(async (req)=>{
   } catch (e) {
     console.error("Sync error:", e);
     const errorMessage = e instanceof Error ? e.message : "unknown";
+
+    // Generate user-friendly error message based on error type
+    let userMessage = errorMessage;
+    if (errorMessage.includes('refresh_unauthorized')) {
+      userMessage = "Authentication failed. Please check your sportsbook connection.";
+    } else if (errorMessage.includes('refresh_forbidden')) {
+      userMessage = "Access denied. Please reconnect your sportsbook account.";
+    } else if (errorMessage.includes('refresh_not_found')) {
+      userMessage = "Account not found. Please reconnect your sportsbook.";
+    } else if (errorMessage.includes('refresh_rate_limited')) {
+      userMessage = "Too many requests. Please wait a moment and try again.";
+    } else if (errorMessage.includes('refresh_parse_failed')) {
+      userMessage = "Failed to process sportsbook response. Please try again.";
+    } else if (errorMessage.includes('context_failed')) {
+      userMessage = "Failed to initialize sync. Please try again.";
+    } else if (errorMessage.includes('db_upsert_failed')) {
+      userMessage = "Database error. Please contact support.";
+    } else if (errorMessage.includes('fetch') || errorMessage.includes('network')) {
+      userMessage = "Network error. Please check your connection and try again.";
+    } else {
+      userMessage = "Sync failed. Please try again or contact support.";
+    }
+
     return json({
       status: "error",
-      error: errorMessage
+      error: errorMessage,  // Technical error for logging
+      message: userMessage  // User-friendly message for display
     }, 500);
   }
 });

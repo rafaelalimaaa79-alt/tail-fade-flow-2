@@ -73,8 +73,11 @@ export const useSyncBets = () => {
       });
 
       if (error) {
-        console.error('Sync error:', error);
-        toast.error('Sync failed: ' + error.message);
+        // Extract the real error message from the response body
+        // When edge function returns non-2xx status, the actual error details are in 'data', not 'error.message'
+        const errorMessage = data?.error || data?.message || data?.detail || error.message;
+        console.error('Sync error:', error, 'Response data:', data);
+        toast.error('Sync failed: ' + errorMessage);
         setIsSyncing(false); // Reset loading state on error
         return;
       }
@@ -193,8 +196,11 @@ export const useSyncBets = () => {
         });
 
       if (error) {
-        console.error('Post-2FA sync error:', error);
-        toast.error('Failed to fetch bets: ' + error.message);
+        // Extract the real error message from the response body
+        // When edge function returns non-2xx status, the actual error details are in 'data', not 'error.message'
+        const errorMessage = data?.error || data?.message || data?.detail || error.message;
+        console.error('Post-2FA sync error:', error, 'Response data:', data);
+        toast.error('Failed to fetch bets: ' + errorMessage);
         setIsSyncing(false);
         return;
       }
