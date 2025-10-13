@@ -2,12 +2,16 @@
 import React, { memo, useMemo } from "react";
 import LeaderboardTable from "./LeaderboardTable";
 
-interface BettorData {
+interface LeaderboardUser {
   id: string;
-  name: string;
-  profit: number;
+  username: string;
+  totalBets: number;
   winRate: number;
-  streak: number;
+  roi: number;
+  unitsGained: number;
+  confidenceScore: number | null;
+  statline: string | null;
+  isCurrentUser: boolean;
 }
 
 interface TabsContainerProps {
@@ -15,22 +19,25 @@ interface TabsContainerProps {
   onTabChange: (value: string) => void;
   showAll: boolean;
   setShowAll: (show: boolean) => void;
-  hottestBettors: BettorData[];
-  coldestBettors: BettorData[];
+  hottestBettors: any[];
+  coldestBettors: LeaderboardUser[];
+  loading?: boolean;
 }
 
 const TabsContainer: React.FC<TabsContainerProps> = ({
   coldestBettors,
+  loading = false,
 }) => {
   // Memoize the content to prevent unnecessary renders
   const coldTabContent = useMemo(() => (
-    <LeaderboardTable 
+    <LeaderboardTable
       bettors={coldestBettors}
       showAll={false}
       setShowAll={() => {}}
       variant="fade"
+      loading={loading}
     />
-  ), [coldestBettors]);
+  ), [coldestBettors, loading]);
 
   return (
     <div className="w-full">

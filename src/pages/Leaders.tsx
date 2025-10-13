@@ -1,4 +1,4 @@
-import React, { useMemo } from "react";
+import React, { useState, useEffect } from "react";
 import BottomNav from "@/components/BottomNav";
 import { useIsMobile } from "@/hooks/use-mobile";
 import TabsContainer from "@/components/leaders/TabsContainer";
@@ -6,30 +6,57 @@ import ProfileIcon from "@/components/common/ProfileIcon";
 import HeaderChatIcon from "@/components/common/HeaderChatIcon";
 import InlineSmackTalk from "@/components/InlineSmackTalk";
 import { useInlineSmackTalk } from "@/hooks/useInlineSmackTalk";
-import { coldestBettors } from "@/components/leaders/mockData";
 import { useNavigate } from "react-router-dom";
 import FloatingSyncButton from "@/components/common/FloatingSyncButton";
+import { getLeaderboardData, getCurrentUserId } from "@/services/userDataService";
+
+interface LeaderboardUser {
+  id: string;
+  username: string;
+  totalBets: number;
+  winRate: number;
+  roi: number;
+  unitsGained: number;
+  confidenceScore: number | null;
+  statline: string | null;
+  isCurrentUser: boolean;
+}
 
 const Leaders = () => {
   const isMobile = useIsMobile();
   const navigate = useNavigate();
   const { isOpen, smackTalkData, closeSmackTalk } = useInlineSmackTalk();
+  const [leaderboardData, setLeaderboardData] = useState<LeaderboardUser[]>([]);
+  const [loading, setLoading] = useState(true);
 
-  // Memoize the data to prevent unnecessary recalculations
-  const memoizedColdestBettors = useMemo(() => coldestBettors, []);
+  // Fetch leaderboard data
+  useEffect(() => {
+    const fetchLeaderboard = async () => {
+      try {
+        const currentUserId = await getCurrentUserId();
+        const data = await getLeaderboardData(currentUserId || undefined);
+        setLeaderboardData(data);
+      } catch (error) {
+        console.error('Error fetching leaderboard:', error);
+      } finally {
+        setLoading(false);
+      }
+    };
+
+    fetchLeaderboard();
+  }, []);
 
   const handleLogoClick = () => {
     navigate("/dashboard");
   };
 
-  // Memoize the entire component output for optimal performance
   return (
     <div className="flex min-h-screen flex-col bg-background">
       <div className={`max-w-md mx-auto w-full px-2 ${isMobile ? "pb-24" : ""}`}>
         <div className="flex justify-between items-center pt-2 mb-4">
-          <img 
-            src="/lovable-uploads/7b63dfa5-820d-4bd0-82f2-9e01001a0364.png" 
-            alt="NoShot logo" 
+          <img
+            src="/lovable-uploads/7b63dfa5-820d-4bd0-82f2-9e01001a0364.png"
+            alt="NoShot logo"
             className="h-40 cursor-pointer"
             onClick={handleLogoClick}
           />
@@ -38,14 +65,15 @@ const Leaders = () => {
             <ProfileIcon />
           </div>
         </div>
-        
+
         <TabsContainer
           activeTab="cold"
           onTabChange={() => {}}
           showAll={false}
           setShowAll={() => {}}
           hottestBettors={[]}
-          coldestBettors={memoizedColdestBettors}
+          coldestBettors={leaderboardData}
+          loading={loading}
         />
         
         {isOpen && (

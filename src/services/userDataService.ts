@@ -283,7 +283,275 @@ export async function getCurrentUserHistoricalBets(
 ): Promise<BetRecord[]> {
   const userId = await getCurrentUserId();
   if (!userId) return [];
-  
+
   return getHistoricalBets(userId, limit);
+}
+
+/**
+ * Get recent bet streak for any user
+ * @param userId - User ID to fetch streak for
+ * @param limit - Number of recent bets to check (default: 5)
+ * @returns Array of results: 1 = Win, 0 = Loss/Push
+ */
+export async function getRecentStreak(
+  userId: string,
+  limit: number = 5
+): Promise<number[]> {
+  try {
+    const recentBets = await getUserBets(userId, {
+      isProcessed: true,
+      orderBy: 'timestamp',
+      ascending: false,
+      limit
+    });
+
+    return recentBets.map(bet => {
+      if (bet.result === 'Win') return 1;
+      if (bet.result === 'Loss') return 0;
+      return 0; // Push counts as 0 for streak display
+    });
+  } catch (error) {
+    console.error('Error in getRecentStreak:', error);
+    return [];
+  }
+}
+
+/**
+ * Get current user's recent bet streak
+ * @param limit - Number of recent bets to check (default: 5)
+ * @returns Array of results: 1 = Win, 0 = Loss/Push
+ */
+export async function getCurrentUserRecentStreak(
+  limit: number = 5
+): Promise<number[]> {
+  const userId = await getCurrentUserId();
+  if (!userId) return [];
+
+  return getRecentStreak(userId, limit);
+}
+
+/**
+ * Calculate performance by timeframe for any user
+ * @param userId - User ID to calculate performance for
+ * @returns Performance object with units gained per timeframe
+ */
+export async function getPerformanceByTimeframe(
+  userId: string
+): Promise<Record<'1D' | '1W' | '1M' | '3M' | '1Y', number>> {
+  try {
+    const timeframes: Array<'1D' | '1W' | '1M' | '3M' | '1Y'> = ['1D', '1W', '1M', '3M', '1Y'];
+    const performance: Record<'1D' | '1W' | '1M' | '3M' | '1Y', number> = {
+      '1D': 0,
+      '1W': 0,
+      '1M': 0,
+      '3M': 0,
+      '1Y': 0
+    };
+
+    // Helper to get days for each timeframe
+    const getTimeframeDays = (tf: '1D' | '1W' | '1M' | '3M' | '1Y'): number => {
+      switch (tf) {
+        case '1D': return 1;
+        case '1W': return 7;
+        case '1M': return 30;
+        case '3M': return 90;
+        case '1Y': return 365;
+      }
+    };
+
+    // Calculate performance for each timeframe
+    for (const tf of timeframes) {
+      const days = getTimeframeDays(tf);
+      const startDate = new Date();
+      startDate.setDate(startDate.getDate() - days);
+
+      const { data: bets, error } = await supabase
+        .from('bets')
+        .select('units_won_lost')
+        .eq('user_id', userId)
+        .in('result', ['Win', 'Loss', 'Push'])
+        .gte('created_at', startDate.toISOString());
+
+      if (error) {
+        console.error(`Error calculating ${tf} performance:`, error);
+        continue;
+      }
+
+      // Sum all units won/lost for this timeframe
+      const totalUnits = (bets || []).reduce((sum, bet) => {
+        return sum + (Number(bet.units_won_lost) || 0);
+      }, 0);
+
+      // Convert cents to dollars and round to 2 decimals
+      performance[tf] = parseFloat((totalUnits / 100).toFixed(2));
+    }
+
+    return performance;
+  } catch (error) {
+    console.error('Error in getPerformanceByTimeframe:', error);
+    return {
+      '1D': 0,
+      '1W': 0,
+      '1M': 0,
+      '3M': 0,
+      '1Y': 0
+    };
+  }
+}
+
+/**
+ * Get current user's performance by timeframe
+ * @returns Performance object with units gained per timeframe
+ */
+export async function getCurrentUserPerformanceByTimeframe(): Promise<
+  Record<'1D' | '1W' | '1M' | '3M' | '1Y', number>
+> {
+  const userId = await getCurrentUserId();
+  if (!userId) {
+    return {
+      '1D': 0,
+      '1W': 0,
+      '1M': 0,
+      '3M': 0,
+      '1Y': 0
+    };
+  }
+
+  return getPerformanceByTimeframe(userId);
+}
+
+/**
+ * Get leaderboard data (all users with confidence scores)
+ * @param currentUserId - Current user ID to highlight in results
+ * @param limit - Optional limit on number of users to return
+ * @returns Array of users with profile and confidence data
+ */
+export async function getLeaderboardData(
+  currentUserId?: string,
+  limit?: number
+) {
+  try {
+    // Start from confidence_scores to include ALL users with scores
+    // (even if they don't have a user_profile yet)
+    let query = supabase
+      .from('confidence_scores')
+      .select(`
+        user_id,
+        score,
+        statline,
+        user_profiles (
+          username,
+          total_bets,
+          win_rate,
+          roi,
+          units_gained
+        )
+      `)
+      .order('score', { ascending: false }); // Order by confidence score DESC
+
+    if (limit) {
+      query = query.limit(limit);
+    }
+
+    const { data, error } = await query;
+
+    if (error) {
+      console.error('Error fetching leaderboard data:', error);
+      return [];
+    }
+
+    if (!data) return [];
+
+    // Transform data to match expected format
+    return data.map((item: any) => {
+      const profile = item.user_profiles;
+
+      return {
+        id: item.user_id,
+        username: profile?.username || null,
+        totalBets: profile?.total_bets ?? 0,
+        winRate: profile?.win_rate ?? 0,
+        roi: profile?.roi ?? 0,
+        unitsGained: profile?.units_gained ?? 0,
+        confidenceScore: Number(item.score) ?? null,
+        statline: item.statline ?? null,
+        isCurrentUser: currentUserId ? item.user_id === currentUserId : false
+      };
+    });
+  } catch (error) {
+    console.error('Error in getLeaderboardData:', error);
+    return [];
+  }
+}
+
+/**
+ * Get top coldest bettors with their pending bets
+ * @param limit - Number of coldest bettors to return (default: 5)
+ * @param currentUserId - Current user ID to exclude from results
+ * @returns Array of coldest bettors with their pending bets
+ */
+export async function getColdestBettorsWithPendingBets(
+  limit: number = 5,
+  currentUserId?: string
+) {
+  try {
+    // Start from confidence_scores to include ALL users with scores
+    let query = supabase
+      .from('confidence_scores')
+      .select(`
+        user_id,
+        score,
+        statline,
+        user_profiles (
+          username,
+          units_gained
+        )
+      `)
+      .order('score', { ascending: false }); // Highest confidence first
+
+    // Exclude current user if provided
+    if (currentUserId) {
+      query = query.neq('user_id', currentUserId);
+    }
+
+    query = query.limit(limit);
+
+    const { data: coldBettors, error } = await query;
+
+    if (error) {
+      console.error('Error fetching coldest bettors:', error);
+      return [];
+    }
+
+    if (!coldBettors || coldBettors.length === 0) return [];
+
+    // For each bettor, get ALL their pending bets and recent streak
+    const bettorsWithBets = await Promise.all(
+      coldBettors.map(async (bettor: any) => {
+        const profile = bettor.user_profiles;
+
+        // Get pending bets
+        const pendingBets = await getPendingBets(bettor.user_id);
+
+        // Get recent streak
+        const streak = await getRecentStreak(bettor.user_id, 5);
+
+        return {
+          id: bettor.user_id,
+          name: profile?.username || `User${bettor.user_id.substring(0, 4)}`,
+          profit: Math.round((profile?.units_gained ?? 0) / 100), // Convert cents to dollars
+          confidenceScore: Number(bettor.score) ?? 0,
+          statline: bettor.statline ?? null,
+          pendingBets: pendingBets,
+          streak: streak.length > 0 ? streak : [0, 0, 0, 0, 0]
+        };
+      })
+    );
+
+    return bettorsWithBets;
+  } catch (error) {
+    console.error('Error in getColdestBettorsWithPendingBets:', error);
+    return [];
+  }
 }
 

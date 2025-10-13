@@ -1,33 +1,96 @@
 
-import React from "react";
+import React, { useState, useEffect } from "react";
 import { useNavigate } from "react-router-dom";
 import BettorStreakItem from "./BettorStreakItem";
 import ActionButton from "./ActionButton";
 import { Separator } from "./ui/separator";
+import { Badge } from "./ui/badge";
+import { getColdestBettorsWithPendingBets, getCurrentUserId } from "@/services/userDataService";
+import { calculateBetLine } from "@/utils/betLineParser";
 
 interface LeaderboardCarouselProps {
   currentIndex: number;
   onIndexChange: (index: number) => void;
 }
 
-const coldestBettors = [
-  { id: "10", name: "Alex", profit: -2100, streak: [0, 0, 0, 0, 0] },
-  { id: "11", name: "Sam", profit: -1890, streak: [0, 0, 0, 1, 0] },
-  { id: "12", name: "Jordan", profit: -1750, streak: [1, 0, 0, 0, 0] },
-  { id: "13", name: "Casey", profit: -1680, streak: [0, 1, 0, 0, 0] },
-  { id: "14", name: "Taylor", profit: -1590, streak: [0, 0, 1, 0, 0] },
-];
+interface ColdBettor {
+  id: string;
+  name: string;
+  profit: number;
+  confidenceScore: number;
+  statline: string | null;
+  pendingBets: any[];
+  streak: number[];
+}
 
 const LeaderboardCarousel = ({ currentIndex, onIndexChange }: LeaderboardCarouselProps) => {
   const navigate = useNavigate();
-  
+  const [coldestBettors, setColdestBettors] = useState<ColdBettor[]>([]);
+  const [loading, setLoading] = useState(true);
+
+  // Fetch coldest bettors with pending bets
+  useEffect(() => {
+    const fetchColdestBettors = async () => {
+      try {
+        const currentUserId = await getCurrentUserId();
+        const bettors = await getColdestBettorsWithPendingBets(5, currentUserId || undefined);
+        setColdestBettors(bettors);
+      } catch (error) {
+        console.error('Error fetching coldest bettors:', error);
+      } finally {
+        setLoading(false);
+      }
+    };
+
+    fetchColdestBettors();
+  }, []);
+
   // Function to handle navigation to leaders page
   const navigateToLeaders = (type: 'fade') => {
     navigate(`/leaders?type=${type}`);
   };
-  
+
+  // Loading state
+  if (loading) {
+    return (
+      <div className="w-full px-2">
+        <div className="rounded-xl bg-card p-5 shadow-lg border border-white/10">
+          <div className="mb-6">
+            <h3 className="text-2xl font-black text-[#AEE3F5] font-exo uppercase tracking-wide text-center mb-3">
+              Can't Buy a Win
+            </h3>
+            <Separator className="bg-[#AEE3F5]/30" />
+          </div>
+          <div className="text-center py-8">
+            <p className="text-gray-400">Loading coldest bettors...</p>
+          </div>
+        </div>
+      </div>
+    );
+  }
+
+  // Empty state
+  if (coldestBettors.length === 0) {
+    return (
+      <div className="w-full px-2">
+        <div className="rounded-xl bg-card p-5 shadow-lg border border-white/10">
+          <div className="mb-6">
+            <h3 className="text-2xl font-black text-[#AEE3F5] font-exo uppercase tracking-wide text-center mb-3">
+              Can't Buy a Win
+            </h3>
+            <Separator className="bg-[#AEE3F5]/30" />
+          </div>
+          <div className="text-center py-8">
+            <p className="text-gray-400">No cold bettors with pending bets</p>
+            <p className="text-sm text-gray-500 mt-2">Check back later!</p>
+          </div>
+        </div>
+      </div>
+    );
+  }
+
   return (
-    <div className="w-full px-2"> 
+    <div className="w-full px-2">
       <div className="rounded-xl bg-card p-5 shadow-lg border border-white/10">
         <div className="mb-6">
           <h3 className="text-2xl font-black text-[#AEE3F5] font-exo uppercase tracking-wide text-center mb-3">
@@ -35,21 +98,55 @@ const LeaderboardCarousel = ({ currentIndex, onIndexChange }: LeaderboardCarouse
           </h3>
           <Separator className="bg-[#AEE3F5]/30" />
         </div>
-        
-        <div className="space-y-1">
-          {coldestBettors.map((bettor) => (
-            <BettorStreakItem
-              key={bettor.id}
-              id={bettor.id}
-              name={bettor.name}
-              profit={bettor.profit}
-              streak={bettor.streak}
-            />
+
+        <div className="space-y-4">
+          {coldestBettors.map((bettor, bettorIndex) => (
+            <div key={bettor.id}>
+              {/* Bettor Header */}
+              <div className="flex items-center justify-between mb-2">
+                <span className="text-white font-bold text-sm">@{bettor.name}</span>
+                {bettor.confidenceScore > 0 && (
+                  <Badge className="bg-onetime-red text-white text-xs">
+                    {Math.round(bettor.confidenceScore)}% Fade
+                  </Badge>
+                )}
+              </div>
+
+              {/* Statline */}
+              {bettor.statline && (
+                <p className="text-xs text-gray-400 italic mb-2">{bettor.statline}</p>
+              )}
+
+              {/* Show ALL pending bets for this bettor */}
+              {bettor.pendingBets.length > 0 ? (
+                <div className="space-y-1">
+                  {bettor.pendingBets.map((bet) => {
+                    const betLine = calculateBetLine(bet);
+                    return (
+                      <BettorStreakItem
+                        key={bet.id}
+                        id={bet.id}
+                        name={betLine}
+                        profit={bettor.profit}
+                        streak={bettor.streak}
+                      />
+                    );
+                  })}
+                </div>
+              ) : (
+                <p className="text-sm text-gray-500 py-2">No pending bets</p>
+              )}
+
+              {/* Separator between bettors (not after last one) */}
+              {bettorIndex < coldestBettors.length - 1 && (
+                <Separator className="my-4 bg-[#AEE3F5]/30" />
+              )}
+            </div>
           ))}
         </div>
-        
-        <ActionButton 
-          variant="fade" 
+
+        <ActionButton
+          variant="fade"
           className="mt-4 h-10 text-sm"
           onClick={() => navigateToLeaders('fade')}
         >
