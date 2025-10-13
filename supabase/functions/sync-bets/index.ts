@@ -251,7 +251,7 @@ async function calculateFadeConfidence(supabase, userId) {
     // Fetch all completed bets with detailed info for fade confidence
     const { data: allBets, error: fetchError } = await supabase
       .from('bets')
-      .select('id, result, units_won_lost, units_risked, sport, bet_type, home_team, away_team, position, timestamp')
+      .select('id, slip_id, result, units_won_lost, units_risked, sport, bet_type, home_team, away_team, position, timestamp')
       .eq('user_id', userId)
       .eq('is_processed', true)
       .order('timestamp', { ascending: true });
@@ -380,12 +380,12 @@ async function calculateFadeConfidence(supabase, userId) {
     // FIND WORST PERFORMING CATEGORY FOR STATLINE
     const worstCategory = findWorstCategory(gradedBets, sportStats, marketStats);
 
-    // FIND WORST BET (biggest loss)
+    // FIND WORST BET (biggest loss) - use slip_id for frontend lookup
     const worstBet = gradedBets
       .filter(bet => bet.result === 'Loss' && bet.units_won_lost < 0)
       .sort((a, b) => a.units_won_lost - b.units_won_lost)[0]; // Sort ascending (most negative first)
 
-    const worstBetId = worstBet ? worstBet.id : null;
+    const worstBetId = worstBet ? worstBet.slip_id : null;
 
     console.log(`Fade confidence: ${fadeConfidence.toFixed(1)}, Statline: ${worstCategory.statline}, Worst bet ID: ${worstBetId}`);
 
