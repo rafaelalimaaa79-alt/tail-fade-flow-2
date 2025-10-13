@@ -13,18 +13,22 @@ import { useInlineSmackTalk } from "@/hooks/useInlineSmackTalk";
 import { useNavigate } from "react-router-dom";
 import FloatingSyncButton from "@/components/common/FloatingSyncButton";
 import { supabase } from "@/integrations/supabase/client";
-import { DbBetRecord } from "@/utils/betLineParser";
 import { BettorStats } from "@/utils/bettorStatsCalculator";
+import {
+  getCurrentUserPendingBets,
+  getCurrentUserConfidenceScore,
+  getCurrentUserProfile,
+  BetRecord
+} from "@/services/userDataService";
 
 // Extended TrendData to include the full bet record
 export interface EnhancedTrendData extends TrendData {
-  bet: DbBetRecord;
+  bet: BetRecord;
   stats?: BettorStats;
   sportStatline?: string;
 }
 
 const Trends = () => {
-  const [betSlips, setBetSlips] = useState<BetSlip[]>([]);
   const [convertedTrends, setConvertedTrends] = useState<EnhancedTrendData[]>([]);
   const [loading, setLoading] = useState(true);
 
@@ -43,49 +47,20 @@ const Trends = () => {
   // Extract fetchBetsFromDatabase so it can be called from event listener
   const fetchBetsFromDatabase = async () => {
     try {
-      const { data } = await supabase.auth.getSession();
-      const userId = data.session?.user.id;
-      const username = data.session?.user.email?.split("@")[0];
-
-      if (!userId) {
-        setLoading(false);
-        return;
-      }
-
       console.log("Fetching bets from database...");
 
-      // Fetch confidence score and statline from backend
-      const { data: confidenceData } = await supabase
-        .from("confidence_scores")
-        .select("score, statline, worst_bet_id")
-        .eq("user_id", userId)
-        .single();
+      // Fetch pending bets using helper
+      const bets = await getCurrentUserPendingBets();
+
+      // Fetch confidence score using helper
+      const confidenceData = await getCurrentUserConfidenceScore();
 
       console.log("Confidence data from backend:", confidenceData);
 
-      // Fetch user profile stats
-      const { data: profileData } = await supabase
-        .from("user_profiles")
-        .select("total_bets, win_rate, roi, units_gained")
-        .eq("id", userId)
-        .single();
+      // Fetch user profile using helper
+      const profileData = await getCurrentUserProfile();
 
       console.log("Profile data from backend:", profileData);
-
-      // Read pending bets from Supabase database
-      const { data: bets, error } = await supabase
-        .from("bets")
-        .select("*")
-        .eq("user_id", userId)
-        .eq("result", "Pending")
-        .order("event_start_time", { ascending: true });
-
-      if (error) {
-        console.error("Error fetching bets:", error);
-        setLoading(false);
-        return;
-      }
-
       console.log("Pending bets from database:", bets);
 
       // If no pending bets, show empty state
@@ -101,7 +76,7 @@ const Trends = () => {
       const fadeConfidence = confidenceData?.score ?? 50;
       const statline = confidenceData?.statline ?? "No betting history";
 
-      const converted: EnhancedTrendData[] = (bets || []).map((bet: any) => {
+      const converted: EnhancedTrendData[] = (bets || []).map((bet) => {
         // Determine market type (handle over/under separation)
         let marketType = bet.bet_type || "unknown";
         if (marketType === 'total' && bet.position) {
@@ -114,8 +89,8 @@ const Trends = () => {
         }
 
         return {
-          id: bet.id,
-          name: username || "You",
+          id: bet.id || "",
+          name: "You",
           betDescription: bet.event || "Unknown Event",
           betType: bet.bet_type || "straight",
           isTailRecommendation: false,
@@ -127,7 +102,7 @@ const Trends = () => {
           userCount: profileData?.total_bets ?? 0,
           categoryBets: [],
           categoryName: marketType,
-          bet: bet as DbBetRecord,
+          bet: bet,
           stats: {
             wins: Math.round((profileData?.win_rate ?? 0) / 100 * (profileData?.total_bets ?? 0)),
             losses: Math.round((100 - (profileData?.win_rate ?? 0)) / 100 * (profileData?.total_bets ?? 0)),
