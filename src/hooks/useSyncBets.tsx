@@ -73,13 +73,20 @@ export const useSyncBets = () => {
       });
 
       if (error) {
-        // Extract the real error message from the response body
-        // When edge function returns non-2xx status, the actual error details are in 'data', not 'error.message'
         const errorMessage = data?.error || data?.message || data?.detail || error.message;
         console.error('Sync error:', error, 'Response data:', data);
         toast.error('Sync failed: ' + errorMessage);
         setIsSyncing(false); // Reset loading state on error
         return;
+      }
+
+      if (data.statusCode !== 200) {
+        console.error('Sync failed with status code:', data.statusCode, 'Response data:', data);
+        toast.error('Sync failed: ' + data.message);
+        setIsSyncing(false);
+        if (data.statusCode != 401) {
+          return;
+        }
       }
 
       console.log('Sync response:', data);

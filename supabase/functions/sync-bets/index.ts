@@ -12,8 +12,11 @@ const SERVICE_ROLE_KEY = Deno.env.get("SUPABASE_SERVICE_ROLE_KEY");
 // --- helpers ---
 const sleep = (ms)=>new Promise((r)=>setTimeout(r, ms));
 function json(body, status = 200) {
-  return new Response(JSON.stringify(body), {
-    status,
+  const responseBody = status !== 200
+  ? { ...body, statusCode: status }
+  : body;
+  return new Response(JSON.stringify(responseBody), {
+    status: 200,
     headers: {
       ...cors,
       "Content-Type": "application/json"
@@ -616,7 +619,7 @@ serve(async (req)=>{
         accounts: refreshResponse.otpRequired,
         otpUrl: `https://ui.sharpsports.io/otp/${refreshResponse.cid}`,
         message: "2FA verification required. Please enter the code sent to your sportsbook account."
-      });
+      }, 401);
     }
 
     // 3) CHECK FOR UNVERIFIED ACCOUNTS (need re-linking)
@@ -630,7 +633,7 @@ serve(async (req)=>{
         accounts: refreshResponse.unverified,
         linkUrl: `https://ui.sharpsports.io/link/${contextData.cid}`,
         message: "Account verification expired. Please re-link your sportsbook account."
-      });
+      }, 401);
     }
 
     // 4) CHECK FOR NO ACCESS (credentials invalid - need re-linking)
@@ -643,7 +646,7 @@ serve(async (req)=>{
         accounts: refreshResponse.noAccess,
         linkUrl: `https://ui.sharpsports.io/link/${contextData.cid}`,
         message: "Account access lost. Please re-link your sportsbook account."
-      });
+      }, 401);
     }
 
     // 5) CHECK FOR RATE LIMITING
