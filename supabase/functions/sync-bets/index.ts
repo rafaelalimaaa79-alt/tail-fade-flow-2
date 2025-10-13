@@ -198,6 +198,66 @@ function calculateBettorStats(completedBets) {
   };
 }
 
+// Ensure user profile exists, create if not
+async function ensureUserProfile(supabase, userId) {
+  try {
+    // Check if profile already exists
+    const { data: existingProfile, error: checkError } = await supabase
+      .from('user_profiles')
+      .select('id')
+      .eq('id', userId)
+      .single();
+
+    // If profile exists, we're done
+    if (existingProfile) {
+      console.log(`User profile already exists for ${userId}`);
+      return;
+    }
+
+    // If error is not "no rows found", log it
+    if (checkError && checkError.code !== 'PGRST116') {
+      console.error(`Error checking user profile:`, checkError.message);
+      return;
+    }
+
+    // Profile doesn't exist, fetch user email from auth.users
+    console.log(`Creating user profile for ${userId}...`);
+    const { data: authUser, error: authError } = await supabase.auth.admin.getUserById(userId);
+
+    if (authError) {
+      console.error(`Error fetching auth user:`, authError.message);
+      return;
+    }
+
+    const email = authUser?.user?.email;
+    const username = email || `User${userId.substring(0, 8)}`;
+
+    // Create user profile
+    const { error: insertError } = await supabase
+      .from('user_profiles')
+      .insert({
+        id: userId,
+        username: username,
+        avatar_url: null,
+        bio: null,
+        total_bets: 0,
+        win_rate: 0,
+        roi: 0,
+        units_gained: 0,
+        created_at: new Date().toISOString(),
+        updated_at: new Date().toISOString()
+      });
+
+    if (insertError) {
+      console.error(`Error creating user profile:`, insertError.message);
+    } else {
+      console.log(`✅ Created user profile for ${username} (${userId})`);
+    }
+  } catch (error) {
+    console.error(`Error in ensureUserProfile:`, error.message);
+  }
+}
+
 // Update user profile with calculated stats
 async function updateUserProfileStats(supabase, userId) {
   try {
@@ -789,11 +849,15 @@ serve(async (req)=>{
 
     console.log(`Successfully synced ${rows.length} bets (${pendingRows.length} pending, ${historicalRows.length} historical)`);
 
-    // 18) UPDATE USER PROFILE STATS
+    // 18) ENSURE USER PROFILE EXISTS
+    console.log("Ensuring user profile exists...");
+    await ensureUserProfile(supabase, userId);
+
+    // 19) UPDATE USER PROFILE STATS
     console.log("Updating user profile stats...");
     await updateUserProfileStats(supabase, userId);
 
-    // 19) CALCULATE FADE CONFIDENCE SCORE AND STATLINE
+    // 20) CALCULATE FADE CONFIDENCE SCORE AND STATLINE
     console.log("Calculating fade confidence...");
     await calculateFadeConfidence(supabase, userId);
 
