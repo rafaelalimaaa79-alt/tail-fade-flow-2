@@ -27,10 +27,10 @@ const TrendItem = ({
   sportStatline = "Loading...",
   unitPerformance = 0,
 }: TrendItemProps) => {
-  // Generate statline using the utility function
-  const calculatedStatline = stats && stats.totalBets > 0
+  // Use provided sportStatline if available, otherwise generate from stats
+  const calculatedStatline = sportStatline || (stats && stats.totalBets > 0
     ? `He is ${generateStatline(stats)}`
-    : sportStatline; // Fallback to provided statline if no stats data
+    : "No betting history");
   
   // Use fadeConfidence from stats if not explicitly provided
   const finalFadeConfidence = fadeConfidence ?? stats?.fadeConfidence ?? 75;

@@ -20,6 +20,7 @@ export type TrendData = {
   categoryName?: string;   // Added for the category name
   bet?: DbBetRecord;       // Full bet record from database
   stats?: BettorStats;     // Bettor statistics
+  sportStatline?: string;  // Stat line
 };
 
 type TrendsListProps = {
@@ -51,6 +52,7 @@ const TrendsList = ({ trendData }: TrendsListProps) => {
             bet={trend.bet}
             stats={trend.stats}
             fadeConfidence={trend.fadeScore}
+            sportStatline={trend.sportStatline}
             unitPerformance={trend.unitPerformance}
           />
         );

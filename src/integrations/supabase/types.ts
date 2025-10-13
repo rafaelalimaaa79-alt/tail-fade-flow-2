@@ -157,6 +157,8 @@ export type Database = {
           score: number
           sport_specific_score: Json | null
           user_id: string
+          worst_bet_id: string | null
+          statline: string | null
         }
         Insert: {
           id?: string
@@ -164,6 +166,8 @@ export type Database = {
           score?: number
           sport_specific_score?: Json | null
           user_id: string
+          worst_bet_id?: string | null
+          statline?: string | null
         }
         Update: {
           id?: string
@@ -171,6 +175,8 @@ export type Database = {
           score?: number
           sport_specific_score?: Json | null
           user_id?: string
+          worst_bet_id?: string | null
+          statline?: string | null
         }
         Relationships: []
       }

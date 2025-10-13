@@ -1,10 +1,8 @@
-import React, { useEffect, useState } from "react";
+import { useEffect, useState } from "react";
 import BottomNav from "@/components/BottomNav";
 import { useIsMobile } from "@/hooks/use-mobile";
-import TrendsHeader from "@/components/trends/TrendsHeader";
 import TrendsTitle from "@/components/trends/TrendsTitle";
 import TrendsList, { TrendData } from "@/components/trends/TrendsList";
-import BetSlipsList from "@/components/betslips/BetSlipsList";
 import TrendsNotificationHandler from "@/components/trends/TrendsNotificationHandler";
 import BadgeAnimationHandler from "@/components/dashboard/BadgeAnimationHandler";
 import TopTenReveal from "@/components/trends/TopTenReveal";
@@ -12,18 +10,17 @@ import ProfileIcon from "@/components/common/ProfileIcon";
 import HeaderChatIcon from "@/components/common/HeaderChatIcon";
 import InlineSmackTalk from "@/components/InlineSmackTalk";
 import { useInlineSmackTalk } from "@/hooks/useInlineSmackTalk";
-import { trendData } from "@/data/trendData";
 import { useNavigate } from "react-router-dom";
 import FloatingSyncButton from "@/components/common/FloatingSyncButton";
-import { BetSlip } from "@/types/betslips";
 import { supabase } from "@/integrations/supabase/client";
 import { DbBetRecord } from "@/utils/betLineParser";
-import { calculateStatsFromArray, BettorStats } from "@/utils/bettorStatsCalculator";
+import { BettorStats } from "@/utils/bettorStatsCalculator";
 
 // Extended TrendData to include the full bet record
 export interface EnhancedTrendData extends TrendData {
   bet: DbBetRecord;
   stats?: BettorStats;
+  sportStatline?: string;
 }
 
 const Trends = () => {
@@ -57,13 +54,30 @@ const Trends = () => {
 
       console.log("Fetching bets from database...");
 
-      // Read bets from Supabase database
+      // Fetch confidence score and statline from backend
+      const { data: confidenceData } = await supabase
+        .from("confidence_scores")
+        .select("score, statline, worst_bet_id")
+        .eq("user_id", userId)
+        .single();
+
+      console.log("Confidence data from backend:", confidenceData);
+
+      // Fetch user profile stats
+      const { data: profileData } = await supabase
+        .from("user_profiles")
+        .select("total_bets, win_rate, roi, units_gained")
+        .eq("id", userId)
+        .single();
+
+      console.log("Profile data from backend:", profileData);
+
+      // Read pending bets from Supabase database
       const { data: bets, error } = await supabase
         .from("bets")
         .select("*")
         .eq("user_id", userId)
         .eq("result", "Pending")
-        // .gte('event_start_time', new Date().toISOString())
         .order("event_start_time", { ascending: true });
 
       if (error) {
@@ -72,61 +86,70 @@ const Trends = () => {
         return;
       }
 
-      console.log("Bets from database:", bets);
+      console.log("Pending bets from database:", bets);
 
-      // Fetch historical bets for statistics (using only existing columns)
-      const { data: historicalBets } = await supabase
-        .from("bets")
-        .select("result, units_won_lost, odds, bet_type")
-        .eq("user_id", userId)
-        .in("result", ["Win", "Loss", "Push"])
-        .order("created_at", { ascending: false })
-        .limit(50);
+      // If no pending bets, show empty state
+      if (!bets || bets.length === 0) {
+        console.log("No pending bets found");
+        setConvertedTrends([]);
+        setLoading(false);
+        return;
+      }
 
-      // Calculate statistics from historical data
-      const stats = historicalBets && historicalBets.length > 0
-        ? calculateStatsFromArray(historicalBets)
-        : {
-            wins: 0,
-            losses: 0,
+      // Convert pending bets to EnhancedTrendData
+      // Use backend confidence score and statline (already calculated with weighted formula)
+      const fadeConfidence = confidenceData?.score ?? 50;
+      const statline = confidenceData?.statline ?? "No betting history";
+
+      const converted: EnhancedTrendData[] = (bets || []).map((bet: any) => {
+        // Determine market type (handle over/under separation)
+        let marketType = bet.bet_type || "unknown";
+        if (marketType === 'total' && bet.position) {
+          const pos = bet.position.toLowerCase();
+          if (pos.includes('over')) {
+            marketType = 'over';
+          } else if (pos.includes('under')) {
+            marketType = 'under';
+          }
+        }
+
+        return {
+          id: bet.id,
+          name: username || "You",
+          betDescription: bet.event || "Unknown Event",
+          betType: bet.bet_type || "straight",
+          isTailRecommendation: false,
+          reason: `${bet.sportsbook_name || "Sportsbook"} - ${bet.bet_type || "Bet"}`,
+          recentBets: [],
+          unitPerformance: profileData?.units_gained ?? 0,
+          tailScore: fadeConfidence,
+          fadeScore: fadeConfidence,
+          userCount: profileData?.total_bets ?? 0,
+          categoryBets: [],
+          categoryName: marketType,
+          bet: bet as DbBetRecord,
+          stats: {
+            wins: Math.round((profileData?.win_rate ?? 0) / 100 * (profileData?.total_bets ?? 0)),
+            losses: Math.round((100 - (profileData?.win_rate ?? 0)) / 100 * (profileData?.total_bets ?? 0)),
             pushes: 0,
-            totalBets: 0,
-            winRate: 0,
-            fadeConfidence: 50,
-            netProfit: 0,
+            totalBets: profileData?.total_bets ?? 0,
+            winRate: profileData?.win_rate ?? 0,
+            fadeConfidence: Math.round(fadeConfidence),
+            netProfit: profileData?.units_gained ?? 0,
             avgOdds: 0,
             recentForm: []
-          };
+          },
+          sportStatline: statline,
+        };
+      });
 
-        // Convert bets to EnhancedTrendData
-        const converted: EnhancedTrendData[] = (bets || []).map((bet: any) => {
-          return {
-            id: bet.id,
-            name: username || "You",
-            betDescription: bet.event || "Unknown Event",
-            betType: bet.bet_type || "straight",
-            isTailRecommendation: false, // We're showing fade opportunities
-            reason: `${bet.sportsbook_name || "Sportsbook"} - ${bet.bet_type || "Bet"}`,
-            recentBets: stats.recentForm.length > 0 ? stats.recentForm : [1, 0, 1, 0, 1, 0, 1, 0, 1, 0],
-            unitPerformance: stats.netProfit,
-            tailScore: stats.fadeConfidence,
-            fadeScore: stats.fadeConfidence,
-            userCount: stats.totalBets,
-            categoryBets: stats.recentForm.slice(0, 5),
-            categoryName: bet.bet_type || "straight",
-            // Add the full bet record for bet line calculations
-            bet: bet as DbBetRecord,
-            stats: stats,
-          };
-        });
-
-        setConvertedTrends(converted);
-      } catch (err: any) {
-        console.error("Fetch error:", err);
-      } finally {
-        setLoading(false);
-      }
-    };
+      setConvertedTrends(converted);
+    } catch (err: any) {
+      console.error("Fetch error:", err);
+    } finally {
+      setLoading(false);
+    }
+  };
 
   useEffect(() => {
     fetchBetsFromDatabase();
@@ -189,7 +212,44 @@ const Trends = () => {
 
         <TrendsTitle />
 
-        {showTopTen ? <TopTenReveal isRevealed={showTopTen} /> : <TrendsList trendData={convertedTrends} />}
+        {loading ? (
+          <div className="text-center py-12">
+            <div className="animate-spin h-12 w-12 border-4 border-[#AEE3F5] border-t-transparent rounded-full mx-auto mb-4" />
+            <p className="text-gray-400">Loading your bets...</p>
+          </div>
+        ) : showTopTen ? (
+          <TopTenReveal isRevealed={showTopTen} />
+        ) : convertedTrends.length === 0 ? (
+          <div className="text-center py-12 px-4">
+            <div className="mb-6">
+              <svg
+                className="w-24 h-24 mx-auto text-gray-600 mb-4"
+                fill="none"
+                stroke="currentColor"
+                viewBox="0 0 24 24"
+              >
+                <path
+                  strokeLinecap="round"
+                  strokeLinejoin="round"
+                  strokeWidth={2}
+                  d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z"
+                />
+              </svg>
+            </div>
+            <h2 className="text-2xl font-bold text-[#AEE3F5] mb-4">
+              No Pending Bets
+            </h2>
+            <p className="text-gray-400 mb-6 max-w-sm mx-auto">
+              Sync your sportsbook account to see auto-fade recommendations based on your betting history!
+            </p>
+            <p className="text-sm text-gray-500">
+              Click the sync button below to get started
+            </p>
+          </div>
+        ) : (
+          <TrendsList trendData={convertedTrends} />
+        )}
+
         {isOpen && (
           <InlineSmackTalk
             isOpen={isOpen}
