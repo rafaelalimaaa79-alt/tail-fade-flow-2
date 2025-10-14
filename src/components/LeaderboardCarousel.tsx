@@ -4,9 +4,7 @@ import { useNavigate } from "react-router-dom";
 import BettorStreakItem from "./BettorStreakItem";
 import ActionButton from "./ActionButton";
 import { Separator } from "./ui/separator";
-import { Badge } from "./ui/badge";
 import { getColdestBettorsWithPendingBets, getCurrentUserId } from "@/services/userDataService";
-import { calculateBetLine } from "@/utils/betLineParser";
 
 interface LeaderboardCarouselProps {
   currentIndex: number;
@@ -99,49 +97,15 @@ const LeaderboardCarousel = ({ currentIndex, onIndexChange }: LeaderboardCarouse
           <Separator className="bg-[#AEE3F5]/30" />
         </div>
 
-        <div className="space-y-4">
-          {coldestBettors.map((bettor, bettorIndex) => (
-            <div key={bettor.id}>
-              {/* Bettor Header */}
-              <div className="flex items-center justify-between mb-2">
-                <span className="text-white font-bold text-sm">@{bettor.name}</span>
-                {bettor.confidenceScore > 0 && (
-                  <Badge className="bg-onetime-red text-white text-xs">
-                    {Math.round(bettor.confidenceScore)}% Fade
-                  </Badge>
-                )}
-              </div>
-
-              {/* Statline */}
-              {bettor.statline && (
-                <p className="text-xs text-gray-400 italic mb-2">{bettor.statline}</p>
-              )}
-
-              {/* Show ALL pending bets for this bettor */}
-              {bettor.pendingBets.length > 0 ? (
-                <div className="space-y-1">
-                  {bettor.pendingBets.map((bet) => {
-                    const betLine = calculateBetLine(bet);
-                    return (
-                      <BettorStreakItem
-                        key={bet.id}
-                        id={bet.id}
-                        name={betLine}
-                        profit={bettor.profit}
-                        streak={bettor.streak}
-                      />
-                    );
-                  })}
-                </div>
-              ) : (
-                <p className="text-sm text-gray-500 py-2">No pending bets</p>
-              )}
-
-              {/* Separator between bettors (not after last one) */}
-              {bettorIndex < coldestBettors.length - 1 && (
-                <Separator className="my-4 bg-[#AEE3F5]/30" />
-              )}
-            </div>
+        <div className="space-y-1">
+          {coldestBettors.map((bettor) => (
+            <BettorStreakItem
+              key={bettor.id}
+              id={bettor.id}
+              name={bettor.name}
+              profit={bettor.profit}
+              streak={bettor.streak}
+            />
           ))}
         </div>
 
