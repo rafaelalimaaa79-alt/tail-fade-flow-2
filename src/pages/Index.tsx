@@ -3,7 +3,6 @@ import BottomNav from "@/components/BottomNav";
 import BetOfTheDay from "@/components/BetOfTheDay";
 import LeaderboardCarousel from "@/components/LeaderboardCarousel";
 import { useIsMobile } from "@/hooks/use-mobile";
-import { playsOfTheDay } from "@/types/betTypes";
 import DashboardHeader from "@/components/dashboard/DashboardHeader";
 import NotificationHandler from "@/components/dashboard/NotificationHandler";
 import BadgeAnimationHandler from "@/components/dashboard/BadgeAnimationHandler";
@@ -17,6 +16,7 @@ import { useNavigate } from "react-router-dom";
 import FloatingSyncButton from "@/components/common/FloatingSyncButton";
 import { useSyncBets } from "@/hooks/useSyncBets";
 import { SharpSportsModal } from "@/components/SharpSportsModal";
+import { usePendingBets } from "@/hooks/usePendingBets";
 
 const Dashboard = () => {
   const isMobile = useIsMobile();
@@ -25,13 +25,16 @@ const Dashboard = () => {
   const { resetViewedState } = usePortfolioStore();
   const { isOpen, smackTalkData, closeSmackTalk } = useInlineSmackTalk();
   const { syncBets, sharpSportsModal, handleModalComplete, handleModalClose } = useSyncBets();
-  
+
+  // Fetch pending bets for Fade Watch
+  const { bets: pendingBets, loading: betsLoading } = usePendingBets();
+
   // Set up carousel rotations with custom hook
-  const { 
-    currentIndex: topCarouselIndex, 
-    handleCarouselChange: handleTopCarouselChange 
+  const {
+    currentIndex: topCarouselIndex,
+    handleCarouselChange: handleTopCarouselChange
   } = useCarouselRotation({
-    itemsCount: playsOfTheDay.length,
+    itemsCount: pendingBets.length || 1,
     rotationInterval: 5000, // Updated to 5 seconds (5000ms)
     pauseDuration: 5000 // Keep pause duration at 5 seconds (5000ms)
   });
@@ -95,9 +98,11 @@ const Dashboard = () => {
         </div>
 
         <div className="w-full mb-4">
-          <BetOfTheDay 
+          <BetOfTheDay
             currentIndex={topCarouselIndex}
             onIndexChange={handleTopCarouselChange}
+            bets={pendingBets}
+            loading={betsLoading}
           />
         </div>
         

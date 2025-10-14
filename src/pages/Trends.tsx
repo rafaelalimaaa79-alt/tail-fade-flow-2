@@ -12,13 +12,11 @@ import InlineSmackTalk from "@/components/InlineSmackTalk";
 import { useInlineSmackTalk } from "@/hooks/useInlineSmackTalk";
 import { useNavigate } from "react-router-dom";
 import FloatingSyncButton from "@/components/common/FloatingSyncButton";
-import { supabase } from "@/integrations/supabase/client";
 import { BettorStats } from "@/utils/bettorStatsCalculator";
+import { usePendingBets } from "@/hooks/usePendingBets";
 import {
-  getCurrentUserPendingBets,
   getCurrentUserConfidenceScore,
   getCurrentUserProfile,
-  calculateBetStatline,
   BetRecord
 } from "@/services/userDataService";
 
@@ -30,59 +28,44 @@ export interface EnhancedTrendData extends TrendData {
 }
 
 const Trends = () => {
-  const [convertedTrends, setConvertedTrends] = useState<EnhancedTrendData[]>([]);
-  const [loading, setLoading] = useState(true);
-
-  const SharpSportKey = "969e890a2542ae09830c54c7c5c0eadb29138c00";
-  // const internalId = "b3ee8956-c455-4ae8-8410-39df182326dc";
-
   const isMobile = useIsMobile();
   const navigate = useNavigate();
   const [showTopTen, setShowTopTen] = useState(false);
   const { isOpen, smackTalkData, closeSmackTalk } = useInlineSmackTalk();
 
+  // Use shared pending bets hook
+  const { bets: pendingBets, loading: betsLoading } = usePendingBets();
+
+  // Convert pending bets to EnhancedTrendData format
+  const [convertedTrends, setConvertedTrends] = useState<EnhancedTrendData[]>([]);
+  const [loading, setLoading] = useState(true);
+
   const handleLogoClick = () => {
     navigate("/dashboard");
   };
 
-  // Extract fetchBetsFromDatabase so it can be called from event listener
-  const fetchBetsFromDatabase = async () => {
-    try {
-      console.log("Fetching bets from database...");
+  // Convert pending bets to EnhancedTrendData format
+  useEffect(() => {
+    const convertBets = async () => {
+      try {
+        setLoading(true);
 
-      // Fetch pending bets using helper
-      const bets = await getCurrentUserPendingBets();
+        if (pendingBets.length === 0) {
+          setConvertedTrends([]);
+          setLoading(false);
+          return;
+        }
 
-      // Fetch confidence score using helper
-      const confidenceData = await getCurrentUserConfidenceScore();
+        // Fetch user profile for stats
+        const profileData = await getCurrentUserProfile();
+        const confidenceData = await getCurrentUserConfidenceScore();
 
-      console.log("Confidence data from backend:", confidenceData);
-
-      // Fetch user profile using helper
-      const profileData = await getCurrentUserProfile();
-
-      console.log("Profile data from backend:", profileData);
-      console.log("Pending bets from database:", bets);
-
-      // If no pending bets, show empty state
-      if (!bets || bets.length === 0) {
-        console.log("No pending bets found");
-        setConvertedTrends([]);
-        setLoading(false);
-        return;
-      }
-
-      // Convert pending bets to EnhancedTrendData
-      // Use backend confidence score (global fade confidence)
-      const globalFadeConfidence = confidenceData?.score ?? 50;
-
-      // Calculate bet-specific statlines for each bet in parallel
-      const converted: EnhancedTrendData[] = await Promise.all(
-        (bets || []).map(async (bet) => {
+        // Convert pending bets to EnhancedTrendData format
+        const converted: EnhancedTrendData[] = pendingBets.map((pendingBet) => {
           // Determine market type (handle over/under separation)
-          let marketType = bet.bet_type || "unknown";
-          if (marketType === 'total' && bet.position) {
-            const pos = bet.position.toLowerCase();
+          let marketType = pendingBet.bet.bet_type || "unknown";
+          if (marketType === 'total' && pendingBet.bet.position) {
+            const pos = pendingBet.bet.position.toLowerCase();
             if (pos.includes('over')) {
               marketType = 'over';
             } else if (pos.includes('under')) {
@@ -90,95 +73,48 @@ const Trends = () => {
             }
           }
 
-          // Get bet-specific statline and fade confidence
-          const statlineData = bet.slip_id
-            ? await calculateBetStatline(bet.user_id, bet.slip_id)
-            : null;
-
-          const betSpecificStatline = statlineData?.statline || "Loading...";
-          const betSpecificFadeConfidence = statlineData?.fadeConfidence || globalFadeConfidence;
-
           return {
-            id: bet.id || "",
+            id: pendingBet.id,
             name: "You",
-            betDescription: bet.event || "Unknown Event",
-            betType: bet.bet_type || "straight",
+            betDescription: pendingBet.bet.event || "Unknown Event",
+            betType: pendingBet.bet.bet_type || "straight",
             isTailRecommendation: false,
-            reason: `${bet.sportsbook_name || "Sportsbook"} - ${bet.bet_type || "Bet"}`,
+            reason: `${pendingBet.bet.sportsbook_name || "Sportsbook"} - ${pendingBet.bet.bet_type || "Bet"}`,
             recentBets: [],
             unitPerformance: profileData?.units_gained ?? 0,
-            tailScore: betSpecificFadeConfidence,
-            fadeScore: betSpecificFadeConfidence,
+            tailScore: pendingBet.fadeConfidence,
+            fadeScore: pendingBet.fadeConfidence,
             userCount: profileData?.total_bets ?? 0,
             categoryBets: [],
             categoryName: marketType,
-            bet: bet,
+            bet: pendingBet.bet,
             stats: {
               wins: Math.round((profileData?.win_rate ?? 0) / 100 * (profileData?.total_bets ?? 0)),
               losses: Math.round((100 - (profileData?.win_rate ?? 0)) / 100 * (profileData?.total_bets ?? 0)),
               pushes: 0,
               totalBets: profileData?.total_bets ?? 0,
               winRate: profileData?.win_rate ?? 0,
-              fadeConfidence: Math.round(betSpecificFadeConfidence),
+              fadeConfidence: Math.round(pendingBet.fadeConfidence),
               netProfit: profileData?.units_gained ?? 0,
               avgOdds: 0,
               recentForm: []
             },
-            sportStatline: betSpecificStatline,
+            sportStatline: pendingBet.statline,
           };
-        })
-      );
+        });
 
-      setConvertedTrends(converted);
-    } catch (err: any) {
-      console.error("Fetch error:", err);
-    } finally {
-      setLoading(false);
-    }
-  };
-
-  useEffect(() => {
-    fetchBetsFromDatabase();
-
-    // Listen for sync completion events
-    const handleBetsSynced = (event: Event) => {
-      console.log('Bets synced event received, refetching data...');
-      fetchBetsFromDatabase();
+        setConvertedTrends(converted);
+      } catch (err: any) {
+        console.error("Error converting bets:", err);
+      } finally {
+        setLoading(false);
+      }
     };
 
-    window.addEventListener('bets-synced', handleBetsSynced);
+    convertBets();
+  }, [pendingBets]);
 
-    // Set up realtime subscription for live bet updates
-    supabase.auth.getSession().then(({ data }) => {
-      const userId = data.session?.user.id;
-      if (!userId) return;
 
-      const channel = supabase
-        .channel("bets-changes")
-        .on(
-          "postgres_changes",
-          {
-            event: "*",
-            schema: "public",
-            table: "bets",
-            filter: `user_id=eq.${userId}`,
-          },
-          (payload) => {
-            console.log("Bet change detected:", payload);
-            fetchBetsFromDatabase();
-          },
-        )
-        .subscribe();
-
-      return () => {
-        supabase.removeChannel(channel);
-      };
-    });
-
-    return () => {
-      window.removeEventListener('bets-synced', handleBetsSynced);
-    };
-  }, []);
 
   return (
     <div className="flex min-h-screen flex-col bg-background font-rajdhani">
