@@ -15,6 +15,8 @@ import { useCarouselRotation } from "@/hooks/useCarouselRotation";
 import { usePortfolioStore } from "@/utils/portfolio-state";
 import { useNavigate } from "react-router-dom";
 import FloatingSyncButton from "@/components/common/FloatingSyncButton";
+import { useSyncBets } from "@/hooks/useSyncBets";
+import { SharpSportsModal } from "@/components/SharpSportsModal";
 
 const Dashboard = () => {
   const isMobile = useIsMobile();
@@ -22,6 +24,7 @@ const Dashboard = () => {
   const portfolioButtonRef = useRef<HTMLButtonElement>(null);
   const { resetViewedState } = usePortfolioStore();
   const { isOpen, smackTalkData, closeSmackTalk } = useInlineSmackTalk();
+  const { syncBets, sharpSportsModal, handleModalComplete, handleModalClose } = useSyncBets();
   
   // Set up carousel rotations with custom hook
   const { 
@@ -55,10 +58,22 @@ const Dashboard = () => {
     const timer = setTimeout(() => {
       resetViewedState(); // Reset the viewed state to make the briefcase glow
     }, 1500);
-    
+
     return () => clearTimeout(timer);
   }, [resetViewedState]);
-  
+
+  // Auto-sync after login
+  useEffect(() => {
+    const pendingSync = localStorage.getItem('pendingLoginSync');
+    if (pendingSync === 'true') {
+      console.log('Dashboard mounted with pendingLoginSync flag - triggering auto-sync');
+      // Remove flag immediately to prevent duplicate syncs
+      localStorage.removeItem('pendingLoginSync');
+      // Trigger sync
+      syncBets();
+    }
+  }, [syncBets]);
+
   const handleLogoClick = () => {
     navigate("/dashboard");
   };
@@ -107,6 +122,18 @@ const Dashboard = () => {
       <NotificationHandler getPortfolioRect={getPortfolioRect} />
       <FloatingSyncButton />
       <BottomNav />
+
+      {/* SharpSports Modal for auto-sync after login */}
+      {sharpSportsModal && (
+        <SharpSportsModal
+          url={sharpSportsModal.url}
+          title={sharpSportsModal.title}
+          message={sharpSportsModal.message}
+          type={sharpSportsModal.type}
+          onComplete={handleModalComplete}
+          onClose={handleModalClose}
+        />
+      )}
     </div>
   );
 };

@@ -55,6 +55,11 @@ export const useSignIn = () => {
       localStorage.removeItem('otpVerifiedAt');
       console.log("Cleared otpVerifiedAt - 2FA will be required on next sync");
 
+      // IMPORTANT: Set flag to trigger sync after navigation
+      // This will be checked by Dashboard to trigger auto-sync once
+      localStorage.setItem('pendingLoginSync', 'true');
+      console.log("Set pendingLoginSync flag - sync will trigger on Dashboard");
+
       // Check if this is the user's first time logging in (no biometric preference set)
       const biometricEnabled = localStorage.getItem('biometricEnabled');
       const supportsBiometrics = 'FaceID' in window || 'TouchID' in window || 'webauthn' in navigator;

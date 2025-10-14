@@ -44,30 +44,13 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
       setSession(session);
       setUser(session?.user ?? null);
 
-      // IMPORTANT: Trigger auto-sync on SIGNED_IN event (password login)
-      // This fires when user successfully signs in with password
-      if (event === "SIGNED_IN" && session?.user) {
-        // Skip if this is the very first load (handled by getSession below)
-        if (isInitialLoad) {
-          console.log("Skipping auto-sync on initial load");
-          return;
-        }
-
-        // Notify iOS app of successful authentication
+      // Notify iOS app of successful authentication
+      if (event === "SIGNED_IN" && session?.user && !isInitialLoad) {
         console.log("success-signIn-postAuthSuccessMessage", session?.user);
         postAuthSuccessMessage({
           user: session.user,
           type: "signIn",
         });
-
-        // Trigger auto-sync on sign in
-        // This happens AFTER navigation to dashboard
-        console.log("Triggering auto-sync from AuthContext for user:", session.user.id);
-
-        // Dispatch custom event that components can listen to
-        window.dispatchEvent(new CustomEvent('auth-sync-trigger', {
-          detail: { userId: session.user.id }
-        }));
       }
 
       if (event === "SIGNED_OUT") {
@@ -75,6 +58,7 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
         setBiometricEnabled(false);
         safeRemoveItem('otpVerifiedAt');
         safeRemoveItem('lastSyncTime');
+        safeRemoveItem('pendingLoginSync'); // Clear pending sync flag
         console.log("Cleared OTP verification and sync state on logout");
 
         // Always redirect to signin on sign out

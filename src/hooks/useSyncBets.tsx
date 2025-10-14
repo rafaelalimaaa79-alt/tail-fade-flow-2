@@ -296,23 +296,6 @@ export const useSyncBets = () => {
     }
   }, []);
 
-  /**
-   * Listen for auth-sync-trigger event from AuthContext
-   * This handles auto-sync for biometric and other non-password logins
-   */
-  useEffect(() => {
-    const handleAuthSyncTrigger = (event: CustomEvent) => {
-      console.log('Auth sync trigger received:', event.detail);
-      syncBets();
-    };
-
-    window.addEventListener('auth-sync-trigger', handleAuthSyncTrigger as EventListener);
-
-    return () => {
-      window.removeEventListener('auth-sync-trigger', handleAuthSyncTrigger as EventListener);
-    };
-  }, [syncBets]);
-
   return {
     syncBets,
     isSyncing,
