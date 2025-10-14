@@ -6,7 +6,6 @@ import { useBiometricAuth } from "@/hooks/useBiometricAuth";
 import { useSignIn } from "@/hooks/useSignIn";
 import SignInForm from "@/components/auth/SignInForm";
 import BiometricPrompt from "@/components/auth/BiometricPrompt";
-import { SharpSportsModal } from "@/components/SharpSportsModal";
 
 const SignIn = () => {
   const location = useLocation();
@@ -22,12 +21,7 @@ const SignIn = () => {
     handleSignIn,
     handleCreateAccount,
     handleForgotPassword,
-    closeBiometricPrompt,
-    // Sync-related state for 2FA modal
-    isSyncing,
-    sharpSportsModal,
-    handleModalComplete,
-    handleModalClose
+    closeBiometricPrompt
   } = useSignIn();
 
   const { attemptBiometricAuth } = useBiometricAuth();
@@ -90,18 +84,11 @@ const SignIn = () => {
           setEmail={setEmail}
           password={password}
           setPassword={setPassword}
-          loading={loading || isSyncing}
+          loading={loading}
           onSubmit={handleSignIn}
           onCreateAccount={handleCreateAccount}
           onForgotPassword={handleForgotPassword}
         />
-
-        {/* Show syncing indicator */}
-        {isSyncing && !sharpSportsModal && (
-          <div className="mt-4 text-center">
-            <p className="text-sm text-muted-foreground">Syncing your bets...</p>
-          </div>
-        )}
       </div>
 
       <BiometricPrompt
@@ -109,18 +96,6 @@ const SignIn = () => {
         redirectPath={from}
         onClose={closeBiometricPrompt}
       />
-
-      {/* SharpSports Modal for 2FA/Re-linking during login */}
-      {sharpSportsModal && (
-        <SharpSportsModal
-          url={sharpSportsModal.url}
-          title={sharpSportsModal.title}
-          message={sharpSportsModal.message}
-          type={sharpSportsModal.type}
-          onComplete={handleModalComplete}
-          onClose={handleModalClose}
-        />
-      )}
     </div>
   );
 };

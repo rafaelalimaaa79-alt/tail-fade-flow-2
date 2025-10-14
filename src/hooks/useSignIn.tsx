@@ -3,7 +3,6 @@ import { useState } from "react";
 import { useNavigate, useLocation } from "react-router-dom";
 import { toast } from "sonner";
 import { supabase } from "@/integrations/supabase/client";
-import { useSyncBets } from "@/hooks/useSyncBets";
 
 export const useSignIn = () => {
   const navigate = useNavigate();
@@ -12,15 +11,6 @@ export const useSignIn = () => {
   const [password, setPassword] = useState("");
   const [loading, setLoading] = useState(false);
   const [showBiometricPrompt, setShowBiometricPrompt] = useState(false);
-
-  // Get sync functionality with 2FA support
-  const {
-    syncBets,
-    isSyncing,
-    sharpSportsModal,
-    handleModalComplete,
-    handleModalClose
-  } = useSyncBets();
 
   // Get the redirect path from location state or default to dashboard
   const from = location.state?.from || '/dashboard';
@@ -60,28 +50,15 @@ export const useSignIn = () => {
       // If authentication succeeds
       toast.success("Signed in successfully");
 
-      // Trigger auto-sync with 2FA support
-      // This will show the SharpSportsModal if 2FA is required
-      if (data.session) {
-        console.log("Triggering auto-sync on login for user:", data.session.user.id);
-
-        // IMPORTANT: Clear OTP verification on login
-        // This ensures 2FA is ALWAYS required when user logs in
-        localStorage.removeItem('otpVerifiedAt');
-        console.log("Cleared otpVerifiedAt - 2FA will be required on login");
-
-        // Don't await - let it run in background
-        // If 2FA is needed, modal will appear automatically
-        syncBets().catch(err => {
-          console.error("Auto-sync error (non-blocking):", err);
-          // Don't block login on sync failure
-        });
-      }
+      // IMPORTANT: Clear OTP verification on login
+      // This ensures 2FA is ALWAYS required when user logs in
+      localStorage.removeItem('otpVerifiedAt');
+      console.log("Cleared otpVerifiedAt - 2FA will be required on next sync");
 
       // Check if this is the user's first time logging in (no biometric preference set)
       const biometricEnabled = localStorage.getItem('biometricEnabled');
       const supportsBiometrics = 'FaceID' in window || 'TouchID' in window || 'webauthn' in navigator;
-      
+
       if (!biometricEnabled && supportsBiometrics) {
         setShowBiometricPrompt(true);
       } else {
@@ -124,11 +101,6 @@ export const useSignIn = () => {
     handleSignIn,
     handleCreateAccount,
     handleForgotPassword,
-    closeBiometricPrompt,
-    // Sync-related state for 2FA modal
-    isSyncing,
-    sharpSportsModal,
-    handleModalComplete,
-    handleModalClose
+    closeBiometricPrompt
   };
 };

@@ -28,9 +28,12 @@ export const useSyncBets = () => {
 
   /**
    * Main sync function
+   * @param overrideUserId - Optional user ID to use instead of the current user (for sign-in race conditions)
    */
-  const syncBets = useCallback(async () => {
-    if (!user) {
+  const syncBets = useCallback(async (overrideUserId?: string) => {
+    const userId = overrideUserId || user?.id;
+
+    if (!userId) {
       toast.error('Please sign in to sync bets');
       return;
     }
@@ -40,7 +43,7 @@ export const useSyncBets = () => {
       return;
     }
 
-    console.log('Starting bet sync for user:', user.id);
+    console.log('Starting bet sync for user:', userId);
     setIsSyncing(true);
 
     // Check if OTP was verified within the last hour
@@ -66,8 +69,8 @@ export const useSyncBets = () => {
     try {
       const { data, error } = await supabase.functions.invoke('sync-bets', {
         body: {
-          internalId: user.id,
-          userId: user.id,
+          internalId: userId,
+          userId: userId,
           forceRefresh
         }
       });

@@ -44,10 +44,9 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
       setSession(session);
       setUser(session?.user ?? null);
 
-      // IMPORTANT: Only trigger auto-sync on INITIAL_SESSION or PASSWORD_RECOVERY events
-      // Do NOT trigger on SIGNED_IN events from tab visibility changes
-      // SIGNED_IN fires every time the tab becomes visible (Supabase refreshes the session)
-      if ((event === "INITIAL_SESSION" || event === "PASSWORD_RECOVERY") && session?.user) {
+      // IMPORTANT: Trigger auto-sync on SIGNED_IN event (password login)
+      // This fires when user successfully signs in with password
+      if (event === "SIGNED_IN" && session?.user) {
         // Skip if this is the very first load (handled by getSession below)
         if (isInitialLoad) {
           console.log("Skipping auto-sync on initial load");
@@ -61,28 +60,14 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
           type: "signIn",
         });
 
-        // Trigger auto-sync on sign in (for biometric/token-based logins)
-        // Note: Regular password login already triggers sync in useSignIn hook
-        // This ensures sync happens for all login methods
-        const lastSyncTime = localStorage.getItem('lastSyncTime');
-        const now = Date.now();
-        const fiveMinutes = 5 * 60 * 1000;
+        // Trigger auto-sync on sign in
+        // This happens AFTER navigation to dashboard
+        console.log("Triggering auto-sync from AuthContext for user:", session.user.id);
 
-        // Only auto-sync if last sync was more than 5 minutes ago
-        if (!lastSyncTime || (now - new Date(lastSyncTime).getTime() > fiveMinutes)) {
-          console.log("Triggering auto-sync from AuthContext for user:", session.user.id);
-
-          // Note: otpVerifiedAt is cleared in useSignIn.tsx for password logins
-          // For biometric/token logins, we don't clear it here to avoid race conditions
-          // The 5-minute check above already prevents frequent syncs
-
-          // Dispatch custom event that components can listen to
-          window.dispatchEvent(new CustomEvent('auth-sync-trigger', {
-            detail: { userId: session.user.id }
-          }));
-        } else {
-          console.log("Skipping auto-sync, last sync was recent");
-        }
+        // Dispatch custom event that components can listen to
+        window.dispatchEvent(new CustomEvent('auth-sync-trigger', {
+          detail: { userId: session.user.id }
+        }));
       }
 
       if (event === "SIGNED_OUT") {

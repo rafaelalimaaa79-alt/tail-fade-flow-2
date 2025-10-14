@@ -44,7 +44,7 @@ const LeaderboardCarousel = ({ currentIndex, onIndexChange }: LeaderboardCarouse
   }, []);
 
   // Function to handle navigation to leaders page
-  const navigateToLeaders = (type: 'fade') => {
+  const navigateToLeaders = (type: 'cold') => {
     navigate(`/leaders?type=${type}`);
   };
 
@@ -112,7 +112,7 @@ const LeaderboardCarousel = ({ currentIndex, onIndexChange }: LeaderboardCarouse
         <ActionButton
           variant="fade"
           className="mt-4 h-10 text-sm"
-          onClick={() => navigateToLeaders('fade')}
+          onClick={() => navigateToLeaders('cold')}
         >
           View All Cold Bettors
         </ActionButton>
