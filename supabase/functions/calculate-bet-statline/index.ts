@@ -184,38 +184,33 @@ async function calculateBetStatline(supabase: any, userId: string, betSlipId: st
       }
     }
 
-    // 4. Choose the worst metric (lowest win rate)
+    // 4. Choose the most specific metric available (highest priority)
     if (metrics.length === 0) {
       console.log('No sport-specific metrics available, using overall fallback');
       // Fallback: Overall last 10 across all sports
       const overallRecent = allBets.slice(0, 10);
       const stats = calculateStats(overallRecent);
-      
+
       return {
-        statline: `He's ${stats.wins}-${stats.losses} (${stats.winRate}%) in last ${stats.total} bets`,
+        statline: `He's ${stats.wins}-${stats.losses} in last ${stats.total} bets`,
         fadeConfidence: Math.max(50, Math.min(99, 100 - stats.winRate)),
         metric: 'fallback_overall'
       };
     }
 
-    // Sort by win rate (ascending) to get worst metric
-    // If tied, use priority (lower priority number = higher importance)
-    const worstMetric = metrics.sort((a, b) => {
-      if (a.winRate === b.winRate) {
-        return a.priority - b.priority; // Lower priority number wins
-      }
-      return a.winRate - b.winRate;
-    })[0];
+    // Sort by priority (ascending) to get most specific metric
+    // Priority 1 (team) > Priority 2 (market) > Priority 3 (sport) > Priority 4 (recent form)
+    const mostSpecificMetric = metrics.sort((a, b) => a.priority - b.priority)[0];
 
-    console.log(`Worst metric selected: ${worstMetric.type} with ${worstMetric.winRate}% win rate`);
+    console.log(`Most specific metric selected: ${mostSpecificMetric.type} (priority ${mostSpecificMetric.priority}) with ${mostSpecificMetric.winRate}% win rate`);
 
-    const statline = `He's ${worstMetric.wins}-${worstMetric.losses} (${worstMetric.winRate}%) ${worstMetric.label}`;
-    const fadeConfidence = Math.max(50, Math.min(99, 100 - worstMetric.winRate));
+    const statline = `He's ${mostSpecificMetric.wins}-${mostSpecificMetric.losses} ${mostSpecificMetric.label}`;
+    const fadeConfidence = Math.max(50, Math.min(99, 100 - mostSpecificMetric.winRate));
 
     return {
       statline,
       fadeConfidence,
-      metric: worstMetric.type
+      metric: mostSpecificMetric.type
     };
 
   } catch (error: any) {
