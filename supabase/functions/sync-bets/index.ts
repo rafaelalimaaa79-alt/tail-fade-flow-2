@@ -304,7 +304,7 @@ async function updateUserProfileStats(supabase, userId) {
   }
 }
 
-// Calculate fade confidence score and statline
+// Calculate fade confidence score (statline now calculated per-bet via calculate-bet-statline edge function)
 async function calculateFadeConfidence(supabase, userId) {
   try {
     console.log(`Calculating fade confidence for user ${userId}...`);
@@ -312,7 +312,7 @@ async function calculateFadeConfidence(supabase, userId) {
     // Fetch all completed bets with detailed info for fade confidence
     const { data: allBets, error: fetchError } = await supabase
       .from('bets')
-      .select('id, slip_id, result, units_won_lost, units_risked, sport, bet_type, home_team, away_team, position, timestamp')
+      .select('id, slip_id, result, units_won_lost, units_risked, sport, bet_type, timestamp')
       .eq('user_id', userId)
       .eq('is_processed', true)
       .order('timestamp', { ascending: true });
@@ -331,7 +331,7 @@ async function calculateFadeConfidence(supabase, userId) {
           user_id: userId,
           score: 0,
           worst_bet_id: null,
-          statline: "No betting history yet",
+          statline: null, // Statline is now calculated per-bet
           last_calculated: new Date().toISOString()
         }, { onConflict: 'user_id' });
       return;
@@ -350,7 +350,7 @@ async function calculateFadeConfidence(supabase, userId) {
           user_id: userId,
           score: 0,
           worst_bet_id: null,
-          statline: "No completed bets yet",
+          statline: null, // Statline is now calculated per-bet
           last_calculated: new Date().toISOString()
         }, { onConflict: 'user_id' });
       return;
@@ -438,9 +438,6 @@ async function calculateFadeConfidence(supabase, userId) {
       (0.1 * bigBetScore)
     )));
 
-    // FIND WORST PERFORMING CATEGORY FOR STATLINE
-    const worstCategory = findWorstCategory(gradedBets, sportStats, marketStats);
-
     // FIND WORST BET (biggest loss) - use slip_id for frontend lookup
     const worstBet = gradedBets
       .filter(bet => bet.result === 'Loss' && bet.units_won_lost < 0)
@@ -448,16 +445,16 @@ async function calculateFadeConfidence(supabase, userId) {
 
     const worstBetId = worstBet ? worstBet.slip_id : null;
 
-    console.log(`Fade confidence: ${fadeConfidence.toFixed(1)}, Statline: ${worstCategory.statline}, Worst bet ID: ${worstBetId}`);
+    console.log(`Fade confidence: ${fadeConfidence.toFixed(1)}, Worst bet ID: ${worstBetId}`);
 
-    // Store in database
+    // Store in database (no statline - calculated per-bet now)
     const { error: upsertError } = await supabase
       .from('confidence_scores')
       .upsert({
         user_id: userId,
         score: parseFloat(fadeConfidence.toFixed(1)),
         worst_bet_id: worstBetId,
-        statline: worstCategory.statline,
+        statline: null, // Statline is now calculated per-bet via calculate-bet-statline edge function
         last_calculated: new Date().toISOString()
       }, { onConflict: 'user_id' });
 
@@ -472,114 +469,8 @@ async function calculateFadeConfidence(supabase, userId) {
   }
 }
 
-// Helper: Find worst performing category (sport, market type, or team)
-function findWorstCategory(gradedBets, sportStats, marketStats) {
-  const categories = [];
-
-  // 1. Check sports
-  Object.entries(sportStats).forEach(([sport, stats]) => {
-    if (stats.total >= 5) { // Only consider if at least 5 bets
-      const winRate = (stats.wins / stats.total) * 100;
-      categories.push({
-        type: "sport",
-        id: sport,
-        wins: stats.wins,
-        losses: stats.losses,
-        total: stats.total,
-        winRate: winRate,
-        statline: `He's ${stats.wins}-${stats.losses} betting on ${sport}`
-      });
-    }
-  });
-
-  // 2. Check market types
-  Object.entries(marketStats).forEach(([marketType, stats]) => {
-    if (stats.total >= 5) { // Only consider if at least 5 bets
-      const winRate = (stats.wins / stats.total) * 100;
-
-      // Format market type for display
-      let displayType = marketType;
-      if (marketType === 'moneyline') displayType = 'moneylines';
-      else if (marketType === 'spread') displayType = 'spreads';
-      else if (marketType === 'over') displayType = 'Overs';
-      else if (marketType === 'under') displayType = 'Unders';
-      else if (marketType === 'total') displayType = 'totals'; // Fallback if position not detected
-
-      categories.push({
-        type: "market",
-        id: marketType,
-        wins: stats.wins,
-        losses: stats.losses,
-        total: stats.total,
-        winRate: winRate,
-        statline: `He's ${stats.wins}-${stats.losses} on ${displayType}`
-      });
-    }
-  });
-
-  // 3. Check teams (both home and away)
-  const teamStats = {};
-  gradedBets.forEach(bet => {
-    // Determine which team the user bet on based on position field
-    let team = null;
-
-    if (bet.position) {
-      const pos = bet.position.toLowerCase();
-
-      // Check if position contains "home" or "away"
-      if (pos.includes("home") && bet.home_team) {
-        team = bet.home_team;
-      } else if (pos.includes("away") && bet.away_team) {
-        team = bet.away_team;
-      } else {
-        // For moneylines, position might be the team name directly
-        // Check if position matches either team name
-        if (bet.home_team && pos.includes(bet.home_team.toLowerCase())) {
-          team = bet.home_team;
-        } else if (bet.away_team && pos.includes(bet.away_team.toLowerCase())) {
-          team = bet.away_team;
-        }
-      }
-    }
-
-    // Only track if we successfully identified a team
-    if (team) {
-      if (!teamStats[team]) {
-        teamStats[team] = { wins: 0, losses: 0, total: 0 };
-      }
-      if (bet.result === "Win") teamStats[team].wins++;
-      if (bet.result === "Loss") teamStats[team].losses++;
-      if (bet.result !== "Push") teamStats[team].total++;
-    }
-  });
-
-  Object.entries(teamStats).forEach(([team, stats]) => {
-    if (stats.total >= 3) { // Only consider if at least 3 bets on this team
-      const winRate = (stats.wins / stats.total) * 100;
-      categories.push({
-        type: "team",
-        id: team,
-        wins: stats.wins,
-        losses: stats.losses,
-        total: stats.total,
-        winRate: winRate,
-        statline: `He's ${stats.wins}-${stats.losses} betting on the ${team}`
-      });
-    }
-  });
-
-  // Find the category with lowest win rate
-  if (categories.length === 0) {
-    return {
-      type: "none",
-      id: null,
-      statline: "Not enough data for analysis"
-    };
-  }
-
-  categories.sort((a, b) => a.winRate - b.winRate);
-  return categories[0];
-}
+// NOTE: findWorstCategory function removed - statlines are now calculated per-bet
+// via the calculate-bet-statline edge function
 
 serve(async (req)=>{
   if (req.method === "OPTIONS") return new Response(null, {
