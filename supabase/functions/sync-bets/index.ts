@@ -12,9 +12,7 @@ const SERVICE_ROLE_KEY = Deno.env.get("SUPABASE_SERVICE_ROLE_KEY");
 // --- helpers ---
 const sleep = (ms)=>new Promise((r)=>setTimeout(r, ms));
 function json(body, status = 200) {
-  const responseBody = status !== 200
-  ? { ...body, statusCode: status }
-  : body;
+  const responseBody = { ...body, statusCode: status };
   return new Response(JSON.stringify(responseBody), {
     status: 200,
     headers: {
