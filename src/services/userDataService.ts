@@ -14,9 +14,15 @@ export interface UserProfile {
 export interface ConfidenceScore {
   user_id: string;
   score: number;
-  statline: string;
+  statline: string | null; // Now nullable - calculated per-bet
   worst_bet_id: string | null;
   last_calculated: string;
+}
+
+export interface BetStatline {
+  statline: string;
+  fadeConfidence: number;
+  metric: string;
 }
 
 export interface BetRecord {
@@ -667,3 +673,34 @@ export async function getColdestBettorsWithPendingBets(
   }
 }
 
+/**
+ * Calculate bet-specific statline for a given bet
+ * @param userId - User ID who placed the bet
+ * @param betSlipId - Bet slip ID to calculate statline for
+ * @returns Bet statline data with fade confidence
+ */
+export async function calculateBetStatline(
+  userId: string,
+  betSlipId: string
+): Promise<BetStatline | null> {
+  try {
+    const { data, error } = await supabase.functions.invoke('calculate-bet-statline', {
+      body: { userId, betSlipId }
+    });
+
+    if (error) {
+      console.error('Error calling calculate-bet-statline function:', error);
+      return null;
+    }
+
+    if (!data) {
+      console.log('No data returned from calculate-bet-statline');
+      return null;
+    }
+
+    return data as BetStatline;
+  } catch (error) {
+    console.error('Error in calculateBetStatline:', error);
+    return null;
+  }
+}

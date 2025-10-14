@@ -6,6 +6,7 @@ import { calculateBetLine, getMatchupInfo } from "@/utils/betLineParser";
 import {
   getCurrentUserPendingBets,
   getCurrentUserConfidenceScore,
+  calculateBetStatline,
   BetRecord
 } from "@/services/userDataService";
 
@@ -26,11 +27,16 @@ const SPORTSBOOKS = {
 
 const DEFAULT_SPORTSBOOK = "hardrock";
 
+interface BetWithStatline extends BetRecord {
+  statline: string;
+  fadeConfidence: number;
+}
+
 const PendingBetsList = () => {
   const [showAll, setShowAll] = useState(false);
-  const [pendingBets, setPendingBets] = useState<BetRecord[]>([]);
+  const [betsWithStatlines, setBetsWithStatlines] = useState<BetWithStatline[]>([]);
   const [loading, setLoading] = useState(true);
-  const [confidenceData, setConfidenceData] = useState<{ score: number; statline: string } | null>(null);
+  const [globalConfidenceScore, setGlobalConfidenceScore] = useState<number>(75);
 
   // Fetch real pending bets from database using helper functions
   useEffect(() => {
@@ -39,11 +45,27 @@ const PendingBetsList = () => {
         // Fetch pending bets using helper
         const bets = await getCurrentUserPendingBets();
 
-        // Fetch confidence score using helper
+        // Fetch global confidence score using helper
         const confidence = await getCurrentUserConfidenceScore();
+        const globalScore = confidence?.score ?? 75;
+        setGlobalConfidenceScore(globalScore);
 
-        setPendingBets(bets);
-        setConfidenceData(confidence);
+        // Calculate bet-specific statlines for each bet in parallel
+        const betsWithData = await Promise.all(
+          bets.map(async (bet) => {
+            const statlineData = bet.slip_id
+              ? await calculateBetStatline(bet.user_id, bet.slip_id)
+              : null;
+
+            return {
+              ...bet,
+              statline: statlineData?.statline || "Loading...",
+              fadeConfidence: statlineData?.fadeConfidence || globalScore
+            };
+          })
+        );
+
+        setBetsWithStatlines(betsWithData);
       } catch (error) {
         console.error("Error fetching pending bets:", error);
       } finally {
@@ -62,7 +84,7 @@ const PendingBetsList = () => {
     );
   }
 
-  if (pendingBets.length === 0) {
+  if (betsWithStatlines.length === 0) {
     return (
       <div className="rounded-lg bg-black p-6 text-center border border-white/10">
         <p className="text-gray-400">You don't have any pending bets yet</p>
@@ -75,13 +97,10 @@ const PendingBetsList = () => {
     window.open(SPORTSBOOKS[sportsbook as keyof typeof SPORTSBOOKS]?.appUrl || SPORTSBOOKS[DEFAULT_SPORTSBOOK].appUrl, '_blank');
   };
 
-  // Use backend confidence score
-  const fadeConfidence = confidenceData?.score ?? 75;
-
   // Determine which bets to show
-  const betsToShow = showAll ? pendingBets : pendingBets.slice(0, 3);
-  const hasMoreBets = pendingBets.length > 3;
-  
+  const betsToShow = showAll ? betsWithStatlines : betsWithStatlines.slice(0, 3);
+  const hasMoreBets = betsWithStatlines.length > 3;
+
   return (
     <div className="space-y-4">
       {betsToShow.map((bet, index) => {
@@ -118,19 +137,17 @@ const PendingBetsList = () => {
                 <div className="w-1/2 h-0.5 bg-gradient-to-r from-transparent via-[#AEE3F5]/40 to-transparent"></div>
               </div>
 
-              {/* Statline from backend */}
-              {confidenceData?.statline && (
-                <div className="text-center">
-                  <p className="text-sm text-gray-400 italic">
-                    {confidenceData.statline}
-                  </p>
-                </div>
-              )}
+              {/* Bet-specific statline */}
+              <div className="text-center">
+                <p className="text-sm text-gray-400 italic">
+                  {bet.statline}
+                </p>
+              </div>
 
               {/* Fade confidence */}
               <div className="text-center">
                 <p className="text-base font-semibold text-gray-300">
-                  Fade Confidence: <span className="text-[#AEE3F5] font-bold">{Math.round(fadeConfidence)}%</span>
+                  Fade Confidence: <span className="text-[#AEE3F5] font-bold">{Math.round(bet.fadeConfidence)}%</span>
                 </p>
               </div>
 

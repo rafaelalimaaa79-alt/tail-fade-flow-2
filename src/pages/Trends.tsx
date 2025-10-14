@@ -18,6 +18,7 @@ import {
   getCurrentUserPendingBets,
   getCurrentUserConfidenceScore,
   getCurrentUserProfile,
+  calculateBetStatline,
   BetRecord
 } from "@/services/userDataService";
 
@@ -72,51 +73,61 @@ const Trends = () => {
       }
 
       // Convert pending bets to EnhancedTrendData
-      // Use backend confidence score and statline (already calculated with weighted formula)
-      const fadeConfidence = confidenceData?.score ?? 50;
-      const statline = confidenceData?.statline ?? "No betting history";
+      // Use backend confidence score (global fade confidence)
+      const globalFadeConfidence = confidenceData?.score ?? 50;
 
-      const converted: EnhancedTrendData[] = (bets || []).map((bet) => {
-        // Determine market type (handle over/under separation)
-        let marketType = bet.bet_type || "unknown";
-        if (marketType === 'total' && bet.position) {
-          const pos = bet.position.toLowerCase();
-          if (pos.includes('over')) {
-            marketType = 'over';
-          } else if (pos.includes('under')) {
-            marketType = 'under';
+      // Calculate bet-specific statlines for each bet in parallel
+      const converted: EnhancedTrendData[] = await Promise.all(
+        (bets || []).map(async (bet) => {
+          // Determine market type (handle over/under separation)
+          let marketType = bet.bet_type || "unknown";
+          if (marketType === 'total' && bet.position) {
+            const pos = bet.position.toLowerCase();
+            if (pos.includes('over')) {
+              marketType = 'over';
+            } else if (pos.includes('under')) {
+              marketType = 'under';
+            }
           }
-        }
 
-        return {
-          id: bet.id || "",
-          name: "You",
-          betDescription: bet.event || "Unknown Event",
-          betType: bet.bet_type || "straight",
-          isTailRecommendation: false,
-          reason: `${bet.sportsbook_name || "Sportsbook"} - ${bet.bet_type || "Bet"}`,
-          recentBets: [],
-          unitPerformance: profileData?.units_gained ?? 0,
-          tailScore: fadeConfidence,
-          fadeScore: fadeConfidence,
-          userCount: profileData?.total_bets ?? 0,
-          categoryBets: [],
-          categoryName: marketType,
-          bet: bet,
-          stats: {
-            wins: Math.round((profileData?.win_rate ?? 0) / 100 * (profileData?.total_bets ?? 0)),
-            losses: Math.round((100 - (profileData?.win_rate ?? 0)) / 100 * (profileData?.total_bets ?? 0)),
-            pushes: 0,
-            totalBets: profileData?.total_bets ?? 0,
-            winRate: profileData?.win_rate ?? 0,
-            fadeConfidence: Math.round(fadeConfidence),
-            netProfit: profileData?.units_gained ?? 0,
-            avgOdds: 0,
-            recentForm: []
-          },
-          sportStatline: statline,
-        };
-      });
+          // Get bet-specific statline and fade confidence
+          const statlineData = bet.slip_id
+            ? await calculateBetStatline(bet.user_id, bet.slip_id)
+            : null;
+
+          const betSpecificStatline = statlineData?.statline || "Loading...";
+          const betSpecificFadeConfidence = statlineData?.fadeConfidence || globalFadeConfidence;
+
+          return {
+            id: bet.id || "",
+            name: "You",
+            betDescription: bet.event || "Unknown Event",
+            betType: bet.bet_type || "straight",
+            isTailRecommendation: false,
+            reason: `${bet.sportsbook_name || "Sportsbook"} - ${bet.bet_type || "Bet"}`,
+            recentBets: [],
+            unitPerformance: profileData?.units_gained ?? 0,
+            tailScore: betSpecificFadeConfidence,
+            fadeScore: betSpecificFadeConfidence,
+            userCount: profileData?.total_bets ?? 0,
+            categoryBets: [],
+            categoryName: marketType,
+            bet: bet,
+            stats: {
+              wins: Math.round((profileData?.win_rate ?? 0) / 100 * (profileData?.total_bets ?? 0)),
+              losses: Math.round((100 - (profileData?.win_rate ?? 0)) / 100 * (profileData?.total_bets ?? 0)),
+              pushes: 0,
+              totalBets: profileData?.total_bets ?? 0,
+              winRate: profileData?.win_rate ?? 0,
+              fadeConfidence: Math.round(betSpecificFadeConfidence),
+              netProfit: profileData?.units_gained ?? 0,
+              avgOdds: 0,
+              recentForm: []
+            },
+            sportStatline: betSpecificStatline,
+          };
+        })
+      );
 
       setConvertedTrends(converted);
     } catch (err: any) {

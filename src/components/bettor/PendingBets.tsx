@@ -9,7 +9,7 @@ import ActionButton from "@/components/ActionButton";
 import { ThumbsUp, ThumbsDown, Clock, Star, ArrowRight } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Separator } from "@/components/ui/separator";
-import { getConfidenceScore } from "@/services/userDataService";
+import { getConfidenceScore, calculateBetStatline } from "@/services/userDataService";
 
 type PendingBetsProps = {
   pendingBets: BettorBet[];
@@ -17,44 +17,76 @@ type PendingBetsProps = {
   className?: string;
 };
 
+interface BetWithStatline extends BettorBet {
+  fadeConfidence: number;
+  sportStatline: string;
+  matchup: { game: string; teams: string[]; sport: string };
+  betLine: string;
+}
+
 const PendingBets: React.FC<PendingBetsProps> = ({ pendingBets, profile, className }) => {
   const [showAll, setShowAll] = useState(false);
-  const [confidenceData, setConfidenceData] = useState<{score: number, statline: string | null} | null>(null);
+  const [globalConfidenceScore, setGlobalConfidenceScore] = useState<number>(0);
+  const [betsWithStatlines, setBetsWithStatlines] = useState<BetWithStatline[]>([]);
+  const [loading, setLoading] = useState(true);
 
-  // Fetch real confidence score and statline from Supabase using existing service
+  // Fetch global confidence score (for overall fade confidence)
   useEffect(() => {
-    const fetchConfidenceData = async () => {
+    const fetchConfidenceScore = async () => {
       if (!profile.userId) return;
 
       const data = await getConfidenceScore(profile.userId);
-
       if (data) {
-        setConfidenceData({
-          score: data.score,
-          statline: data.statline
-        });
+        setGlobalConfidenceScore(data.score);
       }
     };
 
-    fetchConfidenceData();
+    fetchConfidenceScore();
   }, [profile.userId]);
+
+  // Fetch bet-specific statlines for each pending bet
+  useEffect(() => {
+    const fetchBetStatlines = async () => {
+      if (!profile.userId || pendingBets.length === 0) {
+        setLoading(false);
+        return;
+      }
+
+      setLoading(true);
+
+      // Calculate statline for each bet in parallel
+      const betsWithData = await Promise.all(
+        pendingBets.map(async (bet) => {
+          // Get bet-specific statline
+          const statlineData = bet.id
+            ? await calculateBetStatline(profile.userId, bet.id)
+            : null;
+
+          return {
+            ...bet,
+            fadeConfidence: statlineData?.fadeConfidence || globalConfidenceScore || 0,
+            sportStatline: statlineData?.statline || "Loading...",
+            matchup: { game: bet.teams, teams: [bet.teams], sport: "NCAAFB" },
+            betLine: bet.betType
+          };
+        })
+      );
+
+      // Sort by fade confidence (highest first)
+      const sorted = betsWithData.sort((a, b) => b.fadeConfidence - a.fadeConfidence);
+      setBetsWithStatlines(sorted);
+      setLoading(false);
+    };
+
+    fetchBetStatlines();
+  }, [pendingBets, profile.userId, globalConfidenceScore]);
 
   const handleFade = (bet: BettorBet) => {
     showFadeNotification("Bettor", bet.betType);
   };
 
-  // Create bets with real fade confidence and statline from database
-  const betsWithConfidence = pendingBets.map(bet => ({
-    ...bet,
-    fadeConfidence: confidenceData?.score || 0,
-    sportStatline: confidenceData?.statline || "No data available",
-    // Keep display data from the bet itself
-    matchup: { game: bet.teams, teams: [bet.teams], sport: "NCAAFB" },
-    betLine: bet.betType
-  })).sort((a, b) => b.fadeConfidence - a.fadeConfidence);
-
   // Determine which bets to show
-  const betsToShow = showAll ? betsWithConfidence : betsWithConfidence.slice(0, 3);
+  const betsToShow = showAll ? betsWithStatlines : betsWithStatlines.slice(0, 3);
   const hasMoreBets = pendingBets.length > 3;
 
   return (
@@ -62,8 +94,12 @@ const PendingBets: React.FC<PendingBetsProps> = ({ pendingBets, profile, classNa
       <h3 className="mb-6 text-3xl font-bold text-[#AEE3F5] text-center relative z-10 drop-shadow-[0_0_8px_rgba(174,227,245,0.7)] font-rajdhani uppercase tracking-wide">
         Pending Bets
       </h3>
-      
-      {pendingBets.length > 0 ? (
+
+      {loading ? (
+        <div className="text-center py-8">
+          <p className="text-gray-400">Loading bet statlines...</p>
+        </div>
+      ) : pendingBets.length > 0 ? (
         <div className="space-y-6 relative z-10">
           {betsToShow.map((bet, index) => {
             return (
