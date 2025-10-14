@@ -33,6 +33,9 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
   }, [biometricEnabled]);
 
   useEffect(() => {
+    // Track if this is the initial session check to avoid triggering sync on tab visibility changes
+    let isInitialLoad = true;
+
     // Set up auth state listener first
     const {
       data: { subscription },
@@ -41,7 +44,16 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
       setSession(session);
       setUser(session?.user ?? null);
 
-      if (event === "SIGNED_IN" && session?.user) {
+      // IMPORTANT: Only trigger auto-sync on INITIAL_SESSION or PASSWORD_RECOVERY events
+      // Do NOT trigger on SIGNED_IN events from tab visibility changes
+      // SIGNED_IN fires every time the tab becomes visible (Supabase refreshes the session)
+      if ((event === "INITIAL_SESSION" || event === "PASSWORD_RECOVERY") && session?.user) {
+        // Skip if this is the very first load (handled by getSession below)
+        if (isInitialLoad) {
+          console.log("Skipping auto-sync on initial load");
+          return;
+        }
+
         // Notify iOS app of successful authentication
         console.log("success-signIn-postAuthSuccessMessage", session?.user);
         postAuthSuccessMessage({
@@ -92,6 +104,9 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
       setSession(session);
       setUser(session?.user ?? null);
       setLoading(false);
+
+      // Mark initial load as complete
+      isInitialLoad = false;
 
       // Don't notify iOS for existing sessions, only for new sign-ins
     });

@@ -6,7 +6,7 @@ import ProfileIcon from "@/components/common/ProfileIcon";
 import HeaderChatIcon from "@/components/common/HeaderChatIcon";
 import InlineSmackTalk from "@/components/InlineSmackTalk";
 import { useInlineSmackTalk } from "@/hooks/useInlineSmackTalk";
-import { useNavigate } from "react-router-dom";
+import { useNavigate, useSearchParams } from "react-router-dom";
 import FloatingSyncButton from "@/components/common/FloatingSyncButton";
 import { getLeaderboardData, getCurrentUserId } from "@/services/userDataService";
 
@@ -25,9 +25,14 @@ interface LeaderboardUser {
 const Leaders = () => {
   const isMobile = useIsMobile();
   const navigate = useNavigate();
+  const [searchParams, setSearchParams] = useSearchParams();
   const { isOpen, smackTalkData, closeSmackTalk } = useInlineSmackTalk();
-  const [leaderboardData, setLeaderboardData] = useState<LeaderboardUser[]>([]);
+  const [coldestBettors, setColdestBettors] = useState<LeaderboardUser[]>([]);
+  const [hottestBettors, setHottestBettors] = useState<LeaderboardUser[]>([]);
   const [loading, setLoading] = useState(true);
+
+  // Get active tab from URL params, default to 'cold'
+  const activeTab = (searchParams.get('type') as 'hot' | 'cold') || 'cold';
 
   // Fetch leaderboard data
   useEffect(() => {
@@ -35,7 +40,18 @@ const Leaders = () => {
       try {
         const currentUserId = await getCurrentUserId();
         const data = await getLeaderboardData(currentUserId || undefined);
-        setLeaderboardData(data);
+
+        // Split data into hottest (positive units) and coldest (negative units)
+        const hot = data.filter(user => user.unitsGained > 0)
+          .sort((a, b) => b.unitsGained - a.unitsGained)
+          .slice(0, 10);
+
+        const cold = data.filter(user => user.unitsGained < 0)
+          .sort((a, b) => a.unitsGained - b.unitsGained)
+          .slice(0, 10);
+
+        setHottestBettors(hot);
+        setColdestBettors(cold);
       } catch (error) {
         console.error('Error fetching leaderboard:', error);
       } finally {
@@ -48,6 +64,10 @@ const Leaders = () => {
 
   const handleLogoClick = () => {
     navigate("/dashboard");
+  };
+
+  const handleTabChange = (value: string) => {
+    setSearchParams({ type: value });
   };
 
   return (
@@ -67,12 +87,12 @@ const Leaders = () => {
         </div>
 
         <TabsContainer
-          activeTab="cold"
-          onTabChange={() => {}}
+          activeTab={activeTab}
+          onTabChange={handleTabChange}
           showAll={false}
           setShowAll={() => {}}
-          hottestBettors={[]}
-          coldestBettors={leaderboardData}
+          hottestBettors={hottestBettors}
+          coldestBettors={coldestBettors}
           loading={loading}
         />
         

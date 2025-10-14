@@ -18,58 +18,49 @@ const TrendStats = ({
   bettorName,
   isMostVisible
 }: TrendStatsProps) => {
-  // Generate dynamic status line based on performance and bet type
+  // Generate data-driven status line based on actual performance
   const generateStatusLine = () => {
     const total = wins + losses;
     const winRate = total > 0 ? (wins / total) : 0;
-    
-    // Hot streak indicators
+
+    // Not enough data
+    if (total < 3) {
+      return "not enough data yet.";
+    }
+
+    // Perfect or near-perfect hot streak (80%+)
     if (winRate >= 0.8 && total >= 5) {
-      const hotPhrases = [
-        "Auto-Tail Mode Engaged.",
-        "cooking.",
-        "might be onto something.",
-        "print factory.",
-        "safe but scary accurate.",
-        "specialist vibes.",
-        "might be rigging games.",
-        "might be on a heater from heaven.",
-        "ice cold and right every time."
-      ];
-      return hotPhrases[Math.floor(Math.random() * hotPhrases.length)];
+      if (winRate === 1.0) {
+        return `${total}-0 run. Auto-Tail Mode Engaged.`;
+      }
+      return `${wins}-${losses} on fire. cooking.`;
     }
-    
-    // Cold streak indicators
+
+    // Very cold streak (30% or worse)
     if (winRate <= 0.3 && total >= 5) {
-      const coldPhrases = [
-        "Fade Fuel Certified.",
-        "what are we doing.",
-        "he's donating again.",
-        "tail at your own risk.",
-        "legend in the wrong direction.",
-        "he's due. Or cursed.",
-        "doesn't help him win though."
-      ];
-      return coldPhrases[Math.floor(Math.random() * coldPhrases.length)];
+      if (winRate === 0) {
+        return `0-${total}. Fade Fuel Certified.`;
+      }
+      return `${wins}-${losses}. what are we doing.`;
     }
-    
-    // Moderate performance
+
+    // Moderate performance (40-60%)
     if (winRate >= 0.4 && winRate <= 0.6) {
-      return "beautiful chaos.";
+      return `${wins}-${losses}. beautiful chaos.`;
     }
-    
-    // Good but not great
+
+    // Good but not great (60-80%)
     if (winRate > 0.6 && winRate < 0.8) {
-      const decentPhrases = [
-        "respect the grind.",
-        "never doubt the system.",
-        "variance or violence?"
-      ];
-      return decentPhrases[Math.floor(Math.random() * decentPhrases.length)];
+      return `${wins}-${losses}. respect the grind.`;
     }
-    
+
+    // Poor but not terrible (30-40%)
+    if (winRate > 0.3 && winRate < 0.4) {
+      return `${wins}-${losses}. tail at your own risk.`;
+    }
+
     // Default fallback
-    return "the numbers don't lie.";
+    return `${wins}-${losses}. the numbers don't lie.`;
   };
 
   const statusLine = generateStatusLine();
