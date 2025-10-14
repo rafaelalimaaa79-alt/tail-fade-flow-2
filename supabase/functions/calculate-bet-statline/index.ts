@@ -20,18 +20,34 @@ function calculateStats(bets: any[]) {
 // Main function to calculate bet-specific statline
 async function calculateBetStatline(supabase: any, userId: string, betSlipId: string) {
   try {
-    console.log(`Calculating statline for user ${userId}, betSlip ${betSlipId}`);
+    console.log(`🔍 [STATLINE] Calculating for user ${userId}, betSlip ${betSlipId}`);
 
     // 1. Get the specific bet details
     const { data: targetBet, error: betError } = await supabase
       .from('bets')
-      .select('sport, bet_type, position, home_team, away_team')
+      .select('id, slip_id, bet_id, sport, bet_type, position, home_team, away_team')
       .eq('slip_id', betSlipId)
       .eq('user_id', userId)
       .single();
 
-    if (betError || !targetBet) {
-      console.error('Error fetching target bet:', betError?.message);
+    if (betError) {
+      console.error(`❌ [STATLINE] Error fetching target bet:`, betError);
+      console.error(`❌ [STATLINE] Error code: ${betError.code}, message: ${betError.message}`);
+
+      // Check if error is due to multiple rows
+      if (betError.code === 'PGRST116') {
+        console.error(`❌ [STATLINE] Multiple bets found with slip_id ${betSlipId} - this should not happen for single straight bets!`);
+      }
+
+      return {
+        statline: "Error fetching bet data",
+        fadeConfidence: 50,
+        metric: "error"
+      };
+    }
+
+    if (!targetBet) {
+      console.error(`❌ [STATLINE] No bet found with slip_id ${betSlipId}`);
       return {
         statline: "No bet data available",
         fadeConfidence: 50,
@@ -39,11 +55,22 @@ async function calculateBetStatline(supabase: any, userId: string, betSlipId: st
       };
     }
 
-    const { sport, bet_type, position, home_team, away_team } = targetBet;
+    const { id, slip_id, bet_id, sport, bet_type, position, home_team, away_team } = targetBet;
 
-    console.log(`Target bet: sport=${sport}, bet_type=${bet_type}, position=${position}`);
+    console.log(`✅ [STATLINE] Target bet found:`, {
+      id,
+      slip_id,
+      bet_id,
+      sport,
+      bet_type,
+      position,
+      home_team,
+      away_team
+    });
 
     // 2. Fetch all historical graded bets for this user
+    console.log(`📊 [STATLINE] Fetching historical bets for user ${userId}...`);
+
     const { data: allBets, error: fetchError } = await supabase
       .from('bets')
       .select('sport, bet_type, position, home_team, away_team, result, timestamp')
@@ -52,7 +79,7 @@ async function calculateBetStatline(supabase: any, userId: string, betSlipId: st
       .order('timestamp', { ascending: false });
 
     if (fetchError) {
-      console.error('Error fetching historical bets:', fetchError.message);
+      console.error(`❌ [STATLINE] Error fetching historical bets:`, fetchError);
       return {
         statline: "Error fetching bet history",
         fadeConfidence: 50,
@@ -61,6 +88,7 @@ async function calculateBetStatline(supabase: any, userId: string, betSlipId: st
     }
 
     if (!allBets || allBets.length === 0) {
+      console.log(`⚠️ [STATLINE] No betting history found for user ${userId}`);
       return {
         statline: "No betting history yet",
         fadeConfidence: 50,
@@ -68,7 +96,7 @@ async function calculateBetStatline(supabase: any, userId: string, betSlipId: st
       };
     }
 
-    console.log(`Found ${allBets.length} historical bets`);
+    console.log(`✅ [STATLINE] Found ${allBets.length} historical bets for analysis`);
 
     // 3. Calculate candidate metrics
     const metrics: any[] = [];
@@ -186,35 +214,49 @@ async function calculateBetStatline(supabase: any, userId: string, betSlipId: st
 
     // 4. Choose the most specific metric available (highest priority)
     if (metrics.length === 0) {
-      console.log('No sport-specific metrics available, using overall fallback');
+      console.log(`⚠️ [STATLINE] No sport-specific metrics available, using overall fallback`);
       // Fallback: Overall last 10 across all sports
       const overallRecent = allBets.slice(0, 10);
       const stats = calculateStats(overallRecent);
 
-      return {
+      const result = {
         statline: `He's ${stats.wins}-${stats.losses} in last ${stats.total} bets`,
         fadeConfidence: Math.max(50, Math.min(99, 100 - stats.winRate)),
         metric: 'fallback_overall'
       };
+
+      console.log(`📤 [STATLINE] Returning fallback result:`, result);
+      return result;
     }
 
     // Sort by priority (ascending) to get most specific metric
     // Priority 1 (team) > Priority 2 (market) > Priority 3 (sport) > Priority 4 (recent form)
+    console.log(`🎯 [STATLINE] Evaluating ${metrics.length} candidate metrics:`, metrics.map(m => ({
+      type: m.type,
+      priority: m.priority,
+      record: `${m.wins}-${m.losses}`,
+      winRate: `${m.winRate}%`
+    })));
+
     const mostSpecificMetric = metrics.sort((a, b) => a.priority - b.priority)[0];
 
-    console.log(`Most specific metric selected: ${mostSpecificMetric.type} (priority ${mostSpecificMetric.priority}) with ${mostSpecificMetric.winRate}% win rate`);
+    console.log(`✅ [STATLINE] Most specific metric selected: ${mostSpecificMetric.type} (priority ${mostSpecificMetric.priority}) with ${mostSpecificMetric.winRate}% win rate`);
 
     const statline = `He's ${mostSpecificMetric.wins}-${mostSpecificMetric.losses} ${mostSpecificMetric.label}`;
     const fadeConfidence = Math.max(50, Math.min(99, 100 - mostSpecificMetric.winRate));
 
-    return {
+    const result = {
       statline,
       fadeConfidence,
       metric: mostSpecificMetric.type
     };
 
+    console.log(`📤 [STATLINE] Returning result for slip_id ${betSlipId}:`, result);
+    return result;
+
   } catch (error: any) {
-    console.error('Error in calculateBetStatline:', error.message);
+    console.error(`❌ [STATLINE] Unexpected error in calculateBetStatline:`, error);
+    console.error(`❌ [STATLINE] Error stack:`, error.stack);
     return {
       statline: "Error calculating statline",
       fadeConfidence: 50,

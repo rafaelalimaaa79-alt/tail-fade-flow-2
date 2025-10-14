@@ -108,12 +108,13 @@ async function waitForFreshness({ internalId, timeoutMs = 30_000, intervalMs = 1
   console.warn("Freshness wait timed out; proceeding to fetch slips.");
 }
 // Generalized function to fetch bet slips with retry logic
-async function fetchBetSlips(internalId, status = "pending", limit = 200) {
+async function fetchBetSlips(internalId, status = "pending", limit = 200, page = 1) {
   const qs = new URLSearchParams({
     status: status,
     type: "single",
     betType: "straight",
-    limit: String(limit)
+    limit: String(limit),
+    page: String(page)
   });
   const url = `https://api.sharpsports.io/v1/bettors/${internalId}/betSlips?${qs.toString()}`;
   const attempt = async ()=>{
@@ -149,9 +150,56 @@ async function fetchPendingSingles(internalId) {
   return fetchBetSlips(internalId, "pending", 200);
 }
 
-// Fetch historical/completed bets for statistics
+// Fetch historical/completed bets for statistics (limited)
 async function fetchHistoricalBets(internalId, limit = 50) {
   return fetchBetSlips(internalId, "completed", limit);
+}
+
+// Fetch ALL historical/completed bets with pagination for comprehensive analysis
+async function fetchAllHistoricalBets(internalId, maxPages = 50) {
+  console.log(`📚 [SYNC] Fetching ALL historical bets for user ${internalId} (max ${maxPages} pages)...`);
+
+  const allSlips = [];
+  let page = 1;
+  const limit = 200; // Max per page
+
+  while (page <= maxPages) {
+    try {
+      console.log(`📄 [SYNC] Fetching page ${page}/${maxPages} (limit: ${limit})...`);
+
+      const slips = await fetchBetSlips(internalId, "completed", limit, page);
+
+      if (!slips || !slips.data || slips.data.length === 0) {
+        console.log(`✅ [SYNC] No more bets found on page ${page}. Total fetched: ${allSlips.length}`);
+        break;
+      }
+
+      allSlips.push(...slips.data);
+      console.log(`✅ [SYNC] Page ${page}: Found ${slips.data.length} bets. Total so far: ${allSlips.length}`);
+
+      // If we got fewer than limit, we've reached the end
+      if (slips.data.length < limit) {
+        console.log(`✅ [SYNC] Reached end of historical bets (page ${page} had ${slips.data.length} < ${limit}). Total: ${allSlips.length}`);
+        break;
+      }
+
+      page++;
+
+      // Small delay to avoid rate limiting
+      if (page <= maxPages) {
+        await sleep(100);
+      }
+
+    } catch (error) {
+      console.error(`❌ [SYNC] Error fetching page ${page}:`, error);
+      // Continue with what we have so far
+      break;
+    }
+  }
+
+  console.log(`📊 [SYNC] Finished fetching historical bets. Total: ${allSlips.length} bets across ${page - 1} pages`);
+
+  return { data: allSlips };
 }
 
 // Calculate stats from bet rows
@@ -619,11 +667,11 @@ serve(async (req)=>{
       });
     }
 
-    // 12) FETCH both pending and historical slips
-    console.log("Fetching pending and historical bets...");
+    // 12) FETCH both pending and ALL historical slips
+    console.log("Fetching pending and ALL historical bets...");
     const [pendingSlips, historicalSlips] = await Promise.all([
       fetchPendingSingles(internalId),
-      fetchHistoricalBets(internalId, 50) // Fetch last 50 historical bets for statistics
+      fetchAllHistoricalBets(internalId, 50) // Fetch ALL historical bets (up to 50 pages = 10,000 bets)
     ]);
 
     // 13) Transform rows - helper function to avoid duplication
@@ -696,7 +744,10 @@ serve(async (req)=>{
 
     // 15) Process historical bets
     const historicalRows = [];
-    for (const slip of historicalSlips ?? []) {
+    const historicalData = historicalSlips?.data ?? [];
+    console.log(`Processing ${historicalData.length} historical slips...`);
+
+    for (const slip of historicalData) {
       if (slip.status !== "pending") {
         historicalRows.push(...transformSlipToRows(slip, false));
       }

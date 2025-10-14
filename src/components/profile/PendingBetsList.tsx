@@ -185,7 +185,7 @@ const PendingBetsList = () => {
               boxShadow: "0 0 20px rgba(174, 227, 245, 0.6), 0 0 40px rgba(174, 227, 245, 0.3)"
             }}
           >
-            {showAll ? `Show Top 3 Bets` : `View All ${pendingBets.length} Pending Bets`}
+            {showAll ? `Show Top 3 Bets` : `View All ${betsWithStatlines.length} Pending Bets`}
             {!showAll && <ArrowRight className="ml-2 h-5 w-5" />}
           </Button>
         </div>
