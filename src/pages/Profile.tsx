@@ -49,6 +49,7 @@ const ProfilePage = () => {
 
         setUserStats(prev => ({
           ...prev,
+          rank: summary.profile.tailRanking, // Use real tail ranking from leaderboard
           winRate: summary.profile.stats.winRate,
           roi: summary.profile.stats.roi,
           profit: summary.profile.stats.unitsGained,

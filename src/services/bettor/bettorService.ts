@@ -3,6 +3,7 @@ import { BettorSummary, BettorBet, BetHistoryPoint } from "@/types/bettor";
 import { TimeFrame, BettorActivity } from "./types";
 import { calculateBettorStats } from "@/utils/bettorStatsCalculator";
 import { supabase } from "@/integrations/supabase/client";
+import { getLeaderboardData } from "@/services/userDataService";
 
 // Helper to convert timeframe to days limit
 const getTimeframeDays = (timeframe: TimeFrame): number => {
@@ -115,35 +116,64 @@ const calculatePerformanceByTimeframe = async (
   }
 };
 
+/**
+ * Calculate tail ranking for a bettor
+ * Tail ranking = position among profitable bettors sorted by units gained (descending)
+ * Returns 0 if bettor is not profitable or not ranked
+ */
+const calculateTailRanking = async (bettorId: string): Promise<number> => {
+  try {
+    // Get all leaderboard data
+    const leaderboardData = await getLeaderboardData();
+
+    // Filter for profitable bettors only (positive units gained)
+    const hottestBettors = leaderboardData
+      .filter(user => user.unitsGained > 0)
+      .sort((a, b) => b.unitsGained - a.unitsGained);
+
+    // Find this bettor's position (index + 1 = rank)
+    const rankIndex = hottestBettors.findIndex(user => user.id === bettorId);
+
+    // Return 0 if not found (not profitable enough to be ranked)
+    return rankIndex >= 0 ? rankIndex + 1 : 0;
+  } catch (error) {
+    console.error('Error calculating tail ranking:', error);
+    return 0;
+  }
+};
+
 // Fetch bettor summary with real data
 export const fetchBettorSummary = async (
   bettorId: string,
   timeframe: TimeFrame = '1M'
 ): Promise<BettorSummary> => {
   console.log(`Fetching bettor summary for ${bettorId} with timeframe ${timeframe}`);
-  
+
   try {
     // Calculate real statistics for the bettor
     const limit = getTimeframeDays(timeframe) * 5; // Approximate bet limit per timeframe
     const stats = await calculateBettorStats(bettorId, undefined, undefined, limit);
-    
+
     // Fetch profile info from database
     const { data: profile, error: profileError } = await supabase
       .from('user_profiles')
       .select('username')
       .eq('id', bettorId)
       .single();
-    
+
     if (profileError && profileError.code !== 'PGRST116') {
       console.error('Error fetching profile:', profileError);
     }
-    
+
     // Calculate performance by timeframe
     const performanceByTimeframe = await calculatePerformanceByTimeframe(bettorId);
-    
+
     // Generate graph data for the selected timeframe
     const graphData = await generateGraphData(bettorId, timeframe);
-    
+
+    // Calculate tail ranking (position among profitable bettors)
+    const tailRanking = await calculateTailRanking(bettorId);
+
     // Fetch biggest winners
     const { data: biggestWinners, error: winnersError } = await supabase
       .from('bets')
@@ -152,11 +182,11 @@ export const fetchBettorSummary = async (
       .eq('result', 'Win')
       .order('units_won_lost', { ascending: false })
       .limit(5);
-    
+
     if (winnersError) {
       console.error('Error fetching biggest winners:', winnersError);
     }
-    
+
     // Fetch largest bets by units risked
     const { data: largestBetsData, error: largestBetsError } = await supabase
       .from('bets')
@@ -164,17 +194,17 @@ export const fetchBettorSummary = async (
       .eq('user_id', bettorId)
       .order('units_risked', { ascending: false })
       .limit(10);
-    
+
     if (largestBetsError) {
       console.error('Error fetching largest bets:', largestBetsError);
     }
-    
+
     // Build summary from real data
     const summary: BettorSummary = {
       profile: {
         userId: bettorId,
         username: profile?.username || `Bettor${bettorId.substring(0, 4)}`,
-        tailRanking: 0, // TODO: Fetch from leaderboard system (Phase 2)
+        tailRanking: tailRanking, // Real tail ranking based on leaderboard position
         stats: {
           totalBets: stats.totalBets,
           roi: stats.winRate > 0 ? ((stats.netProfit / stats.totalBets) * 100) : 0,
