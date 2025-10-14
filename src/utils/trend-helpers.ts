@@ -1,11 +1,5 @@
 
 import { getRandomGame, realGames } from "@/data/realGamesData";
-import { analyzeBettorWeaknesses, getStrongestWeaknessDescription } from "@/utils/weakness-analyzer";
-
-// Function to get fade confidence
-export const getFadeConfidence = () => {
-  return Math.floor(Math.random() * 30) + 70; // Random between 70-99%
-};
 
 // Function to generate matchups for different sports
 export const getMatchup = (sport?: string) => {
@@ -63,26 +57,3 @@ export const getBetLine = (teams: string[], sport?: string) => {
   return `${team} ML`;
 };
 
-// Function to generate sport-specific statlines using weakness analysis
-export const getSportStatline = (sport: string, bettorName?: string, betDescription?: string) => {
-  // If we have enough info, use the weakness analyzer
-  if (bettorName && betDescription) {
-    const weaknesses = analyzeBettorWeaknesses(bettorName, betDescription, sport);
-    return getStrongestWeaknessDescription(weaknesses);
-  }
-  
-  // Fallback to old method if not enough info
-  const wins = Math.floor(Math.random() * 10) + 1;
-  const totalBets = wins + Math.floor(Math.random() * 15) + 3;
-  
-  const sportStatlines = {
-    "NBA": `He is ${wins} for ${totalBets} in his last ${totalBets} NBA bets`,
-    "NFL": `He is ${wins} for ${totalBets} in his last ${totalBets} NFL bets`,
-    "MLB": `He is ${wins} for ${totalBets} in his last ${totalBets} MLB bets`,
-    "NHL": `He is ${wins} for ${totalBets} in his last ${totalBets} NHL bets`,
-    "UFC": `He is ${wins} for ${totalBets} in his last ${totalBets} UFC fights`,
-    "NCAAFB": `He is ${wins} for ${totalBets} in his last ${totalBets} NCAAFB bets`
-  };
-  
-  return sportStatlines[sport as keyof typeof sportStatlines] || `He is ${wins} for ${totalBets} in his last ${totalBets} bets`;
-};

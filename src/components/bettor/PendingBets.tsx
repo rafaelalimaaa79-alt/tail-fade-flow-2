@@ -1,7 +1,6 @@
 
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import { BettorBet, BettorProfile } from "@/types/bettor";
-import { analyzeBettorWeaknesses, getStrongestWeaknessDescription } from "@/utils/weakness-analyzer";
 import { cn } from "@/lib/utils";
 import { format } from "date-fns";
 import { Badge } from "@/components/ui/badge";
@@ -10,6 +9,7 @@ import ActionButton from "@/components/ActionButton";
 import { ThumbsUp, ThumbsDown, Clock, Star, ArrowRight } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Separator } from "@/components/ui/separator";
+import { getConfidenceScore } from "@/services/userDataService";
 
 type PendingBetsProps = {
   pendingBets: BettorBet[];
@@ -19,74 +19,38 @@ type PendingBetsProps = {
 
 const PendingBets: React.FC<PendingBetsProps> = ({ pendingBets, profile, className }) => {
   const [showAll, setShowAll] = useState(false);
-  
+  const [confidenceData, setConfidenceData] = useState<{score: number, statline: string | null} | null>(null);
+
+  // Fetch real confidence score and statline from Supabase using existing service
+  useEffect(() => {
+    const fetchConfidenceData = async () => {
+      if (!profile.userId) return;
+
+      const data = await getConfidenceScore(profile.userId);
+
+      if (data) {
+        setConfidenceData({
+          score: data.score,
+          statline: data.statline
+        });
+      }
+    };
+
+    fetchConfidenceData();
+  }, [profile.userId]);
+
   const handleFade = (bet: BettorBet) => {
     showFadeNotification("Bettor", bet.betType);
   };
 
-  // Function to get fade confidence (mock data for now)
-  const getFadeConfidence = () => {
-    return Math.floor(Math.random() * 30) + 70; // Random between 70-99%
-  };
-
-  // Function to generate NBA matchups
-  const getMatchup = () => {
-    const matchups = [
-      { game: "Lakers vs Celtics", teams: ["Lakers", "Celtics"], sport: "NBA" },
-      { game: "Warriors vs Nets", teams: ["Warriors", "Nets"], sport: "NBA" }, 
-      { game: "Bucks vs Heat", teams: ["Bucks", "Heat"], sport: "NBA" },
-      { game: "76ers vs Nuggets", teams: ["76ers", "Nuggets"], sport: "NBA" },
-      { game: "Suns vs Mavericks", teams: ["Suns", "Mavericks"], sport: "NBA" }
-    ];
-    return matchups[Math.floor(Math.random() * matchups.length)];
-  };
-
-  // Function to generate realistic NBA bet lines
-  const getBetLine = (teams: string[]) => {
-    const team = teams[Math.floor(Math.random() * teams.length)];
-    const betTypes = [
-      "Over 230.5", // Total points
-      "Under 225.5", // Total points
-      "-3.5", // Point spread
-      "+5.5", // Point spread
-      "Over 115.5", // Team total
-      "Under 110.5", // Team total
-      "ML" // Moneyline
-    ];
-    const betType = betTypes[Math.floor(Math.random() * betTypes.length)];
-    
-    // For totals, don't include team name
-    if (betType.includes("Over") || betType.includes("Under")) {
-      if (betType.includes("230.5") || betType.includes("225.5")) {
-        return betType; // Game total
-      } else {
-        return `${team} ${betType}`; // Team total
-      }
-    }
-    
-    // For spreads and ML, include team name
-    return `${team} ${betType}`;
-  };
-
-  // Function to generate sport-specific statlines using weakness analysis
-  const getSportStatline = (sport: string, bettorName: string, betDescription: string) => {
-    const weaknesses = analyzeBettorWeaknesses(bettorName, betDescription, sport);
-    return getStrongestWeaknessDescription(weaknesses);
-  };
-
-  // Create bets with fade confidence and sort by highest confidence
+  // Create bets with real fade confidence and statline from database
   const betsWithConfidence = pendingBets.map(bet => ({
     ...bet,
-    fadeConfidence: getFadeConfidence(),
-    matchup: getMatchup(),
-    betLine: (() => {
-      const matchup = getMatchup();
-      return getBetLine(matchup.teams);
-    })(),
-    sportStatline: (() => {
-      const matchup = getMatchup();
-      return getSportStatline(matchup.sport, profile.username, bet.teams);
-    })()
+    fadeConfidence: confidenceData?.score || 0,
+    sportStatline: confidenceData?.statline || "No data available",
+    // Keep display data from the bet itself
+    matchup: { game: bet.teams, teams: [bet.teams], sport: "NCAAFB" },
+    betLine: bet.betType
   })).sort((a, b) => b.fadeConfidence - a.fadeConfidence);
 
   // Determine which bets to show

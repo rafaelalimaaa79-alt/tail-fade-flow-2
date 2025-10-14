@@ -485,6 +485,118 @@ export async function getLeaderboardData(
 }
 
 /**
+ * Get top hottest bettors (most profitable)
+ * @param limit - Number of hottest bettors to return (default: 5)
+ * @param currentUserId - Current user ID to exclude from results
+ * @returns Array of hottest bettors with their stats
+ */
+export async function getHottestBettors(
+  limit: number = 5,
+  currentUserId?: string
+) {
+  try {
+    // Query user_profiles for most profitable users
+    let query = supabase
+      .from('user_profiles')
+      .select('id, username, units_gained, win_rate, total_bets')
+      .gt('units_gained', 0) // Only profitable users
+      .order('units_gained', { ascending: false })
+      .limit(limit);
+
+    // Exclude current user if provided
+    if (currentUserId) {
+      query = query.neq('id', currentUserId);
+    }
+
+    const { data: profiles, error } = await query;
+
+    if (error) {
+      console.error('Error fetching hottest bettors:', error);
+      return [];
+    }
+
+    if (!profiles || profiles.length === 0) {
+      return [];
+    }
+
+    // Fetch recent streak for each bettor using existing service function
+    const bettorsWithStreaks = await Promise.all(
+      profiles.map(async (profile) => {
+        const streak = await getRecentStreak(profile.id, 5);
+
+        return {
+          id: profile.id,
+          name: profile.username || 'Unknown',
+          profit: Math.round(profile.units_gained / 100), // Convert cents to dollars
+          streak: streak.length > 0 ? streak : [0, 0, 0, 0, 0]
+        };
+      })
+    );
+
+    return bettorsWithStreaks;
+  } catch (error) {
+    console.error('Error in getHottestBettors:', error);
+    return [];
+  }
+}
+
+/**
+ * Get top coldest bettors (most negative units)
+ * @param limit - Number of coldest bettors to return (default: 10)
+ * @param currentUserId - Current user ID to exclude from results
+ * @returns Array of coldest bettors with their stats
+ */
+export async function getColdestBettors(
+  limit: number = 10,
+  currentUserId?: string
+) {
+  try {
+    // Query user_profiles for most unprofitable users
+    let query = supabase
+      .from('user_profiles')
+      .select('id, username, units_gained, win_rate, total_bets')
+      .lt('units_gained', 0) // Only unprofitable users
+      .order('units_gained', { ascending: true }) // Most negative first
+      .limit(limit);
+
+    // Exclude current user if provided
+    if (currentUserId) {
+      query = query.neq('id', currentUserId);
+    }
+
+    const { data: profiles, error } = await query;
+
+    if (error) {
+      console.error('Error fetching coldest bettors:', error);
+      return [];
+    }
+
+    if (!profiles || profiles.length === 0) {
+      return [];
+    }
+
+    // Fetch recent streak for each bettor using existing service function
+    const bettorsWithStreaks = await Promise.all(
+      profiles.map(async (profile) => {
+        const streak = await getRecentStreak(profile.id, 5);
+
+        return {
+          id: profile.id,
+          name: profile.username || 'Unknown',
+          profit: Math.round(profile.units_gained / 100), // Convert cents to dollars
+          streak: streak.length > 0 ? streak : [0, 0, 0, 0, 0]
+        };
+      })
+    );
+
+    return bettorsWithStreaks;
+  } catch (error) {
+    console.error('Error in getColdestBettors:', error);
+    return [];
+  }
+}
+
+/**
  * Get top coldest bettors with their pending bets
  * @param limit - Number of coldest bettors to return (default: 5)
  * @param currentUserId - Current user ID to exclude from results

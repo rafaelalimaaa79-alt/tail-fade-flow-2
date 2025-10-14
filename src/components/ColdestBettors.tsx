@@ -1,28 +1,63 @@
 
-import React from "react";
+import React, { useState, useEffect } from "react";
 import BettorStreakItem from "./BettorStreakItem";
+import { getColdestBettors, getCurrentUserId } from "@/services/userDataService";
 
-// Mock data - this would come from an API in a real app
-const coldestBettors = [
-  { id: "6", name: "Kevin", profit: -165, streak: [0, 0, 0, 0, 1] }, // 1=win, 0=loss
-  { id: "7", name: "Lisa", profit: -149, streak: [0, 0, 0, 1, 0] },
-  { id: "8", name: "Ryan", profit: -125, streak: [1, 0, 0, 0, 0] },
-  { id: "9", name: "Emily", profit: -110, streak: [0, 1, 0, 0, 0] },
-  { id: "10", name: "Alex", profit: -21, streak: [0, 0, 0, 0, 0] },
-  { id: "11", name: "Sam", profit: -19, streak: [0, 0, 0, 1, 0] },
-  { id: "12", name: "Jordan", profit: -18, streak: [1, 0, 0, 0, 0] },
-  { id: "13", name: "Casey", profit: -17, streak: [0, 1, 0, 0, 0] },
-  { id: "14", name: "Taylor", profit: -16, streak: [0, 0, 1, 0, 0] },
-  { id: "15", name: "Blake", profit: -42, streak: [1, 0, 1, 0, 0] },
-];
+interface ColdestBettor {
+  id: string;
+  name: string;
+  profit: number;
+  streak: number[];
+}
 
 const ColdestBettors = () => {
+  const [coldestBettors, setColdestBettors] = useState<ColdestBettor[]>([]);
+  const [loading, setLoading] = useState(true);
+
+  useEffect(() => {
+    const fetchColdestBettors = async () => {
+      try {
+        const currentUserId = await getCurrentUserId();
+        const bettors = await getColdestBettors(10, currentUserId || undefined);
+        setColdestBettors(bettors);
+      } catch (error) {
+        console.error('Error fetching coldest bettors:', error);
+      } finally {
+        setLoading(false);
+      }
+    };
+
+    fetchColdestBettors();
+  }, []);
+
+  if (loading) {
+    return (
+      <div className="rounded-xl bg-card p-5 shadow-lg border border-white/10">
+        <div className="mb-4 flex items-center justify-center">
+          <h3 className="text-lg font-bold text-white/90">Ice Cold</h3>
+        </div>
+        <div className="text-center text-white/60 py-8">Loading...</div>
+      </div>
+    );
+  }
+
+  if (coldestBettors.length === 0) {
+    return (
+      <div className="rounded-xl bg-card p-5 shadow-lg border border-white/10">
+        <div className="mb-4 flex items-center justify-center">
+          <h3 className="text-lg font-bold text-white/90">Ice Cold</h3>
+        </div>
+        <div className="text-center text-white/60 py-8">No unprofitable bettors yet</div>
+      </div>
+    );
+  }
+
   return (
     <div className="rounded-xl bg-card p-5 shadow-lg border border-white/10">
       <div className="mb-4 flex items-center justify-center">
         <h3 className="text-lg font-bold text-white/90">Ice Cold</h3>
       </div>
-      
+
       <div className="max-h-[300px] overflow-y-auto space-y-1">
         {coldestBettors.map((bettor) => (
           <BettorStreakItem
