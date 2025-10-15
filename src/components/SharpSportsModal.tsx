@@ -1,6 +1,6 @@
 import { Dialog, DialogContent, DialogHeader, DialogTitle } from '@/components/ui/dialog';
 import { useEffect, useState, useRef } from 'react';
-import { Loader2 } from 'lucide-react';
+import { Loader2, CheckCircle2 } from 'lucide-react';
 
 interface SharpSportsModalProps {
   url: string | null;
@@ -27,6 +27,8 @@ export const SharpSportsModal = ({
   const [isLoading, setIsLoading] = useState(true);
   const [canClose, setCanClose] = useState(false);
   const [showManualClose, setShowManualClose] = useState(false);
+  const [countdown, setCountdown] = useState(45);
+  const [isVerified, setIsVerified] = useState(false);
   const iframeRef = useRef<HTMLIFrameElement>(null);
   const loadCountRef = useRef(0);
   const completedRef = useRef(false);
@@ -38,6 +40,8 @@ export const SharpSportsModal = ({
     if (url) {
       setIsLoading(true);
       setShowManualClose(false);
+      setCountdown(45); // Reset countdown
+      setIsVerified(false); // Reset verification state
       loadCountRef.current = 0; // Reset load counter for new URL
       completedRef.current = false;
 
@@ -59,6 +63,22 @@ export const SharpSportsModal = ({
       }
     }
   }, [url, is2FA]);
+
+  // Countdown timer for 2FA
+  useEffect(() => {
+    if (!isOpen || !is2FA || isVerified || isLoading) return;
+
+    const timer = setInterval(() => {
+      setCountdown((prev) => {
+        if (prev <= 1) {
+          return 0; // Stop at 0
+        }
+        return prev - 1;
+      });
+    }, 1000);
+
+    return () => clearInterval(timer);
+  }, [isOpen, is2FA, isVerified, isLoading]);
 
   useEffect(() => {
     if (!isOpen) return;
@@ -122,8 +142,13 @@ export const SharpSportsModal = ({
     }
 
     completedRef.current = true;
+    setIsVerified(true); // Show success state
     console.log(`🎉 Triggering completion from ${source}`);
-    handleClose(true);
+    
+    // Delay closing slightly to show success state
+    setTimeout(() => {
+      handleClose(true);
+    }, 1000);
   };
 
   const handleClose = (completed: boolean = false) => {
@@ -182,15 +207,78 @@ export const SharpSportsModal = ({
           {message && (
             <p className="text-sm text-muted-foreground mt-1">{message}</p>
           )}
-          {is2FA && (
-            <div className="mt-3 space-y-2">
-              <p className="text-sm text-yellow-400 font-medium flex items-center gap-2">
-                <span className="text-lg">⏳</span>
-                Please wait - the modal will close automatically after verification succeeds.
-              </p>
-              <p className="text-xs text-gray-400">
-                Do not close this window manually.
-              </p>
+          {is2FA && !isLoading && (
+            <div className="mt-3 flex items-center justify-center">
+              <div className="relative flex items-center justify-center">
+                {/* Circular progress ring */}
+                <svg className="w-16 h-16 transform -rotate-90">
+                  <circle
+                    cx="32"
+                    cy="32"
+                    r="28"
+                    stroke="currentColor"
+                    strokeWidth="4"
+                    fill="none"
+                    className="text-white/10"
+                  />
+                  <circle
+                    cx="32"
+                    cy="32"
+                    r="28"
+                    stroke="currentColor"
+                    strokeWidth="4"
+                    fill="none"
+                    className={isVerified ? "text-green-500" : "text-[#AEE3F5]"}
+                    strokeDasharray={`${2 * Math.PI * 28}`}
+                    strokeDashoffset={`${2 * Math.PI * 28 * (1 - countdown / 45)}`}
+                    style={{ transition: 'stroke-dashoffset 1s linear' }}
+                  />
+                </svg>
+                {/* Center content */}
+                <div className="absolute inset-0 flex items-center justify-center">
+                  {isVerified ? (
+                    <CheckCircle2 className="w-8 h-8 text-green-500" />
+                  ) : (
+                    <span className="text-2xl font-bold text-[#AEE3F5]">
+                      {countdown}
+                    </span>
+                  )}
+                </div>
+              </div>
+              <div className="ml-4">
+                {isVerified ? (
+                  <p className="text-sm font-medium text-green-500">
+                    ✓ Verified! Fetching bets...
+                  </p>
+                ) : countdown > 10 ? (
+                  <div>
+                    <p className="text-sm font-medium text-[#AEE3F5]">
+                      Verifying your code...
+                    </p>
+                    <p className="text-xs text-white/60 mt-1">
+                      {countdown}s remaining
+                    </p>
+                  </div>
+                ) : countdown > 0 ? (
+                  <div>
+                    <p className="text-sm font-medium text-yellow-400 animate-pulse">
+                      Almost there...
+                    </p>
+                    <p className="text-xs text-white/60 mt-1">
+                      {countdown}s remaining
+                    </p>
+                  </div>
+                ) : (
+                  <div>
+                    <p className="text-sm font-medium text-white/80">
+                      Taking longer than usual...
+                    </p>
+                    <p className="text-xs text-white/60 mt-1">
+                      Please be patient
+                    </p>
+                  </div>
+                )}
+              </div>
             </div>
           )}
         </DialogHeader>
@@ -218,12 +306,11 @@ export const SharpSportsModal = ({
 
         <div className="p-4 border-t border-white/10">
           {is2FA ? (
-            // 2FA: Show waiting indicator
-            !isLoading && (
-              <div className="flex items-center justify-center gap-2 text-sm text-gray-400">
-                <div className="animate-spin h-4 w-4 border-2 border-gray-400 border-t-transparent rounded-full" />
-                <span>Waiting for verification...</span>
-              </div>
+            // 2FA: Show instruction
+            !isLoading && !isVerified && (
+              <p className="text-xs text-white/60 text-center">
+                Please complete the verification above. This window will close automatically.
+              </p>
             )
           ) : (
             // Relinking: Show manual close button or instruction
