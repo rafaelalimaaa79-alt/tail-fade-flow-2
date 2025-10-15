@@ -27,7 +27,7 @@ export const SharpSportsModal = ({
   const [isLoading, setIsLoading] = useState(true);
   const [canClose, setCanClose] = useState(false);
   const [showManualClose, setShowManualClose] = useState(false);
-  const [countdown, setCountdown] = useState(35);
+  const [countdown, setCountdown] = useState(40);
   const [isVerified, setIsVerified] = useState(false);
   const iframeRef = useRef<HTMLIFrameElement>(null);
   const loadCountRef = useRef(0);
@@ -40,7 +40,7 @@ export const SharpSportsModal = ({
     if (url) {
       setIsLoading(true);
       setShowManualClose(false);
-      setCountdown(35); // Reset countdown
+      setCountdown(40); // Reset countdown
       setIsVerified(false); // Reset verification state
       loadCountRef.current = 0; // Reset load counter for new URL
       completedRef.current = false;
@@ -204,7 +204,7 @@ export const SharpSportsModal = ({
       <DialogContent className="max-w-lg h-[600px] p-0 bg-background flex flex-col gap-0">
         <DialogHeader className="p-4 pb-2 border-b border-white/10">
           <DialogTitle className="text-white">{title}</DialogTitle>
-          {message && (
+          {!is2FA && message && (
             <p className="text-sm text-muted-foreground mt-1">{message}</p>
           )}
           {is2FA && !isLoading && (
@@ -230,7 +230,7 @@ export const SharpSportsModal = ({
                     fill="none"
                     className={isVerified ? "text-green-500" : "text-[#AEE3F5]"}
                     strokeDasharray={`${2 * Math.PI * 28}`}
-                    strokeDashoffset={`${2 * Math.PI * 28 * (1 - countdown / 35)}`}
+                    strokeDashoffset={`${2 * Math.PI * 28 * (1 - countdown / 40)}`}
                     style={{ transition: 'stroke-dashoffset 1s linear' }}
                   />
                 </svg>
@@ -250,10 +250,19 @@ export const SharpSportsModal = ({
                   <p className="text-sm font-medium text-green-500">
                     ✓ Verified! Fetching bets...
                   </p>
+                ) : countdown > 25 ? (
+                  <div>
+                    <p className="text-sm font-medium text-[#AEE3F5]">
+                      ✓ Waiting for verification code entry
+                    </p>
+                    <p className="text-xs text-white/60 mt-1">
+                      {countdown}s remaining
+                    </p>
+                  </div>
                 ) : countdown > 10 ? (
                   <div>
                     <p className="text-sm font-medium text-[#AEE3F5]">
-                      Verifying your code...
+                      ⏳ Verifying code...
                     </p>
                     <p className="text-xs text-white/60 mt-1">
                       {countdown}s remaining
@@ -262,7 +271,7 @@ export const SharpSportsModal = ({
                 ) : countdown > 0 ? (
                   <div>
                     <p className="text-sm font-medium text-yellow-400 animate-pulse">
-                      Almost there...
+                      ⏳ Fetching your bets...
                     </p>
                     <p className="text-xs text-white/60 mt-1">
                       {countdown}s remaining
