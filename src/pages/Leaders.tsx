@@ -1,12 +1,12 @@
 import React, { useState, useEffect } from "react";
 import BottomNav from "@/components/BottomNav";
 import { useIsMobile } from "@/hooks/use-mobile";
-import TabsContainer from "@/components/leaders/TabsContainer";
+import LeaderboardTable from "@/components/leaders/LeaderboardTable";
 import ProfileIcon from "@/components/common/ProfileIcon";
 import HeaderChatIcon from "@/components/common/HeaderChatIcon";
 import InlineSmackTalk from "@/components/InlineSmackTalk";
 import { useInlineSmackTalk } from "@/hooks/useInlineSmackTalk";
-import { useNavigate, useSearchParams } from "react-router-dom";
+import { useNavigate } from "react-router-dom";
 import FloatingSyncButton from "@/components/common/FloatingSyncButton";
 import { getLeaderboardData, getCurrentUserId } from "@/services/userDataService";
 
@@ -25,14 +25,9 @@ interface LeaderboardUser {
 const Leaders = () => {
   const isMobile = useIsMobile();
   const navigate = useNavigate();
-  const [searchParams, setSearchParams] = useSearchParams();
   const { isOpen, smackTalkData, closeSmackTalk } = useInlineSmackTalk();
   const [coldestBettors, setColdestBettors] = useState<LeaderboardUser[]>([]);
-  const [hottestBettors, setHottestBettors] = useState<LeaderboardUser[]>([]);
   const [loading, setLoading] = useState(true);
-
-  // Get active tab from URL params, default to 'cold'
-  const activeTab = (searchParams.get('type') as 'hot' | 'cold') || 'cold';
 
   // Fetch leaderboard data
   useEffect(() => {
@@ -41,16 +36,11 @@ const Leaders = () => {
         const currentUserId = await getCurrentUserId();
         const data = await getLeaderboardData(currentUserId || undefined);
 
-        // Split data into hottest (positive units) and coldest (negative units)
-        const hot = data.filter(user => user.unitsGained > 0)
-          .sort((a, b) => b.unitsGained - a.unitsGained)
-          .slice(0, 10);
-
+        // Get coldest bettors (negative units)
         const cold = data.filter(user => user.unitsGained < 0)
           .sort((a, b) => a.unitsGained - b.unitsGained)
           .slice(0, 10);
 
-        setHottestBettors(hot);
         setColdestBettors(cold);
       } catch (error) {
         console.error('Error fetching leaderboard:', error);
@@ -64,10 +54,6 @@ const Leaders = () => {
 
   const handleLogoClick = () => {
     navigate("/dashboard");
-  };
-
-  const handleTabChange = (value: string) => {
-    setSearchParams({ type: value });
   };
 
   return (
@@ -86,15 +72,24 @@ const Leaders = () => {
           </div>
         </div>
 
-        <TabsContainer
-          activeTab={activeTab}
-          onTabChange={handleTabChange}
-          showAll={false}
-          setShowAll={() => {}}
-          hottestBettors={hottestBettors}
-          coldestBettors={coldestBettors}
-          loading={loading}
-        />
+        <div className="mb-6 text-center bg-gradient-to-r from-[#AEE3F5]/10 to-[#AEE3F5]/5 rounded-xl border border-[#AEE3F5]/20 p-6">
+          <h2 className="text-3xl font-bold font-exo text-[#AEE3F5] uppercase tracking-wide mb-2 drop-shadow-[0_0_8px_rgba(174,227,245,0.7)]">
+            Fade Leaderboard
+          </h2>
+          <p className="text-base text-white/70 font-medium">
+            Top 10 Worst Bettors
+          </p>
+        </div>
+
+        <div className="space-y-2 animate-fade-in">
+          <LeaderboardTable
+            bettors={coldestBettors}
+            showAll={false}
+            setShowAll={() => {}}
+            variant="fade"
+            loading={loading}
+          />
+        </div>
         
         {isOpen && (
           <InlineSmackTalk

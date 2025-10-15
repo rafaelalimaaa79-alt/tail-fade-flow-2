@@ -38,7 +38,7 @@ const TabsContainer: React.FC<TabsContainerProps> = ({
       bettors={hottestBettors}
       showAll={false}
       setShowAll={() => {}}
-      variant="tail"
+      variant="fade"
       loading={loading}
     />
   ), [hottestBettors, loading]);
