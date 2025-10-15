@@ -27,7 +27,7 @@ export const SharpSportsModal = ({
   const [isLoading, setIsLoading] = useState(true);
   const [canClose, setCanClose] = useState(false);
   const [showManualClose, setShowManualClose] = useState(false);
-  const [countdown, setCountdown] = useState(45);
+  const [countdown, setCountdown] = useState(35);
   const [isVerified, setIsVerified] = useState(false);
   const iframeRef = useRef<HTMLIFrameElement>(null);
   const loadCountRef = useRef(0);
@@ -40,7 +40,7 @@ export const SharpSportsModal = ({
     if (url) {
       setIsLoading(true);
       setShowManualClose(false);
-      setCountdown(45); // Reset countdown
+      setCountdown(35); // Reset countdown
       setIsVerified(false); // Reset verification state
       loadCountRef.current = 0; // Reset load counter for new URL
       completedRef.current = false;
@@ -230,7 +230,7 @@ export const SharpSportsModal = ({
                     fill="none"
                     className={isVerified ? "text-green-500" : "text-[#AEE3F5]"}
                     strokeDasharray={`${2 * Math.PI * 28}`}
-                    strokeDashoffset={`${2 * Math.PI * 28 * (1 - countdown / 45)}`}
+                    strokeDashoffset={`${2 * Math.PI * 28 * (1 - countdown / 35)}`}
                     style={{ transition: 'stroke-dashoffset 1s linear' }}
                   />
                 </svg>
