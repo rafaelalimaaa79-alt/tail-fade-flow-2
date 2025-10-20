@@ -147,16 +147,16 @@ async function fetchBetSlips(internalId, status = "pending", limit = 200, page =
 
 // Fetch pending bets
 async function fetchPendingSingles(internalId) {
-  return fetchBetSlips(internalId, "pending", 200);
+  return fetchBetSlips(internalId, "pending", 5000);
 }
 
 // Fetch historical/completed bets for statistics (limited)
-async function fetchHistoricalBets(internalId, limit = 50) {
+async function fetchHistoricalBets(internalId, limit = 5000) {
   return fetchBetSlips(internalId, "completed", limit);
 }
 
 // Fetch ALL historical/completed bets with pagination for comprehensive analysis
-async function fetchAllHistoricalBets(internalId, maxPages = 50) {
+async function fetchAllHistoricalBets(internalId, maxPages = 5000) {
   console.log(`📚 [SYNC] Fetching ALL historical bets for user ${internalId} (max ${maxPages} pages)...`);
 
   const allSlips = [];
@@ -671,7 +671,7 @@ serve(async (req)=>{
     console.log("Fetching pending and ALL historical bets...");
     const [pendingSlips, historicalSlips] = await Promise.all([
       fetchPendingSingles(internalId),
-      fetchAllHistoricalBets(internalId, 50) // Fetch ALL historical bets (up to 50 pages = 10,000 bets)
+      fetchAllHistoricalBets(internalId, 5000) // Fetch ALL historical bets (up to 50 pages = 10,000 bets)
     ]);
 
     // 13) Transform rows - helper function to avoid duplication
