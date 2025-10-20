@@ -11,6 +11,7 @@ import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@
 import { toast } from "sonner";
 import { SharpSportsModal } from "@/components/SharpSportsModal";
 import { supabase } from "@/integrations/supabase/client";
+import { postAuthSuccessMessage } from "@/utils/ios-bridge";
 
 const sportsbooks = [
   {
@@ -109,6 +110,30 @@ const ConnectSportsbooks = () => {
     type: '2fa' | 'relink';
   } | null>(null);
 
+
+  // Check if user just verified email via redirect
+  useEffect(() => {
+    const checkEmailVerification = async () => {
+      try {
+        const { data: { user } } = await supabase.auth.getUser();
+
+        if (user?.email_confirmed_at) {
+          console.log("User email is verified! Showing success message");
+          toast.success("Email verified successfully!");
+
+          // Notify iOS app of successful signup
+          postAuthSuccessMessage({
+            user: user,
+            type: "signUp",
+          });
+        }
+      } catch (error) {
+        console.error("Error checking email verification:", error);
+      }
+    };
+
+    checkEmailVerification();
+  }, []);
 
   // Countdown timer effect for 2FA resend
   useEffect(() => {
