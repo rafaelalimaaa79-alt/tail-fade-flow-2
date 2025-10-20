@@ -1,9 +1,10 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import { useNavigate } from "react-router-dom";
 import { toast } from "sonner";
 import { supabase } from "@/integrations/supabase/client";
 import SignUpForm from "@/components/auth/SignUpForm";
 import { postAuthSuccessMessage } from "@/utils/ios-bridge";
+import FullscreenNotification from "@/components/FullscreenNotification";
 
 const SignUp = () => {
   const navigate = useNavigate();
@@ -12,6 +13,42 @@ const SignUp = () => {
   const [password, setPassword] = useState("");
   const [confirmPassword, setConfirmPassword] = useState("");
   const [loading, setLoading] = useState(false);
+  const [showEmailVerification, setShowEmailVerification] = useState(false);
+  const [userEmail, setUserEmail] = useState("");
+
+  // Check email verification status periodically
+  useEffect(() => {
+    if (!showEmailVerification) return;
+
+    const checkEmailVerification = async () => {
+      try {
+        const { data: { user } } = await supabase.auth.getUser();
+
+        if (user?.email_confirmed_at) {
+          console.log("Email verified! Proceeding to connect sportsbooks");
+          setShowEmailVerification(false);
+
+          // Notify iOS app of successful signup
+          postAuthSuccessMessage({
+            user: user,
+            type: "signUp",
+          });
+
+          navigate("/connect-sportsbooks");
+        }
+      } catch (error) {
+        console.error("Error checking email verification:", error);
+      }
+    };
+
+    // Check immediately
+    checkEmailVerification();
+
+    // Then check every 3 seconds
+    const interval = setInterval(checkEmailVerification, 3000);
+
+    return () => clearInterval(interval);
+  }, [showEmailVerification, navigate]);
 
   const handleSignUp = async (e: React.FormEvent) => {
     e.preventDefault();
@@ -75,21 +112,25 @@ const SignUp = () => {
 
       // Email signup succeeded
       if (data.user && !data.user.email_confirmed_at) {
-        toast.success("Check your email for a verification link!");
+        // Show fullscreen notification for email verification
+        console.log("Email verification required - showing fullscreen notification");
+        setUserEmail(email);
+        setShowEmailVerification(true);
       } else {
+        // Email already verified (shouldn't happen with new signups, but handle it)
         toast.success("Account created successfully!");
-      }
 
-      // Notify iOS app of successful signup
-      console.log("success-signUp-postAuthSuccessMessage: ", data.user);
-      if (data.user) {
-        postAuthSuccessMessage({
-          user: data.user,
-          type: "signUp",
-        });
-      }
+        // Notify iOS app of successful signup
+        console.log("success-signUp-postAuthSuccessMessage: ", data.user);
+        if (data.user) {
+          postAuthSuccessMessage({
+            user: data.user,
+            type: "signUp",
+          });
+        }
 
-      navigate("/connect-sportsbooks");
+        navigate("/connect-sportsbooks");
+      }
 
       // } else {
       //   // Phone signup succeeded
@@ -143,24 +184,40 @@ const SignUp = () => {
   };
 
   return (
-    <div className="flex flex-col min-h-screen bg-background">
-      <div className="flex-1 flex flex-col justify-center items-center px-4 sm:px-6 py-12">
-        <SignUpForm
-          email={email}
-          setEmail={setEmail}
-          phone={phone}
-          setPhone={setPhone}
-          password={password}
-          setPassword={setPassword}
-          confirmPassword={confirmPassword}
-          setConfirmPassword={setConfirmPassword}
-          loading={loading}
-          onSubmit={handleSignUp}
-          onSignIn={handleSignIn}
-          onGoogleSignUp={handleGoogleSignUp}
-        />
+    <>
+      <div className="flex flex-col min-h-screen bg-background">
+        <div className="flex-1 flex flex-col justify-center items-center px-4 sm:px-6 py-12">
+          <SignUpForm
+            email={email}
+            setEmail={setEmail}
+            phone={phone}
+            setPhone={setPhone}
+            password={password}
+            setPassword={setPassword}
+            confirmPassword={confirmPassword}
+            setConfirmPassword={setConfirmPassword}
+            loading={loading}
+            onSubmit={handleSignUp}
+            onSignIn={handleSignIn}
+            onGoogleSignUp={handleGoogleSignUp}
+          />
+        </div>
       </div>
-    </div>
+
+      {/* Email Verification Fullscreen Notification */}
+      <FullscreenNotification
+        isOpen={showEmailVerification}
+        message="VERIFY YOUR EMAIL"
+        variant="email-verification"
+        onClose={() => {
+          // Don't allow closing until email is verified
+          console.log("Email verification notification - cannot close until verified");
+        }}
+        bettorName={userEmail}
+        betDescription="Check your inbox and click the verification link to continue"
+        autoCloseAfter={0} // Don't auto-close
+      />
+    </>
   );
 };
 

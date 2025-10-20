@@ -6,7 +6,7 @@ import { useNavigate } from "react-router-dom";
 type FullscreenNotificationProps = {
   message: string;
   isOpen: boolean;
-  variant: "tail" | "fade";
+  variant: "tail" | "fade" | "email-verification";
   onClose: () => void;
   bettorName: string;
   betDescription: string;
@@ -55,6 +55,11 @@ const FullscreenNotification = ({
   };
 
   const handleBackdropClick = () => {
+    // Don't allow closing email verification notification by clicking backdrop
+    if (variant === "email-verification") {
+      console.log("Email verification notification - cannot close by clicking backdrop");
+      return;
+    }
     console.log("Backdrop clicked, closing notification");
     handleClose();
   };
@@ -68,12 +73,15 @@ const FullscreenNotification = ({
   if (!isOpen) return null;
 
   const IconComponent = variant === "tail" ? ZapIcon : ZapIcon;
-  const bgGradient = variant === "tail" 
-    ? "bg-gradient-to-br from-onetime-green/95 to-onetime-green/80" 
+  const bgGradient = variant === "tail"
+    ? "bg-gradient-to-br from-onetime-green/95 to-onetime-green/80"
+    : variant === "email-verification"
+    ? "bg-gradient-to-br from-yellow-500/95 to-orange-500/80"
     : "bg-gradient-to-br from-[#AEE3F5]/95 to-[#AEE3F5]/80";
 
-  // Check if this is a welcome message
+  // Check if this is a welcome message or email verification
   const isWelcomeMessage = message.includes("YOU'RE IN!");
+  const isEmailVerification = variant === "email-verification";
 
   return (
     <div
@@ -109,7 +117,7 @@ const FullscreenNotification = ({
             <>
               {/* Welcome message */}
               <div className={`overflow-hidden mb-2`}>
-                <h2 
+                <h2
                   className={`text-4xl font-bold transition-all duration-700 transform ${
                     textAppeared ? "translate-y-0 opacity-100" : "translate-y-full opacity-0"
                   }`}
@@ -117,16 +125,63 @@ const FullscreenNotification = ({
                   YOU'RE IN!
                 </h2>
               </div>
-              
+
               {/* Username welcome */}
               <div className="overflow-hidden mt-4">
-                <h3 
+                <h3
                   className={`text-3xl font-semibold transition-all duration-700 transform ${
                     textAppeared ? "scale-100 opacity-100" : "scale-50 opacity-0"
                   }`}
                 >
                   Welcome @{bettorName}!
                 </h3>
+              </div>
+            </>
+          ) : isEmailVerification ? (
+            <>
+              {/* Email Verification message */}
+              <div className={`overflow-hidden mb-2`}>
+                <h2
+                  className={`text-4xl font-bold transition-all duration-700 transform ${
+                    textAppeared ? "translate-y-0 opacity-100" : "translate-y-full opacity-0"
+                  }`}
+                >
+                  {message}
+                </h2>
+              </div>
+
+              {/* Email address */}
+              <div className="overflow-hidden mt-4">
+                <h3
+                  className={`text-2xl font-semibold transition-all duration-700 transform ${
+                    textAppeared ? "scale-100 opacity-100" : "scale-50 opacity-0"
+                  }`}
+                >
+                  {bettorName}
+                </h3>
+              </div>
+
+              {/* Instructions */}
+              <div className="overflow-hidden mt-6">
+                <p
+                  className={`text-lg text-center px-4 transition-all duration-700 transform ${
+                    textAppeared ? "translate-y-0 opacity-100" : "translate-y-full opacity-0"
+                  }`}
+                >
+                  {betDescription}
+                </p>
+              </div>
+
+              {/* Checking status indicator */}
+              <div className="overflow-hidden mt-8">
+                <div
+                  className={`flex items-center gap-2 transition-all duration-700 transform ${
+                    textAppeared ? "translate-y-0 opacity-100" : "translate-y-full opacity-0"
+                  }`}
+                >
+                  <div className="animate-spin rounded-full h-5 w-5 border-b-2 border-black"></div>
+                  <span className="text-sm font-medium">Checking verification status...</span>
+                </div>
               </div>
             </>
           ) : (
