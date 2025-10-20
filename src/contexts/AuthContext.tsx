@@ -44,6 +44,14 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
       setSession(session);
       setUser(session?.user ?? null);
 
+      // Dispatch email verification event if user just verified email
+      if (event === "SIGNED_IN" && session?.user?.email_confirmed_at) {
+        console.log("Email verified! Dispatching emailVerified event");
+        window.dispatchEvent(new CustomEvent('emailVerified', {
+          detail: { user: session.user }
+        }));
+      }
+
       // Notify iOS app of successful authentication
       if (event === "SIGNED_IN" && session?.user && !isInitialLoad) {
         console.log("success-signIn-postAuthSuccessMessage", session?.user);

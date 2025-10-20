@@ -50,6 +50,27 @@ const SignUp = () => {
     return () => clearInterval(interval);
   }, [showEmailVerification, navigate]);
 
+  // Listen for email verification event from AuthContext (for when user is redirected)
+  useEffect(() => {
+    const handleEmailVerified = (event: any) => {
+      console.log("Email verified event received in SignUp!");
+      setShowEmailVerification(false);
+
+      // Notify iOS app of successful signup
+      if (event.detail?.user) {
+        postAuthSuccessMessage({
+          user: event.detail.user,
+          type: "signUp",
+        });
+      }
+
+      navigate("/connect-sportsbooks");
+    };
+
+    window.addEventListener('emailVerified', handleEmailVerified);
+    return () => window.removeEventListener('emailVerified', handleEmailVerified);
+  }, [navigate]);
+
   const handleSignUp = async (e: React.FormEvent) => {
     e.preventDefault();
 
