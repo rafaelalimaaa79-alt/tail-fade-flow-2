@@ -53,13 +53,10 @@ export const SharpSportsModal = ({
         }, 10000);
         return () => clearTimeout(timer);
       } else {
-        // For relinking: Always allow close
+        // For relinking/onboarding: Always allow close
         setCanClose(true);
-        // Show manual close button after 15 seconds for relinking
-        const timer = setTimeout(() => {
-          setShowManualClose(true);
-        }, 15000);
-        return () => clearTimeout(timer);
+        // Note: Manual close button will be shown based on load count (>= 3)
+        // not based on time, to ensure it only appears on the final blank page
       }
     }
   }, [url, is2FA]);
@@ -169,6 +166,12 @@ export const SharpSportsModal = ({
 
     console.log(`📄 SharpSports iframe loaded (count: ${loadCount})`);
     setIsLoading(false);
+
+    // For relinking/onboarding: Show "Take Me Back" button on final blank page (load count >= 3)
+    if (!is2FA && loadCount >= 3) {
+      console.log('Final blank page reached - showing "Take Me Back" button');
+      setShowManualClose(true);
+    }
 
     // Auto-detection only for 2FA
     if (!is2FA) {

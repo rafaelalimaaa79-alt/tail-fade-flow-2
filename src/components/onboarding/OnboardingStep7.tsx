@@ -7,6 +7,8 @@ import OnboardingHeader from "./OnboardingHeader";
 import UsernameInput from "./UsernameInput";
 import UsernamePreview from "./UsernamePreview";
 import { validateUsername, checkUsernameAvailability } from "@/utils/usernameValidation";
+import { supabase } from "@/integrations/supabase/client";
+import { toast } from "sonner";
 
 interface OnboardingStep7Props {
   onComplete: (route: string) => void;
@@ -69,12 +71,12 @@ const OnboardingStep7: React.FC<OnboardingStep7Props> = ({ onComplete }) => {
     }
   };
 
-  const handleSubmit = () => {
+  const handleSubmit = async () => {
     if (hasPendingTFA) {
       // Get sportsbook name from pendingTFA data
       const pendingTFAData = localStorage.getItem('pendingTFA');
       let sportsbookName = "your sportsbook";
-      
+
       if (pendingTFAData) {
         try {
           const tfaData = JSON.parse(pendingTFAData);
@@ -83,26 +85,60 @@ const OnboardingStep7: React.FC<OnboardingStep7Props> = ({ onComplete }) => {
           console.error('Error parsing pendingTFA data:', error);
         }
       }
-      
+
       setError(`Please enter the verification code that ${sportsbookName} texted to you. Use the 'Enter Code' button above to continue.`);
       return;
     }
-    
+
     if (!username.trim()) {
       setError("You gotta pick a name to enter the Zone.");
       return;
     }
-    
+
     if (!isAvailable) {
       setError("Please choose an available username");
       return;
     }
-    
+
     // Store username in onboarding data
     const onboardingData = JSON.parse(localStorage.getItem('onboardingData') || '{}');
     onboardingData.username = username;
     localStorage.setItem('onboardingData', JSON.stringify(onboardingData));
-    
+
+    // Save username to database (user_profiles table)
+    try {
+      const { data: { user } } = await supabase.auth.getUser();
+
+      if (user) {
+        console.log('Saving username to database:', username);
+
+        // Update or insert user profile with username
+        const { error: upsertError } = await supabase
+          .from('user_profiles')
+          .upsert({
+            id: user.id,
+            username: username,
+            updated_at: new Date().toISOString()
+          }, {
+            onConflict: 'id'
+          });
+
+        if (upsertError) {
+          console.error('Error saving username to database:', upsertError);
+          toast.error('Failed to save username. Please try again.');
+          return;
+        }
+
+        console.log('Username saved successfully to database');
+      } else {
+        console.warn('No authenticated user found - username not saved to database');
+      }
+    } catch (error) {
+      console.error('Error in handleSubmit:', error);
+      toast.error('Failed to save username. Please try again.');
+      return;
+    }
+
     // Show the notification
     setShowNotification(true);
   };

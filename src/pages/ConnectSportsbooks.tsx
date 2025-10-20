@@ -9,6 +9,8 @@ import { Input } from "@/components/ui/input";
 import { Badge } from "@/components/ui/badge";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
 import { toast } from "sonner";
+import { SharpSportsModal } from "@/components/SharpSportsModal";
+import { supabase } from "@/integrations/supabase/client";
 
 const sportsbooks = [
   {
@@ -100,6 +102,12 @@ const ConnectSportsbooks = () => {
   const [showTfaBubble, setShowTfaBubble] = useState(false);
   const [faceIdChoiceMade, setFaceIdChoiceMade] = useState(false);
   const [deferredSportsbooks, setDeferredSportsbooks] = useState<Set<string>>(new Set());
+  const [sharpSportsModal, setSharpSportsModal] = useState<{
+    url: string;
+    title: string;
+    message: string;
+    type: '2fa' | 'relink';
+  } | null>(null);
 
 
   // Countdown timer effect for 2FA resend
@@ -169,105 +177,139 @@ const ConnectSportsbooks = () => {
 
   const handleAction = async (sportsbook: any, action: string) => {
     console.log(`handleAction called with sportsbook: ${sportsbook.name}, action: ${action}`);
-    
+
     if (action === 'mobileInfo') {
       toast.info('This sportsbook must be linked on the iOS/Android app.');
       return;
     }
-    
+
     if (action === 'enter2fa') {
       setCurrentTfaBookId(sportsbook.id);
       setShow2FAModal(true);
       return;
     }
-    
-    if (action === 'fixSync' || action === 'connect') {
-      // Call iOS bridge when user clicks "Connect Now"
-      if (action === 'connect') {
-        try {
-          if (window.webkit?.messageHandlers?.sharpsportHandler) {
-            window.webkit.messageHandlers.sharpsportHandler.postMessage({
-              book: sportsbook
-            });
-            console.log('Posted sportsbook message to iOS:', sportsbook);
-          }
-        } catch (error) {
-          console.log('iOS bridge not available or failed:', error);
-        }
-      }
-      
-      console.log(`About to show credentials modal for ${sportsbook.name}`);
-      setCurrentCredentialsBookId(sportsbook.id);
-      // setShowCredentialsModal(true);
+
+    if (action === 'connect') {
+      // Start SharpSports linking flow
+      await startSharpSportsLink(sportsbook);
     }
   };
 
-  const submitCredentials = async () => {
-    if (!username.trim() || !password.trim() || !currentCredentialsBookId) return;
-    
-    const sportsbook = sportsbooks.find(sb => sb.id === currentCredentialsBookId);
-    if (!sportsbook) return;
-    
-    console.log(`Credentials submitted for ${sportsbook.name}: ${username}/${password}`);
-    
-    // Hide credentials modal and start linking process
-    setShowCredentialsModal(false);
-    setUsername('');
-    setPassword('');
-    
-    // Now proceed with the actual linking
-    await startWebLink(sportsbook);
-  };
-
-  const startWebLink = async (sportsbook: any) => {
-    console.log(`Starting link process for ${sportsbook.name}`);
-    setStatus(sportsbook.id, 'LINKING');
-    setActiveLinkingBook(sportsbook.id);
-    
+  const startSharpSportsLink = async (sportsbook: any) => {
     try {
-      // Simulate opening SharpSports popup and user entering credentials
-      await new Promise(resolve => setTimeout(resolve, 1500));
-      
-      // Force 2FA for Hard Rock Bet to demo the flow
-      if (sportsbook.id === 'hardrock') {
-        console.log(`Forcing 2FA for ${sportsbook.name}`);
-        setStatus(sportsbook.id, 'NEEDS_2FA');
-        setCurrentTfaBookId(sportsbook.id);
-        setShow2FAModal(true);
-        toast.info(`${sportsbook.name} requires 2FA verification to complete linking.`);
+      console.log(`Starting SharpSports link for ${sportsbook.name}`);
+      setStatus(sportsbook.id, 'LINKING');
+      setActiveLinkingBook(sportsbook.id);
+
+      // Get current user
+      const { data: { user } } = await supabase.auth.getUser();
+      if (!user) {
+        toast.error('Please sign in to connect sportsbooks');
+        setStatus(sportsbook.id, 'DISCONNECTED');
         setActiveLinkingBook(null);
         return;
       }
-      
-      // Simulate realistic outcomes for other sportsbooks
-      const outcomes = ['SUCCESS', 'SUCCESS', 'SUCCESS', 'NEEDS_2FA', 'ERROR'];
-      const outcome = outcomes[Math.floor(Math.random() * outcomes.length)];
-      
-      console.log(`Link outcome for ${sportsbook.name}: ${outcome}`);
-      
-      if (outcome === 'SUCCESS') {
-        setStatus(sportsbook.id, 'LINKED');
-        toast.success(`${sportsbook.name} connected successfully!`);
-        setActiveLinkingBook(null);
-      } else if (outcome === 'NEEDS_2FA') {
-        // Only set NEEDS_2FA during active linking when provider specifically requests it
-        if (activeLinkingBook === sportsbook.id) {
-          setStatus(sportsbook.id, 'NEEDS_2FA');
-          setCurrentTfaBookId(sportsbook.id);
-          setShow2FAModal(true);
-          toast.info(`${sportsbook.name} requires 2FA verification to complete linking.`);
-        }
-      } else {
+
+      // Call relink-account edge function to generate context ID
+      const { data: linkData, error } = await supabase.functions.invoke('relink-account', {
+        body: { internalId: user.id }
+      });
+
+      if (error || !linkData?.linkUrl) {
+        console.error('Failed to generate link URL:', error);
+        toast.error('Failed to start linking process');
         setStatus(sportsbook.id, 'ERROR');
-        toast.error('Connection failed. Please try again.');
         setActiveLinkingBook(null);
+        return;
       }
-    } catch (e) {
-      console.error(`Link error for ${sportsbook.name}:`, e);
-      setStatus(sportsbook.id, 'ERROR');
-      toast.error('Connection failed. Please try again.');
+
+      console.log('Link URL generated:', linkData.linkUrl);
+
+      // Open SharpSportsModal with linking flow
+      setSharpSportsModal({
+        url: linkData.linkUrl,
+        title: `Connect ${sportsbook.name}`,
+        message: 'Create your SharpSports account and link your sportsbook',
+        type: 'relink' // Use 'relink' type for linking flow
+      });
+
+    } catch (error) {
+      console.error('Error starting SharpSports link:', error);
+      toast.error('Failed to start linking process');
+      if (sportsbook?.id) {
+        setStatus(sportsbook.id, 'ERROR');
+      }
       setActiveLinkingBook(null);
     }
+  };
+
+  const handleModalComplete = async () => {
+    console.log('SharpSports modal completed');
+    setSharpSportsModal(null);
+
+    if (!activeLinkingBook) {
+      console.log('No active linking book');
+      return;
+    }
+
+    const sportsbook = sportsbooks.find(sb => sb.id === activeLinkingBook);
+    if (!sportsbook) {
+      console.log('Sportsbook not found for id:', activeLinkingBook);
+      setActiveLinkingBook(null);
+      return;
+    }
+
+    // Mark as linked
+    setStatus(sportsbook.id, 'LINKED');
+    setActiveLinkingBook(null);
+    toast.success(`${sportsbook.name} connected successfully!`);
+
+    // Sync bets after linking
+    try {
+      const { data: { user } } = await supabase.auth.getUser();
+      if (user) {
+        toast.info('Syncing your bets...');
+
+        const { data, error } = await supabase.functions.invoke('sync-bets', {
+          body: {
+            internalId: user.id,
+            userId: user.id,
+            forceRefresh: false // Don't trigger refresh, just fetch
+          }
+        });
+
+        if (error) {
+          console.error('Sync error:', error);
+          toast.error('Failed to sync bets');
+        } else if (data.statusCode && data.statusCode !== 200) {
+          console.log('Sync error:', data.message);
+          toast.error('Failed to sync bets. Try again.');
+        } else {
+          console.log('Sync response:', data);
+          toast.success('Bets synced successfully!');
+        }
+      }
+    } catch (error) {
+      console.error('Error syncing bets:', error);
+    }
+  };
+
+  const handleModalClose = () => {
+    console.log('SharpSports modal closed without completion');
+    setSharpSportsModal(null);
+
+    if (activeLinkingBook) {
+      setStatus(activeLinkingBook, 'DISCONNECTED');
+      setActiveLinkingBook(null);
+    }
+  };
+
+
+
+  const submitCredentials = async () => {
+    // This function is kept for the credentials modal but is not actively used
+    // The real linking happens through startSharpSportsLink
+    console.log('submitCredentials called - this is deprecated');
   };
 
   // Handle 2FA code input with auto-submit and digit-only filtering
@@ -275,7 +317,7 @@ const ConnectSportsbooks = () => {
     const value = e.target.value.replace(/\D/g, '').slice(0, 8); // Only digits, max 8
     setTfaCode(value);
     setTfaError('');
-    
+
     // Auto-submit at 6 digits
     if (value.length === 6 && !tfaSubmitting) {
       submit2FA(value);
@@ -691,6 +733,18 @@ const ConnectSportsbooks = () => {
             >
               Enter Code
             </button>
+          )}
+
+          {/* SharpSports Modal for Account Linking */}
+          {sharpSportsModal && (
+            <SharpSportsModal
+              url={sharpSportsModal.url}
+              title={sharpSportsModal.title}
+              message={sharpSportsModal.message}
+              type={sharpSportsModal.type}
+              onComplete={handleModalComplete}
+              onClose={handleModalClose}
+            />
           )}
         </div>
       );
