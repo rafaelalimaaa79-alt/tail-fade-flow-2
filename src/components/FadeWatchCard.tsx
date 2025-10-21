@@ -58,7 +58,7 @@ const FadeWatchCard: React.FC<FadeWatchCardProps> = ({ bet, renderWaveText }) =>
         {/* Fade confidence */}
         <div className="text-center py-1">
           <p className="text-lg font-semibold text-gray-300">
-            Fade Confidence: <span className="text-[#AEE3F5] font-bold">{Math.round(bet.fadeConfidence)}%</span>
+            Fade Confidence: <span className="text-[#AEE3F5] font-bold">{bet.fadeConfidence.toFixed(2)}%</span>
           </p>
         </div>
         

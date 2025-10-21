@@ -141,7 +141,7 @@ const PendingBets: React.FC<PendingBetsProps> = ({ pendingBets, profile, classNa
                   {/* Fade confidence */}
                   <div className="text-center py-1">
                     <p className="text-lg font-semibold text-gray-300">
-                      Fade Confidence: <span className="text-[#AEE3F5] font-bold">{bet.fadeConfidence}%</span>
+                      Fade Confidence: <span className="text-[#AEE3F5] font-bold">{bet.fadeConfidence.toFixed(2)}%</span>
                     </p>
                   </div>
                   

@@ -147,7 +147,7 @@ const PendingBetsList = () => {
               {/* Fade confidence */}
               <div className="text-center">
                 <p className="text-base font-semibold text-gray-300">
-                  Fade Confidence: <span className="text-[#AEE3F5] font-bold">{Math.round(bet.fadeConfidence)}%</span>
+                  Fade Confidence: <span className="text-[#AEE3F5] font-bold">{bet.fadeConfidence.toFixed(2)}%</span>
                 </p>
               </div>
 
