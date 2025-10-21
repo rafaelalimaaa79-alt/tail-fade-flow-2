@@ -289,17 +289,17 @@ const ConnectSportsbooks = () => {
     setActiveLinkingBook(null);
     toast.success(`${sportsbook.name} connected successfully!`);
 
-    // Sync bets after linking
+    // Sync bets after linking - IMPORTANT: Force refresh to fetch fresh data from newly linked account
     try {
       const { data: { user } } = await supabase.auth.getUser();
       if (user) {
-        toast.info('Syncing your bets...');
+        toast.info('Fetching your bets from the sportsbook...');
 
         const { data, error } = await supabase.functions.invoke('sync-bets', {
           body: {
             internalId: user.id,
             userId: user.id,
-            forceRefresh: false // Don't trigger refresh, just fetch
+            forceRefresh: true // MUST be true to trigger SharpSports to scrape the newly linked account
           }
         });
 
