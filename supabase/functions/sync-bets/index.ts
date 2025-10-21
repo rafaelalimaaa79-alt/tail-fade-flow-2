@@ -147,7 +147,19 @@ async function fetchBetSlips(internalId, status = "pending", limit = 200, page =
 
 // Fetch pending bets
 async function fetchPendingSingles(internalId) {
-  return fetchBetSlips(internalId, "pending", 5000);
+  const response = await fetchBetSlips(internalId, "pending", 200);
+
+  // Handle both array and object responses
+  if (Array.isArray(response)) {
+    console.log(`📡 [SYNC] Pending API returned array directly with ${response.length} items`);
+    return response;
+  } else if (response && response.data && Array.isArray(response.data)) {
+    console.log(`📡 [SYNC] Pending API returned object with data property: ${response.data.length} items`);
+    return response.data;
+  } else {
+    console.warn(`⚠️ [SYNC] Unexpected pending response format:`, typeof response, Object.keys(response || {}));
+    return [];
+  }
 }
 
 // Fetch historical/completed bets for statistics (limited)
@@ -169,17 +181,30 @@ async function fetchAllHistoricalBets(internalId, maxPages = 5000) {
 
       const slips = await fetchBetSlips(internalId, "completed", limit, page);
 
-      if (!slips || !slips.data || slips.data.length === 0) {
+      // Handle both array and object responses
+      let slipsArray;
+      if (Array.isArray(slips)) {
+        slipsArray = slips;
+        console.log(`📡 [SYNC] API returned array directly with ${slipsArray.length} items`);
+      } else if (slips && slips.data && Array.isArray(slips.data)) {
+        slipsArray = slips.data;
+        console.log(`📡 [SYNC] API returned object with data property: ${slipsArray.length} items`);
+      } else {
+        console.warn(`⚠️ [SYNC] Unexpected response format on page ${page}:`, typeof slips, Object.keys(slips || {}));
+        slipsArray = [];
+      }
+
+      if (slipsArray.length === 0) {
         console.log(`✅ [SYNC] No more bets found on page ${page}. Total fetched: ${allSlips.length}`);
         break;
       }
 
-      allSlips.push(...slips.data);
-      console.log(`✅ [SYNC] Page ${page}: Found ${slips.data.length} bets. Total so far: ${allSlips.length}`);
+      allSlips.push(...slipsArray);
+      console.log(`✅ [SYNC] Page ${page}: Found ${slipsArray.length} bets. Total so far: ${allSlips.length}`);
 
       // If we got fewer than limit, we've reached the end
-      if (slips.data.length < limit) {
-        console.log(`✅ [SYNC] Reached end of historical bets (page ${page} had ${slips.data.length} < ${limit}). Total: ${allSlips.length}`);
+      if (slipsArray.length < limit) {
+        console.log(`✅ [SYNC] Reached end of historical bets (page ${page} had ${slipsArray.length} < ${limit}). Total: ${allSlips.length}`);
         break;
       }
 
@@ -192,6 +217,7 @@ async function fetchAllHistoricalBets(internalId, maxPages = 5000) {
 
     } catch (error) {
       console.error(`❌ [SYNC] Error fetching page ${page}:`, error);
+      console.error(`❌ [SYNC] Error details:`, error.message, error.stack);
       // Continue with what we have so far
       break;
     }
@@ -674,6 +700,8 @@ serve(async (req)=>{
       fetchAllHistoricalBets(internalId, 5000) // Fetch ALL historical bets (up to 50 pages = 10,000 bets)
     ]);
 
+    console.log(`📊 [SYNC] Fetch complete - Pending: ${pendingSlips?.length ?? 0}, Historical: ${historicalSlips?.data?.length ?? 0}`);
+
     // 13) Transform rows - helper function to avoid duplication
     const transformSlipToRows = (slip, isPending = true) => {
       const slipRows = [];
@@ -736,22 +764,33 @@ serve(async (req)=>{
 
     // 14) Process pending bets
     const pendingRows = [];
-    for (const slip of pendingSlips ?? []) {
+    const pendingData = Array.isArray(pendingSlips) ? pendingSlips : [];
+    console.log(`📝 [SYNC] Processing ${pendingData.length} pending slips...`);
+
+    for (const slip of pendingData) {
       if (slip.status === "pending") {
         pendingRows.push(...transformSlipToRows(slip, true));
+      } else {
+        console.warn(`⚠️ [SYNC] Skipping non-pending slip in pending data: ${slip.status}`);
       }
     }
+    console.log(`✅ [SYNC] Processed ${pendingRows.length} pending bet rows from ${pendingData.length} slips`);
 
     // 15) Process historical bets
     const historicalRows = [];
     const historicalData = historicalSlips?.data ?? [];
-    console.log(`Processing ${historicalData.length} historical slips...`);
+    console.log(`📝 [SYNC] Processing ${historicalData.length} historical slips...`);
 
+    let skippedCount = 0;
     for (const slip of historicalData) {
       if (slip.status !== "pending") {
         historicalRows.push(...transformSlipToRows(slip, false));
+      } else {
+        skippedCount++;
+        console.warn(`⚠️ [SYNC] Skipping pending slip in historical data: slip_id=${slip.id}`);
       }
     }
+    console.log(`✅ [SYNC] Processed ${historicalRows.length} historical bet rows from ${historicalData.length} slips (skipped ${skippedCount} pending)`);
 
     // 16) Combine all rows
     const rows = [...pendingRows, ...historicalRows];
