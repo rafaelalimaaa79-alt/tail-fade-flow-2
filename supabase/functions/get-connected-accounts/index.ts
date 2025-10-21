@@ -51,7 +51,7 @@ serve(async (req) => {
     }
 
     // Fetch bettor accounts from SharpSports API
-    const accountsUrl = `https://api.sharpsports.io/v1/bettorAccounts?bettor=${internalId}`;
+    const accountsUrl = `https://api.sharpsports.io/v1/bettors/${internalId}/bettorAccounts`;
     console.log(`[${requestId}] 📡 [GET-ACCOUNTS] Calling SharpSports API: ${accountsUrl}`);
     
     const apiStartTime = Date.now();
@@ -107,42 +107,33 @@ serve(async (req) => {
 
     // Parse response data
     console.log(`[${requestId}] 📦 [GET-ACCOUNTS] Parsing API response...`);
-    const data = await res.json();
-    
+    const accounts = await res.json();
+
     // Log response structure
-    if (!Array.isArray(data)) {
-      console.warn(`[${requestId}] ⚠️  [GET-ACCOUNTS] Unexpected response format - Expected array, got: ${typeof data}`);
-      console.warn(`[${requestId}] 📄 [GET-ACCOUNTS] Response keys: ${Object.keys(data || {}).join(', ')}`);
+    if (!Array.isArray(accounts)) {
+      console.warn(`[${requestId}] ⚠️  [GET-ACCOUNTS] Unexpected response format - Expected array, got: ${typeof accounts}`);
+      console.warn(`[${requestId}] 📄 [GET-ACCOUNTS] Response keys: ${Object.keys(accounts || {}).join(', ')}`);
     }
 
-    const accountCount = Array.isArray(data) ? data.length : 0;
+    const accountCount = Array.isArray(accounts) ? accounts.length : 0;
     console.log(`[${requestId}] ✅ [GET-ACCOUNTS] Found ${accountCount} connected account(s)`);
 
-    // Transform the response to include only necessary fields
-    console.log(`[${requestId}] 🔄 [GET-ACCOUNTS] Transforming account data...`);
-    const accounts = (Array.isArray(data) ? data : []).map((account: any, index: number) => {
-      console.log(`[${requestId}] 📋 [GET-ACCOUNTS] Account ${index + 1}/${accountCount}: ${account.bookName || account.book} (ID: ${account.id}, Status: ${account.status || 'unknown'}, Verified: ${account.verified || false})`);
-      
-      return {
-        id: account.id,
-        bettorId: account.bettor,
-        bookId: account.book,
-        bookName: account.bookName || account.book,
-        regionId: account.bookRegion,
-        status: account.status || 'unknown',
-        verified: account.verified || false,
-        lastRefreshed: account.lastRefreshed || null,
-        createdAt: account.created || null,
-        metadata: account.metadata || {}
-      };
-    });
+    // Log account details for debugging
+    if (Array.isArray(accounts) && accounts.length > 0) {
+      accounts.forEach((account: any, index: number) => {
+        const bookName = account.book?.name || 'Unknown';
+        const regionName = account.bookRegion?.name || 'Unknown';
+        console.log(`[${requestId}] 📋 [GET-ACCOUNTS] Account ${index + 1}: ${bookName} (${regionName}) - ID: ${account.id}, Verified: ${account.verified || false}`);
+      });
+    }
 
     const totalDuration = Date.now() - startTime;
-    console.log(`[${requestId}] ✅ [GET-ACCOUNTS] Request completed successfully - Total duration: ${totalDuration}ms, Accounts: ${accounts.length}`);
+    console.log(`[${requestId}] ✅ [GET-ACCOUNTS] Request completed successfully - Total duration: ${totalDuration}ms, Accounts: ${accountCount}`);
 
-    return json({ 
-      accounts,
-      total: accounts.length 
+    // Return raw SharpSports response without transformation
+    return json({
+      accounts: Array.isArray(accounts) ? accounts : [],
+      total: accountCount
     });
 
   } catch (e) {

@@ -5,17 +5,51 @@ import { Button } from "@/components/ui/button";
 import { SharpSportsModal } from "@/components/SharpSportsModal";
 import { toast } from "sonner";
 
+// SharpSports BettorAccount structure (raw API response)
 interface ConnectedAccount {
   id: string;
-  bettorId: string;
-  bookId: string;
-  bookName: string;
-  regionId: string;
-  status: string;
+  bettor: string;
+  book: {
+    id: string;
+    name: string;
+    abbr: string;
+  };
+  bookRegion: {
+    id: string;
+    name: string;
+    abbr: string;
+    status: string;
+    country: string;
+    sdkRequired: boolean;
+    mobileOnly: boolean;
+  };
   verified: boolean;
-  lastRefreshed: string | null;
-  createdAt: string | null;
-  metadata: any;
+  access: boolean;
+  paused: boolean;
+  betRefreshRequested: string | null;
+  latestRefreshResponse: {
+    id: string;
+    timeCreated: string;
+    status: number;
+    detail: string | null;
+    requestId: string;
+    type: string;
+  } | null;
+  latestRefreshRequestId: string | null;
+  balance: number | null;
+  timeCreated: string;
+  missingBets: number;
+  isUnverifiable: boolean;
+  timeUnverified: string | null;
+  refreshInProgress: boolean;
+  TFA: boolean;
+  metadata?: {
+    handle?: number;
+    unitSize?: number;
+    netProfit?: number;
+    winPercentage?: number;
+    walletShare?: number;
+  };
 }
 
 interface ConnectedAccountsSectionProps {
@@ -253,8 +287,8 @@ const ConnectedAccountsSection: React.FC<ConnectedAccountsSectionProps> = ({ use
 
       <div className="space-y-3">
         {accounts.map((account) => {
-          const logo = getBookLogo(account.bookName);
-          
+          const logo = getBookLogo(account.book.name);
+
           return (
             <div
               key={account.id}
@@ -264,10 +298,10 @@ const ConnectedAccountsSection: React.FC<ConnectedAccountsSectionProps> = ({ use
                 {/* Sportsbook Logo or Icon */}
                 <div className="w-10 h-10 rounded-lg bg-white/5 flex items-center justify-center overflow-hidden">
                   {logo ? (
-                    <img src={logo} alt={account.bookName} className="w-full h-full object-contain" />
+                    <img src={logo} alt={account.book.name} className="w-full h-full object-contain" />
                   ) : (
                     <div className="text-white font-bold text-sm">
-                      {account.bookName.substring(0, 2).toUpperCase()}
+                      {account.book.abbr.toUpperCase()}
                     </div>
                   )}
                 </div>
@@ -275,13 +309,13 @@ const ConnectedAccountsSection: React.FC<ConnectedAccountsSectionProps> = ({ use
                 {/* Account Info */}
                 <div className="flex-1">
                   <div className="flex items-center gap-2">
-                    <p className="font-medium text-white">{account.bookName}</p>
+                    <p className="font-medium text-white">{account.book.name}</p>
                     {getStatusIcon(account)}
                   </div>
                   <div className="flex items-center gap-1 mt-1">
                     <Clock className="w-3 h-3 text-gray-500" />
                     <p className="text-xs text-gray-400">
-                      {formatLastSync(account.lastRefreshed)}
+                      {formatLastSync(account.betRefreshRequested)}
                     </p>
                   </div>
                 </div>
