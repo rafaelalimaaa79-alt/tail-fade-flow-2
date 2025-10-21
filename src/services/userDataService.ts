@@ -257,8 +257,69 @@ export async function getPendingBets(userId: string): Promise<BetRecord[]> {
 export async function getCurrentUserPendingBets(): Promise<BetRecord[]> {
   const userId = await getCurrentUserId();
   if (!userId) return [];
-  
+
   return getPendingBets(userId);
+}
+
+/**
+ * Get all users' pending bets with user profile and confidence score
+ * @param limit - Optional limit on number of bets to return
+ * @returns Array of pending bets with user info and confidence scores
+ */
+export async function getAllUsersPendingBets(limit?: number): Promise<Array<BetRecord & {
+  username: string;
+  userConfidenceScore: number;
+  userUnitsGained: number;
+  userWinRate: number;
+  userTotalBets: number;
+}>> {
+  try {
+    // Query all pending bets with user profile and confidence score
+    let query = supabase
+      .from('bets')
+      .select(`
+        *,
+        user_profiles!inner (
+          username,
+          units_gained,
+          win_rate,
+          total_bets
+        ),
+        confidence_scores!inner (
+          score
+        )
+      `)
+      .eq('result', 'Pending')
+      .order('event_start_time', { ascending: true });
+
+    if (limit) {
+      query = query.limit(limit);
+    }
+
+    const { data, error } = await query;
+
+    if (error) {
+      console.error('Error fetching all users pending bets:', error);
+      return [];
+    }
+
+    if (!data || data.length === 0) {
+      return [];
+    }
+
+    // Transform the data to flatten the joined tables
+    return data.map((bet: any) => ({
+      ...bet,
+      username: bet.user_profiles?.username || `User${bet.user_id.substring(0, 4)}`,
+      userConfidenceScore: bet.confidence_scores?.score || 0,
+      userUnitsGained: bet.user_profiles?.units_gained || 0,
+      userWinRate: bet.user_profiles?.win_rate || 0,
+      userTotalBets: bet.user_profiles?.total_bets || 0,
+    }));
+  } catch (error) {
+    console.error('Error in getAllUsersPendingBets:', error);
+    return [];
+  }
 }
 
 /**
