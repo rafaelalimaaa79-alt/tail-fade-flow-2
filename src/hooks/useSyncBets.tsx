@@ -14,6 +14,7 @@ interface SharpSportsModalState {
   title: string;
   message: string;
   type: '2fa' | 'relink';
+  forcedMode?: boolean; // New: makes modal full-screen and non-dismissable
 }
 
 /**
@@ -29,8 +30,9 @@ export const useSyncBets = () => {
   /**
    * Main sync function
    * @param overrideUserId - Optional user ID to use instead of the current user (for sign-in race conditions)
+   * @param forcedMode - If true, makes 2FA modal full-screen and non-dismissable (for onboarding)
    */
-  const syncBets = useCallback(async (overrideUserId?: string) => {
+  const syncBets = useCallback(async (overrideUserId?: string, forcedMode: boolean = false) => {
     const userId = overrideUserId || user?.id;
 
     if (!userId) {
@@ -119,7 +121,8 @@ export const useSyncBets = () => {
             url: otpUrl,
             title: '2FA Verification Required',
             message: 'Please enter the verification code sent to your sportsbook account.',
-            type: '2fa'
+            type: '2fa',
+            forcedMode // Pass forcedMode to modal
           });
           // Keep isSyncing = true while modal is open
           // Will be set to false when modal closes
@@ -131,7 +134,8 @@ export const useSyncBets = () => {
             url: linkUrl,
             title: 'Re-link Your Account',
             message: 'Your account verification has expired. Please re-link your sportsbook account.',
-            type: 'relink'
+            type: 'relink',
+            forcedMode // Pass forcedMode to modal
           });
           // Keep isSyncing = true while modal is open
           // Will be set to false when modal closes

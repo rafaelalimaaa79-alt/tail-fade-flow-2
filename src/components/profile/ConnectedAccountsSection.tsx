@@ -65,6 +65,7 @@ const ConnectedAccountsSection: React.FC<ConnectedAccountsSectionProps> = ({ use
     title: string;
     message: string;
     type: '2fa' | 'relink';
+    forcedMode?: boolean;
   } | null>(null);
   const [isConnecting, setIsConnecting] = useState(false);
 
@@ -271,6 +272,7 @@ const ConnectedAccountsSection: React.FC<ConnectedAccountsSectionProps> = ({ use
             title={sharpSportsModal.title}
             message={sharpSportsModal.message}
             type={sharpSportsModal.type}
+            forcedMode={sharpSportsModal.forcedMode}
             onComplete={handleModalComplete}
             onClose={() => setSharpSportsModal(null)}
           />
@@ -342,6 +344,7 @@ const ConnectedAccountsSection: React.FC<ConnectedAccountsSectionProps> = ({ use
           title={sharpSportsModal.title}
           message={sharpSportsModal.message}
           type={sharpSportsModal.type}
+          forcedMode={sharpSportsModal.forcedMode}
           onComplete={handleModalComplete}
           onClose={() => setSharpSportsModal(null)}
         />

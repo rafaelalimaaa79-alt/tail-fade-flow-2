@@ -108,6 +108,7 @@ const ConnectSportsbooks = () => {
     title: string;
     message: string;
     type: '2fa' | 'relink';
+    forcedMode?: boolean;
   } | null>(null);
 
 
@@ -255,7 +256,8 @@ const ConnectSportsbooks = () => {
         url: linkData.linkUrl,
         title: `Connect ${sportsbook.name}`,
         message: 'Create your SharpSports account and link your sportsbook',
-        type: 'relink' // Use 'relink' type for linking flow
+        type: 'relink', // Use 'relink' type for linking flow
+        forcedMode: true // Make modal full-screen and non-dismissable during onboarding
       });
 
     } catch (error) {
@@ -767,6 +769,7 @@ const ConnectSportsbooks = () => {
               title={sharpSportsModal.title}
               message={sharpSportsModal.message}
               type={sharpSportsModal.type}
+              forcedMode={sharpSportsModal.forcedMode}
               onComplete={handleModalComplete}
               onClose={handleModalClose}
             />

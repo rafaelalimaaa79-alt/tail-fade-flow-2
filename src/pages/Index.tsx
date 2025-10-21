@@ -135,6 +135,7 @@ const Dashboard = () => {
           title={sharpSportsModal.title}
           message={sharpSportsModal.message}
           type={sharpSportsModal.type}
+          forcedMode={sharpSportsModal.forcedMode}
           onComplete={handleModalComplete}
           onClose={handleModalClose}
         />
