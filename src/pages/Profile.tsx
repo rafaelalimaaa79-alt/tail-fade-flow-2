@@ -5,7 +5,6 @@ import UserHeader from "@/components/profile/UserHeader";
 import PendingBetsSection from "@/components/profile/PendingBetsSection";
 import PerformanceSection from "@/components/profile/PerformanceSection";
 import BiggestWinsSection from "@/components/profile/BiggestWinsSection";
-import ConnectedAccountsSection from "@/components/profile/ConnectedAccountsSection";
 import ProfileIcon from "@/components/common/ProfileIcon";
 import HeaderChatIcon from "@/components/common/HeaderChatIcon";
 import InlineSmackTalk from "@/components/InlineSmackTalk";
@@ -88,8 +87,6 @@ const ProfilePage = () => {
           rank={userStats.rank}
           rankChange={userStats.rankChange}
         />
-
-        {user?.id && <ConnectedAccountsSection userId={user.id} />}
 
         <PendingBetsSection />
         
