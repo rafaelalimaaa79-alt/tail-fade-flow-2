@@ -1,16 +1,20 @@
 import React from "react";
 import { Button } from "@/components/ui/button";
 import { PendingBetWithStatline } from "@/hooks/usePendingBets";
+import { AllUsersPendingBet } from "@/hooks/useAllUsersPendingBets";
 import { showFadeNotification } from "@/utils/betting-notifications";
 
 interface FadeWatchCardProps {
-  bet: PendingBetWithStatline;
+  bet: PendingBetWithStatline | AllUsersPendingBet;
   renderWaveText: (text: string, lineIndex: number) => React.ReactNode;
 }
 
 const FadeWatchCard: React.FC<FadeWatchCardProps> = ({ bet, renderWaveText }) => {
+  // Get the bettor name - handle both PendingBetWithStatline and AllUsersPendingBet
+  const bettorName = 'name' in bet ? bet.name : bet.username;
+
   const handleBetClick = () => {
-    showFadeNotification(bet.name, bet.oppositeBet);
+    showFadeNotification(bettorName, bet.oppositeBet);
   };
 
   return (
@@ -34,7 +38,7 @@ const FadeWatchCard: React.FC<FadeWatchCardProps> = ({ bet, renderWaveText }) =>
         {/* Bettor's pick */}
         <div className="text-center py-1">
           <p className="text-lg font-bold">
-            <span className="text-[#AEE3F5]">@{bet.name}</span>
+            <span className="text-[#AEE3F5]">@{bettorName}</span>
             <span className="text-white"> is on {bet.betLine}</span>
           </p>
         </div>
