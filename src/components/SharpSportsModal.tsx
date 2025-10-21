@@ -168,7 +168,7 @@ export const SharpSportsModal = ({
     setIsLoading(false);
 
     // For relinking/onboarding: Detect blank page (final page after successful linking)
-    if (!is2FA && loadCount >= 3) {
+    if (!is2FA && loadCount >= 2) {
       console.log('✅ Final blank page reached - linking successful!');
       setShowManualClose(true);
       setIsVerified(true); // Show success state
@@ -192,7 +192,7 @@ export const SharpSportsModal = ({
       return;
     }
 
-    if (loadCount >= 2) {
+    if (is2FA && loadCount >= 2) {
       console.log('✅ Iframe navigated to new page - likely /done (2FA completed)');
       // Wait a moment to ensure the page is fully loaded, then trigger completion
       setTimeout(() => {
