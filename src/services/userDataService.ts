@@ -274,48 +274,73 @@ export async function getAllUsersPendingBets(limit?: number): Promise<Array<BetR
   userTotalBets: number;
 }>> {
   try {
-    // Query all pending bets with user profile and confidence score
-    let query = supabase
+    // First, get all pending bets
+    let betsQuery = supabase
       .from('bets')
-      .select(`
-        *,
-        user_profiles!inner (
-          username,
-          units_gained,
-          win_rate,
-          total_bets
-        ),
-        confidence_scores!inner (
-          score
-        )
-      `)
+      .select('*')
       .eq('result', 'Pending')
       .order('event_start_time', { ascending: true });
 
     if (limit) {
-      query = query.limit(limit);
+      betsQuery = betsQuery.limit(limit);
     }
 
-    const { data, error } = await query;
+    const { data: bets, error: betsError } = await betsQuery;
 
-    if (error) {
-      console.error('Error fetching all users pending bets:', error);
+    if (betsError) {
+      console.error('Error fetching pending bets:', betsError);
       return [];
     }
 
-    if (!data || data.length === 0) {
+    if (!bets || bets.length === 0) {
       return [];
     }
 
-    // Transform the data to flatten the joined tables
-    return data.map((bet: any) => ({
-      ...bet,
-      username: bet.user_profiles?.username || `User${bet.user_id.substring(0, 4)}`,
-      userConfidenceScore: bet.confidence_scores?.score || 0,
-      userUnitsGained: bet.user_profiles?.units_gained || 0,
-      userWinRate: bet.user_profiles?.win_rate || 0,
-      userTotalBets: bet.user_profiles?.total_bets || 0,
-    }));
+    // Get unique user IDs
+    const userIds = [...new Set(bets.map(bet => bet.user_id))];
+
+    // Fetch user profiles for all users
+    const { data: profiles, error: profilesError } = await supabase
+      .from('user_profiles')
+      .select('id, username, units_gained, win_rate, total_bets')
+      .in('id', userIds);
+
+    if (profilesError) {
+      console.error('Error fetching user profiles:', profilesError);
+      return [];
+    }
+
+    // Fetch confidence scores for all users
+    const { data: scores, error: scoresError } = await supabase
+      .from('confidence_scores')
+      .select('user_id, score')
+      .in('user_id', userIds);
+
+    if (scoresError) {
+      console.error('Error fetching confidence scores:', scoresError);
+      return [];
+    }
+
+    // Create lookup maps
+    const profileMap = new Map(profiles?.map(p => [p.id, p]) || []);
+    const scoreMap = new Map(scores?.map(s => [s.user_id, s.score]) || []);
+
+    // Combine the data
+    const data = bets.map(bet => {
+      const profile = profileMap.get(bet.user_id);
+      const score = scoreMap.get(bet.user_id) || 0;
+
+      return {
+        ...bet,
+        username: profile?.username || 'Unknown',
+        userConfidenceScore: score,
+        userUnitsGained: profile?.units_gained || 0,
+        userWinRate: profile?.win_rate || 0,
+        userTotalBets: profile?.total_bets || 0,
+      };
+    });
+
+    return data;
   } catch (error) {
     console.error('Error in getAllUsersPendingBets:', error);
     return [];
