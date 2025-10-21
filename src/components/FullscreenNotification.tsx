@@ -216,7 +216,7 @@ const FullscreenNotification = ({
                     textAppeared ? "translate-y-0 opacity-100" : "translate-y-full opacity-0"
                   }`}
                 >
-                  Click here to view all bets
+                  Click here to place bet on your sportsbook!
                 </button>
               </div>
             </>
