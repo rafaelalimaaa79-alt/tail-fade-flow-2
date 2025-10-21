@@ -109,30 +109,35 @@ const OnboardingStep7: React.FC<OnboardingStep7Props> = ({ onComplete }) => {
     try {
       const { data: { user } } = await supabase.auth.getUser();
 
-      if (user) {
-        console.log('Saving username to database:', username);
-
-        // Update or insert user profile with username
-        const { error: upsertError } = await supabase
-          .from('user_profiles')
-          .upsert({
-            id: user.id,
-            username: username,
-            updated_at: new Date().toISOString()
-          }, {
-            onConflict: 'id'
-          });
-
-        if (upsertError) {
-          console.error('Error saving username to database:', upsertError);
-          toast.error('Failed to save username. Please try again.');
-          return;
-        }
-
-        console.log('Username saved successfully to database');
-      } else {
-        console.warn('No authenticated user found - username not saved to database');
+      if (!user) {
+        console.error('No authenticated user found');
+        toast.error('Not authenticated. Please sign in again.');
+        return;
       }
+
+      console.log('Saving username to database:', username);
+
+      // Update or insert user profile with username
+      const { error: upsertError } = await supabase
+        .from('user_profiles')
+        .upsert({
+          id: user.id,
+          username: username,
+          created_at: new Date().toISOString(),
+          updated_at: new Date().toISOString()
+        }, {
+          onConflict: 'id'
+        });
+
+      if (upsertError) {
+        console.error('Error saving username to database:', upsertError);
+        console.error('Error code:', upsertError.code);
+        console.error('Error message:', upsertError.message);
+        toast.error('Failed to save username. Please try again.');
+        return;
+      }
+
+      console.log('Username saved successfully to database');
     } catch (error) {
       console.error('Error in handleSubmit:', error);
       toast.error('Failed to save username. Please try again.');

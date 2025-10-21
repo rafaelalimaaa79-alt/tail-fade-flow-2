@@ -40,8 +40,8 @@ async function calculateBetStatline(supabase: any, userId: string, betSlipId: st
       }
 
       return {
-        statline: "Error fetching bet data",
-        fadeConfidence: 50,
+        statline: "No statline available",
+        fadeConfidence: -1,
         metric: "error"
       };
     }

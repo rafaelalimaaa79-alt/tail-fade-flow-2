@@ -167,15 +167,23 @@ export const SharpSportsModal = ({
     console.log(`📄 SharpSports iframe loaded (count: ${loadCount})`);
     setIsLoading(false);
 
-    // For relinking/onboarding: Show "Take Me Back" button on final blank page (load count >= 3)
-    if (!is2FA && loadCount >= 3) {
-      console.log('Final blank page reached - showing "Take Me Back" button');
+    // For relinking/onboarding: Detect blank page (final page after successful linking)
+    if (!is2FA && loadCount >= 2) {
+      console.log('✅ Final blank page reached - linking successful!');
       setShowManualClose(true);
+      setIsVerified(true); // Show success state
+
+      // Auto-close after 2 seconds to show success message
+      setTimeout(() => {
+        console.log('Auto-closing modal after relinking completion');
+        triggerCompletion('iframeLoad');
+      }, 2000);
+      return;
     }
 
     // Auto-detection only for 2FA
     if (!is2FA) {
-      console.log('Relinking modal - no auto-detection via iframe load');
+      console.log('Relinking modal - waiting for manual completion');
       return;
     }
 
@@ -184,7 +192,7 @@ export const SharpSportsModal = ({
       return;
     }
 
-    if (loadCount >= 2) {
+    if (is2FA && loadCount >= 2) {
       console.log('✅ Iframe navigated to new page - likely /done (2FA completed)');
       // Wait a moment to ensure the page is fully loaded, then trigger completion
       setTimeout(() => {
@@ -325,8 +333,14 @@ export const SharpSportsModal = ({
               </p>
             )
           ) : (
-            // Relinking: Show manual close button or instruction
-            showManualClose ? (
+            // Relinking: Show success message or manual close button
+            isVerified ? (
+              <div className="flex flex-col gap-2 items-center">
+                <p className="text-sm font-medium text-green-500">
+                  ✓ Linking successful! Closing...
+                </p>
+              </div>
+            ) : showManualClose ? (
               <div className="flex flex-col gap-2">
                 <p className="text-xs text-muted-foreground text-center">
                   Completed the verification?
