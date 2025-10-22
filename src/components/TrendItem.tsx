@@ -49,15 +49,16 @@ const TrendItem = ({
   return (
     <TrendVisibilityWrapper>
       {(isVisible, isMostVisible) => (
-        <Card 
+        <Card
           className={cn(
             "rounded-lg bg-card shadow-md overflow-hidden min-h-[280px] flex flex-col transition-all duration-300 relative",
-            isMostVisible ? "border-onetime-red" : "border-gray-500",
-            !isMostVisible && "grayscale"
+            isMostVisible ? "border-onetime-red" : "border-gray-500"
           )}
           style={isMostVisible ? {
             boxShadow: "0 0 10px rgba(239, 68, 68, 0.7)"
-          } : undefined}
+          } : {
+            opacity: 0.6
+          }}
         >
           <TrendItemContent
             matchup={matchup}
