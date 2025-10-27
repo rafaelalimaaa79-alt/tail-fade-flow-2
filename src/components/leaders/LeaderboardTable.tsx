@@ -1,6 +1,5 @@
 
 import React from "react";
-import { useNavigate } from "react-router-dom";
 import { Table, TableHeader, TableRow, TableHead, TableBody, TableCell } from "@/components/ui/table";
 import { Award, Crown, Star, Zap } from "lucide-react";
 
@@ -28,7 +27,6 @@ const LeaderboardTable: React.FC<LeaderboardTableProps> = ({
   bettors,
   loading = false,
 }) => {
-  const navigate = useNavigate();
   const displayBettors = bettors.slice(0, 50);
 
   // Function to get rank icon based on position
@@ -65,7 +63,6 @@ const LeaderboardTable: React.FC<LeaderboardTableProps> = ({
             <TableRow
               key={bettor.id}
               className="cursor-pointer hover:bg-muted/30"
-              onClick={() => navigate(`/bettor/${bettor.id}`)}
             >
               <TableCell className="font-medium w-16 py-3 px-3">
                 {getRankIcon(index)}

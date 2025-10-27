@@ -16,7 +16,6 @@ import Index from "./pages/Index";
 import Trends from "./pages/Trends";
 import Profile from "./pages/Profile";
 import Settings from "./pages/Settings";
-import BettorDetail from "./pages/BettorDetail";
 import Leaders from "./pages/Leaders";
 import Public from "./pages/Public";
 import NotFound from "./pages/NotFound";
@@ -65,7 +64,6 @@ const App = () => {
             <Route path="/trends" element={<ProtectedRoute><Trends /></ProtectedRoute>} />
             <Route path="/profile" element={<ProtectedRoute><Profile /></ProtectedRoute>} />
             <Route path="/settings" element={<ProtectedRoute><Settings /></ProtectedRoute>} />
-            <Route path="/bettor/:id" element={<ProtectedRoute><BettorDetail /></ProtectedRoute>} />
             <Route path="/leaders" element={<ProtectedRoute><Leaders /></ProtectedRoute>} />
             <Route path="/public" element={<ProtectedRoute><Public /></ProtectedRoute>} />
             

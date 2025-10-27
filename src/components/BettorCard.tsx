@@ -28,8 +28,7 @@ const BettorCard = ({
   const absStreak = Math.abs(streak);
 
   return (
-    <Link 
-      to={`/bettor/${id}`} 
+    <div
       className="block"
       onClick={() => triggerHaptic('impactLight')}
     >
@@ -84,7 +83,7 @@ const BettorCard = ({
           </div>
         </div>
       </div>
-    </Link>
+    </div>
   );
 };
 
