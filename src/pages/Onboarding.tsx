@@ -1,5 +1,5 @@
 
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import { useNavigate } from "react-router-dom";
 import { Button } from "@/components/ui/button";
 import { OnboardingProvider } from "@/contexts/OnboardingContext";
@@ -38,9 +38,25 @@ const Onboarding = () => {
   const totalSteps = 7;
   const navigate = useNavigate();
 
+  // Handle beforeunload event to warn user before leaving
+  useEffect(() => {
+    const handleBeforeUnload = (e: BeforeUnloadEvent) => {
+      // Show warning if user tries to leave during onboarding
+      e.preventDefault();
+      e.returnValue = "Are you sure? The progress is not saved.";
+      return "Are you sure? The progress is not saved.";
+    };
+
+    window.addEventListener('beforeunload', handleBeforeUnload);
+
+    return () => {
+      window.removeEventListener('beforeunload', handleBeforeUnload);
+    };
+  }, []);
+
   const handleStepSelect = (field: keyof OnboardingData, value: string) => {
     setFormData(prev => ({ ...prev, [field]: value }));
-    
+
     // Auto-advance to next step after selection (except for step 7)
     if (currentStep < totalSteps) {
       setTimeout(() => {

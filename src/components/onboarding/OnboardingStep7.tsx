@@ -117,12 +117,13 @@ const OnboardingStep7: React.FC<OnboardingStep7Props> = ({ onComplete }) => {
 
       console.log('Saving username to database:', username);
 
-      // Update or insert user profile with username
+      // Update or insert user profile with username and mark onboarding as completed
       const { error: upsertError } = await supabase
         .from('user_profiles')
         .upsert({
           id: user.id,
           username: username,
+          onboarding_completed_at: new Date().toISOString(),
           created_at: new Date().toISOString(),
           updated_at: new Date().toISOString()
         }, {

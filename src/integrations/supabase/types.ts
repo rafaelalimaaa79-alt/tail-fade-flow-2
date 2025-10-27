@@ -234,6 +234,7 @@ export type Database = {
           bio: string | null
           created_at: string
           id: string
+          onboarding_completed_at: string | null
           roi: number | null
           total_bets: number | null
           units_gained: number | null
@@ -246,6 +247,7 @@ export type Database = {
           bio?: string | null
           created_at?: string
           id: string
+          onboarding_completed_at?: string | null
           roi?: number | null
           total_bets?: number | null
           units_gained?: number | null
@@ -258,6 +260,7 @@ export type Database = {
           bio?: string | null
           created_at?: string
           id?: string
+          onboarding_completed_at?: string | null
           roi?: number | null
           total_bets?: number | null
           units_gained?: number | null
