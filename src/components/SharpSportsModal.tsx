@@ -1,6 +1,8 @@
 import { Dialog, DialogContent, DialogHeader, DialogTitle } from '@/components/ui/dialog';
 import { useEffect, useState, useRef } from 'react';
 import { Loader2, CheckCircle2 } from 'lucide-react';
+import { isIOSWebView } from '@/utils/platform-detection';
+import { postSharpSportsMessage } from '@/utils/ios-bridge';
 
 interface SharpSportsModalProps {
   url: string | null;
@@ -36,6 +38,7 @@ export const SharpSportsModal = ({
   const completedRef = useRef(false);
 
   const is2FA = type === '2fa';
+  const isInIOSWebView = isIOSWebView();
 
   useEffect(() => {
     setIsOpen(!!url);
@@ -46,6 +49,12 @@ export const SharpSportsModal = ({
       setIsVerified(false); // Reset verification state
       loadCountRef.current = 0; // Reset load counter for new URL
       completedRef.current = false;
+
+      // Notify iOS app that SharpSports modal is opening
+      if (isInIOSWebView) {
+        console.log('📱 iOS WebView detected - SharpSports modal opening');
+        postSharpSportsMessage('modal_opened', { url, type });
+      }
 
       if (forcedMode) {
         // Forced mode (onboarding): Never allow manual close - only auto-close on completion
@@ -64,7 +73,7 @@ export const SharpSportsModal = ({
         // not based on time, to ensure it only appears on the final blank page
       }
     }
-  }, [url, is2FA, forcedMode]);
+  }, [url, is2FA, forcedMode, isInIOSWebView]);
 
   // Countdown timer for 2FA
   useEffect(() => {
@@ -146,7 +155,12 @@ export const SharpSportsModal = ({
     completedRef.current = true;
     setIsVerified(true); // Show success state
     console.log(`🎉 Triggering completion from ${source}`);
-    
+
+    // Notify iOS app of completion
+    if (isInIOSWebView) {
+      postSharpSportsMessage('modal_completed', { source, type });
+    }
+
     // Delay closing slightly to show success state
     setTimeout(() => {
       handleClose(true);
@@ -157,6 +171,11 @@ export const SharpSportsModal = ({
     console.log('Closing SharpSports modal, completed:', completed);
     setIsOpen(false);
     setIsLoading(true);
+
+    // Notify iOS app of modal closing
+    if (isInIOSWebView) {
+      postSharpSportsMessage('modal_closed', { completed, type });
+    }
 
     if (completed) {
       onComplete();
@@ -334,7 +353,11 @@ export const SharpSportsModal = ({
             className="w-full h-full border-0"
             title={title}
             onLoad={handleIframeLoad}
-            sandbox="allow-same-origin allow-scripts allow-forms allow-popups allow-popups-to-escape-sandbox"
+            sandbox={
+              isInIOSWebView
+                ? "allow-same-origin allow-scripts allow-forms allow-popups"
+                : "allow-same-origin allow-scripts allow-forms allow-popups allow-popups-to-escape-sandbox"
+            }
             allow="clipboard-write"
           />
         </div>
