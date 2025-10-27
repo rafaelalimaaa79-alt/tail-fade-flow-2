@@ -14,6 +14,7 @@ interface SharpSportsModalState {
   title: string;
   message: string;
   type: '2fa' | 'relink';
+  forcedMode?: boolean; // New: makes modal full-screen and non-dismissable
 }
 
 /**
@@ -29,8 +30,9 @@ export const useSyncBets = () => {
   /**
    * Main sync function
    * @param overrideUserId - Optional user ID to use instead of the current user (for sign-in race conditions)
+   * @param forcedMode - If true, makes 2FA modal full-screen and non-dismissable (for onboarding)
    */
-  const syncBets = useCallback(async (overrideUserId?: string) => {
+  const syncBets = useCallback(async (overrideUserId?: string, forcedMode: boolean = false) => {
     const userId = overrideUserId || user?.id;
 
     if (!userId) {
@@ -119,7 +121,8 @@ export const useSyncBets = () => {
             url: otpUrl,
             title: '2FA Verification Required',
             message: 'Please enter the verification code sent to your sportsbook account.',
-            type: '2fa'
+            type: '2fa',
+            forcedMode // Pass forcedMode to modal
           });
           // Keep isSyncing = true while modal is open
           // Will be set to false when modal closes
@@ -131,7 +134,8 @@ export const useSyncBets = () => {
             url: linkUrl,
             title: 'Re-link Your Account',
             message: 'Your account verification has expired. Please re-link your sportsbook account.',
-            type: 'relink'
+            type: 'relink',
+            forcedMode // Pass forcedMode to modal
           });
           // Keep isSyncing = true while modal is open
           // Will be set to false when modal closes
@@ -268,11 +272,67 @@ export const useSyncBets = () => {
       }
 
     } else if (modalType === 'relink') {
-      // RELINKING COMPLETION: Just close and release lock
-      // User will manually click sync button to fetch data
-      console.log('Account re-linked successfully');
-      toast.success('Account re-linked successfully! Click sync to fetch your bets.');
-      setIsSyncing(false);
+      // RELINKING COMPLETION: Trigger refresh to fetch fresh data from re-linked account
+      console.log('Account re-linked successfully, triggering refresh...');
+      toast.info('Account re-linked! Fetching your bets...');
+
+      // Wait a moment for SharpSports to process the linking
+      await new Promise(resolve => setTimeout(resolve, 2000));
+
+      // Trigger sync with forceRefresh to scrape the newly re-linked account
+      try {
+        const { data, error } = await supabase.functions.invoke('sync-bets', {
+          body: {
+            internalId: user?.id,
+            userId: user?.id,
+            forceRefresh: true // MUST be true to trigger SharpSports to scrape the re-linked account
+          }
+        });
+
+        if (error) {
+          console.error('Post-relink sync error:', error);
+          toast.error('Failed to sync bets. Please try again.');
+          setIsSyncing(false);
+          return;
+        }
+
+        // Handle response using existing handler
+        handleSyncResponse(data, {
+          onSuccess: (message, inserted, pending, historical) => {
+            toast.success(message);
+            setIsSyncing(false);
+          },
+
+          onOtpRequired: () => {
+            // This shouldn't happen after relinking
+            console.error('Unexpected OTP required after relinking');
+            toast.error('Unexpected error. Please try syncing again.');
+            setIsSyncing(false);
+          },
+
+          onRelinkRequired: () => {
+            // This shouldn't happen after relinking
+            console.error('Unexpected relink required after relinking');
+            toast.error('Unexpected error. Please try syncing again.');
+            setIsSyncing(false);
+          },
+
+          onRateLimited: (retryAfter, message) => {
+            toast.error(message);
+            setIsSyncing(false);
+          },
+
+          onError: (message) => {
+            toast.error(message);
+            setIsSyncing(false);
+          }
+        });
+
+      } catch (error) {
+        console.error('Unexpected post-relink sync error:', error);
+        toast.error('Failed to fetch bets. Please try again.');
+        setIsSyncing(false);
+      }
     }
   }, [user, sharpSportsModal]);
 

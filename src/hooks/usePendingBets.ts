@@ -30,12 +30,12 @@ export function usePendingBets() {
   const fetchBets = async () => {
     try {
       setLoading(true);
-      
+
       // Fetch pending bets
       const pendingBets = await getCurrentUserPendingBets();
-      
+
       console.log("Pending bets from database:", pendingBets);
-      
+
       // If no bets, return empty array
       if (!pendingBets || pendingBets.length === 0) {
         console.log("No pending bets found");
@@ -43,21 +43,37 @@ export function usePendingBets() {
         setLoading(false);
         return;
       }
-      
+
+      // Get current user's username from user_profiles
+      const { data: { user } } = await supabase.auth.getUser();
+      let username = "You";
+
+      if (user?.id) {
+        const { data: profile } = await supabase
+          .from('user_profiles')
+          .select('username')
+          .eq('id', user.id)
+          .single();
+
+        if (profile?.username) {
+          username = profile.username;
+        }
+      }
+
       // Fetch global confidence score as fallback
       const confidenceData = await getCurrentUserConfidenceScore();
-      const globalFadeConfidence = confidenceData?.score ?? 50;
-      
+      const globalFadeConfidence = confidenceData?.score ?? 1;
+
       // Calculate bet-specific statlines in parallel
       const betsWithStatlines = await Promise.all(
         pendingBets.map(async (bet) => {
           const statlineData = bet.slip_id
             ? await calculateBetStatline(bet.user_id, bet.slip_id)
             : null;
-          
+
           return {
             id: bet.id || "",
-            name: "You",
+            name: username,
             bet: bet,
             fadeConfidence: statlineData?.fadeConfidence || globalFadeConfidence,
             statline: statlineData?.statline || "Loading...",

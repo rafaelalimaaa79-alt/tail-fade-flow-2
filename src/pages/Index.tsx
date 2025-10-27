@@ -16,7 +16,7 @@ import { useNavigate } from "react-router-dom";
 import FloatingSyncButton from "@/components/common/FloatingSyncButton";
 import { useSyncBets } from "@/hooks/useSyncBets";
 import { SharpSportsModal } from "@/components/SharpSportsModal";
-import { usePendingBets } from "@/hooks/usePendingBets";
+import { useAllUsersPendingBets } from "@/hooks/useAllUsersPendingBets";
 
 const Dashboard = () => {
   const isMobile = useIsMobile();
@@ -26,15 +26,15 @@ const Dashboard = () => {
   const { isOpen, smackTalkData, closeSmackTalk } = useInlineSmackTalk();
   const { syncBets, sharpSportsModal, handleModalComplete, handleModalClose } = useSyncBets();
 
-  // Fetch pending bets for Fade Watch
-  const { bets: pendingBets, loading: betsLoading } = usePendingBets();
+  // Fetch all users' pending bets for Fade Watch (sorted by confidence score)
+  const { bets: allUsersPendingBets, loading: betsLoading } = useAllUsersPendingBets();
 
   // Set up carousel rotations with custom hook
   const {
     currentIndex: topCarouselIndex,
     handleCarouselChange: handleTopCarouselChange
   } = useCarouselRotation({
-    itemsCount: pendingBets.length || 1,
+    itemsCount: allUsersPendingBets.length || 1,
     rotationInterval: 5000, // Updated to 5 seconds (5000ms)
     pauseDuration: 5000 // Keep pause duration at 5 seconds (5000ms)
   });
@@ -101,7 +101,7 @@ const Dashboard = () => {
           <BetOfTheDay
             currentIndex={topCarouselIndex}
             onIndexChange={handleTopCarouselChange}
-            bets={pendingBets}
+            bets={allUsersPendingBets}
             loading={betsLoading}
           />
         </div>
@@ -135,6 +135,7 @@ const Dashboard = () => {
           title={sharpSportsModal.title}
           message={sharpSportsModal.message}
           type={sharpSportsModal.type}
+          forcedMode={sharpSportsModal.forcedMode}
           onComplete={handleModalComplete}
           onClose={handleModalClose}
         />

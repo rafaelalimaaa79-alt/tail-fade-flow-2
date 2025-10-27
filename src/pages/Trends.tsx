@@ -13,12 +13,8 @@ import { useInlineSmackTalk } from "@/hooks/useInlineSmackTalk";
 import { useNavigate } from "react-router-dom";
 import FloatingSyncButton from "@/components/common/FloatingSyncButton";
 import { BettorStats } from "@/utils/bettorStatsCalculator";
-import { usePendingBets } from "@/hooks/usePendingBets";
-import {
-  getCurrentUserConfidenceScore,
-  getCurrentUserProfile,
-  BetRecord
-} from "@/services/userDataService";
+import { useAllUsersPendingBets } from "@/hooks/useAllUsersPendingBets";
+import { BetRecord } from "@/services/userDataService";
 
 // Extended TrendData to include the full bet record
 export interface EnhancedTrendData extends TrendData {
@@ -33,8 +29,8 @@ const Trends = () => {
   const [showTopTen, setShowTopTen] = useState(false);
   const { isOpen, smackTalkData, closeSmackTalk } = useInlineSmackTalk();
 
-  // Use shared pending bets hook
-  const { bets: pendingBets, loading: betsLoading } = usePendingBets();
+  // Use hook to fetch all users' pending bets
+  const { bets: allUsersPendingBets, loading: betsLoading } = useAllUsersPendingBets();
 
   // Convert pending bets to EnhancedTrendData format
   const [convertedTrends, setConvertedTrends] = useState<EnhancedTrendData[]>([]);
@@ -44,24 +40,20 @@ const Trends = () => {
     navigate("/dashboard");
   };
 
-  // Convert pending bets to EnhancedTrendData format
+  // Convert all users' pending bets to EnhancedTrendData format
   useEffect(() => {
     const convertBets = async () => {
       try {
         setLoading(true);
 
-        if (pendingBets.length === 0) {
+        if (allUsersPendingBets.length === 0) {
           setConvertedTrends([]);
           setLoading(false);
           return;
         }
 
-        // Fetch user profile for stats
-        const profileData = await getCurrentUserProfile();
-        const confidenceData = await getCurrentUserConfidenceScore();
-
-        // Convert pending bets to EnhancedTrendData format
-        const converted: EnhancedTrendData[] = pendingBets.map((pendingBet) => {
+        // Convert all users' pending bets to EnhancedTrendData format
+        const converted: EnhancedTrendData[] = allUsersPendingBets.map((pendingBet) => {
           // Determine market type (handle over/under separation)
           let marketType = pendingBet.bet.bet_type || "unknown";
           if (marketType === 'total' && pendingBet.bet.position) {
@@ -75,27 +67,27 @@ const Trends = () => {
 
           return {
             id: pendingBet.id,
-            name: "You",
+            name: pendingBet.username, // Use actual username instead of "You"
             betDescription: pendingBet.bet.event || "Unknown Event",
             betType: pendingBet.bet.bet_type || "straight",
             isTailRecommendation: false,
             reason: `${pendingBet.bet.sportsbook_name || "Sportsbook"} - ${pendingBet.bet.bet_type || "Bet"}`,
             recentBets: [],
-            unitPerformance: profileData?.units_gained ?? 0,
+            unitPerformance: pendingBet.userUnitsGained ?? 0,
             tailScore: pendingBet.fadeConfidence,
             fadeScore: pendingBet.fadeConfidence,
-            userCount: profileData?.total_bets ?? 0,
+            userCount: pendingBet.userTotalBets ?? 0,
             categoryBets: [],
             categoryName: marketType,
             bet: pendingBet.bet,
             stats: {
-              wins: Math.round((profileData?.win_rate ?? 0) / 100 * (profileData?.total_bets ?? 0)),
-              losses: Math.round((100 - (profileData?.win_rate ?? 0)) / 100 * (profileData?.total_bets ?? 0)),
+              wins: Math.round((pendingBet.userWinRate ?? 0) / 100 * (pendingBet.userTotalBets ?? 0)),
+              losses: Math.round((100 - (pendingBet.userWinRate ?? 0)) / 100 * (pendingBet.userTotalBets ?? 0)),
               pushes: 0,
-              totalBets: profileData?.total_bets ?? 0,
-              winRate: profileData?.win_rate ?? 0,
+              totalBets: pendingBet.userTotalBets ?? 0,
+              winRate: pendingBet.userWinRate ?? 0,
               fadeConfidence: Math.round(pendingBet.fadeConfidence),
-              netProfit: profileData?.units_gained ?? 0,
+              netProfit: pendingBet.userUnitsGained ?? 0,
               avgOdds: 0,
               recentForm: []
             },
@@ -112,7 +104,7 @@ const Trends = () => {
     };
 
     convertBets();
-  }, [pendingBets]);
+  }, [allUsersPendingBets]);
 
 
 
@@ -137,7 +129,7 @@ const Trends = () => {
         {loading ? (
           <div className="text-center py-12">
             <div className="animate-spin h-12 w-12 border-4 border-[#AEE3F5] border-t-transparent rounded-full mx-auto mb-4" />
-            <p className="text-gray-400">Loading your bets...</p>
+            <p className="text-gray-400">Loading pending bets...</p>
           </div>
         ) : showTopTen ? (
           <TopTenReveal isRevealed={showTopTen} />

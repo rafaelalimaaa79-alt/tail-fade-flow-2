@@ -66,11 +66,15 @@ const PublicGameItem = ({ game, rank, isInitialized = false }: PublicGameItemPro
     <PublicGameVisibilityWrapper>
       {(isVisible, isMostVisible) => (
         <div className="max-w-sm mx-auto mb-4">
-          <div className={cn(
-            "relative bg-black border-2 border-[#AEE3F5]/30 rounded-xl overflow-hidden transition-all duration-300",
-            isInitialized && "hover:border-[#AEE3F5]/50 hover:shadow-lg hover:shadow-[#AEE3F5]/10",
-            !isMostVisible && "grayscale"
-          )}>
+          <div
+            className={cn(
+              "relative bg-black border-2 border-[#AEE3F5]/30 rounded-xl overflow-hidden transition-all duration-300",
+              isInitialized && "hover:border-[#AEE3F5]/50 hover:shadow-lg hover:shadow-[#AEE3F5]/10"
+            )}
+            style={{
+              opacity: isMostVisible ? 1 : 0.6
+            }}
+          >
             {/* Header with Game - Trend Style */}
             <div className="flex justify-center items-center px-4 py-3 bg-black/20 border-b border-white/10">
               <div className="text-center pb-1">

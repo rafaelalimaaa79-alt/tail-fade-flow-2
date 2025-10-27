@@ -108,6 +108,7 @@ const ConnectSportsbooks = () => {
     title: string;
     message: string;
     type: '2fa' | 'relink';
+    forcedMode?: boolean;
   } | null>(null);
 
 
@@ -255,7 +256,8 @@ const ConnectSportsbooks = () => {
         url: linkData.linkUrl,
         title: `Connect ${sportsbook.name}`,
         message: 'Create your SharpSports account and link your sportsbook',
-        type: 'relink' // Use 'relink' type for linking flow
+        type: 'relink', // Use 'relink' type for linking flow
+        forcedMode: true // Make modal full-screen and non-dismissable during onboarding
       });
 
     } catch (error) {
@@ -289,17 +291,17 @@ const ConnectSportsbooks = () => {
     setActiveLinkingBook(null);
     toast.success(`${sportsbook.name} connected successfully!`);
 
-    // Sync bets after linking
+    // Sync bets after linking - IMPORTANT: Force refresh to fetch fresh data from newly linked account
     try {
       const { data: { user } } = await supabase.auth.getUser();
       if (user) {
-        toast.info('Syncing your bets...');
+        toast.info('Fetching your bets from the sportsbook...');
 
         const { data, error } = await supabase.functions.invoke('sync-bets', {
           body: {
             internalId: user.id,
             userId: user.id,
-            forceRefresh: false // Don't trigger refresh, just fetch
+            forceRefresh: true // MUST be true to trigger SharpSports to scrape the newly linked account
           }
         });
 
@@ -767,6 +769,7 @@ const ConnectSportsbooks = () => {
               title={sharpSportsModal.title}
               message={sharpSportsModal.message}
               type={sharpSportsModal.type}
+              forcedMode={sharpSportsModal.forcedMode}
               onComplete={handleModalComplete}
               onClose={handleModalClose}
             />

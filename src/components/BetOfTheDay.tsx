@@ -4,6 +4,7 @@ import WaveText from "./WaveText";
 import FadeWatchCard from "./FadeWatchCard";
 import PaginationIndicator from "./PaginationIndicator";
 import { PendingBetWithStatline } from "@/hooks/usePendingBets";
+import { AllUsersPendingBet } from "@/hooks/useAllUsersPendingBets";
 import useWaveAnimation from "@/hooks/useWaveAnimation";
 import {
   Carousel,
@@ -16,7 +17,7 @@ import { triggerHaptic } from "@/utils/haptic-feedback";
 interface BetOfTheDayProps {
   currentIndex: number;
   onIndexChange: (index: number) => void;
-  bets: PendingBetWithStatline[];
+  bets: PendingBetWithStatline[] | AllUsersPendingBet[];
   loading: boolean;
 }
 

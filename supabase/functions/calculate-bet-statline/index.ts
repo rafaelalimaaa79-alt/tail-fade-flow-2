@@ -6,15 +6,40 @@ const corsHeaders = {
   "Access-Control-Allow-Headers": "authorization, x-client-info, apikey, content-type",
 };
 
-// Helper to calculate stats from bet array
+// Helper to calculate win rate from bet array
+function calculateWinRate(bets: any[]): number {
+  const gradedBets = bets.filter(b => b.result !== "Push");
+  if (gradedBets.length === 0) return 0;
+
+  const wins = bets.filter(b => b.result === "Win").length;
+  const winRate = (wins / gradedBets.length) * 100;
+
+  return winRate;
+}
+
+// Helper to calculate stats from bet array (for statline display)
 function calculateStats(bets: any[]) {
   const gradedBets = bets.filter(b => b.result !== "Push");
   const wins = bets.filter(b => b.result === "Win").length;
   const losses = bets.filter(b => b.result === "Loss").length;
   const total = gradedBets.length;
-  const winRate = total > 0 ? Math.round((wins / total) * 100) : 0;
+  const winRate = total > 0 ? (wins / total) * 100 : 0;
 
   return { wins, losses, total, winRate };
+}
+
+// Helper to format statline in "won/lost X of his last Y" format
+function formatStatline(wins: number, losses: number, label: string): string {
+  const total = wins + losses;
+
+  if (wins > losses) {
+    return `He's won ${wins} of his last ${total} ${label}`;
+  } else if (losses > wins) {
+    return `He's lost ${losses} of his last ${total} ${label}`;
+  } else {
+    // Equal wins and losses
+    return `He's split ${wins}-${losses} in his last ${total} ${label}`;
+  }
 }
 
 // Main function to calculate bet-specific statline
@@ -25,7 +50,7 @@ async function calculateBetStatline(supabase: any, userId: string, betSlipId: st
     // 1. Get the specific bet details
     const { data: targetBet, error: betError } = await supabase
       .from('bets')
-      .select('id, slip_id, bet_id, sport, bet_type, position, home_team, away_team')
+      .select('id, slip_id, bet_id, sport, bet_type, position, home_team, away_team, units_risked')
       .eq('slip_id', betSlipId)
       .eq('user_id', userId)
       .single();
@@ -41,7 +66,7 @@ async function calculateBetStatline(supabase: any, userId: string, betSlipId: st
 
       return {
         statline: "No statline available",
-        fadeConfidence: -1,
+        fadeConfidence: 0,
         metric: "error"
       };
     }
@@ -50,7 +75,7 @@ async function calculateBetStatline(supabase: any, userId: string, betSlipId: st
       console.error(`❌ [STATLINE] No bet found with slip_id ${betSlipId}`);
       return {
         statline: "No bet data available",
-        fadeConfidence: 50,
+        fadeConfidence: 0,
         metric: "error"
       };
     }
@@ -73,7 +98,7 @@ async function calculateBetStatline(supabase: any, userId: string, betSlipId: st
 
     const { data: allBets, error: fetchError } = await supabase
       .from('bets')
-      .select('sport, bet_type, position, home_team, away_team, result, timestamp')
+      .select('sport, bet_type, position, home_team, away_team, result, timestamp, units_risked')
       .eq('user_id', userId)
       .in('result', ['Win', 'Loss', 'Push'])
       .order('timestamp', { ascending: false });
@@ -82,7 +107,7 @@ async function calculateBetStatline(supabase: any, userId: string, betSlipId: st
       console.error(`❌ [STATLINE] Error fetching historical bets:`, fetchError);
       return {
         statline: "Error fetching bet history",
-        fadeConfidence: 50,
+        fadeConfidence:50,
         metric: "error"
       };
     }
@@ -91,19 +116,64 @@ async function calculateBetStatline(supabase: any, userId: string, betSlipId: st
       console.log(`⚠️ [STATLINE] No betting history found for user ${userId}`);
       return {
         statline: "No betting history yet",
-        fadeConfidence: 50,
+        fadeConfidence: 0,
         metric: "no_history"
       };
     }
 
     console.log(`✅ [STATLINE] Found ${allBets.length} historical bets for analysis`);
 
-    // 3. Calculate candidate metrics
-    const metrics: any[] = [];
+    // 3. Calculate the 4 metrics per PDF specification (ALL SPORT-SPECIFIC)
 
-    // METRIC 1: Team Record (user's record betting on this specific team)
+    // First, filter all bets to this sport only
+    const sportBets = allBets.filter(b => b.sport === sport);
+    console.log(`📊 Found ${sportBets.length} historical ${sport} bets for sport-specific metrics`);
+
+    // METRIC 1: Recent Form (last 10 bets IN THIS SPORT) - 40% weight
+    const recentBets = sportBets.slice(0, 10);
+    const recentFormWinRate = calculateWinRate(recentBets);
+    console.log(`📊 Recent Form: ${recentFormWinRate.toFixed(1)}% over last ${recentBets.length} ${sport} bets`);
+
+    // METRIC 2: Sport Win Rate (lifetime in this sport) - 30% weight
+    const sportLifetimeWinRate = calculateWinRate(sportBets);
+    console.log(`📊 Sport Lifetime: ${sportLifetimeWinRate.toFixed(1)}% over ${sportBets.length} ${sport} bets`);
+
+    // METRIC 3: Market Type Record (in this sport) - 20% weight
+    const marketBets = sportBets.filter(b => b.bet_type === bet_type);
+    const marketTypeWinRate = calculateWinRate(marketBets);
+    const marketLabel = bet_type === 'moneyline' ? 'moneylines' :
+                       bet_type === 'spread' ? 'spreads' :
+                       bet_type === 'total' ? 'totals' : bet_type;
+    console.log(`📊 Market Type: ${marketTypeWinRate.toFixed(1)}% over ${marketBets.length} ${sport} ${marketLabel}`);
+
+    // METRIC 4: Big Bet Record (>2 units IN THIS SPORT) - 10% weight
+    const bigBets = sportBets.filter(b => {
+      const units = parseFloat(String(b.units_risked || 0));
+      return units > 2;
+    });
+    const bigBetWinRate = calculateWinRate(bigBets);
+    console.log(`📊 Big Bets: ${bigBetWinRate.toFixed(1)}% over ${bigBets.length} ${sport} bets >2 units`);
+
+    // 4. Calculate weighted fade confidence per PDF formula
+    // fade_confidence = 100 - ((0.4 * recent_form) + (0.3 * sport_lifetime) + (0.2 * market_type) + (0.1 * big_bet))
+    const weightedWinRate = (
+      (0.4 * recentFormWinRate) +
+      (0.3 * sportLifetimeWinRate) +
+      (0.2 * marketTypeWinRate) +
+      (0.1 * bigBetWinRate)
+    );
+
+    // Round to 1 decimal place for display
+    const fadeConfidence = Math.max(1, Math.min(99, 100 - weightedWinRate));
+
+    console.log(`🎯 Weighted Win Rate (Sport-Specific): ${weightedWinRate.toFixed(1)}%`);
+    console.log(`🎯 Fade Confidence: ${fadeConfidence.toFixed(1)}%`);
+
+    // 5. Find lowest-performing category for statline (per PDF spec, SPORT-SPECIFIC)
+    const statlineCategories: any[] = [];
+
+    // Category 1: Team Record (in this sport only)
     if (position && sport) {
-      // Determine which team the user bet on
       let targetTeam = null;
       const pos = position.toLowerCase();
 
@@ -112,7 +182,6 @@ async function calculateBetStatline(supabase: any, userId: string, betSlipId: st
       } else if (pos.includes("away") && away_team) {
         targetTeam = away_team;
       } else {
-        // For moneylines, position might be the team name directly
         if (home_team && pos.includes(home_team.toLowerCase())) {
           targetTeam = home_team;
         } else if (away_team && pos.includes(away_team.toLowerCase())) {
@@ -121,134 +190,76 @@ async function calculateBetStatline(supabase: any, userId: string, betSlipId: st
       }
 
       if (targetTeam) {
-        const teamBets = allBets.filter(b => {
-          if (b.sport !== sport) return false;
-          
+        // Use sportBets (already filtered to this sport) instead of allBets
+        const teamBets = sportBets.filter((b: any) => {
           const betPos = (b.position || '').toLowerCase();
           const betHomeTeam = b.home_team || '';
           const betAwayTeam = b.away_team || '';
-          
-          // Check if this bet was on the same team
+
           if (betPos.includes("home") && betHomeTeam === targetTeam) return true;
           if (betPos.includes("away") && betAwayTeam === targetTeam) return true;
           if (betHomeTeam && betPos.includes(betHomeTeam.toLowerCase()) && betHomeTeam === targetTeam) return true;
           if (betAwayTeam && betPos.includes(betAwayTeam.toLowerCase()) && betAwayTeam === targetTeam) return true;
-          
+
           return false;
         });
 
         if (teamBets.length >= 3) {
           const stats = calculateStats(teamBets);
-          metrics.push({
-            type: 'team_record',
+          statlineCategories.push({
+            type: 'team',
             ...stats,
-            label: `betting on ${targetTeam}`,
-            priority: 1 // Highest priority
+            label: `betting on ${targetTeam}`
           });
-          console.log(`Team metric: ${stats.wins}-${stats.losses} (${stats.winRate}%) on ${targetTeam}`);
-        } else {
-          console.log(`Team metric skipped: only ${teamBets.length} bets on ${targetTeam}`);
+          console.log(`📊 Team category: ${stats.wins}-${stats.losses} (${stats.winRate.toFixed(1)}%) on ${targetTeam}`);
         }
       }
     }
 
-    // METRIC 2: Market Record (user's record on this market type in this sport)
-    if (sport && bet_type) {
-      const marketBets = allBets.filter(b => 
-        b.sport === sport && b.bet_type === bet_type
-      );
-
-      if (marketBets.length >= 3) {
-        const stats = calculateStats(marketBets);
-        const marketLabel = bet_type === 'moneyline' ? 'moneylines' : 
-                           bet_type === 'spread' ? 'spreads' : 
-                           bet_type === 'total' ? 'totals' : bet_type;
-        metrics.push({
-          type: 'market_record',
-          ...stats,
-          label: `${sport} ${marketLabel}`,
-          priority: 2
-        });
-        console.log(`Market metric: ${stats.wins}-${stats.losses} (${stats.winRate}%) on ${sport} ${marketLabel}`);
-      } else {
-        console.log(`Market metric skipped: only ${marketBets.length} bets on ${sport} ${bet_type}`);
-      }
+    // Category 2: Market Type Record
+    if (marketBets.length >= 3) {
+      const stats = calculateStats(marketBets);
+      statlineCategories.push({
+        type: 'market',
+        ...stats,
+        label: `${sport} ${marketLabel}`
+      });
+      console.log(`📊 Market category: ${stats.wins}-${stats.losses} (${stats.winRate.toFixed(1)}%) on ${sport} ${marketLabel}`);
     }
 
-    // METRIC 3: Sport Record (user's overall record in this sport)
-    if (sport) {
-      const sportBets = allBets.filter(b => b.sport === sport);
-
-      if (sportBets.length >= 3) {
-        const stats = calculateStats(sportBets);
-        metrics.push({
-          type: 'sport_record',
-          ...stats,
-          label: `${sport} bets`,
-          priority: 3
-        });
-        console.log(`Sport metric: ${stats.wins}-${stats.losses} (${stats.winRate}%) on ${sport}`);
-      } else {
-        console.log(`Sport metric skipped: only ${sportBets.length} bets on ${sport}`);
-      }
+    // Category 3: Sport Record
+    if (sportBets.length >= 3) {
+      const stats = calculateStats(sportBets);
+      statlineCategories.push({
+        type: 'sport',
+        ...stats,
+        label: `${sport} bets`
+      });
+      console.log(`📊 Sport category: ${stats.wins}-${stats.losses} (${stats.winRate.toFixed(1)}%) on ${sport}`);
     }
 
-    // METRIC 4: Recent Form (last 10 bets in this sport)
-    if (sport) {
-      const sportBets = allBets.filter(b => b.sport === sport);
-      const recentBets = sportBets.slice(0, 10); // Already sorted by timestamp desc
+    // 6. Select lowest-performing category for statline
+    let statline: string;
+    let statlineMetric: string;
 
-      if (recentBets.length >= 3) {
-        const stats = calculateStats(recentBets);
-        metrics.push({
-          type: 'recent_form',
-          ...stats,
-          label: `last ${recentBets.length} ${sport} bets`,
-          priority: 4
-        });
-        console.log(`Recent form metric: ${stats.wins}-${stats.losses} (${stats.winRate}%) in last ${recentBets.length} ${sport} bets`);
-      } else {
-        console.log(`Recent form metric skipped: only ${recentBets.length} bets in ${sport}`);
-      }
+    if (statlineCategories.length === 0) {
+      // Fallback: use recent form
+      const stats = calculateStats(recentBets);
+      statline = formatStatline(stats.wins, stats.losses, 'bets');
+      statlineMetric = 'recent_form_fallback';
+      console.log(`� Using fallback statline: recent form`);
+    } else {
+      // Sort by win rate (ascending) to get lowest-performing
+      const lowestPerforming = statlineCategories.sort((a, b) => a.winRate - b.winRate)[0];
+      statline = formatStatline(lowestPerforming.wins, lowestPerforming.losses, lowestPerforming.label);
+      statlineMetric = lowestPerforming.type;
+      console.log(`📊 Lowest-performing category: ${lowestPerforming.type} with ${lowestPerforming.winRate.toFixed(1)}% win rate`);
     }
-
-    // 4. Choose the most specific metric available (highest priority)
-    if (metrics.length === 0) {
-      console.log(`⚠️ [STATLINE] No sport-specific metrics available, using overall fallback`);
-      // Fallback: Overall last 10 across all sports
-      const overallRecent = allBets.slice(0, 10);
-      const stats = calculateStats(overallRecent);
-
-      const result = {
-        statline: `He's ${stats.wins}-${stats.losses} in last ${stats.total} bets`,
-        fadeConfidence: Math.max(50, Math.min(99, 100 - stats.winRate)),
-        metric: 'fallback_overall'
-      };
-
-      console.log(`📤 [STATLINE] Returning fallback result:`, result);
-      return result;
-    }
-
-    // Sort by priority (ascending) to get most specific metric
-    // Priority 1 (team) > Priority 2 (market) > Priority 3 (sport) > Priority 4 (recent form)
-    console.log(`🎯 [STATLINE] Evaluating ${metrics.length} candidate metrics:`, metrics.map(m => ({
-      type: m.type,
-      priority: m.priority,
-      record: `${m.wins}-${m.losses}`,
-      winRate: `${m.winRate}%`
-    })));
-
-    const mostSpecificMetric = metrics.sort((a, b) => a.priority - b.priority)[0];
-
-    console.log(`✅ [STATLINE] Most specific metric selected: ${mostSpecificMetric.type} (priority ${mostSpecificMetric.priority}) with ${mostSpecificMetric.winRate}% win rate`);
-
-    const statline = `He's ${mostSpecificMetric.wins}-${mostSpecificMetric.losses} ${mostSpecificMetric.label}`;
-    const fadeConfidence = Math.max(50, Math.min(99, 100 - mostSpecificMetric.winRate));
 
     const result = {
       statline,
-      fadeConfidence,
-      metric: mostSpecificMetric.type
+      fadeConfidence: fadeConfidence,
+      metric: statlineMetric
     };
 
     console.log(`📤 [STATLINE] Returning result for slip_id ${betSlipId}:`, result);
@@ -259,7 +270,7 @@ async function calculateBetStatline(supabase: any, userId: string, betSlipId: st
     console.error(`❌ [STATLINE] Error stack:`, error.stack);
     return {
       statline: "Error calculating statline",
-      fadeConfidence: 50,
+      fadeConfidence: 0,
       metric: "error"
     };
   }

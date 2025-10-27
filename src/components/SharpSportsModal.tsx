@@ -1,6 +1,8 @@
 import { Dialog, DialogContent, DialogHeader, DialogTitle } from '@/components/ui/dialog';
 import { useEffect, useState, useRef } from 'react';
 import { Loader2, CheckCircle2 } from 'lucide-react';
+import { isIOSWebView } from '@/utils/platform-detection';
+import { postSharpSportsMessage } from '@/utils/ios-bridge';
 
 interface SharpSportsModalProps {
   url: string | null;
@@ -9,6 +11,7 @@ interface SharpSportsModalProps {
   type?: '2fa' | 'relink';
   onComplete: () => void;
   onClose?: () => void;
+  forcedMode?: boolean; // New prop: makes modal full-screen and non-dismissable until completion
 }
 
 /**
@@ -21,7 +24,8 @@ export const SharpSportsModal = ({
   message,
   type = '2fa',
   onComplete,
-  onClose
+  onClose,
+  forcedMode = false
 }: SharpSportsModalProps) => {
   const [isOpen, setIsOpen] = useState(!!url);
   const [isLoading, setIsLoading] = useState(true);
@@ -34,6 +38,7 @@ export const SharpSportsModal = ({
   const completedRef = useRef(false);
 
   const is2FA = type === '2fa';
+  const isInIOSWebView = isIOSWebView();
 
   useEffect(() => {
     setIsOpen(!!url);
@@ -45,7 +50,16 @@ export const SharpSportsModal = ({
       loadCountRef.current = 0; // Reset load counter for new URL
       completedRef.current = false;
 
-      if (is2FA) {
+      // Notify iOS app that SharpSports modal is opening
+      if (isInIOSWebView) {
+        console.log('📱 iOS WebView detected - SharpSports modal opening');
+        postSharpSportsMessage('modal_opened', { url, type });
+      }
+
+      if (forcedMode) {
+        // Forced mode (onboarding): Never allow manual close - only auto-close on completion
+        setCanClose(false);
+      } else if (is2FA) {
         // For 2FA: Disable close for first 10 seconds
         setCanClose(false);
         const timer = setTimeout(() => {
@@ -59,7 +73,7 @@ export const SharpSportsModal = ({
         // not based on time, to ensure it only appears on the final blank page
       }
     }
-  }, [url, is2FA]);
+  }, [url, is2FA, forcedMode, isInIOSWebView]);
 
   // Countdown timer for 2FA
   useEffect(() => {
@@ -141,7 +155,12 @@ export const SharpSportsModal = ({
     completedRef.current = true;
     setIsVerified(true); // Show success state
     console.log(`🎉 Triggering completion from ${source}`);
-    
+
+    // Notify iOS app of completion
+    if (isInIOSWebView) {
+      postSharpSportsMessage('modal_completed', { source, type });
+    }
+
     // Delay closing slightly to show success state
     setTimeout(() => {
       handleClose(true);
@@ -152,6 +171,11 @@ export const SharpSportsModal = ({
     console.log('Closing SharpSports modal, completed:', completed);
     setIsOpen(false);
     setIsLoading(true);
+
+    // Notify iOS app of modal closing
+    if (isInIOSWebView) {
+      postSharpSportsMessage('modal_closed', { completed, type });
+    }
 
     if (completed) {
       onComplete();
@@ -206,13 +230,23 @@ export const SharpSportsModal = ({
 
   return (
     <Dialog open={isOpen} onOpenChange={(open) => {
+      // Forced mode: Never allow manual close
+      if (forcedMode) {
+        return;
+      }
       // For 2FA: Only allow closing if canClose is true (after 10 seconds)
       // For relinking: Always allow closing
       if (!open && canClose) {
         handleClose(false);
       }
     }}>
-      <DialogContent className="max-w-lg h-[600px] p-0 bg-background flex flex-col gap-0">
+      <DialogContent
+        className={forcedMode
+          ? "w-screen h-screen max-w-none p-0 bg-background flex flex-col gap-0 rounded-none"
+          : "max-w-lg h-[600px] p-0 bg-background flex flex-col gap-0"
+        }
+        hideCloseButton={forcedMode}
+      >
         <DialogHeader className="p-4 pb-2 border-b border-white/10">
           <DialogTitle className="text-white">{title}</DialogTitle>
           {!is2FA && message && (
@@ -319,7 +353,11 @@ export const SharpSportsModal = ({
             className="w-full h-full border-0"
             title={title}
             onLoad={handleIframeLoad}
-            sandbox="allow-same-origin allow-scripts allow-forms allow-popups allow-popups-to-escape-sandbox"
+            sandbox={
+              isInIOSWebView
+                ? "allow-same-origin allow-scripts allow-forms allow-popups"
+                : "allow-same-origin allow-scripts allow-forms allow-popups allow-popups-to-escape-sandbox"
+            }
             allow="clipboard-write"
           />
         </div>

@@ -82,10 +82,10 @@ const ProfilePage = () => {
           </div>
         </div>
 
-        <UserHeader 
-          username={userStats.username} 
-          rank={userStats.rank} 
-          rankChange={userStats.rankChange} 
+        <UserHeader
+          username={userStats.username}
+          rank={userStats.rank}
+          rankChange={userStats.rankChange}
         />
 
         <PendingBetsSection />

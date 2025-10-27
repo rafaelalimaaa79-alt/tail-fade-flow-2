@@ -5,11 +5,13 @@ import { ArrowLeft } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import BottomNav from "@/components/BottomNav";
 import SubscriptionSection from "@/components/settings/SubscriptionSection";
-import ConnectedSportsbooksSection from "@/components/settings/ConnectedSportsbooksSection";
+import ConnectedAccountsSection from "@/components/profile/ConnectedAccountsSection";
 import SignOutSection from "@/components/settings/SignOutSection";
+import { useAuth } from "@/contexts/AuthContext";
 
 const Settings = () => {
   const navigate = useNavigate();
+  const { user } = useAuth();
 
   return (
     <div className="bg-black min-h-screen pb-20">
@@ -30,7 +32,7 @@ const Settings = () => {
         </div>
 
         <div className="space-y-8">
-          <ConnectedSportsbooksSection />
+          {user?.id && <ConnectedAccountsSection userId={user.id} />}
           <SubscriptionSection />
           <SignOutSection />
         </div>

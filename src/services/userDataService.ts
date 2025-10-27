@@ -257,8 +257,94 @@ export async function getPendingBets(userId: string): Promise<BetRecord[]> {
 export async function getCurrentUserPendingBets(): Promise<BetRecord[]> {
   const userId = await getCurrentUserId();
   if (!userId) return [];
-  
+
   return getPendingBets(userId);
+}
+
+/**
+ * Get all users' pending bets with user profile and confidence score
+ * @param limit - Optional limit on number of bets to return
+ * @returns Array of pending bets with user info and confidence scores
+ */
+export async function getAllUsersPendingBets(limit?: number): Promise<Array<BetRecord & {
+  username: string;
+  userConfidenceScore: number;
+  userUnitsGained: number;
+  userWinRate: number;
+  userTotalBets: number;
+}>> {
+  try {
+    // First, get all pending bets
+    let betsQuery = supabase
+      .from('bets')
+      .select('*')
+      .eq('result', 'Pending')
+      .order('event_start_time', { ascending: true });
+
+    if (limit) {
+      betsQuery = betsQuery.limit(limit);
+    }
+
+    const { data: bets, error: betsError } = await betsQuery;
+
+    if (betsError) {
+      console.error('Error fetching pending bets:', betsError);
+      return [];
+    }
+
+    if (!bets || bets.length === 0) {
+      return [];
+    }
+
+    // Get unique user IDs
+    const userIds = [...new Set(bets.map(bet => bet.user_id))];
+
+    // Fetch user profiles for all users
+    const { data: profiles, error: profilesError } = await supabase
+      .from('user_profiles')
+      .select('id, username, units_gained, win_rate, total_bets')
+      .in('id', userIds);
+
+    if (profilesError) {
+      console.error('Error fetching user profiles:', profilesError);
+      return [];
+    }
+
+    // Fetch confidence scores for all users
+    const { data: scores, error: scoresError } = await supabase
+      .from('confidence_scores')
+      .select('user_id, score')
+      .in('user_id', userIds);
+
+    if (scoresError) {
+      console.error('Error fetching confidence scores:', scoresError);
+      return [];
+    }
+
+    // Create lookup maps
+    const profileMap = new Map(profiles?.map(p => [p.id, p]) || []);
+    const scoreMap = new Map(scores?.map(s => [s.user_id, s.score]) || []);
+
+    // Combine the data
+    const data = bets.map(bet => {
+      const profile = profileMap.get(bet.user_id);
+      const score = scoreMap.get(bet.user_id) || 0;
+
+      return {
+        ...bet,
+        username: profile?.username || 'Unknown',
+        userConfidenceScore: score,
+        userUnitsGained: profile?.units_gained || 0,
+        userWinRate: profile?.win_rate || 0,
+        userTotalBets: profile?.total_bets || 0,
+      };
+    });
+
+    return data;
+  } catch (error) {
+    console.error('Error in getAllUsersPendingBets:', error);
+    return [];
+  }
 }
 
 /**

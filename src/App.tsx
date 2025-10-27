@@ -7,6 +7,10 @@ import { BrowserRouter, Routes, Route } from "react-router-dom";
 import { AuthProvider } from "@/contexts/AuthContext";
 import { ChatProvider } from "@/contexts/ChatContext";
 import ProtectedRoute from "@/components/ProtectedRoute";
+import { useEffect } from "react";
+import { setupNavigationGuard } from "@/utils/navigation-guard";
+import { logPlatformInfo } from "@/utils/platform-detection";
+import { logIOSBridgeStatus } from "@/utils/ios-bridge";
 
 import Index from "./pages/Index";
 import Trends from "./pages/Trends";
@@ -26,15 +30,24 @@ import DidYouKnow from "./pages/DidYouKnow";
 
 const queryClient = new QueryClient();
 
-const App = () => (
-  <QueryClientProvider client={queryClient}>
-    <TooltipProvider>
-      <Toaster />
-      <Sonner position="top-center" />
-      <BrowserRouter>
-        <AuthProvider>
-          <ChatProvider>
-            <Routes>
+const App = () => {
+  // Initialize navigation guard and platform detection on app load
+  useEffect(() => {
+    console.log('🚀 Initializing app...');
+    logPlatformInfo();
+    logIOSBridgeStatus();
+    setupNavigationGuard();
+  }, []);
+
+  return (
+    <QueryClientProvider client={queryClient}>
+      <TooltipProvider>
+        <Toaster />
+        <Sonner position="top-center" />
+        <BrowserRouter>
+          <AuthProvider>
+            <ChatProvider>
+              <Routes>
             {/* Root route always goes to sign in - no authentication check */}
             <Route path="/" element={<SignIn />} />
             
@@ -64,6 +77,7 @@ const App = () => (
       </BrowserRouter>
     </TooltipProvider>
   </QueryClientProvider>
-);
+  );
+};
 
 export default App;

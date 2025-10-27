@@ -16,7 +16,7 @@ const TrendFadeButton = ({ oppositeBet, fadeConfidence, onBetClick, isMostVisibl
       {/* Fade confidence */}
       <div className="text-center py-1">
         <p className="text-lg font-semibold text-gray-300">
-          Fade Confidence: <span className="text-[#AEE3F5] font-bold">{fadeConfidence}%</span>
+          Fade Confidence: <span className="text-[#AEE3F5] font-bold">{fadeConfidence.toFixed(2)}%</span>
         </p>
       </div>
       
