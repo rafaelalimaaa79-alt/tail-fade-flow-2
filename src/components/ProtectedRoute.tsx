@@ -72,8 +72,7 @@ const ProtectedRoute = ({ children }: ProtectedRouteProps) => {
           navigate('/signin', { state: { from: location.pathname } });
         } else {
           console.log("ProtectedRoute: Valid session found");
-          // Check if onboarding is completed
-          await checkOnboardingStatus(session.user.id);
+          setIsVerifying(false);
         }
       } catch (error) {
         console.error('Error verifying auth:', error);
@@ -83,46 +82,13 @@ const ProtectedRoute = ({ children }: ProtectedRouteProps) => {
       }
     };
 
-    const checkOnboardingStatus = async (userId: string) => {
-      try {
-        console.log("ProtectedRoute: Checking onboarding status for user", { userId });
-
-        // Don't check onboarding status if already on onboarding page
-        if (location.pathname === '/onboarding') {
-          console.log("ProtectedRoute: Already on onboarding page, skipping check");
-          return;
-        }
-
-        const { data: userProfile, error } = await supabase
-          .from('user_profiles')
-          .select('onboarding_completed_at')
-          .eq('id', userId)
-          .single();
-
-        if (error) {
-          console.error('Error fetching user profile:', error);
-          return;
-        }
-
-        // If onboarding_completed_at is null, redirect to onboarding
-        if (!userProfile?.onboarding_completed_at) {
-          console.log("ProtectedRoute: Onboarding not completed, redirecting to onboarding page");
-          navigate('/onboarding', { state: { from: location.pathname } });
-        } else {
-          console.log("ProtectedRoute: Onboarding completed");
-        }
-      } catch (error) {
-        console.error('Error checking onboarding status:', error);
-      }
-    };
-
     if (!loading) {
       if (!user) {
         console.log("ProtectedRoute: No user in context, checking session");
         checkAuth();
       } else {
         console.log("ProtectedRoute: User found in context", { id: user.id });
-        checkOnboardingStatus(user.id);
+        setIsVerifying(false);
       }
     }
   }, [user, loading, navigate, location.pathname, attemptBiometricAuth, biometricAttempted]);

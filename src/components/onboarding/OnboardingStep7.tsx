@@ -8,6 +8,7 @@ import UsernameInput from "./UsernameInput";
 import UsernamePreview from "./UsernamePreview";
 import { validateUsername, checkUsernameAvailability } from "@/utils/usernameValidation";
 import { supabase } from "@/integrations/supabase/client";
+import { useAuth } from "@/contexts/AuthContext";
 import { toast } from "sonner";
 
 interface OnboardingStep7Props {
@@ -21,6 +22,7 @@ const OnboardingStep7: React.FC<OnboardingStep7Props> = ({ onComplete }) => {
   const [error, setError] = useState("");
   const [showNotification, setShowNotification] = useState(false);
   const [hasPendingTFA, setHasPendingTFA] = useState(false);
+  const { setOnboardingCompleted } = useAuth();
 
   useEffect(() => {
     // Check for pending 2FA initially and set up listener
@@ -139,6 +141,9 @@ const OnboardingStep7: React.FC<OnboardingStep7Props> = ({ onComplete }) => {
       }
 
       console.log('Username saved successfully to database');
+
+      // Update AuthContext to mark onboarding as completed
+      setOnboardingCompleted(true);
     } catch (error) {
       console.error('Error in handleSubmit:', error);
       toast.error('Failed to save username. Please try again.');
