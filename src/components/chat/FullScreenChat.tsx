@@ -2,20 +2,11 @@ import React, { useState, useEffect, useRef } from "react";
 import { Send, Smile, Users } from "lucide-react";
 import { supabase } from "@/integrations/supabase/client";
 import { useToast } from "@/hooks/use-toast";
+import { useMessagesRealtime } from "@/hooks/useMessagesRealtime";
+import { useAuth } from "@/contexts/AuthContext";
 import { Textarea } from "@/components/ui/textarea";
 import { Button } from "@/components/ui/button";
-import { ScrollArea } from "@/components/ui/scroll-area";
 import { cn } from "@/lib/utils";
-
-interface Message {
-  id: string;
-  user_id: string;
-  username: string;
-  content: string;
-  created_at: string;
-  likes_count: number;
-  user_has_liked: boolean;
-}
 
 interface FullScreenChatProps {
   isOpen: boolean;
@@ -23,34 +14,27 @@ interface FullScreenChatProps {
 }
 
 const FullScreenChat = ({ isOpen, onClose }: FullScreenChatProps) => {
-  const [messages, setMessages] = useState<Message[]>([]);
   const [newMessage, setNewMessage] = useState("");
-  const [currentUser, setCurrentUser] = useState<any>(null);
-  const [isLoading, setIsLoading] = useState(false);
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [showEmojiPicker, setShowEmojiPicker] = useState(false);
   const [scrollPosition, setScrollPosition] = useState(0);
   const [suggestedUsers, setSuggestedUsers] = useState<string[]>([]);
   const [showUserSuggestions, setShowUserSuggestions] = useState(false);
-  
+
   const scrollAreaRef = useRef<HTMLDivElement>(null);
   const inputRef = useRef<HTMLTextAreaElement>(null);
-  const channelRef = useRef<any>(null);
   const { toast } = useToast();
+
+  // Get current user from AuthContext
+  const { user, loading: authLoading } = useAuth();
+
+  // Use the realtime messages hook
+  const { messages, isLoading, sendMessage } = useMessagesRealtime();
 
   const emojis = ["👍", "❤️", "😂", "😢", "😡", "🔥", "💯", "🎯", "⚡", "💪"];
 
   useEffect(() => {
-    supabase.auth.getUser().then(({ data: { user } }) => {
-      setCurrentUser(user);
-    });
-  }, []);
-
-  useEffect(() => {
-    if (isOpen && currentUser) {
-      loadMessages();
-      setupRealtimeSubscription();
-      
+    if (isOpen) {
       // Restore scroll position
       setTimeout(() => {
         if (scrollAreaRef.current && scrollPosition > 0) {
@@ -60,13 +44,7 @@ const FullScreenChat = ({ isOpen, onClose }: FullScreenChatProps) => {
         }
       }, 100);
     }
-
-    return () => {
-      if (channelRef.current) {
-        supabase.removeChannel(channelRef.current);
-      }
-    };
-  }, [isOpen, currentUser]);
+  }, [isOpen, messages]);
 
   // Save scroll position when closing
   useEffect(() => {
@@ -75,64 +53,6 @@ const FullScreenChat = ({ isOpen, onClose }: FullScreenChatProps) => {
     }
   }, [isOpen]);
 
-  const setupRealtimeSubscription = () => {
-    channelRef.current = supabase
-      .channel('global-chat-realtime')
-      .on(
-        'postgres_changes',
-        {
-          event: 'INSERT',
-          schema: 'public',
-          table: 'comments',
-          filter: 'item_id=eq.global-chat'
-        },
-        (payload) => {
-          console.log('New message received:', payload);
-          loadMessages();
-        }
-      )
-      .on(
-        'postgres_changes',
-        {
-          event: 'UPDATE',
-          schema: 'public',
-          table: 'comments',
-          filter: 'item_id=eq.global-chat'
-        },
-        (payload) => {
-          console.log('Message updated:', payload);
-          loadMessages();
-        }
-      )
-      .subscribe();
-  };
-
-  const loadMessages = async () => {
-    setIsLoading(true);
-    try {
-      const { data, error } = await supabase.rpc('get_comments_with_likes', {
-        target_item_id: 'global-chat',
-        requesting_user_id: currentUser?.id || null
-      });
-
-      if (error) throw error;
-      setMessages(data || []);
-      
-      // Auto scroll to bottom for new messages only if user is near bottom
-      if (scrollAreaRef.current) {
-        const scrollArea = scrollAreaRef.current;
-        const isNearBottom = scrollArea.scrollTop + scrollArea.clientHeight >= scrollArea.scrollHeight - 100;
-        if (isNearBottom) {
-          setTimeout(scrollToBottom, 100);
-        }
-      }
-    } catch (error) {
-      console.error('Error loading messages:', error);
-    } finally {
-      setIsLoading(false);
-    }
-  };
-
   const scrollToBottom = () => {
     if (scrollAreaRef.current) {
       scrollAreaRef.current.scrollTop = scrollAreaRef.current.scrollHeight;
@@ -140,29 +60,11 @@ const FullScreenChat = ({ isOpen, onClose }: FullScreenChatProps) => {
   };
 
   const handleSubmitMessage = async () => {
-    if (!currentUser || !newMessage.trim()) return;
+    if (!user || authLoading || !newMessage.trim()) return;
 
     setIsSubmitting(true);
     try {
-      const { data: profile } = await supabase
-        .from('user_profiles')
-        .select('username')
-        .eq('id', currentUser.id)
-        .single();
-
-      const username = profile?.username || currentUser.email || 'Anonymous';
-
-      const { error } = await supabase
-        .from('comments')
-        .insert({
-          item_id: 'global-chat',
-          user_id: currentUser.id,
-          username: username,
-          content: newMessage.trim()
-        });
-
-      if (error) throw error;
-
+      await sendMessage(newMessage.trim(), user.id);
       setNewMessage("");
       setShowEmojiPicker(false);
       scrollToBottom();
@@ -299,7 +201,7 @@ const FullScreenChat = ({ isOpen, onClose }: FullScreenChatProps) => {
           </div>
         ) : (
           <div className="space-y-4 pb-4">
-            {messages.map((message, index) => (
+            {messages.map((message) => (
               <div key={message.id} className="flex flex-col gap-1">
                 <div className="flex items-baseline gap-2">
                   <span className="text-[#AEE3F5] font-semibold text-sm">
@@ -369,7 +271,7 @@ const FullScreenChat = ({ isOpen, onClose }: FullScreenChatProps) => {
                   inputRef.current.style.height = Math.min(inputRef.current.scrollHeight, 100) + 'px';
                 }
               }}
-              onKeyPress={handleKeyPress}
+              onKeyDown={handleKeyPress}
               placeholder="Enter Trash Talk Here"
               className="bg-black border-[#AEE3F5]/30 text-[#AEE3F5] placeholder-[#AEE3F5]/50 resize-none min-h-[40px] max-h-[100px] text-sm focus:border-[#AEE3F5]/60 pr-12 no-scroll-textarea"
               rows={1}
@@ -395,11 +297,15 @@ const FullScreenChat = ({ isOpen, onClose }: FullScreenChatProps) => {
           <span className="text-xs text-[#AEE3F5]/40">
             {newMessage.length}/500
           </span>
-          {!currentUser && (
+          {authLoading ? (
+            <span className="text-xs text-[#AEE3F5]/60">
+              Loading...
+            </span>
+          ) : !user ? (
             <span className="text-xs text-[#AEE3F5]/60">
               Sign in to chat
             </span>
-          )}
+          ) : null}
         </div>
       </div>
     </div>
