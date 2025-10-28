@@ -201,24 +201,34 @@ const FullScreenChat = ({ isOpen, onClose }: FullScreenChatProps) => {
           </div>
         ) : (
           <div className="space-y-4 pb-4">
-            {messages.map((message) => (
-              <div key={message.id} className="flex flex-col gap-1">
-                <div className="flex items-baseline gap-2">
-                  <span className="text-[#AEE3F5] font-semibold text-sm">
-                    @{message.username}
-                  </span>
-                  <span className="text-[#AEE3F5]/40 text-xs">
-                    {formatTimeAgo(message.created_at)}
-                  </span>
+            {messages.map((message, index) => {
+              const previousMessage = index > 0 ? messages[index - 1] : null;
+              const isSameUserAsPrevious = previousMessage?.user_id === message.user_id;
+
+              return (
+                <div key={message.id} className="flex flex-col gap-1">
+                  {!isSameUserAsPrevious && (
+                    <div className="flex items-baseline gap-2">
+                      <span className="text-[#AEE3F5] font-semibold text-sm">
+                        @{message.username}
+                      </span>
+                      <span className="text-[#AEE3F5]/40 text-xs">
+                        {formatTimeAgo(message.created_at)}
+                      </span>
+                    </div>
+                  )}
+                  <div
+                    className={cn(
+                      "text-[#AEE3F5] text-sm leading-relaxed",
+                      isSameUserAsPrevious && "ml-0"
+                    )}
+                    dangerouslySetInnerHTML={{
+                      __html: formatMessageContent(message.content)
+                    }}
+                  />
                 </div>
-                <div 
-                  className="text-[#AEE3F5] text-sm leading-relaxed"
-                  dangerouslySetInnerHTML={{ 
-                    __html: formatMessageContent(message.content)
-                  }}
-                />
-              </div>
-            ))}
+              );
+            })}
           </div>
         )}
         </div>
