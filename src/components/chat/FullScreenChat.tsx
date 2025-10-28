@@ -4,6 +4,8 @@ import { supabase } from "@/integrations/supabase/client";
 import { useToast } from "@/hooks/use-toast";
 import { useMessagesRealtime } from "@/hooks/useMessagesRealtime";
 import { useAuth } from "@/contexts/AuthContext";
+import { useMessagesRealtime } from "@/hooks/useMessagesRealtime";
+import { useAuth } from "@/contexts/AuthContext";
 import { Textarea } from "@/components/ui/textarea";
 import { Button } from "@/components/ui/button";
 import { cn } from "@/lib/utils";
@@ -24,6 +26,12 @@ const FullScreenChat = ({ isOpen, onClose }: FullScreenChatProps) => {
   const scrollAreaRef = useRef<HTMLDivElement>(null);
   const inputRef = useRef<HTMLTextAreaElement>(null);
   const { toast } = useToast();
+
+  // Get current user from AuthContext
+  const { user, loading: authLoading } = useAuth();
+
+  // Use the realtime messages hook
+  const { messages, isLoading, sendMessage } = useMessagesRealtime();
 
   // Get current user from AuthContext
   const { user, loading: authLoading } = useAuth();
