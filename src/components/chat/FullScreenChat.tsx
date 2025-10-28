@@ -204,11 +204,21 @@ const FullScreenChat = ({ isOpen, onClose }: FullScreenChatProps) => {
             {messages.map((message, index) => {
               const previousMessage = index > 0 ? messages[index - 1] : null;
               const isSameUserAsPrevious = previousMessage?.user_id === message.user_id;
+              const isCurrentUser = message.user_id === user?.id;
 
               return (
-                <div key={message.id} className="flex flex-col gap-1">
+                <div
+                  key={message.id}
+                  className={cn(
+                    "flex flex-col gap-1",
+                    isCurrentUser ? "items-end" : "items-start"
+                  )}
+                >
                   {!isSameUserAsPrevious && (
-                    <div className="flex items-baseline gap-2">
+                    <div className={cn(
+                      "flex items-baseline gap-2",
+                      isCurrentUser && "flex-row-reverse"
+                    )}>
                       <span className="text-[#AEE3F5] font-semibold text-sm">
                         @{message.username}
                       </span>
@@ -219,8 +229,10 @@ const FullScreenChat = ({ isOpen, onClose }: FullScreenChatProps) => {
                   )}
                   <div
                     className={cn(
-                      "text-[#AEE3F5] text-sm leading-relaxed",
-                      isSameUserAsPrevious && "ml-0"
+                      "text-[#AEE3F5] text-sm leading-relaxed max-w-xs px-3 py-2 rounded-lg",
+                      isCurrentUser
+                        ? "bg-[#AEE3F5]/20 text-right"
+                        : "bg-[#AEE3F5]/10"
                     )}
                     dangerouslySetInnerHTML={{
                       __html: formatMessageContent(message.content)
