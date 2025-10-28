@@ -1,17 +1,35 @@
 
-import React from "react";
+import React, { useState } from "react";
 import { useNavigate } from "react-router-dom";
 import { ArrowLeft } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import BottomNav from "@/components/BottomNav";
+import ChangeUsernameSection from "@/components/settings/ChangeUsernameSection";
 import SubscriptionSection from "@/components/settings/SubscriptionSection";
 import ConnectedAccountsSection from "@/components/profile/ConnectedAccountsSection";
 import SignOutSection from "@/components/settings/SignOutSection";
 import { useAuth } from "@/contexts/AuthContext";
+import { getUserProfile } from "@/services/userDataService";
 
 const Settings = () => {
   const navigate = useNavigate();
   const { user } = useAuth();
+  const [currentUsername, setCurrentUsername] = useState<string | null>(null);
+
+  React.useEffect(() => {
+    const fetchUsername = async () => {
+      if (user?.id) {
+        const profile = await getUserProfile(user.id);
+        setCurrentUsername(profile?.username || null);
+      }
+    };
+
+    fetchUsername();
+  }, [user?.id]);
+
+  const handleUsernameChanged = (newUsername: string) => {
+    setCurrentUsername(newUsername);
+  };
 
   return (
     <div className="bg-black min-h-screen pb-20">
@@ -32,6 +50,13 @@ const Settings = () => {
         </div>
 
         <div className="space-y-8">
+          {user?.id && (
+            <ChangeUsernameSection
+              currentUsername={currentUsername}
+              userId={user.id}
+              onUsernameChanged={handleUsernameChanged}
+            />
+          )}
           {user?.id && <ConnectedAccountsSection userId={user.id} />}
           <SubscriptionSection />
           <SignOutSection />
