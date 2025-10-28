@@ -26,6 +26,7 @@ import OnboardingStep7 from './OnboardingStep7';
 import OnboardingStep8 from './OnboardingStep8';
 import OnboardingStep9 from './OnboardingStep9';
 import OnboardingStepPaywall from './OnboardingStepPaywall';
+import ConnectSportsbooks from '@/pages/ConnectSportsbooks';
 
 const DynamicOnboarding = () => {
   const navigate = useNavigate();
@@ -47,7 +48,7 @@ const DynamicOnboarding = () => {
     referralSources: [] as string[],
   });
 
-  const totalSteps = 9;
+  const totalSteps = 10;
 
   const saveCurrentStepAnswer = async () => {
     if (!user?.id) return;
@@ -89,7 +90,7 @@ const DynamicOnboarding = () => {
             await saveQuizAnswer(user.id, formData.quizAnswer);
           }
           break;
-        case 8:
+        case 10:
           if (formData.sportsbooks.length > 0) {
             await saveSportsbooks(user.id, formData.sportsbooks);
           }
@@ -192,6 +193,20 @@ const DynamicOnboarding = () => {
         );
       case 8:
         return (
+          <OnboardingStepPaywall
+            onSelect={() => {
+              handleNext();
+            }}
+          />
+        );
+      case 9:
+        return (
+          <div className="relative">
+            <ConnectSportsbooks />
+          </div>
+        );
+      case 10:
+        return (
           <div className="relative">
             <OnboardingStep7
               value={formData.sportsbooks}
@@ -202,15 +217,6 @@ const DynamicOnboarding = () => {
               onBack={handlePrevious}
             />
           </div>
-        );
-      case 9:
-        return (
-          <OnboardingStepPaywall
-            onSelect={() => {
-              // Handle paywall completion and navigate to dashboard
-              navigate('/');
-            }}
-          />
         );
       default:
         return null;
@@ -244,7 +250,7 @@ const DynamicOnboarding = () => {
         </div>
 
         {/* Bottom navigation */}
-        {currentStep !== 8 && currentStep !== 9 && (
+        {currentStep !== 8 && currentStep !== 9 && currentStep !== 10 && (
           <div className="space-y-4">
             <div className="flex gap-3">
               {currentStep > 1 && (
