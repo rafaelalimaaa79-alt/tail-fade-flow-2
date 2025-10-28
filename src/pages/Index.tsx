@@ -6,7 +6,7 @@ import { useIsMobile } from "@/hooks/use-mobile";
 import DashboardHeader from "@/components/dashboard/DashboardHeader";
 import NotificationHandler from "@/components/dashboard/NotificationHandler";
 import BadgeAnimationHandler from "@/components/dashboard/BadgeAnimationHandler";
-import ProfileIcon from "@/components/common/ProfileIcon";
+import SettingsIcon from "@/components/common/SettingsIcon";
 import HeaderChatIcon from "@/components/common/HeaderChatIcon";
 import InlineSmackTalk from "@/components/InlineSmackTalk";
 import { useInlineSmackTalk } from "@/hooks/useInlineSmackTalk";
@@ -93,7 +93,7 @@ const Dashboard = () => {
           />
           <div className="flex items-center gap-2">
             <HeaderChatIcon />
-            <ProfileIcon />
+            <SettingsIcon />
           </div>
         </div>
 

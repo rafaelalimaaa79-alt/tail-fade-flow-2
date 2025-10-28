@@ -7,7 +7,7 @@ import PageHeader from "@/components/compete/PageHeader";
 import TournamentList from "@/components/compete/TournamentList";
 import FixedMatchesList from "@/components/compete/FixedMatchesList";
 import CustomMatchesList from "@/components/compete/custom-matches/CustomMatchesList";
-import ProfileIcon from "@/components/common/ProfileIcon";
+import SettingsIcon from "@/components/common/SettingsIcon";
 import HeaderChatIcon from "@/components/common/HeaderChatIcon";
 import InlineSmackTalk from "@/components/InlineSmackTalk";
 import { useInlineSmackTalk } from "@/hooks/useInlineSmackTalk";
@@ -96,7 +96,7 @@ const Compete = () => {
           />
           <div className="flex items-center gap-2">
             <HeaderChatIcon />
-            <ProfileIcon />
+            <SettingsIcon />
           </div>
         </div>
         

@@ -6,7 +6,7 @@ import TrendsList, { TrendData } from "@/components/trends/TrendsList";
 import TrendsNotificationHandler from "@/components/trends/TrendsNotificationHandler";
 import BadgeAnimationHandler from "@/components/dashboard/BadgeAnimationHandler";
 import TopTenReveal from "@/components/trends/TopTenReveal";
-import ProfileIcon from "@/components/common/ProfileIcon";
+import SettingsIcon from "@/components/common/SettingsIcon";
 import HeaderChatIcon from "@/components/common/HeaderChatIcon";
 import InlineSmackTalk from "@/components/InlineSmackTalk";
 import { useInlineSmackTalk } from "@/hooks/useInlineSmackTalk";
@@ -120,7 +120,7 @@ const Trends = () => {
           />
           <div className="flex items-center gap-2">
             <HeaderChatIcon />
-            <ProfileIcon />
+            <SettingsIcon />
           </div>
         </div>
 
