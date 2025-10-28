@@ -161,7 +161,7 @@ const Trends = () => {
             </p>
           </div>
         ) : (
-          <TrendsList trendData={convertedTrends} />
+          <TrendsList trendData={convertedTrends.slice(0, 5)} />
         )}
 
         {isOpen && (
