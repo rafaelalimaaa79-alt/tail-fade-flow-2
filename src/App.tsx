@@ -11,6 +11,7 @@ import { useEffect } from "react";
 import { setupNavigationGuard } from "@/utils/navigation-guard";
 import { logPlatformInfo } from "@/utils/platform-detection";
 import { logIOSBridgeStatus } from "@/utils/ios-bridge";
+import { useVersionCheck } from "@/hooks/useVersionCheck";
 
 import Index from "./pages/Index";
 import Trends from "./pages/Trends";
@@ -29,6 +30,9 @@ import DynamicOnboarding from "./components/onboarding/DynamicOnboarding";
 const queryClient = new QueryClient();
 
 const App = () => {
+  // Initialize version check (checks every 60 seconds)
+  useVersionCheck(60000);
+
   // Initialize navigation guard and platform detection on app load
   useEffect(() => {
     console.log('🚀 Initializing app...');
