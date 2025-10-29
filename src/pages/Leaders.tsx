@@ -2,13 +2,13 @@ import React, { useState, useEffect } from "react";
 import BottomNav from "@/components/BottomNav";
 import { useIsMobile } from "@/hooks/use-mobile";
 import LeaderboardTable from "@/components/leaders/LeaderboardTable";
-import ProfileIcon from "@/components/common/ProfileIcon";
+import SettingsIcon from "@/components/common/SettingsIcon";
 import HeaderChatIcon from "@/components/common/HeaderChatIcon";
 import InlineSmackTalk from "@/components/InlineSmackTalk";
 import { useInlineSmackTalk } from "@/hooks/useInlineSmackTalk";
 import { useNavigate } from "react-router-dom";
 import FloatingSyncButton from "@/components/common/FloatingSyncButton";
-import { getLeaderboardData, getCurrentUserId } from "@/services/userDataService";
+import { getWeeklyLeaderboardData, getCurrentUserId } from "@/services/userDataService";
 
 interface LeaderboardUser {
   id: string;
@@ -29,19 +29,16 @@ const Leaders = () => {
   const [coldestBettors, setColdestBettors] = useState<LeaderboardUser[]>([]);
   const [loading, setLoading] = useState(true);
 
-  // Fetch leaderboard data
+  // Fetch leaderboard data with polling every 5 minutes
   useEffect(() => {
     const fetchLeaderboard = async () => {
       try {
         const currentUserId = await getCurrentUserId();
-        const data = await getLeaderboardData(currentUserId || undefined);
+        const data = await getWeeklyLeaderboardData(currentUserId || undefined);
 
-        // Get coldest bettors (negative units)
-        const cold = data.filter(user => user.unitsGained < 0)
-          .sort((a, b) => a.unitsGained - b.unitsGained)
-          .slice(0, 10);
-
-        setColdestBettors(cold);
+        // Data is already sorted by worst win rate (ascending)
+        // Take top 10 worst performers
+        setColdestBettors(data.slice(0, 10));
       } catch (error) {
         console.error('Error fetching leaderboard:', error);
       } finally {
@@ -49,7 +46,16 @@ const Leaders = () => {
       }
     };
 
+    // Initial fetch
     fetchLeaderboard();
+
+    // Set up polling every 5 minutes (300,000 ms)
+    const pollInterval = setInterval(() => {
+      fetchLeaderboard();
+    }, 300000);
+
+    // Cleanup interval on unmount
+    return () => clearInterval(pollInterval);
   }, []);
 
   const handleLogoClick = () => {
@@ -68,7 +74,7 @@ const Leaders = () => {
           />
           <div className="flex items-center gap-2">
             <HeaderChatIcon />
-            <ProfileIcon />
+            <SettingsIcon />
           </div>
         </div>
 
@@ -77,7 +83,7 @@ const Leaders = () => {
             Fade Leaderboard
           </h2>
           <p className="text-base text-white/70 font-medium">
-            Top 10 Worst Bettors
+            Top 10 Worst Bettors This Week
           </p>
         </div>
 

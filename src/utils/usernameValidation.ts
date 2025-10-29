@@ -23,12 +23,29 @@ export const checkUsernameAvailability = async (usernameToCheck: string): Promis
     return null;
   }
 
-  // Simulate API call delay
-  await new Promise(resolve => setTimeout(resolve, 500));
-  
-  // Mock some taken usernames for demo
-  const takenUsernames = ["coldpublic", "publicfader", "sharps", "admin", "fadezone"];
-  const available = !takenUsernames.includes(usernameToCheck.toLowerCase());
-  
-  return available;
+  try {
+    // Import supabase client dynamically to avoid circular dependencies
+    const { supabase } = await import("@/integrations/supabase/client");
+
+    // Query the database to check if username already exists
+    const { data, error } = await supabase
+      .from("user_profiles")
+      .select("id")
+      .ilike("username", usernameToCheck)
+      .limit(1);
+
+    if (error) {
+      console.error("Error checking username availability:", error);
+      // If there's an error, assume it's available to not block the user
+      return true;
+    }
+
+    // If data is empty, username is available; if data has items, it's taken
+    const available = !data || data.length === 0;
+    return available;
+  } catch (error) {
+    console.error("Error in checkUsernameAvailability:", error);
+    // If there's an error, assume it's available to not block the user
+    return true;
+  }
 };

@@ -6,7 +6,7 @@ import TrendsList, { TrendData } from "@/components/trends/TrendsList";
 import TrendsNotificationHandler from "@/components/trends/TrendsNotificationHandler";
 import BadgeAnimationHandler from "@/components/dashboard/BadgeAnimationHandler";
 import TopTenReveal from "@/components/trends/TopTenReveal";
-import ProfileIcon from "@/components/common/ProfileIcon";
+import SettingsIcon from "@/components/common/SettingsIcon";
 import HeaderChatIcon from "@/components/common/HeaderChatIcon";
 import InlineSmackTalk from "@/components/InlineSmackTalk";
 import { useInlineSmackTalk } from "@/hooks/useInlineSmackTalk";
@@ -120,13 +120,14 @@ const Trends = () => {
           />
           <div className="flex items-center gap-2">
             <HeaderChatIcon />
-            <ProfileIcon />
+            <SettingsIcon />
           </div>
         </div>
 
         <TrendsTitle />
 
-        {loading ? (
+        {betsLoading || loading ? (
+          // Show loading indicator while fetching bets
           <div className="text-center py-12">
             <div className="animate-spin h-12 w-12 border-4 border-[#AEE3F5] border-t-transparent rounded-full mx-auto mb-4" />
             <p className="text-gray-400">Loading pending bets...</p>
@@ -161,7 +162,7 @@ const Trends = () => {
             </p>
           </div>
         ) : (
-          <TrendsList trendData={convertedTrends} />
+          <TrendsList trendData={convertedTrends.slice(0, 5)} />
         )}
 
         {isOpen && (

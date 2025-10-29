@@ -43,18 +43,18 @@ const ProtectedRoute = ({ children }: ProtectedRouteProps) => {
     }
 
     setIsVerifying(true);
-    
+
     const checkAuth = async () => {
       try {
         console.log("ProtectedRoute: Checking authentication status");
         // First check if we have a session already
         const { data: { session } } = await supabase.auth.getSession();
-        
+
         if (!session) {
           console.log("ProtectedRoute: No session found, checking biometric options");
           // If biometric authentication is enabled and not already attempted, try it once
           const biometricEnabled = localStorage.getItem('biometricEnabled') === 'true';
-          
+
           if (biometricEnabled && !biometricAttempted) {
             console.log("ProtectedRoute: Attempting biometric authentication");
             setBiometricAttempted(true);
@@ -66,12 +66,13 @@ const ProtectedRoute = ({ children }: ProtectedRouteProps) => {
             }
             console.log("ProtectedRoute: Biometric authentication failed");
           }
-          
+
           // If biometric failed or is not enabled, redirect to signin
           console.log("ProtectedRoute: Redirecting to signin page", { from: location.pathname });
           navigate('/signin', { state: { from: location.pathname } });
         } else {
           console.log("ProtectedRoute: Valid session found");
+          setIsVerifying(false);
         }
       } catch (error) {
         console.error('Error verifying auth:', error);

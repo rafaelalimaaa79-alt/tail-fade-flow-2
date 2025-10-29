@@ -13,6 +13,8 @@ type AuthContextType = {
   signOut: () => Promise<void>;
   biometricEnabled: boolean;
   setBiometricEnabled: (value: boolean) => void;
+  onboardingCompleted: boolean;
+  setOnboardingCompleted: (value: boolean) => void;
 };
 
 const AuthContext = createContext<AuthContextType | undefined>(undefined);
@@ -25,12 +27,43 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
     const stored = localStorage.getItem("biometricEnabled");
     return stored === "true";
   });
+  const [onboardingCompleted, setOnboardingCompleted] = useState(false);
   const navigate = useNavigate();
 
   useEffect(() => {
     // Store biometric preference when it changes
     localStorage.setItem("biometricEnabled", biometricEnabled.toString());
   }, [biometricEnabled]);
+
+  // Check if onboarding is completed
+  const checkOnboardingStatus = useCallback(async (userId: string) => {
+    try {
+      console.log("AuthContext: Checking onboarding status for user", { userId });
+
+      const { data: userProfile, error } = await supabase
+        .from('user_profiles')
+        .select('onboarding_completed_at')
+        .eq('id', userId)
+        .single();
+
+      if (error) {
+        console.error('AuthContext: Error fetching user profile:', error);
+        return;
+      }
+
+      const isCompleted = !!userProfile?.onboarding_completed_at;
+      console.log("AuthContext: Onboarding status:", { isCompleted });
+      setOnboardingCompleted(isCompleted);
+
+      // If onboarding not completed, redirect to connect-sportsbooks
+      if (!isCompleted) {
+        console.log("AuthContext: Onboarding not completed, redirecting to connect-sportsbooks");
+        navigate('/connect-sportsbooks');
+      }
+    } catch (error) {
+      console.error('AuthContext: Error checking onboarding status:', error);
+    }
+  }, [navigate]);
 
   useEffect(() => {
     // Track if this is the initial session check to avoid triggering sync on tab visibility changes
@@ -52,8 +85,12 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
         }));
       }
 
-      // Notify iOS app of successful authentication
+      // Check onboarding status and redirect if needed when user logs in
       if (event === "SIGNED_IN" && session?.user && !isInitialLoad) {
+        console.log("AuthContext: User logged in, checking onboarding status");
+        checkOnboardingStatus(session.user.id);
+
+        // Notify iOS app of successful authentication
         console.log("success-signIn-postAuthSuccessMessage", session?.user);
         postAuthSuccessMessage({
           user: session.user,
@@ -64,6 +101,7 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
       if (event === "SIGNED_OUT") {
         // Clear any local state that should be reset on sign out
         setBiometricEnabled(false);
+        setOnboardingCompleted(false);
         safeRemoveItem('otpVerifiedAt');
         safeRemoveItem('lastSyncTime');
         safeRemoveItem('pendingLoginSync'); // Clear pending sync flag
@@ -89,7 +127,7 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
     });
 
     return () => subscription.unsubscribe();
-  }, [navigate]);
+  }, [navigate, checkOnboardingStatus]);
 
   const signOut = useCallback(async () => {
     try {
@@ -113,6 +151,8 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
         signOut,
         biometricEnabled,
         setBiometricEnabled,
+        onboardingCompleted,
+        setOnboardingCompleted,
       }}
     >
       {children}

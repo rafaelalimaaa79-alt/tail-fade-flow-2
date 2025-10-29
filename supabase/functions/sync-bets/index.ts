@@ -24,9 +24,9 @@ function json(body, status = 200) {
 // refresh scope: "bettor" (default) or "account"
 // Returns the parsed refresh response for status checking
 async function triggerRefresh({ internalId, bettorAccountId }) {
-  const endpoint = bettorAccountId
-    ? `https://api.sharpsports.io/v1/bettorAccounts/${bettorAccountId}/refresh`
-    : `https://api.sharpsports.io/v1/bettors/${internalId}/refresh`;
+  const endpoint = internalId
+    ? `https://api.sharpsports.io/v1/bettors/${internalId}/refresh`
+    : `https://api.sharpsports.io/v1/bettorAccounts/${bettorAccountId}/refresh`;
 
   const res = await fetch(endpoint, {
     method: "POST",

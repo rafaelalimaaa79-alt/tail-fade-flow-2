@@ -5,7 +5,7 @@ import ColdestBettors from "@/components/ColdestBettors";
 import { useIsMobile } from "@/hooks/use-mobile";
 import { useNavigate } from "react-router-dom";
 import BriefcaseButton from "@/components/common/BriefcaseButton";
-import ProfileIcon from "@/components/common/ProfileIcon";
+import SettingsIcon from "@/components/common/SettingsIcon";
 import HeaderChatIcon from "@/components/common/HeaderChatIcon";
 import InlineSmackTalk from "@/components/InlineSmackTalk";
 import { useInlineSmackTalk } from "@/hooks/useInlineSmackTalk";
@@ -27,7 +27,7 @@ const ColdPage = () => {
           <div className="flex items-center gap-2">
             <HeaderChatIcon />
             <BriefcaseButton className="mr-2" />
-            <ProfileIcon />
+            <SettingsIcon />
           </div>
         </div>
 

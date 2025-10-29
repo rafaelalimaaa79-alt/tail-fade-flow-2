@@ -11,29 +11,27 @@ type BettorStreakItemProps = {
 
 const BettorStreakItem = ({ id, name, profit, streak }: BettorStreakItemProps) => {
   const formattedProfit = Math.abs(profit);
-  
+
   return (
-    <Link to={`/bettor/${id}`}>
-      <div className="mb-3 flex items-center justify-between rounded-lg py-2 px-1 hover:bg-muted transition-colors">
-        <div>
-          <div className="font-medium text-white">@{name}</div>
-          <div className={`text-sm ${profit > 0 ? 'text-[#C4D7DC]' : 'text-[#AEE3F5]'}`}>
-            {profit > 0 ? '+' : '-'}{formattedProfit} Units
-          </div>
-        </div>
-        
-        <div className="flex gap-[3px]">
-          {streak.map((result, index) => (
-            <div 
-              key={index} 
-              className={`h-5 w-5 rounded-sm ${result ? 'bg-black text-white border border-[#AEE3F5]' : 'bg-[#AEE3F5] text-black'} flex items-center justify-center text-[9px] font-bold`}
-            >
-              {result ? 'W' : 'L'}
-            </div>
-          ))}
+    <div className="mb-3 flex items-center justify-between rounded-lg py-2 px-1 hover:bg-muted transition-colors">
+      <div>
+        <div className="font-medium text-white">@{name}</div>
+        <div className={`text-sm ${profit > 0 ? 'text-[#C4D7DC]' : 'text-[#AEE3F5]'}`}>
+          {profit > 0 ? '+' : '-'}{formattedProfit} Units
         </div>
       </div>
-    </Link>
+
+      <div className="flex gap-[3px]">
+        {streak.map((result, index) => (
+          <div
+            key={index}
+            className={`h-5 w-5 rounded-sm ${result ? 'bg-black text-white border border-[#AEE3F5]' : 'bg-[#AEE3F5] text-black'} flex items-center justify-center text-[9px] font-bold`}
+          >
+            {result ? 'W' : 'L'}
+          </div>
+        ))}
+      </div>
+    </div>
   );
 };
 

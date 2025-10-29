@@ -5,7 +5,7 @@ import UserHeader from "@/components/profile/UserHeader";
 import PendingBetsSection from "@/components/profile/PendingBetsSection";
 import PerformanceSection from "@/components/profile/PerformanceSection";
 import BiggestWinsSection from "@/components/profile/BiggestWinsSection";
-import ProfileIcon from "@/components/common/ProfileIcon";
+import SettingsIcon from "@/components/common/SettingsIcon";
 import HeaderChatIcon from "@/components/common/HeaderChatIcon";
 import InlineSmackTalk from "@/components/InlineSmackTalk";
 import { useInlineSmackTalk } from "@/hooks/useInlineSmackTalk";
@@ -78,7 +78,7 @@ const ProfilePage = () => {
           />
           <div className="flex items-center gap-2">
             <HeaderChatIcon />
-            <ProfileIcon />
+            <SettingsIcon />
           </div>
         </div>
 

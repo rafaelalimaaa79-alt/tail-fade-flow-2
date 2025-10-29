@@ -119,14 +119,18 @@ const ConnectSportsbooks = () => {
         const { data: { user } } = await supabase.auth.getUser();
 
         if (user?.email_confirmed_at) {
-          console.log("User email is verified! Showing success message");
-          toast.success("Email verified successfully!");
+          const now = new Date();
+          const diffInMs = Math.abs(now.getTime() - new Date(user?.email_confirmed_at).getTime());
+          if (diffInMs < 300000) {
+            console.log("User email is verified! Showing success message");
+            toast.success("Email verified successfully!");
 
-          // Notify iOS app of successful signup
-          postAuthSuccessMessage({
-            user: user,
-            type: "signUp",
-          });
+            // Notify iOS app of successful signup
+            postAuthSuccessMessage({
+              user: user,
+              type: "signUp",
+            });
+          }
         }
       } catch (error) {
         console.error("Error checking email verification:", error);
@@ -182,9 +186,9 @@ const ConnectSportsbooks = () => {
     setAccounts(prev => {
       const updated = {
         ...prev,
-        [sportsbookId]: { 
-          status, 
-          accountIdTemp: accountIdTemp || prev[sportsbookId]?.accountIdTemp 
+        [sportsbookId]: {
+          status,
+          accountIdTemp: accountIdTemp || prev[sportsbookId]?.accountIdTemp
         }
       };
       localStorage.setItem('sportsbookAccounts', JSON.stringify(updated));
@@ -354,14 +358,14 @@ const ConnectSportsbooks = () => {
   const submit2FA = async (code?: string) => {
     const codeToSubmit = code || tfaCode.trim();
     if (!codeToSubmit || codeToSubmit.length < 6 || !currentTfaBookId || tfaSubmitting) return;
-    
+
     setTfaSubmitting(true);
     setTfaError('');
-    
+
     try {
       // Simulate 2FA verification
       await new Promise(resolve => setTimeout(resolve, 1000));
-      
+
       if (codeToSubmit === '12345' || codeToSubmit === '123456' || Math.random() > 0.5) {
         setStatus(currentTfaBookId, 'LINKED');
         toast.success('Successfully verified and connected!');
@@ -387,7 +391,7 @@ const ConnectSportsbooks = () => {
     toast.info('Verification code resent!');
   };
 
-  
+
   // Debug function to reset stuck state
   const resetSportsbookState = (sportsbookId: string) => {
     console.log(`Resetting state for ${sportsbookId}`);
@@ -401,16 +405,16 @@ const ConnectSportsbooks = () => {
 
   const doLater = () => {
     if (!deferEnabled || !currentTfaBookId) return;
-    
+
     // Add this sportsbook to the deferred set
     setDeferredSportsbooks(prev => new Set([...prev, currentTfaBookId]));
-    
+
     setDeferred(true);
     setShow2FAModal(false);
     setShowTfaBubble(true);
     // Store TFA state for onboarding - this will be picked up by the onboarding context
     const sportsbook = sportsbooks.find(sb => sb.id === currentTfaBookId);
-    localStorage.setItem('pendingTFA', JSON.stringify({ 
+    localStorage.setItem('pendingTFA', JSON.stringify({
       accountIdTemp: currentTfaBookId,
       sportsbookName: sportsbook?.name || ''
     }));
@@ -448,15 +452,15 @@ const ConnectSportsbooks = () => {
               </SelectTrigger>
               <SelectContent className="bg-black border-white/20 z-50">
                 {sportsbooks.map((sportsbook) => (
-                  <SelectItem 
-                    key={sportsbook.id} 
+                  <SelectItem
+                    key={sportsbook.id}
                     value={sportsbook.id}
                     className="text-white hover:bg-card focus:bg-card cursor-pointer"
                   >
                     {sportsbook.name}
                   </SelectItem>
                 ))}
-                <SelectItem 
+                <SelectItem
                   value="no-sportsbook"
                   className="text-white hover:bg-card focus:bg-card cursor-pointer"
                 >
@@ -476,11 +480,11 @@ const ConnectSportsbooks = () => {
                     <div className="text-xl font-semibold text-white">
                       No Sportsbook
                     </div>
-                    
+
                     <div className="text-sm text-muted-foreground">
                       You can continue without connecting a sportsbook for now
                     </div>
-                    
+
                     <div className="w-full">
                       <button
                         className="w-full py-3 px-4 rounded-lg font-medium transition-all duration-300 bg-gray-600/50 text-gray-400 cursor-default"
@@ -495,22 +499,22 @@ const ConnectSportsbooks = () => {
 
             const selectedSportsbook = sportsbooks.find(sb => sb.id === selectedSportsbookId);
             if (!selectedSportsbook) return null;
-            
+
             const status = getStatus(selectedSportsbook.id);
             const statusLabel = getStatusLabel(status, selectedSportsbook.requiresSdk);
             const isLinked = status === 'LINKED';
-            
+
             return (
               <Card className="p-6 bg-card border border-white/10">
                 <div className="flex flex-col items-center text-center space-y-4">
                   <div className="text-xl font-semibold text-white">
                     {selectedSportsbook.name}
                   </div>
-                  
+
                   <div className={`text-sm ${isLinked ? 'text-green-400' : 'text-muted-foreground'}`}>
                     {statusLabel}
                   </div>
-                  
+
                   <div className="w-full">
                     {isLinked ? (
                       <button
@@ -522,11 +526,10 @@ const ConnectSportsbooks = () => {
                     ) : status === 'NEEDS_2FA' ? (
                       <button
                         onClick={() => deferredSportsbooks.has(selectedSportsbook.id) ? null : handleAction(selectedSportsbook, 'enter2fa')}
-                        className={`w-full py-3 px-4 rounded-lg font-medium transition-all duration-300 ${
-                          deferredSportsbooks.has(selectedSportsbook.id)
+                        className={`w-full py-3 px-4 rounded-lg font-medium transition-all duration-300 ${deferredSportsbooks.has(selectedSportsbook.id)
                             ? 'bg-gray-600/50 text-gray-400 cursor-default'
                             : 'bg-[#AEE3F5] text-black hover:bg-[#AEE3F5]/90 shadow-[0_0_15px_rgba(174,227,245,0.4)]'
-                        }`}
+                          }`}
                       >
                         Enter Code
                       </button>
@@ -552,9 +555,8 @@ const ConnectSportsbooks = () => {
           })()}
         </div>
 
-        <div className={`bg-card/50 border border-white/10 rounded-lg p-4 mb-6 transition-all duration-300 ${
-          !canEnableFaceId ? 'opacity-50 pointer-events-none grayscale' : ''
-        }`}>
+        <div className={`bg-card/50 border border-white/10 rounded-lg p-4 mb-6 transition-all duration-300 ${!canEnableFaceId ? 'opacity-50 pointer-events-none grayscale' : ''
+          }`}>
           <div className="flex items-start gap-3 mb-4">
             <Fingerprint className={`h-5 w-5 mt-0.5 ${canEnableFaceId ? 'text-[#AEE3F5]' : 'text-gray-500'}`} />
             <div>
@@ -562,14 +564,14 @@ const ConnectSportsbooks = () => {
                 Enable Face ID for Quick Access
               </h3>
               <p className="text-sm text-muted-foreground mb-2">
-                {canEnableFaceId 
+                {canEnableFaceId
                   ? 'Log in instantly next time with Face ID. It\'s secure, private, and faster.'
                   : 'Please complete the sportsbook connection process first.'
                 }
               </p>
             </div>
           </div>
-          
+
           <div className="space-y-3">
             <button
               onClick={() => {
@@ -578,17 +580,16 @@ const ConnectSportsbooks = () => {
                 if (!faceIdEnabled) setFaceIdChoiceMade(true);
               }}
               disabled={!canEnableFaceId}
-              className={`w-full py-3 px-4 rounded-lg font-medium transition-all duration-300 ${
-                !canEnableFaceId
+              className={`w-full py-3 px-4 rounded-lg font-medium transition-all duration-300 ${!canEnableFaceId
                   ? 'bg-gray-600/30 text-gray-500 cursor-not-allowed'
-                  : !faceIdEnabled 
-                    ? 'bg-[#AEE3F5] text-black hover:bg-[#AEE3F5]/90 shadow-[0_0_15px_rgba(174,227,245,0.4)]' 
+                  : !faceIdEnabled
+                    ? 'bg-[#AEE3F5] text-black hover:bg-[#AEE3F5]/90 shadow-[0_0_15px_rgba(174,227,245,0.4)]'
                     : 'bg-gray-600/50 text-gray-400 cursor-default'
-              }`}
+                }`}
             >
               {!faceIdEnabled ? 'Enable Face ID' : 'Face ID Enabled'}
             </button>
-            
+
             {!faceIdEnabled && canEnableFaceId && (
               <button
                 onClick={() => {
@@ -616,13 +617,12 @@ const ConnectSportsbooks = () => {
           <Button
             onClick={handleContinue}
             disabled={!canProceed}
-            className={`w-full transition-all duration-500 ${
-              canProceed && (faceIdEnabled || faceIdChoiceMade)
-                ? 'bg-[#AEE3F5] hover:bg-[#AEE3F5]/90 text-black shadow-[0_0_30px_rgba(174,227,245,0.9)] animate-pulse brightness-150' 
+            className={`w-full transition-all duration-500 ${canProceed && (faceIdEnabled || faceIdChoiceMade)
+                ? 'bg-[#AEE3F5] hover:bg-[#AEE3F5]/90 text-black shadow-[0_0_30px_rgba(174,227,245,0.9)] animate-pulse brightness-150'
                 : canProceed
-                ? 'bg-[#AEE3F5] hover:bg-[#AEE3F5]/90 text-black'
-                : 'bg-gray-600 cursor-not-allowed opacity-50'
-            }`}
+                  ? 'bg-[#AEE3F5] hover:bg-[#AEE3F5]/90 text-black'
+                  : 'bg-gray-600 cursor-not-allowed opacity-50'
+              }`}
           >
             Continue
           </Button>
@@ -641,7 +641,7 @@ const ConnectSportsbooks = () => {
                 return `${sportsbook?.name || 'Your sportsbook'} is sending you a verification code.`;
               })()}
             </p>
-            
+
             {showWaiting && (
               <div className="text-muted-foreground text-sm flex items-center justify-center gap-2">
                 <div className="w-2 h-2 border-2 border-[#AEE3F5] border-r-transparent rounded-full animate-spin"></div>
@@ -664,7 +664,7 @@ const ConnectSportsbooks = () => {
               Didn't get it? {!canResend ? (
                 <span>Resend available in <strong>{resendCountdown}s</strong></span>
               ) : (
-                <button 
+                <button
                   onClick={handleResend}
                   className="text-[#AEE3F5] hover:underline"
                 >
@@ -674,15 +674,15 @@ const ConnectSportsbooks = () => {
             </div>
 
             <div className="space-y-2">
-              <Button 
+              <Button
                 onClick={() => submit2FA()}
                 className="w-full h-11 bg-[#AEE3F5] hover:bg-[#AEE3F5]/90 text-black font-medium"
                 disabled={tfaCode.length === 0 || tfaSubmitting}
               >
                 {tfaSubmitting ? 'Submitting…' : 'Submit'}
               </Button>
-              <Button 
-                variant="outline" 
+              <Button
+                variant="outline"
                 onClick={doLater}
                 className="w-full h-11 font-medium border-white/20 text-white/80 hover:bg-white/5"
               >
@@ -724,15 +724,15 @@ const ConnectSportsbooks = () => {
               onKeyDown={(e) => e.key === 'Enter' && submitCredentials()}
             />
             <div className="space-y-2">
-              <Button 
-                onClick={submitCredentials} 
+              <Button
+                onClick={submitCredentials}
                 className="w-full h-11 bg-[#AEE3F5] hover:bg-[#AEE3F5]/90 text-black font-medium"
                 disabled={!username.trim() || !password.trim()}
               >
                 Connect
               </Button>
-              <Button 
-                variant="outline" 
+              <Button
+                variant="outline"
                 onClick={() => {
                   setShowCredentialsModal(false);
                   setUsername('');
@@ -748,34 +748,34 @@ const ConnectSportsbooks = () => {
         </DialogContent>
       </Dialog>
 
-          {/* Floating TFA Bubble */}
-          {showTfaBubble && (
-            <button
-              onClick={() => {
-                setShow2FAModal(true);
-                setShowTfaBubble(false);
-              }}
-              className="fixed right-4 bottom-4 z-50 bg-[#6b66ff] hover:bg-[#6b66ff]/90 text-white border border-[#6b66ff] rounded-full px-4 py-3 shadow-lg font-semibold transition-all duration-300"
-              aria-label="Enter verification code"
-            >
-              Enter Code
-            </button>
-          )}
+      {/* Floating TFA Bubble */}
+      {showTfaBubble && (
+        <button
+          onClick={() => {
+            setShow2FAModal(true);
+            setShowTfaBubble(false);
+          }}
+          className="fixed right-4 bottom-4 z-50 bg-[#6b66ff] hover:bg-[#6b66ff]/90 text-white border border-[#6b66ff] rounded-full px-4 py-3 shadow-lg font-semibold transition-all duration-300"
+          aria-label="Enter verification code"
+        >
+          Enter Code
+        </button>
+      )}
 
-          {/* SharpSports Modal for Account Linking */}
-          {sharpSportsModal && (
-            <SharpSportsModal
-              url={sharpSportsModal.url}
-              title={sharpSportsModal.title}
-              message={sharpSportsModal.message}
-              type={sharpSportsModal.type}
-              forcedMode={sharpSportsModal.forcedMode}
-              onComplete={handleModalComplete}
-              onClose={handleModalClose}
-            />
-          )}
-        </div>
-      );
-    };
+      {/* SharpSports Modal for Account Linking */}
+      {sharpSportsModal && (
+        <SharpSportsModal
+          url={sharpSportsModal.url}
+          title={sharpSportsModal.title}
+          message={sharpSportsModal.message}
+          type={sharpSportsModal.type}
+          forcedMode={sharpSportsModal.forcedMode}
+          onComplete={handleModalComplete}
+          onClose={handleModalClose}
+        />
+      )}
+    </div>
+  );
+};
 
-    export default ConnectSportsbooks;
+export default ConnectSportsbooks;
