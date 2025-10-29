@@ -577,6 +577,38 @@ export async function getLeaderboardData(
 }
 
 /**
+ * Get weekly leaderboard data (worst bettors by win % in last 7 days)
+ * @param currentUserId - Current user ID to highlight in results
+ * @returns Array of users sorted by worst win rate (ascending)
+ */
+export async function getWeeklyLeaderboardData(currentUserId?: string) {
+  try {
+    const response = await fetch(
+      `${import.meta.env.VITE_SUPABASE_URL}/functions/v1/calculate-weekly-leaderboard`,
+      {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+          'Authorization': `Bearer ${(await supabase.auth.getSession()).data.session?.access_token || ''}`,
+        },
+        body: JSON.stringify({ currentUserId }),
+      }
+    );
+
+    if (!response.ok) {
+      console.error('Error fetching weekly leaderboard:', response.statusText);
+      return [];
+    }
+
+    const result = await response.json();
+    return result.data || [];
+  } catch (error) {
+    console.error('Error in getWeeklyLeaderboardData:', error);
+    return [];
+  }
+}
+
+/**
  * Get top hottest bettors (most profitable)
  * @param limit - Number of hottest bettors to return (default: 5)
  * @param currentUserId - Current user ID to exclude from results

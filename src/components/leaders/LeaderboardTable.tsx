@@ -5,13 +5,13 @@ import { Award, Crown, Star, Zap } from "lucide-react";
 
 interface LeaderboardUser {
   id: string;
-  username: string;
+  username: string | null;
   totalBets: number;
   winRate: number;
-  roi: number;
-  unitsGained: number;
-  confidenceScore: number | null;
-  statline: string | null;
+  roi?: number;
+  unitsGained?: number;
+  confidenceScore?: number | null;
+  statline?: string | null;
   isCurrentUser: boolean;
 }
 
@@ -58,6 +58,22 @@ const LeaderboardTable: React.FC<LeaderboardTableProps> = ({
   return (
     <div className="rounded-xl bg-card border border-white/10 p-2">
       <Table>
+        <TableHeader>
+          <TableRow className="border-b border-white/10">
+            <TableHead className="w-16 py-3 px-3 text-left text-xs font-semibold text-gray-400">
+              Rank
+            </TableHead>
+            <TableHead className="py-3 px-3 text-left text-xs font-semibold text-gray-400">
+              Bettor
+            </TableHead>
+            <TableHead className="w-20 py-3 px-3 text-right text-xs font-semibold text-gray-400">
+              Bets
+            </TableHead>
+            <TableHead className="w-20 py-3 px-3 text-right text-xs font-semibold text-gray-400">
+              Win %
+            </TableHead>
+          </TableRow>
+        </TableHeader>
         <TableBody>
           {displayBettors.map((bettor, index) => (
             <TableRow
@@ -78,13 +94,13 @@ const LeaderboardTable: React.FC<LeaderboardTableProps> = ({
                   )}
                 </span>
               </TableCell>
-              <TableCell className="text-[#FF5C5C] w-20 text-right py-3 px-3">
-                <span className="text-sm font-bold">
-                  {Math.round(bettor.unitsGained / 100)}u
+              <TableCell className="w-20 text-right py-3 px-3">
+                <span className="text-sm font-semibold text-gray-300">
+                  {bettor.totalBets}
                 </span>
               </TableCell>
-              <TableCell className="w-16 text-right py-3 px-3">
-                <span className="text-sm font-semibold">
+              <TableCell className="w-20 text-right py-3 px-3">
+                <span className="text-sm font-semibold text-[#FF5C5C]">
                   {bettor.winRate.toFixed(1)}%
                 </span>
               </TableCell>
