@@ -14,7 +14,8 @@ export const isIOSWebView = (): boolean => {
   
   // Check if it's a WebView (not Safari)
   // Safari has 'Safari' in user agent, WebView doesn't
-  const isWebView = !window.navigator.standalone && 
+  const nav = window.navigator as Navigator & { standalone?: boolean };
+  const isWebView = !nav.standalone && 
                     /(iPhone|iPod|iPad).*AppleWebKit(?!.*Safari)/i.test(window.navigator.userAgent);
   
   // Also check for webkit message handlers (our iOS bridge)
@@ -45,7 +46,8 @@ export const isIOS = (): boolean => {
  * @returns true if in standalone mode
  */
 export const isStandalone = (): boolean => {
-  return window.navigator.standalone === true || 
+  const nav = window.navigator as Navigator & { standalone?: boolean };
+  return nav.standalone === true || 
          window.matchMedia('(display-mode: standalone)').matches;
 };
 

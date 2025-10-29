@@ -100,9 +100,5 @@ declare global {
         };
       };
     };
-    // For PWA detection
-    navigator: Navigator & {
-      standalone?: boolean;
-    };
   }
 }

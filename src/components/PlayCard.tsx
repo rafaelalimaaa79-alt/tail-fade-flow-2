@@ -131,10 +131,13 @@ const PlayCard: React.FC<PlayCardProps> = ({ play, renderWaveText, onActionClick
           <div className="w-1/2 h-0.5 bg-gradient-to-r from-transparent via-[#AEE3F5]/40 to-transparent"></div>
         </div>
         
-        {/* Fade confidence */}
-        <div className="text-center py-1">
+        {/* Fade confidence and Users Fading */}
+        <div className="flex items-center justify-between px-4 py-1">
           <p className="text-lg font-semibold text-gray-300">
             Fade Confidence: <span className="text-[#AEE3F5] font-bold">{fadeConfidence}%</span>
+          </p>
+          <p className="text-lg font-semibold text-gray-300">
+            Users Fading: <span className="text-[#AEE3F5] font-bold">0</span>
           </p>
         </div>
         

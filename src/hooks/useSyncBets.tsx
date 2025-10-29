@@ -298,8 +298,8 @@ export const useSyncBets = () => {
 
         // Handle response using existing handler
         handleSyncResponse(data, {
-          onSuccess: (message, inserted, pending, historical) => {
-            toast.success(message);
+          onSuccess: (data) => {
+            toast.success(formatSyncSuccessMessage(data));
             setIsSyncing(false);
           },
 

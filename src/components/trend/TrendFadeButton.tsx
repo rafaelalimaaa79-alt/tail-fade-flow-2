@@ -8,15 +8,19 @@ type TrendFadeButtonProps = {
   fadeConfidence: number;
   onBetClick: () => void;
   isMostVisible: boolean;
+  usersFading?: number;
 };
 
-const TrendFadeButton = ({ oppositeBet, fadeConfidence, onBetClick, isMostVisible }: TrendFadeButtonProps) => {
+const TrendFadeButton = ({ oppositeBet, fadeConfidence, onBetClick, isMostVisible, usersFading = 0 }: TrendFadeButtonProps) => {
   return (
     <>
-      {/* Fade confidence */}
-      <div className="text-center py-1">
+      {/* Fade confidence and Users Fading */}
+      <div className="flex items-center justify-between px-4 py-1">
         <p className="text-lg font-semibold text-gray-300">
           Fade Confidence: <span className="text-[#AEE3F5] font-bold">{fadeConfidence.toFixed(2)}%</span>
+        </p>
+        <p className="text-lg font-semibold text-gray-300">
+          Users Fading: <span className="text-[#AEE3F5] font-bold">{usersFading}</span>
         </p>
       </div>
       

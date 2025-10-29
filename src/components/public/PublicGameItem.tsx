@@ -125,6 +125,16 @@ const PublicGameItem = ({ game, rank, isInitialized = false }: PublicGameItemPro
               </div>
             </div>
             
+            {/* Fade Stats */}
+            <div className="flex items-center justify-between px-4 py-2 border-t border-white/10">
+              <p className="text-base font-semibold text-gray-300">
+                Fade Confidence: <span className="text-[#AEE3F5] font-bold">{fadeZonePercentage}%</span>
+              </p>
+              <p className="text-base font-semibold text-gray-300">
+                Users Fading: <span className="text-[#AEE3F5] font-bold">0</span>
+              </p>
+            </div>
+            
             {/* Fade Button */}
             <div className="px-4 py-3 border-t border-white/10">
               <ActionButton 
