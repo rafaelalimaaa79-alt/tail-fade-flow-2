@@ -126,7 +126,8 @@ const Trends = () => {
 
         <TrendsTitle />
 
-        {loading ? (
+        {betsLoading || loading ? (
+          // Show loading indicator while fetching bets
           <div className="text-center py-12">
             <div className="animate-spin h-12 w-12 border-4 border-[#AEE3F5] border-t-transparent rounded-full mx-auto mb-4" />
             <p className="text-gray-400">Loading pending bets...</p>
