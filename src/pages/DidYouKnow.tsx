@@ -1,15 +1,8 @@
 
 import React from "react";
 import { motion } from "framer-motion";
-import { Button } from "@/components/ui/button";
-import { useNavigate } from "react-router-dom";
 
 const DidYouKnow = () => {
-  const navigate = useNavigate();
-
-  const handleShowMeHow = () => {
-    navigate('/how-it-works');
-  };
 
   return (
     <div className="bg-black h-screen flex flex-col justify-center items-center px-4 overflow-hidden">
@@ -52,21 +45,6 @@ const DidYouKnow = () => {
             </div>
           </motion.div>
         </div>
-
-        {/* CTA Button - moved closer to content */}
-        <motion.div
-          initial={{ opacity: 0, y: 20 }}
-          animate={{ opacity: 1, y: 0 }}
-          transition={{ delay: 1.0 }}
-          className="w-full max-w-2xl pt-2"
-        >
-          <Button
-            onClick={handleShowMeHow}
-            className="w-full h-12 text-lg bg-[#AEE3F5] hover:bg-[#AEE3F5]/90 text-black font-bold shadow-[0_0_20px_rgba(174,227,245,0.3)] hover:shadow-[0_0_25px_rgba(174,227,245,0.4)] hover:scale-[1.02] transition-all duration-300"
-          >
-            Show Me How It Works
-          </Button>
-        </motion.div>
       </div>
     </div>
   );
