@@ -21,13 +21,23 @@ jobs:
       
       - name: Update Supabase app_versions table
         env:
-          SUPABASE_URL: ${{ secrets.SUPABASE_URL }}
           SUPABASE_ANON_KEY: ${{ secrets.SUPABASE_ANON_KEY }}
         run: |
-          curl --location -X POST "$SUPABASE_URL/functions/v1/update-app-version" \
+          RESPONSE=$(curl --location -X POST "https://suisrrsmangoaadjoovj.supabase.co/functions/v1/update-app-version" \
             -H "Authorization: Bearer $SUPABASE_ANON_KEY" \
             -H "Content-Type: application/json" \
             -d "{\"version\": \"${{ steps.package-version.outputs.version }}\"}" \
-            -w "\nHTTP Status: %{http_code}\n" \
-            -v
+            -w "\nHTTP_STATUS:%{http_code}" \
+            -s)
+
+          echo "$RESPONSE"
+
+          HTTP_STATUS=$(echo "$RESPONSE" | grep -o "HTTP_STATUS:[0-9]*" | cut -d: -f2)
+
+          if [ "$HTTP_STATUS" != "200" ]; then
+            echo "❌ Failed to update version. HTTP Status: $HTTP_STATUS"
+            exit 1
+          fi
+
+          echo "✅ Successfully updated version to ${{ steps.package-version.outputs.version }}"
 
