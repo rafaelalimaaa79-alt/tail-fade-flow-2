@@ -86,7 +86,7 @@ serve(async (req) => {
 
     return json({
       version: data.version,
-      forceUpdate: data.force_update || false,
+      forceUpdate: data.force_update || true,
       releaseNotes: data.release_notes || "",
     });
   } catch (e) {
