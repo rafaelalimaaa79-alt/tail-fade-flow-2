@@ -71,6 +71,26 @@ const SignUp = () => {
     return () => window.removeEventListener('emailVerified', handleEmailVerified);
   }, [navigate]);
 
+  // Check if email already exists using Edge Function
+  const checkEmailExists = async (emailToCheck: string): Promise<boolean> => {
+    try {
+      const { data, error } = await supabase.functions.invoke('check-email-exists', {
+        body: { email: emailToCheck.toLowerCase() }
+      });
+
+      if (error) {
+        console.error("Error checking email:", error);
+        // If we can't check, allow signup to proceed (Supabase Auth will catch duplicates)
+        return false;
+      }
+
+      return data?.exists || false;
+    } catch (error) {
+      console.error("Error checking email existence:", error);
+      return false;
+    }
+  };
+
   const handleSignUp = async (e: React.FormEvent) => {
     e.preventDefault();
 
@@ -99,6 +119,14 @@ const SignUp = () => {
     setLoading(true);
 
     try {
+      // Check if email already exists
+      const emailExists = await checkEmailExists(email);
+      if (emailExists) {
+        toast.error("This email is already registered. Please sign in or use a different email.");
+        setLoading(false);
+        return;
+      }
+
       // Try phone signup first
       // const phoneResult = await supabase.auth.signUp({
       //   phone,
