@@ -48,7 +48,7 @@ Deno.serve(async (req) => {
 
     // Parse request body
     const body: UpdateVersionRequest = await req.json();
-    const { version, forceUpdate = false, releaseNotes = `Auto-deployed version ${body.version}` } = body;
+    const { version, forceUpdate = true, releaseNotes = `Auto-deployed version ${body.version}` } = body;
 
     if (!version) {
       console.error(`[${requestId}] ❌ Missing version in request`);
