@@ -1,0 +1,33 @@
+name: Update App Version on Deploy
+
+on:
+  push:
+    branches:
+      - main  # Change to your production branch
+
+jobs:
+  update-version:
+    runs-on: ubuntu-latest
+    
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v3
+      
+      - name: Extract version from package.json
+        id: package-version
+        run: |
+          VERSION=$(node -p "require('./package.json').version")
+          echo "version=$VERSION" >> $GITHUB_OUTPUT
+      
+      - name: Update Supabase app_versions table
+        env:
+          SUPABASE_URL: ${{ secrets.SUPABASE_URL }}
+          SUPABASE_ANON_KEY: ${{ secrets.SUPABASE_ANON_KEY }}
+        run: |
+          curl --location -X POST "$SUPABASE_URL/functions/v1/update-app-version" \
+            -H "Authorization: Bearer $SUPABASE_ANON_KEY" \
+            -H "Content-Type: application/json" \
+            -d "{\"version\": \"${{ steps.package-version.outputs.version }}\"}" \
+            -w "\nHTTP Status: %{http_code}\n" \
+            -v
+
