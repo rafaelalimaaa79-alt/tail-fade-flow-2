@@ -49,11 +49,11 @@ const OnboardingStep1: React.FC<OnboardingStep1Props> = ({ value, onSelect }) =>
                 : 'border-white/20 bg-white/5 hover:bg-white/10'
             }`}
           >
-            <div className="flex items-center justify-center mb-1">
+            <div className="flex items-center justify-center mb-1 h-14">
               <img 
                 src={league.logo} 
                 alt={`${league.name} logo`}
-                className="w-12 h-12 object-contain"
+                className="max-w-full max-h-full object-contain"
               />
             </div>
             <div className="text-white font-semibold text-sm">{league.name}</div>
