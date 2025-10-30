@@ -16,10 +16,8 @@ interface OnboardingStep1Props {
 const leagues = [
   { id: 'nfl', name: 'NFL', logo: nflLogo },
   { id: 'nba', name: 'NBA', logo: nbaLogo },
-  { id: 'wnba', name: 'WNBA', logo: wnbaLogo },
   { id: 'mlb', name: 'MLB', logo: mlbLogo },
   { id: 'nhl', name: 'NHL', logo: nhlLogo },
-  { id: 'soccer', name: 'Soccer', logo: soccerLogo },
   { id: 'ncaab', name: 'NCAAB', logo: ncaabLogo },
   { id: 'ncaaf', name: 'NCAAF', logo: ncaafLogo },
 ];
@@ -45,20 +43,20 @@ const OnboardingStep1: React.FC<OnboardingStep1Props> = ({ value, onSelect }) =>
           <button
             key={league.id}
             onClick={() => toggleLeague(league.id)}
-            className={`p-4 rounded-2xl border-2 transition-all duration-200 ${
+            className={`p-3 rounded-2xl border-2 transition-all duration-200 ${
               value.includes(league.id)
                 ? 'border-[#AEE3F5] bg-[#AEE3F5]/20'
                 : 'border-white/20 bg-white/5 hover:bg-white/10'
             }`}
           >
-            <div className="flex items-center justify-center mb-2">
+            <div className="flex items-center justify-center mb-1">
               <img 
                 src={league.logo} 
                 alt={`${league.name} logo`}
-                className="w-16 h-16 object-contain"
+                className="w-12 h-12 object-contain"
               />
             </div>
-            <div className="text-white font-semibold text-base">{league.name}</div>
+            <div className="text-white font-semibold text-sm">{league.name}</div>
           </button>
         ))}
       </div>
