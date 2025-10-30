@@ -24,7 +24,7 @@ const OnboardingStepPaywall: React.FC<OnboardingStepPaywallProps> = ({ onSelect 
       {/* Header */}
       <div className="text-center space-y-3 mt-8">
         <h1 className="text-white text-4xl font-bold leading-tight">
-          See Who's Ice Cold — Free for 7 Days
+          See Who's Ice Cold Free for 7 Days
         </h1>
         <p className="text-gray-400 text-base">
           No card. No risk. Find the worst bettors in the world.
