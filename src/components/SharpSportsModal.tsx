@@ -242,12 +242,12 @@ export const SharpSportsModal = ({
     }}>
       <DialogContent
         className={forcedMode
-          ? "w-screen h-screen max-w-none p-0 bg-background flex flex-col gap-0 rounded-none"
-          : "max-w-lg h-[600px] p-0 bg-background flex flex-col gap-0"
+          ? "w-screen h-screen max-w-none p-0 bg-background flex flex-col gap-0 rounded-none overflow-hidden"
+          : "max-w-lg h-[90vh] max-h-[700px] p-0 bg-background flex flex-col gap-0 overflow-hidden"
         }
         hideCloseButton={forcedMode}
       >
-        <DialogHeader className="p-4 pb-2 border-b border-white/10">
+        <DialogHeader className="p-4 pb-2 border-b border-white/10 flex-shrink-0">
           {!is2FA && <DialogTitle className="text-white">{title}</DialogTitle>}
           {!is2FA && message && (
             <p className="text-sm text-muted-foreground mt-1">{message}</p>
@@ -322,7 +322,7 @@ export const SharpSportsModal = ({
           )}
         </DialogHeader>
         
-        <div className="flex-1 relative">
+        <div className="flex-1 relative min-h-0 overflow-hidden">
           {isLoading && (
             <div className="absolute inset-0 flex items-center justify-center bg-background">
               <div className="flex flex-col items-center gap-2">
@@ -347,7 +347,7 @@ export const SharpSportsModal = ({
           />
         </div>
 
-        <div className="p-4 border-t border-white/10">
+        <div className="p-4 border-t border-white/10 flex-shrink-0">
           {is2FA ? (
             // 2FA: No message needed
             null
