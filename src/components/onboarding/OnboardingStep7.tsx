@@ -42,38 +42,60 @@ const OnboardingStep7: React.FC<OnboardingStep7Props> = ({ onSelect }) => {
   };
 
   const formatLine = (line: string, index: number) => {
-    // Emphasize numbers
+    // Emphasize numbers and key words with specific colors
     if (index === 0) {
-      return line.replace('53%', '<span class="text-[#0EA5E9] font-bold">53%</span>');
+      return line.replace('53%', '<span class="text-[#00CFFF] font-bold">53%</span>');
     }
     if (index === 1) {
       const shakeClass = shake ? 'animate-shake' : '';
-      return line.replace('80%', `<span class="text-red-500 font-bold inline-block ${shakeClass}">80%</span>`);
+      return line.replace('80%', `<span class="text-[#FF3B30] font-bold inline-block ${shakeClass}">80%</span>`);
+    }
+    if (index === 4) {
+      return line.replace('NoShot', '<span class="text-[#FFD700] font-bold">NoShot</span>');
     }
     return line;
+  };
+
+  const getLineStyles = (index: number) => {
+    switch (index) {
+      case 0:
+        return 'text-3xl md:text-4xl font-bold';
+      case 1:
+        return 'text-2xl md:text-3xl font-semibold';
+      case 4:
+        return 'text-2xl md:text-3xl font-semibold';
+      default:
+        return 'text-xl md:text-2xl';
+    }
   };
 
   const isComplete = currentLine === storyLines.length - 1;
 
   return (
-    <div className="min-h-[60vh] flex flex-col justify-between">
+    <div className="min-h-[60vh] flex flex-col justify-between relative overflow-hidden">
+      {/* Animated background gradient */}
+      <div className="absolute inset-0 bg-gradient-to-br from-blue-600/10 via-transparent to-blue-400/5 animate-pulse-slow pointer-events-none" />
+      
       {/* Story lines */}
-      <div className="space-y-6 flex-1 flex flex-col justify-center">
+      <div className="space-y-8 flex-1 flex flex-col justify-center relative z-10 px-2">
         {storyLines.slice(0, currentLine + 1).map((line, index) => (
           <div
             key={index}
-            className="animate-fade-in text-white text-2xl font-bold leading-relaxed"
+            className={`animate-fade-in text-white leading-relaxed ${getLineStyles(index)}`}
+            style={{
+              animationDelay: `${index * 0.1}s`
+            }}
             dangerouslySetInnerHTML={{ __html: formatLine(line, index) }}
           />
         ))}
       </div>
 
       {/* Continue button */}
-      <div className="space-y-4 mt-8">
+      <div className="space-y-4 mt-8 relative z-10">
         <Button
           onClick={handleContinue}
           size="lg"
-          className="w-full h-16 rounded-xl bg-[#0EA5E9] hover:bg-[#0EA5E9]/90 text-white font-semibold text-lg"
+          className="w-full h-16 rounded-xl bg-gradient-to-r from-[#0EA5E9] to-[#0284c7] hover:from-[#0EA5E9]/90 hover:to-[#0284c7]/90 text-white font-semibold text-lg shadow-lg shadow-blue-500/30 animate-glow-pulse"
         >
           {isComplete ? (
             <span className="flex items-center justify-center gap-2">
