@@ -1,4 +1,12 @@
 import React from 'react';
+import nflLogo from '@/assets/leagues/nfl-logo.png';
+import nbaLogo from '@/assets/leagues/nba-logo.png';
+import wnbaLogo from '@/assets/leagues/wnba-logo.png';
+import mlbLogo from '@/assets/leagues/mlb-logo.png';
+import nhlLogo from '@/assets/leagues/nhl-logo.png';
+import soccerLogo from '@/assets/leagues/soccer-logo.png';
+import ncaabLogo from '@/assets/leagues/ncaab-logo.png';
+import ncaafLogo from '@/assets/leagues/ncaaf-logo.png';
 
 interface OnboardingStep1Props {
   value: string[];
@@ -6,14 +14,14 @@ interface OnboardingStep1Props {
 }
 
 const leagues = [
-  { id: 'nfl', name: 'NFL', icon: '🏈' },
-  { id: 'nba', name: 'NBA', icon: '🏀' },
-  { id: 'wnba', name: 'WNBA', icon: '🏀' },
-  { id: 'mlb', name: 'MLB', icon: '⚾' },
-  { id: 'nhl', name: 'NHL', icon: '🏒' },
-  { id: 'soccer', name: 'Soccer', icon: '⚽' },
-  { id: 'ncaab', name: 'NCAAB', icon: '🏀' },
-  { id: 'ncaaf', name: 'NCAAF', icon: '🏈' },
+  { id: 'nfl', name: 'NFL', logo: nflLogo },
+  { id: 'nba', name: 'NBA', logo: nbaLogo },
+  { id: 'wnba', name: 'WNBA', logo: wnbaLogo },
+  { id: 'mlb', name: 'MLB', logo: mlbLogo },
+  { id: 'nhl', name: 'NHL', logo: nhlLogo },
+  { id: 'soccer', name: 'Soccer', logo: soccerLogo },
+  { id: 'ncaab', name: 'NCAAB', logo: ncaabLogo },
+  { id: 'ncaaf', name: 'NCAAF', logo: ncaafLogo },
 ];
 
 const OnboardingStep1: React.FC<OnboardingStep1Props> = ({ value, onSelect }) => {
@@ -43,7 +51,13 @@ const OnboardingStep1: React.FC<OnboardingStep1Props> = ({ value, onSelect }) =>
                 : 'border-white/20 bg-white/5 hover:bg-white/10'
             }`}
           >
-            <div className="text-3xl mb-1">{league.icon}</div>
+            <div className="flex items-center justify-center mb-2">
+              <img 
+                src={league.logo} 
+                alt={`${league.name} logo`}
+                className="w-16 h-16 object-contain"
+              />
+            </div>
             <div className="text-white font-semibold text-base">{league.name}</div>
           </button>
         ))}
