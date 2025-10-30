@@ -14,7 +14,7 @@ const OnboardingStep5: React.FC<OnboardingStep5Props> = ({ value, onSelect }) =>
       <h1 className="text-3xl font-bold text-white mb-2">
         What's the average you go down each week?
       </h1>
-      <p className="text-white/70 text-lg mb-6">Enter your average weekly loss.</p>
+      <p className="text-white/70 text-lg mb-6">No lying allowed</p>
 
       <div className="relative mb-4">
         <Input
