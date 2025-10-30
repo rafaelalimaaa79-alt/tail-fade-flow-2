@@ -1,4 +1,4 @@
-import { useEffect, useState, useCallback } from 'react';
+import { useEffect, useState, useCallback, useRef } from 'react';
 import { supabase } from '@/integrations/supabase/client';
 import { RealtimeChannel } from '@supabase/supabase-js';
 
@@ -14,7 +14,7 @@ export const useMessagesRealtime = () => {
   const [messages, setMessages] = useState<Message[]>([]);
   const [isLoading, setIsLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
-  const channelRef = useState<RealtimeChannel | null>(null)[1];
+  const channelRef = useRef<RealtimeChannel | null>(null);
 
   // Load initial messages
   const loadMessages = useCallback(async () => {
@@ -60,7 +60,11 @@ export const useMessagesRealtime = () => {
     loadMessages();
 
     const channel = supabase
-      .channel('messages')
+      .channel('public:messages', {
+        config: {
+          broadcast: { self: true },
+        },
+      })
       .on(
         'postgres_changes',
         {
@@ -69,6 +73,7 @@ export const useMessagesRealtime = () => {
           table: 'messages',
         },
         async (payload) => {
+          console.log('📨 New message received:', payload);
           const newMessage = payload.new as any;
 
           // Fetch username for the new message
@@ -83,13 +88,21 @@ export const useMessagesRealtime = () => {
             username: profile?.username || 'Anonymous',
           };
 
+          console.log('✅ Adding message to state:', messageWithUsername);
           setMessages((prev) => [...prev, messageWithUsername]);
         }
       )
-      .subscribe();
+      .subscribe((status) => {
+        console.log('🔌 Realtime subscription status:', status);
+      });
+
+    channelRef.current = channel;
 
     return () => {
-      channel.unsubscribe();
+      if (channelRef.current) {
+        console.log('🔌 Unsubscribing from realtime channel');
+        channelRef.current.unsubscribe();
+      }
     };
   }, [loadMessages]);
 
@@ -97,6 +110,7 @@ export const useMessagesRealtime = () => {
   const sendMessage = useCallback(
     async (content: string, userId: string) => {
       try {
+        console.log('📤 Sending message:', { content, userId });
         const { data, error: insertError } = await supabase
           .from('messages')
           .insert({
@@ -108,10 +122,11 @@ export const useMessagesRealtime = () => {
 
         if (insertError) throw insertError;
 
+        console.log('✅ Message sent successfully:', data);
         return data;
       } catch (err) {
         const errorMessage = err instanceof Error ? err.message : 'Failed to send message';
-        console.error('Error sending message:', err);
+        console.error('❌ Error sending message:', err);
         throw new Error(errorMessage);
       }
     },
