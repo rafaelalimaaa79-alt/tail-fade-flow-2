@@ -27,7 +27,7 @@ const OnboardingStepPaywall: React.FC<OnboardingStepPaywallProps> = ({ onSelect 
           See Who's Ice Cold Free for 7 Days
         </h1>
         <p className="text-gray-400 text-base">
-          No card. No risk. Find the worst bettors in the world.
+          Know when to fade. Win more often.
         </p>
       </div>
 
@@ -89,7 +89,7 @@ const OnboardingStepPaywall: React.FC<OnboardingStepPaywallProps> = ({ onSelect 
                     Best Value
                   </span>
                 </div>
-                <span className="text-white text-2xl font-bold">$199.99</span>
+                <span className="text-white text-2xl font-bold">$99.99</span>
               </div>
             </div>
           </div>
