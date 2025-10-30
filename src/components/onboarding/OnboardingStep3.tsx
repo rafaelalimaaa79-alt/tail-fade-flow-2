@@ -8,7 +8,7 @@ interface OnboardingStep3Props {
 
 const OnboardingStep3: React.FC<OnboardingStep3Props> = ({ value, onSelect }) => {
   return (
-    <div className="text-center">
+    <div className="text-left">
       <h1 className="text-3xl font-bold text-white mb-2">
         Got a nickname?
       </h1>

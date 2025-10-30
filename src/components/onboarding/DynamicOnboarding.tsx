@@ -65,40 +65,33 @@ const DynamicOnboarding = () => {
         );
       case 2:
         return (
-          <OnboardingStep8
-            value={formData.birthday}
-            onSelect={(birthday) => updateFormData('birthday', birthday)}
-          />
-        );
-      case 3:
-        return (
           <OnboardingStep3
             value={formData.name}
             onSelect={(name) => updateFormData('name', name)}
           />
         );
-      case 4:
+      case 3:
         return (
           <OnboardingStep4
             value={formData.experience}
             onSelect={(experience) => updateFormData('experience', experience)}
           />
         );
-      case 5:
+      case 4:
         return (
           <OnboardingStep5
             value={formData.bankroll}
             onSelect={(bankroll) => updateFormData('bankroll', bankroll)}
           />
         );
-      case 6:
+      case 5:
         return (
           <OnboardingStep6
             value={formData.quizAnswer}
             onSelect={(answer) => updateFormData('quizAnswer', answer)}
           />
         );
-      case 7:
+      case 6:
         return (
           <div className="relative">
             <OnboardingStep7
@@ -110,6 +103,13 @@ const DynamicOnboarding = () => {
               onBack={handlePrevious}
             />
           </div>
+        );
+      case 7:
+        return (
+          <OnboardingStep8
+            value={formData.birthday}
+            onSelect={(birthday) => updateFormData('birthday', birthday)}
+          />
         );
       default:
         return null;
