@@ -162,7 +162,7 @@ export default {
         'glow-pulse': 'glow-pulse 2s ease-in-out infinite',
         'glow-pulse-purple': 'glow-pulse-purple 2s infinite ease-in-out',
         'shimmer': 'shimmer 2s infinite linear',
-        'shake': 'shake 0.4s ease-in-out infinite',
+        'shake': 'shake 0.5s ease-in-out',
         'fade-in': 'fade-in 0.6s ease-out',
         'scale-in': 'scale-in 0.4s ease-out'
 			}

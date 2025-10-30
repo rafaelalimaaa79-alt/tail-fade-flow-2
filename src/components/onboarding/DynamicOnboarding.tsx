@@ -94,10 +94,15 @@ const DynamicOnboarding = () => {
         );
       case 6:
         return (
-          <OnboardingStep7
-            value={formData.sportsbooks}
-            onSelect={(sportsbooks) => updateFormData('sportsbooks', sportsbooks)}
-          />
+          <div className="relative">
+            <OnboardingStep7
+              value={formData.sportsbooks}
+              onSelect={(sportsbooks) => {
+                updateFormData('sportsbooks', sportsbooks);
+                handleNext();
+              }}
+            />
+          </div>
         );
       case 7:
         return (
@@ -149,37 +154,39 @@ const DynamicOnboarding = () => {
         </div>
 
         {/* Bottom navigation */}
-        <div className="space-y-4">
-          <div className="flex gap-3">
-            {currentStep > 1 && (
-              <Button
-                onClick={handlePrevious}
-                variant="outline"
-                size="lg"
-                className="w-16 h-16 rounded-xl border-white/20 bg-white/5 hover:bg-white/10"
-              >
-                <ChevronLeft className="w-6 h-6 text-white" />
-              </Button>
-            )}
-            
-            {(currentStep !== 5 || formData.quizAnswer) && (
-              <Button
-                onClick={handleNext}
-                size="lg"
-                className="flex-1 h-16 rounded-xl bg-[#0EA5E9] hover:bg-[#0EA5E9]/90 text-white font-semibold text-lg"
-              >
-                Continue
-              </Button>
-            )}
-          </div>
+        {currentStep !== 6 && (
+          <div className="space-y-4">
+            <div className="flex gap-3">
+              {currentStep > 1 && (
+                <Button
+                  onClick={handlePrevious}
+                  variant="outline"
+                  size="lg"
+                  className="w-16 h-16 rounded-xl border-white/20 bg-white/5 hover:bg-white/10"
+                >
+                  <ChevronLeft className="w-6 h-6 text-white" />
+                </Button>
+              )}
+              
+              {(currentStep !== 5 || formData.quizAnswer) && (
+                <Button
+                  onClick={handleNext}
+                  size="lg"
+                  className="flex-1 h-16 rounded-xl bg-[#0EA5E9] hover:bg-[#0EA5E9]/90 text-white font-semibold text-lg"
+                >
+                  Continue
+                </Button>
+              )}
+            </div>
 
-          <button
-            onClick={handleSkip}
-            className="w-full text-center text-white/60 hover:text-white/80 transition-colors underline"
-          >
-            Skip Onboarding
-          </button>
-        </div>
+            <button
+              onClick={handleSkip}
+              className="w-full text-center text-white/60 hover:text-white/80 transition-colors underline"
+            >
+              Skip Onboarding
+            </button>
+          </div>
+        )}
       </div>
     </div>
   );

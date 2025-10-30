@@ -1,109 +1,95 @@
 import React, { useState } from 'react';
+import { Button } from '@/components/ui/button';
+import { ArrowRight } from 'lucide-react';
+import { useNavigate } from 'react-router-dom';
 
 interface OnboardingStep7Props {
   value: string[];
-  onSelect: (sportsbooks: string[]) => void;
+  onSelect: (data: string[]) => void;
 }
 
-const tabs = ['All', 'Sportsbooks', 'DFS Platforms'];
-
-const sportsbooks = [
-  { id: 'fanduel', name: 'FanDuel', icon: '🔷', category: 'both' },
-  { id: 'draftkings', name: 'DraftKings', icon: '🟢', category: 'both' },
-  { id: 'caesars', name: 'Caesars', icon: '🏛️', category: 'sportsbook' },
-  { id: 'betmgm', name: 'BetMGM', icon: '🦁', category: 'sportsbook' },
-  { id: 'prizepicks', name: 'PrizePicks', icon: '🟣', category: 'dfs' },
-  { id: 'underdog', name: 'Underdog Fantasy', icon: '🐶', category: 'dfs' },
-  { id: 'espnbet', name: 'ESPN BET', icon: '📺', category: 'sportsbook' },
-  { id: 'sleeper', name: 'Sleeper', icon: '😴', category: 'dfs' },
+const storyLines = [
+  "The sharpest bettors in the world hit just 53% of their bets.",
+  "Your buddy from college? He bricks bets at an 80% clip.",
+  "You seem like a smart guy. So what's the move?",
+  "Tail the 'sharp'… or fade your boy from college?",
+  "Welcome to NoShot — the app built on fading everyone's boy from college."
 ];
 
-const OnboardingStep7: React.FC<OnboardingStep7Props> = ({ value, onSelect }) => {
-  const [activeTab, setActiveTab] = useState('All');
-  const [selectAll, setSelectAll] = useState(false);
+const OnboardingStep7: React.FC<OnboardingStep7Props> = ({ onSelect }) => {
+  const navigate = useNavigate();
+  const [currentLine, setCurrentLine] = useState(0);
+  const [shake, setShake] = useState(false);
 
-  const toggleSportsbook = (sportsbookId: string) => {
-    if (value.includes(sportsbookId)) {
-      onSelect(value.filter(id => id !== sportsbookId));
+  const handleSkip = () => {
+    navigate('/');
+  };
+
+  const handleContinue = () => {
+    if (currentLine < storyLines.length - 1) {
+      const nextLine = currentLine + 1;
+      setCurrentLine(nextLine);
+      
+      // Trigger shake animation when revealing line 2 (80%)
+      if (nextLine === 1) {
+        setShake(true);
+        setTimeout(() => setShake(false), 500);
+      }
     } else {
-      onSelect([...value, sportsbookId]);
+      // Signal completion and move to next step
+      onSelect(['completed']);
     }
   };
 
-  const handleSelectAll = () => {
-    if (selectAll) {
-      onSelect([]);
-      setSelectAll(false);
-    } else {
-      onSelect(sportsbooks.map(s => s.id));
-      setSelectAll(true);
+  const formatLine = (line: string, index: number) => {
+    // Emphasize numbers
+    if (index === 0) {
+      return line.replace('53%', '<span class="text-[#0EA5E9] font-bold">53%</span>');
     }
+    if (index === 1) {
+      const shakeClass = shake ? 'animate-shake' : '';
+      return line.replace('80%', `<span class="text-red-500 font-bold inline-block ${shakeClass}">80%</span>`);
+    }
+    return line;
   };
 
-  const filteredSportsbooks = sportsbooks.filter(sb => {
-    if (activeTab === 'All') return true;
-    if (activeTab === 'Sportsbooks') return sb.category === 'sportsbook' || sb.category === 'both';
-    if (activeTab === 'DFS Platforms') return sb.category === 'dfs' || sb.category === 'both';
-    return true;
-  });
+  const isComplete = currentLine === storyLines.length - 1;
 
   return (
-    <div className="text-left">
-      <div className="flex justify-between items-start mb-6">
-        <div>
-          <h1 className="text-2xl font-bold text-white mb-1">
-            WHICH SPORTSBOOK APPS DO YOU USE?
-          </h1>
-        </div>
-        <button
-          onClick={handleSelectAll}
-          className="flex items-center gap-2 px-3 py-1.5 rounded-lg border border-[#0EA5E9] text-[#0EA5E9] text-sm"
+    <div className="min-h-[60vh] flex flex-col justify-between">
+      {/* Story lines */}
+      <div className="space-y-6 flex-1 flex flex-col justify-center">
+        {storyLines.slice(0, currentLine + 1).map((line, index) => (
+          <div
+            key={index}
+            className="animate-fade-in text-white text-2xl font-bold leading-relaxed"
+            dangerouslySetInnerHTML={{ __html: formatLine(line, index) }}
+          />
+        ))}
+      </div>
+
+      {/* Continue button */}
+      <div className="space-y-4 mt-8">
+        <Button
+          onClick={handleContinue}
+          size="lg"
+          className="w-full h-16 rounded-xl bg-[#0EA5E9] hover:bg-[#0EA5E9]/90 text-white font-semibold text-lg"
         >
-          <div className={`w-4 h-4 rounded border-2 ${selectAll ? 'bg-[#0EA5E9] border-[#0EA5E9]' : 'border-[#0EA5E9]'}`} />
-          Select All
+          {isComplete ? (
+            <span className="flex items-center justify-center gap-2">
+              Let's Go <ArrowRight className="w-5 h-5" />
+            </span>
+          ) : (
+            'Continue'
+          )}
+        </Button>
+
+        <button
+          onClick={handleSkip}
+          className="w-full text-center text-white/60 hover:text-white/80 transition-colors underline"
+        >
+          Skip Onboarding
         </button>
-      </div>
-
-      {/* Tabs */}
-      <div className="flex gap-2 mb-4 bg-white/5 p-1 rounded-xl">
-        {tabs.map((tab) => (
-          <button
-            key={tab}
-            onClick={() => setActiveTab(tab)}
-            className={`flex-1 py-2 rounded-lg transition-all text-sm ${
-              activeTab === tab
-                ? 'bg-white/20 text-white'
-                : 'text-white/60 hover:text-white/80'
-            }`}
-          >
-            {tab}
-          </button>
-        ))}
-      </div>
-
-      {/* Sportsbooks list */}
-      <div className="space-y-2 max-h-[400px] overflow-y-auto">
-        {filteredSportsbooks.map((sportsbook) => (
-          <button
-            key={sportsbook.id}
-            onClick={() => toggleSportsbook(sportsbook.id)}
-            className={`w-full p-4 rounded-2xl border-2 transition-all duration-200 flex items-center gap-4 ${
-              value.includes(sportsbook.id)
-                ? 'border-[#0EA5E9] bg-[#0EA5E9]/20'
-                : 'border-white/20 bg-black hover:bg-white/5'
-            }`}
-          >
-            <div className="text-3xl">{sportsbook.icon}</div>
-            <span className="text-white text-lg font-medium flex-1 text-left">{sportsbook.name}</span>
-            <div className={`w-6 h-6 rounded-full border-2 flex items-center justify-center ${
-              value.includes(sportsbook.id) ? 'border-[#0EA5E9] bg-[#0EA5E9]' : 'border-white/40'
-            }`}>
-              {value.includes(sportsbook.id) && (
-                <div className="w-3 h-3 rounded-full bg-white" />
-              )}
-            </div>
-          </button>
-        ))}
       </div>
     </div>
   );
