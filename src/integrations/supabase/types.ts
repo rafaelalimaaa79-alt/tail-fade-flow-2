@@ -280,6 +280,14 @@ export type Database = {
           updated_at: string
           username: string | null
           win_rate: number | null
+          onboarding_referral_source: string | null
+          onboarding_leagues: string | null
+          onboarding_birthday: string | null
+          onboarding_name: string | null
+          onboarding_experience: string | null
+          onboarding_bankroll: string | null
+          onboarding_quiz_answer: string | null
+          onboarding_sportsbooks: string | null
         }
         Insert: {
           avatar_url?: string | null
@@ -293,6 +301,14 @@ export type Database = {
           updated_at?: string
           username?: string | null
           win_rate?: number | null
+          onboarding_referral_source?: string | null
+          onboarding_leagues?: string | null
+          onboarding_birthday?: string | null
+          onboarding_name?: string | null
+          onboarding_experience?: string | null
+          onboarding_bankroll?: string | null
+          onboarding_quiz_answer?: string | null
+          onboarding_sportsbooks?: string | null
         }
         Update: {
           avatar_url?: string | null
@@ -306,6 +322,14 @@ export type Database = {
           updated_at?: string
           username?: string | null
           win_rate?: number | null
+          onboarding_referral_source?: string | null
+          onboarding_leagues?: string | null
+          onboarding_birthday?: string | null
+          onboarding_name?: string | null
+          onboarding_experience?: string | null
+          onboarding_bankroll?: string | null
+          onboarding_quiz_answer?: string | null
+          onboarding_sportsbooks?: string | null
         }
         Relationships: []
       }
