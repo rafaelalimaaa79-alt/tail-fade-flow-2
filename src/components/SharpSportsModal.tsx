@@ -243,7 +243,7 @@ export const SharpSportsModal = ({
       <DialogContent
         className={forcedMode
           ? "w-screen h-screen max-w-none p-0 bg-background flex flex-col gap-0 rounded-none overflow-hidden"
-          : "max-w-lg h-[90vh] max-h-[700px] p-0 bg-background flex flex-col gap-0 overflow-hidden"
+          : "max-w-lg h-[90vh] max-h-[700px] p-0 bg-background flex flex-col gap-0 overflow-y-hidden"
         }
         hideCloseButton={forcedMode}
       >
@@ -322,7 +322,7 @@ export const SharpSportsModal = ({
           )}
         </DialogHeader>
         
-        <div className="flex-1 relative min-h-0 overflow-hidden">
+        <div className="flex-1 relative min-h-0 overflow-hidden" style={{ maxHeight: '100%' }}>
           {isLoading && (
             <div className="absolute inset-0 flex items-center justify-center bg-background">
               <div className="flex flex-col items-center gap-2">
@@ -344,6 +344,7 @@ export const SharpSportsModal = ({
                 : "allow-same-origin allow-scripts allow-forms allow-popups allow-popups-to-escape-sandbox"
             }
             allow="clipboard-write"
+            scrolling="no"
           />
         </div>
 
