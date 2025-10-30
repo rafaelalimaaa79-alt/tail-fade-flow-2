@@ -5,7 +5,8 @@ import { toast } from 'sonner';
 import {
   handleSyncResponse,
   SyncResponse,
-  formatSyncSuccessMessage
+  formatSyncSuccessMessage,
+  SYNC_ERROR_MESSAGE
 } from '@/utils/syncResponseHandler';
 import { safeSetItem, safeGetItem, safeRemoveItem } from '@/utils/localStorage';
 
@@ -80,14 +81,14 @@ export const useSyncBets = () => {
       if (error) {
         const errorMessage = data?.error || data?.message || data?.detail || error.message;
         console.error('Sync error:', error, 'Response data:', data);
-        toast.error('Sync failed: ' + errorMessage);
+        toast.error(SYNC_ERROR_MESSAGE);
         setIsSyncing(false); // Reset loading state on error
         return;
       }
 
       if (data.statusCode !== 200) {
         console.error('Sync failed with status code:', data.statusCode, 'Response data:', data);
-        toast.error('Sync failed: ' + data.message);
+        toast.error(SYNC_ERROR_MESSAGE);
         setIsSyncing(false);
         if (data.statusCode != 401) {
           return;
@@ -162,7 +163,7 @@ export const useSyncBets = () => {
 
     } catch (error) {
       console.error('Unexpected sync error:', error);
-      toast.error('Sync failed. Please try again.');
+      toast.error(SYNC_ERROR_MESSAGE);
       setIsSyncing(false); // Set false on exception
     }
   }, [user, isSyncing]);
@@ -214,7 +215,7 @@ export const useSyncBets = () => {
         // When edge function returns non-2xx status, the actual error details are in 'data', not 'error.message'
         const errorMessage = data?.error || data?.message || data?.detail || error.message;
         console.error('Post-2FA sync error:', error, 'Response data:', data);
-        toast.error('Failed to fetch bets: ' + errorMessage);
+        toast.error(SYNC_ERROR_MESSAGE);
         setIsSyncing(false);
         return;
       }
@@ -267,7 +268,7 @@ export const useSyncBets = () => {
 
       } catch (error) {
         console.error('Unexpected post-2FA sync error:', error);
-        toast.error('Failed to fetch bets. Please try again.');
+        toast.error(SYNC_ERROR_MESSAGE);
         setIsSyncing(false);
       }
 
@@ -291,7 +292,7 @@ export const useSyncBets = () => {
 
         if (error) {
           console.error('Post-relink sync error:', error);
-          toast.error('Failed to sync bets. Please try again.');
+          toast.error(SYNC_ERROR_MESSAGE);
           setIsSyncing(false);
           return;
         }
@@ -330,7 +331,7 @@ export const useSyncBets = () => {
 
       } catch (error) {
         console.error('Unexpected post-relink sync error:', error);
-        toast.error('Failed to fetch bets. Please try again.');
+        toast.error(SYNC_ERROR_MESSAGE);
         setIsSyncing(false);
       }
     }
