@@ -20,27 +20,27 @@ const OnboardingStepReferral: React.FC<OnboardingStepReferralProps> = ({ value, 
       <div className="text-white text-3xl font-bold mb-8 text-center">
         How did you hear about us?
       </div>
-      <div className="space-y-4 w-full">
+      <div className="space-y-3 w-full">
         {referralSources.map((source) => {
           const IconComponent = source.icon;
           return (
             <button
               key={source.id}
               onClick={() => onSelect(source.id)}
-              className={`w-full p-6 rounded-2xl border-2 transition-all duration-200 flex items-center gap-4 ${
+              className={`w-full p-4 rounded-xl border-2 transition-all duration-200 flex items-center gap-3 ${
                 value === source.id
                   ? 'border-[#AEE3F5] bg-[#AEE3F5]/20'
                   : 'border-white/20 bg-white/5 hover:bg-white/10'
               }`}
             >
-              <div className={`w-12 h-12 rounded-full flex items-center justify-center ${
+              <div className={`w-10 h-10 rounded-full flex items-center justify-center ${
                 value === source.id ? 'bg-[#AEE3F5]' : 'bg-white/10'
               }`}>
-                <IconComponent className={`w-6 h-6 ${
+                <IconComponent className={`w-5 h-5 ${
                   value === source.id ? 'text-black' : 'text-white'
                 }`} />
               </div>
-              <span className="text-white text-xl font-semibold">{source.label}</span>
+              <span className="text-white text-lg font-medium">{source.label}</span>
             </button>
           );
         })}
