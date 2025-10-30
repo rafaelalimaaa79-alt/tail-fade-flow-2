@@ -143,7 +143,7 @@ const DynamicOnboarding = () => {
         </div>
 
         {/* Bottom navigation */}
-        {currentStep !== 6 && (
+        {currentStep !== 7 && (
           <div className="space-y-4">
             <div className="flex gap-3">
               {currentStep > 1 && (
@@ -157,7 +157,7 @@ const DynamicOnboarding = () => {
                 </Button>
               )}
               
-              {(currentStep !== 6 || formData.quizAnswer) && !(currentStep === 5 && !formData.bankroll) && (
+              {!(currentStep === 5 && !formData.bankroll) && !(currentStep === 6 && !formData.quizAnswer) && (
                 <Button
                   onClick={handleNext}
                   size="lg"
