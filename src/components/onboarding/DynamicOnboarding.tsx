@@ -157,7 +157,7 @@ const DynamicOnboarding = () => {
                 </Button>
               )}
               
-              {(currentStep !== 5 || formData.quizAnswer) && (
+              {(currentStep !== 6 || formData.quizAnswer) && !(currentStep === 5 && !formData.bankroll) && (
                 <Button
                   onClick={handleNext}
                   size="lg"
