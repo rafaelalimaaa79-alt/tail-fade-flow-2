@@ -1,54 +1,102 @@
-
-import React from "react";
-import { motion } from "framer-motion";
-import { Calendar } from "lucide-react";
+import React, { useState } from 'react';
+import { Input } from '@/components/ui/input';
+import { Search } from 'lucide-react';
 
 interface OnboardingStep2Props {
-  value: string;
-  onSelect: (value: string) => void;
+  value: string[];
+  selectedLeagues: string[];
+  onSelect: (teams: string[]) => void;
 }
 
+const leagueFilters = [
+  { id: 'nfl', name: 'NFL' },
+  { id: 'nba', name: 'NBA' },
+  { id: 'wnba', name: 'WNBA' },
+];
+
+// Sample teams - in real app, these would be filtered by league
+const sampleTeams = [
+  { id: '49ers', name: '49ers', league: 'nfl', logo: '🔴' },
+  { id: 'bears', name: 'Bears', league: 'nfl', logo: '🐻' },
+  { id: 'bengals', name: 'Bengals', league: 'nfl', logo: '🐯' },
+  { id: 'bills', name: 'Bills', league: 'nfl', logo: '🦬' },
+  { id: 'broncos', name: 'Broncos', league: 'nfl', logo: '🐴' },
+  { id: 'browns', name: 'Browns', league: 'nfl', logo: '🟤' },
+  { id: 'buccaneers', name: 'Buccaneers', league: 'nfl', logo: '🏴‍☠️' },
+  { id: 'cardinals', name: 'Cardinals', league: 'nfl', logo: '🔴' },
+  { id: 'chargers', name: 'Chargers', league: 'nfl', logo: '⚡' },
+];
+
 const OnboardingStep2: React.FC<OnboardingStep2Props> = ({ value, onSelect }) => {
-  const options = [
-    { value: "daily", label: "Daily" },
-    { value: "weekly", label: "Weekly" },
-    { value: "favorite-team", label: "When my favorite team is playing" },
-    { value: "rarely", label: "Rarely — just watching for now" }
-  ];
+  const [selectedLeague, setSelectedLeague] = useState('nfl');
+  const [searchTerm, setSearchTerm] = useState('');
+
+  const toggleTeam = (teamId: string) => {
+    if (value.includes(teamId)) {
+      onSelect(value.filter(id => id !== teamId));
+    } else {
+      onSelect([...value, teamId]);
+    }
+  };
+
+  const filteredTeams = sampleTeams.filter(team =>
+    team.name.toLowerCase().includes(searchTerm.toLowerCase())
+  );
 
   return (
-    <div className="text-center">
-      <motion.div
-        initial={{ opacity: 0, y: 20 }}
-        animate={{ opacity: 1, y: 0 }}
-        transition={{ delay: 0.1 }}
-        className="mb-8"
-      >
-        <div className="w-16 h-16 bg-[#AEE3F5]/20 rounded-full flex items-center justify-center mx-auto mb-4">
-          <Calendar className="w-8 h-8 text-[#AEE3F5]" />
-        </div>
-        <h2 className="text-2xl font-light text-white mb-3">
-          How often do you bet?
-        </h2>
-        <p className="text-white/70 text-sm">
-          Just to get a feel for how you play.
-        </p>
-      </motion.div>
+    <div className="text-left">
+      <h1 className="text-3xl font-bold text-white mb-2">
+        WHAT ARE YOUR FAVORITE TEAMS?
+      </h1>
+      <p className="text-white/70 text-lg mb-6">Select as many as you'd like.</p>
 
-      <div className="space-y-3">
-        {options.map((option, index) => (
-          <motion.button
-            key={option.value}
-            initial={{ opacity: 0, y: 20 }}
-            animate={{ opacity: 1, y: 0 }}
-            transition={{ delay: 0.2 + index * 0.1 }}
-            onClick={() => onSelect(option.value)}
-            className="w-full p-4 rounded-lg border border-white/20 bg-white/5 text-white hover:bg-white/10 hover:border-[#AEE3F5]/50 transition-all duration-300 hover:shadow-[0_0_15px_rgba(174,227,245,0.3)] group"
+      {/* League filters */}
+      <div className="flex gap-2 mb-4">
+        {leagueFilters.map((league) => (
+          <button
+            key={league.id}
+            onClick={() => setSelectedLeague(league.id)}
+            className={`px-4 py-2 rounded-full transition-all ${
+              selectedLeague === league.id
+                ? 'bg-[#0EA5E9] text-white'
+                : 'bg-white/10 text-white/60 hover:bg-white/20'
+            }`}
           >
-            <span className="text-base group-hover:text-[#AEE3F5] transition-colors">
-              {option.label}
+            <span className="flex items-center gap-2">
+              <span className="text-xl">{league.id === 'nfl' ? '🏈' : league.id === 'nba' ? '🏀' : '🏀'}</span>
+              {league.name}
             </span>
-          </motion.button>
+          </button>
+        ))}
+      </div>
+
+      {/* Search */}
+      <div className="relative mb-4">
+        <Search className="absolute left-3 top-1/2 -translate-y-1/2 w-5 h-5 text-white/40" />
+        <Input
+          type="text"
+          placeholder="Enter a team"
+          value={searchTerm}
+          onChange={(e) => setSearchTerm(e.target.value)}
+          className="pl-10 bg-white/10 border-white/20 text-white placeholder:text-white/40 h-12 rounded-xl"
+        />
+      </div>
+
+      {/* Teams grid */}
+      <div className="grid grid-cols-3 gap-3 max-h-[400px] overflow-y-auto">
+        {filteredTeams.map((team) => (
+          <button
+            key={team.id}
+            onClick={() => toggleTeam(team.id)}
+            className={`p-4 rounded-2xl border-2 transition-all duration-200 flex flex-col items-center gap-2 ${
+              value.includes(team.id)
+                ? 'border-[#0EA5E9] bg-[#0EA5E9]/20'
+                : 'border-white/20 bg-white/5 hover:bg-white/10'
+            }`}
+          >
+            <div className="text-3xl">{team.logo}</div>
+            <div className="text-white text-sm font-medium text-center">{team.name}</div>
+          </button>
         ))}
       </div>
     </div>

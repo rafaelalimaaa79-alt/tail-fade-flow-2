@@ -1,71 +1,43 @@
-import React, { useState, useEffect } from 'react';
-import { useNavigate, useSearchParams } from 'react-router-dom';
+import React, { useState } from 'react';
+import { useNavigate } from 'react-router-dom';
 import { Button } from '@/components/ui/button';
-import { Loader2 } from 'lucide-react';
-import OnboardingProgress from './OnboardingProgress';
-import DynamicQuestionRenderer from './DynamicQuestionRenderer';
-import DynamicOnboardingStep23 from './DynamicOnboardingStep23';
-import DynamicOnboardingStep24 from './DynamicOnboardingStep24';
-import OnboardingTfaModal from './OnboardingTfaModal';
-import OnboardingEnterCodeButton from './OnboardingEnterCodeButton';
-import { OnboardingProvider } from '@/contexts/OnboardingContext';
-import {
-  fetchOnboardingQuestions,
-  fetchOnboardingOptions,
-  OnboardingQuestion,
-  OnboardingOption,
-} from '@/services/dynamicOnboardingService';
-import { toast } from 'sonner';
+import { ChevronLeft } from 'lucide-react';
+import OnboardingStep1 from './OnboardingStep1';
+import OnboardingStep2 from './OnboardingStep2';
+import OnboardingStep3 from './OnboardingStep3';
+import OnboardingStep4 from './OnboardingStep4';
+import OnboardingStep5 from './OnboardingStep5';
+import OnboardingStep6 from './OnboardingStep6';
+import OnboardingStep7 from './OnboardingStep7';
+import OnboardingStep8 from './OnboardingStep8';
+import OnboardingStep9 from './OnboardingStep9';
 
 const DynamicOnboarding = () => {
   const navigate = useNavigate();
-  const [searchParams] = useSearchParams();
-  const [questions, setQuestions] = useState<OnboardingQuestion[]>([]);
-  const [options, setOptions] = useState<OnboardingOption[]>([]);
-  const [isLoading, setIsLoading] = useState(true);
-  const [error, setError] = useState<string | null>(null);
+  const [currentStep, setCurrentStep] = useState(1);
+  const [formData, setFormData] = useState({
+    leagues: [] as string[],
+    teams: [] as string[],
+    name: '',
+    experience: '',
+    bankroll: '',
+    sportsbooks: [] as string[],
+    country: '',
+    state: '',
+    birthday: { month: '', day: '', year: '' },
+    referralSources: [] as string[],
+  });
 
-  // Get initial step from URL or default to 1
-  const initialStep = parseInt(searchParams.get('step') || '1', 10);
-  const [currentStep, setCurrentStep] = useState(initialStep);
+  const totalSteps = 9;
 
-  // Load questions and options on mount
-  useEffect(() => {
-    const loadOnboardingData = async () => {
-      try {
-        setIsLoading(true);
-        const [questionsData, optionsData] = await Promise.all([
-          fetchOnboardingQuestions(),
-          fetchOnboardingOptions(),
-        ]);
-        setQuestions(questionsData);
-        setOptions(optionsData);
-        setError(null);
-      } catch (err) {
-        console.error('Error loading onboarding data:', err);
-        setError('Failed to load onboarding questions. Please try again.');
-        toast.error('Failed to load onboarding questions');
-      } finally {
-        setIsLoading(false);
-      }
-    };
-
-    loadOnboardingData();
-  }, []);
-
-  // Warn user before leaving during onboarding
-  useEffect(() => {
-    const handleBeforeUnload = (e: BeforeUnloadEvent) => {
-      if (currentStep < 23) {
-        e.preventDefault();
-        e.returnValue = 'Are you sure? Your progress is not saved.';
-        return 'Are you sure? Your progress is not saved.';
-      }
-    };
-
-    window.addEventListener('beforeunload', handleBeforeUnload);
-    return () => window.removeEventListener('beforeunload', handleBeforeUnload);
-  }, [currentStep]);
+  const handleNext = () => {
+    if (currentStep < totalSteps) {
+      setCurrentStep(currentStep + 1);
+    } else {
+      // Complete onboarding
+      navigate('/');
+    }
+  };
 
   const handlePrevious = () => {
     if (currentStep > 1) {
@@ -73,85 +45,148 @@ const DynamicOnboarding = () => {
     }
   };
 
-  const handleNext = () => {
-    if (currentStep < 24) {
-      setCurrentStep(currentStep + 1);
+  const handleSkip = () => {
+    navigate('/');
+  };
+
+  const updateFormData = (field: string, value: any) => {
+    setFormData(prev => ({ ...prev, [field]: value }));
+  };
+
+  const renderStep = () => {
+    switch (currentStep) {
+      case 1:
+        return (
+          <OnboardingStep1
+            value={formData.leagues}
+            onSelect={(leagues) => updateFormData('leagues', leagues)}
+          />
+        );
+      case 2:
+        return (
+          <OnboardingStep2
+            value={formData.teams}
+            selectedLeagues={formData.leagues}
+            onSelect={(teams) => updateFormData('teams', teams)}
+          />
+        );
+      case 3:
+        return (
+          <OnboardingStep3
+            value={formData.name}
+            onSelect={(name) => updateFormData('name', name)}
+          />
+        );
+      case 4:
+        return (
+          <OnboardingStep4
+            value={formData.experience}
+            onSelect={(experience) => updateFormData('experience', experience)}
+          />
+        );
+      case 5:
+        return (
+          <OnboardingStep5
+            value={formData.bankroll}
+            onSelect={(bankroll) => updateFormData('bankroll', bankroll)}
+          />
+        );
+      case 6:
+        return (
+          <OnboardingStep6
+            value={formData.sportsbooks}
+            onSelect={(sportsbooks) => updateFormData('sportsbooks', sportsbooks)}
+          />
+        );
+      case 7:
+        return (
+          <OnboardingStep7
+            country={formData.country}
+            state={formData.state}
+            onSelect={(country, state) => {
+              updateFormData('country', country);
+              updateFormData('state', state);
+            }}
+          />
+        );
+      case 8:
+        return (
+          <OnboardingStep8
+            value={formData.birthday}
+            onSelect={(birthday) => updateFormData('birthday', birthday)}
+          />
+        );
+      case 9:
+        return (
+          <OnboardingStep9
+            value={formData.referralSources}
+            onSelect={(sources) => updateFormData('referralSources', sources)}
+          />
+        );
+      default:
+        return null;
     }
   };
 
-  if (isLoading) {
-    return (
-      <div className="bg-black min-h-screen flex items-center justify-center">
-        <div className="flex flex-col items-center gap-4">
-          <Loader2 className="w-8 h-8 animate-spin text-[#AEE3F5]" />
-          <p className="text-white">Loading onboarding...</p>
-        </div>
-      </div>
-    );
-  }
-
-  if (error) {
-    return (
-      <div className="bg-black min-h-screen flex items-center justify-center">
-        <div className="flex flex-col items-center gap-4 text-center px-4">
-          <p className="text-red-500 text-lg">{error}</p>
-          <Button onClick={() => window.location.reload()}>
-            Try Again
-          </Button>
-        </div>
-      </div>
-    );
-  }
-
-  const totalSteps = 24;
-  const currentQuestion = questions.find(q => q.step_number === currentStep);
-
   return (
-    <OnboardingProvider>
-      <OnboardingEnterCodeButton />
-      <div className="bg-black min-h-screen flex flex-col">
-        <div className="flex-1 flex flex-col justify-center items-center px-4">
-          <div className="w-full max-w-md">
-            <OnboardingProgress currentStep={currentStep} totalSteps={totalSteps} />
+    <div className="bg-gradient-to-b from-[#0F172A] via-[#1E293B] to-black min-h-screen flex flex-col">
+      {/* Progress bar */}
+      <div className="pt-4 px-4">
+        <div className="flex gap-1">
+          {Array.from({ length: totalSteps }).map((_, index) => (
+            <div
+              key={index}
+              className={`h-1 flex-1 rounded-full transition-all duration-300 ${
+                index < currentStep
+                  ? 'bg-white'
+                  : 'bg-white/20'
+              }`}
+            />
+          ))}
+        </div>
+      </div>
 
-            <div className="mt-8">
-              {currentStep < 23 && currentQuestion && (
-                <DynamicQuestionRenderer
-                  question={currentQuestion}
-                  options={options.filter(o => o.question_id === currentQuestion.id)}
-                  onNext={handleNext}
-                />
-              )}
-
-              {currentStep === 23 && (
-                <DynamicOnboardingStep23 onNext={handleNext} />
-              )}
-
-              {currentStep === 24 && (
-                <DynamicOnboardingStep24 />
-              )}
-            </div>
-
-            {/* Back button for steps 2-23 */}
-            {currentStep > 1 && currentStep < 24 && (
-              <div className="mt-8 flex gap-4">
-                <Button
-                  onClick={handlePrevious}
-                  variant="outline"
-                  className="flex-1"
-                >
-                  Back
-                </Button>
-              </div>
-            )}
+      {/* Content */}
+      <div className="flex-1 flex flex-col justify-between px-4 py-8">
+        <div className="flex-1 flex items-center justify-center">
+          <div className="w-full max-w-lg">
+            {renderStep()}
           </div>
         </div>
 
-        <OnboardingTfaModal />
+        {/* Bottom navigation */}
+        <div className="space-y-4">
+          <div className="flex gap-3">
+            {currentStep > 1 && (
+              <Button
+                onClick={handlePrevious}
+                variant="outline"
+                size="lg"
+                className="w-16 h-16 rounded-xl border-white/20 bg-white/5 hover:bg-white/10"
+              >
+                <ChevronLeft className="w-6 h-6 text-white" />
+              </Button>
+            )}
+            
+            <Button
+              onClick={handleNext}
+              size="lg"
+              className="flex-1 h-16 rounded-xl bg-[#0EA5E9] hover:bg-[#0EA5E9]/90 text-white font-semibold text-lg"
+            >
+              Continue
+            </Button>
+          </div>
+
+          <button
+            onClick={handleSkip}
+            className="w-full text-center text-white/60 hover:text-white/80 transition-colors underline"
+          >
+            Skip Onboarding
+          </button>
+        </div>
       </div>
-    </OnboardingProvider>
+    </div>
   );
 };
 
 export default DynamicOnboarding;
-

@@ -1,55 +1,51 @@
-
-import React from "react";
-import { motion } from "framer-motion";
-import { DollarSign } from "lucide-react";
+import React from 'react';
 
 interface OnboardingStep1Props {
-  value: string;
-  onSelect: (value: string) => void;
+  value: string[];
+  onSelect: (leagues: string[]) => void;
 }
 
+const leagues = [
+  { id: 'nfl', name: 'NFL', icon: '🏈' },
+  { id: 'nba', name: 'NBA', icon: '🏀' },
+  { id: 'wnba', name: 'WNBA', icon: '🏀' },
+  { id: 'mlb', name: 'MLB', icon: '⚾' },
+  { id: 'nhl', name: 'NHL', icon: '🏒' },
+  { id: 'soccer', name: 'Soccer', icon: '⚽' },
+  { id: 'ncaab', name: 'NCAAB', icon: '🏀' },
+  { id: 'ncaaf', name: 'NCAAF', icon: '🏈' },
+];
+
 const OnboardingStep1: React.FC<OnboardingStep1Props> = ({ value, onSelect }) => {
-  const options = [
-    { value: "$15", label: "$15" },
-    { value: "$35", label: "$35" },
-    { value: "$70", label: "$70" },
-    { value: "$100", label: "$100" },
-    { value: "$200", label: "$200" }
-  ];
+  const toggleLeague = (leagueId: string) => {
+    if (value.includes(leagueId)) {
+      onSelect(value.filter(id => id !== leagueId));
+    } else {
+      onSelect([...value, leagueId]);
+    }
+  };
 
   return (
-    <div className="text-center">
-      <motion.div
-        initial={{ opacity: 0, y: 20 }}
-        animate={{ opacity: 1, y: 0 }}
-        transition={{ delay: 0.1 }}
-        className="mb-8"
-      >
-        <div className="w-16 h-16 bg-[#AEE3F5]/20 rounded-full flex items-center justify-center mx-auto mb-4">
-          <DollarSign className="w-8 h-8 text-[#AEE3F5]" />
-        </div>
-        <h2 className="text-2xl font-light text-white mb-3">
-          What's your average bet amount?
-        </h2>
-        <p className="text-white/70 text-sm">
-          Pick the one that's closest.
-        </p>
-      </motion.div>
+    <div className="text-left">
+      <h1 className="text-3xl font-bold text-white mb-2">
+        WHICH LEAGUES DO YOU BET ON?
+      </h1>
+      <p className="text-white/70 text-lg mb-8">Select as many as you'd like.</p>
 
-      <div className="space-y-3">
-        {options.map((option, index) => (
-          <motion.button
-            key={option.value}
-            initial={{ opacity: 0, y: 20 }}
-            animate={{ opacity: 1, y: 0 }}
-            transition={{ delay: 0.2 + index * 0.1 }}
-            onClick={() => onSelect(option.value)}
-            className="w-full p-4 rounded-lg border border-white/20 bg-white/5 text-white hover:bg-white/10 hover:border-[#AEE3F5]/50 transition-all duration-300 hover:shadow-[0_0_15px_rgba(174,227,245,0.3)] group"
+      <div className="grid grid-cols-2 gap-3">
+        {leagues.map((league) => (
+          <button
+            key={league.id}
+            onClick={() => toggleLeague(league.id)}
+            className={`p-6 rounded-2xl border-2 transition-all duration-200 ${
+              value.includes(league.id)
+                ? 'border-[#0EA5E9] bg-[#0EA5E9]/20'
+                : 'border-white/20 bg-white/5 hover:bg-white/10'
+            }`}
           >
-            <span className="text-base group-hover:text-[#AEE3F5] transition-colors">
-              {option.label}
-            </span>
-          </motion.button>
+            <div className="text-4xl mb-2">{league.icon}</div>
+            <div className="text-white font-semibold text-lg">{league.name}</div>
+          </button>
         ))}
       </div>
     </div>

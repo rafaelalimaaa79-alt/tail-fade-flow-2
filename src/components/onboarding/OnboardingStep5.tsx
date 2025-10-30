@@ -1,54 +1,41 @@
-
-import React from "react";
-import { motion } from "framer-motion";
-import { Zap } from "lucide-react";
+import React from 'react';
+import { Input } from '@/components/ui/input';
 
 interface OnboardingStep5Props {
   value: string;
-  onSelect: (value: string) => void;
+  onSelect: (bankroll: string) => void;
 }
 
+const quickAmounts = ['100', '200', '300', '500', '1000'];
+
 const OnboardingStep5: React.FC<OnboardingStep5Props> = ({ value, onSelect }) => {
-  const options = [
-    { value: "every-weekend", label: "Every weekend — I live for it" },
-    { value: "when-feel-it", label: "Only when I really feel it" },
-    { value: "rarely-chill", label: "Rarely — I keep it chill" },
-    { value: "never-bankroll", label: "Never — I'm a bankroll guy" }
-  ];
-
   return (
-    <div className="text-center">
-      <motion.div
-        initial={{ opacity: 0, y: 20 }}
-        animate={{ opacity: 1, y: 0 }}
-        transition={{ delay: 0.1 }}
-        className="mb-8"
-      >
-        <div className="w-16 h-16 bg-[#AEE3F5]/20 rounded-full flex items-center justify-center mx-auto mb-4">
-          <Zap className="w-8 h-8 text-[#AEE3F5]" />
-        </div>
-        <h2 className="text-2xl font-light text-white mb-3">
-          How often are you throwing bombs?
-        </h2>
-        <p className="text-white/70 text-sm">
-          We're talkin' big unit plays.
-        </p>
-      </motion.div>
+    <div className="text-left">
+      <h1 className="text-3xl font-bold text-white mb-2">
+        What's your total bankroll?
+      </h1>
+      <p className="text-white/70 text-lg mb-6">Enter in your total bankroll amount.</p>
 
-      <div className="space-y-3">
-        {options.map((option, index) => (
-          <motion.button
-            key={option.value}
-            initial={{ opacity: 0, y: 20 }}
-            animate={{ opacity: 1, y: 0 }}
-            transition={{ delay: 0.2 + index * 0.1 }}
-            onClick={() => onSelect(option.value)}
-            className="w-full p-4 rounded-lg border border-white/20 bg-white/5 text-white hover:bg-white/10 hover:border-[#AEE3F5]/50 transition-all duration-300 hover:shadow-[0_0_15px_rgba(174,227,245,0.3)] group"
+      <div className="relative mb-4">
+        <Input
+          type="number"
+          placeholder=""
+          value={value}
+          onChange={(e) => onSelect(e.target.value)}
+          className="bg-white/10 border-white/20 text-white placeholder:text-white/40 h-14 rounded-xl text-lg pr-12"
+        />
+        <span className="absolute right-4 top-1/2 -translate-y-1/2 text-white/40 text-xl">$</span>
+      </div>
+
+      <div className="flex gap-2 overflow-x-auto pb-2">
+        {quickAmounts.map((amount) => (
+          <button
+            key={amount}
+            onClick={() => onSelect(amount)}
+            className="px-6 py-3 rounded-xl border-2 border-white/20 bg-white/5 hover:bg-white/10 text-white whitespace-nowrap transition-all"
           >
-            <span className="text-base group-hover:text-[#AEE3F5] transition-colors">
-              {option.label}
-            </span>
-          </motion.button>
+            ${amount}
+          </button>
         ))}
       </div>
     </div>

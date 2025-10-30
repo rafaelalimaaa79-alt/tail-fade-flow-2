@@ -1,49 +1,44 @@
-import React from "react";
-import { motion } from "framer-motion";
-import { TrendingUp } from "lucide-react";
+import React from 'react';
 
 interface OnboardingStep4Props {
   value: string;
-  onSelect: (value: string) => void;
+  onSelect: (experience: string) => void;
 }
 
-const OnboardingStep4: React.FC<OnboardingStep4Props> = ({ value, onSelect }) => {
-  const options = [
-    { value: "up-more-than-down", label: "Up more than down" },
-    { value: "win-some-lose-some", label: "Win some, lose some" },
-    { value: "down-bad-every-week", label: "Down bad every week" }
-  ];
+const experiences = [
+  { id: 'beginner', label: 'Beginner' },
+  { id: 'intermediate', label: 'Intermediate' },
+  { id: 'advanced', label: 'Advanced' },
+];
 
+const OnboardingStep4: React.FC<OnboardingStep4Props> = ({ value, onSelect }) => {
   return (
-    <div className="text-center">
-      <motion.div
-        initial={{ opacity: 0, y: 20 }}
-        animate={{ opacity: 1, y: 0 }}
-        transition={{ delay: 0.1 }}
-        className="mb-8"
-      >
-        <div className="w-16 h-16 bg-[#AEE3F5]/20 rounded-full flex items-center justify-center mx-auto mb-4">
-          <TrendingUp className="w-8 h-8 text-[#AEE3F5]" />
-        </div>
-        <h2 className="text-2xl font-light text-white mb-3">
-          Be honest… what's your account balance usually looking like after a week of football betting?
-        </h2>
-      </motion.div>
+    <div className="text-left">
+      <h1 className="text-3xl font-bold text-white mb-2">
+        HOW EXPERIENCED OF A BETTOR ARE YOU?
+      </h1>
+      <p className="text-white/70 text-lg mb-8">Select one.</p>
 
       <div className="space-y-3">
-        {options.map((option, index) => (
-          <motion.button
-            key={option.value}
-            initial={{ opacity: 0, y: 20 }}
-            animate={{ opacity: 1, y: 0 }}
-            transition={{ delay: 0.2 + index * 0.1 }}
-            onClick={() => onSelect(option.value)}
-            className="w-full p-4 rounded-lg border border-white/20 bg-white/5 text-white hover:bg-white/10 hover:border-[#AEE3F5]/50 transition-all duration-300 hover:shadow-[0_0_15px_rgba(174,227,245,0.3)] group"
+        {experiences.map((exp) => (
+          <button
+            key={exp.id}
+            onClick={() => onSelect(exp.id)}
+            className={`w-full p-5 rounded-2xl border-2 transition-all duration-200 flex items-center gap-4 ${
+              value === exp.id
+                ? 'border-[#0EA5E9] bg-[#0EA5E9]/20'
+                : 'border-white/20 bg-black hover:bg-white/5'
+            }`}
           >
-            <span className="text-base group-hover:text-[#AEE3F5] transition-colors">
-              {option.label}
-            </span>
-          </motion.button>
+            <div className={`w-6 h-6 rounded-full border-2 flex items-center justify-center ${
+              value === exp.id ? 'border-[#0EA5E9]' : 'border-white/40'
+            }`}>
+              {value === exp.id && (
+                <div className="w-3 h-3 rounded-full bg-[#0EA5E9]" />
+              )}
+            </div>
+            <span className="text-white text-lg font-medium">{exp.label}</span>
+          </button>
         ))}
       </div>
     </div>
