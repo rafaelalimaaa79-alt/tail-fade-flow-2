@@ -1,57 +1,76 @@
 
-import React from "react";
-import { motion } from "framer-motion";
-import { DollarSign } from "lucide-react";
+import React from 'react';
+import { motion } from 'framer-motion';
+import { Button } from '@/components/ui/button';
 
 interface OnboardingStep1Props {
-  value: string;
-  onSelect: (value: string) => void;
+  selectedLeagues: string[];
+  onSelect: (leagues: string[]) => void;
+  onNext: () => void;
 }
 
-const OnboardingStep1: React.FC<OnboardingStep1Props> = ({ value, onSelect }) => {
-  const options = [
-    { value: "$15", label: "$15" },
-    { value: "$35", label: "$35" },
-    { value: "$70", label: "$70" },
-    { value: "$100", label: "$100" },
-    { value: "$200", label: "$200" }
+const OnboardingStep1: React.FC<OnboardingStep1Props> = ({ selectedLeagues, onSelect, onNext }) => {
+  const leagues = [
+    { id: 'nfl', name: 'NFL', logo: '🏈' },
+    { id: 'nba', name: 'NBA', logo: '🏀' },
+    { id: 'wnba', name: 'WNBA', logo: '🏀' },
+    { id: 'mlb', name: 'MLB', logo: '⚾' },
+    { id: 'nhl', name: 'NHL', logo: '🏒' },
+    { id: 'soccer', name: 'Soccer', logo: '⚽' },
+    { id: 'ncaab', name: 'NCAAB', logo: '🏀' },
+    { id: 'ncaaf', name: 'NCAAF', logo: '🏈' },
   ];
 
+  const toggleLeague = (leagueId: string) => {
+    if (selectedLeagues.includes(leagueId)) {
+      onSelect(selectedLeagues.filter(id => id !== leagueId));
+    } else {
+      onSelect([...selectedLeagues, leagueId]);
+    }
+  };
+
   return (
-    <div className="text-center">
+    <div>
       <motion.div
         initial={{ opacity: 0, y: 20 }}
         animate={{ opacity: 1, y: 0 }}
-        transition={{ delay: 0.1 }}
         className="mb-8"
       >
-        <div className="w-16 h-16 bg-[#AEE3F5]/20 rounded-full flex items-center justify-center mx-auto mb-4">
-          <DollarSign className="w-8 h-8 text-[#AEE3F5]" />
-        </div>
-        <h2 className="text-2xl font-light text-white mb-3">
-          What's your average bet amount?
-        </h2>
-        <p className="text-white/70 text-sm">
-          Pick the one that's closest.
+        <h1 className="text-4xl font-bold text-white mb-3">
+          WHICH LEAGUES DO YOU BET ON?
+        </h1>
+        <p className="text-xl text-white/70">
+          Select as many as you'd like.
         </p>
       </motion.div>
 
-      <div className="space-y-3">
-        {options.map((option, index) => (
+      <div className="grid grid-cols-3 gap-4 mb-8">
+        {leagues.map((league, index) => (
           <motion.button
-            key={option.value}
+            key={league.id}
             initial={{ opacity: 0, y: 20 }}
             animate={{ opacity: 1, y: 0 }}
-            transition={{ delay: 0.2 + index * 0.1 }}
-            onClick={() => onSelect(option.value)}
-            className="w-full p-4 rounded-lg border border-white/20 bg-white/5 text-white hover:bg-white/10 hover:border-[#AEE3F5]/50 transition-all duration-300 hover:shadow-[0_0_15px_rgba(174,227,245,0.3)] group"
+            transition={{ delay: index * 0.05 }}
+            onClick={() => toggleLeague(league.id)}
+            className={`aspect-square rounded-2xl border-2 transition-all duration-300 flex flex-col items-center justify-center gap-3 ${
+              selectedLeagues.includes(league.id)
+                ? 'border-[#0066FF] bg-[#0066FF]/10'
+                : 'border-white/20 bg-gray-900/50 hover:border-white/40'
+            }`}
           >
-            <span className="text-base group-hover:text-[#AEE3F5] transition-colors">
-              {option.label}
-            </span>
+            <span className="text-5xl">{league.logo}</span>
+            <span className="text-white font-medium text-lg">{league.name}</span>
           </motion.button>
         ))}
       </div>
+
+      <Button
+        onClick={onNext}
+        disabled={selectedLeagues.length === 0}
+        className="w-full h-14 text-lg font-semibold bg-[#0066FF] hover:bg-[#0052CC] text-white rounded-full disabled:opacity-50 disabled:cursor-not-allowed"
+      >
+        Continue
+      </Button>
     </div>
   );
 };
