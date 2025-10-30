@@ -2,6 +2,19 @@ import React, { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { Button } from '@/components/ui/button';
 import { ChevronLeft } from 'lucide-react';
+import { useAuth } from '@/contexts/AuthContext';
+import { toast } from 'sonner';
+import {
+  saveReferralSource,
+  saveLeagues,
+  saveBirthday,
+  saveName,
+  saveExperience,
+  saveBankroll,
+  saveQuizAnswer,
+  saveSportsbooks,
+  completeOnboarding
+} from '@/services/onboardingService';
 import OnboardingStepReferral from './OnboardingStepReferral';
 import OnboardingStep1 from './OnboardingStep1';
 import OnboardingStep2 from './OnboardingStep2';
@@ -16,7 +29,9 @@ import OnboardingStepPaywall from './OnboardingStepPaywall';
 
 const DynamicOnboarding = () => {
   const navigate = useNavigate();
+  const { user } = useAuth();
   const [currentStep, setCurrentStep] = useState(1);
+  const [loading, setLoading] = useState(false);
   const [formData, setFormData] = useState({
     referralSource: '',
     leagues: [] as string[],
@@ -34,12 +49,79 @@ const DynamicOnboarding = () => {
 
   const totalSteps = 9;
 
-  const handleNext = () => {
-    if (currentStep < totalSteps) {
-      setCurrentStep(currentStep + 1);
-    } else {
-      // Complete onboarding
-      navigate('/');
+  const saveCurrentStepAnswer = async () => {
+    if (!user?.id) return;
+
+    try {
+      switch (currentStep) {
+        case 1:
+          if (formData.referralSource) {
+            await saveReferralSource(user.id, formData.referralSource);
+          }
+          break;
+        case 2:
+          if (formData.leagues.length > 0) {
+            await saveLeagues(user.id, formData.leagues);
+          }
+          break;
+        case 3:
+          if (formData.birthday.month && formData.birthday.day && formData.birthday.year) {
+            await saveBirthday(user.id, formData.birthday);
+          }
+          break;
+        case 4:
+          if (formData.name) {
+            await saveName(user.id, formData.name);
+          }
+          break;
+        case 5:
+          if (formData.experience) {
+            await saveExperience(user.id, formData.experience);
+          }
+          break;
+        case 6:
+          if (formData.bankroll) {
+            await saveBankroll(user.id, formData.bankroll);
+          }
+          break;
+        case 7:
+          if (formData.quizAnswer) {
+            await saveQuizAnswer(user.id, formData.quizAnswer);
+          }
+          break;
+        case 8:
+          if (formData.sportsbooks.length > 0) {
+            await saveSportsbooks(user.id, formData.sportsbooks);
+          }
+          break;
+      }
+    } catch (error) {
+      console.error('Error saving answer:', error);
+      throw error;
+    }
+  };
+
+  const handleNext = async () => {
+    setLoading(true);
+    try {
+      // Save current step's answer before moving to next
+      await saveCurrentStepAnswer();
+
+      if (currentStep < totalSteps) {
+        setCurrentStep(currentStep + 1);
+      } else {
+        // Complete onboarding
+        if (user?.id) {
+          await completeOnboarding(user.id);
+        }
+        toast.success('Onboarding completed!');
+        navigate('/dashboard');
+      }
+    } catch (error) {
+      toast.error('Failed to save answer. Please try again.');
+      console.error(error);
+    } finally {
+      setLoading(false);
     }
   };
 
@@ -170,12 +252,13 @@ const DynamicOnboarding = () => {
                   onClick={handlePrevious}
                   variant="outline"
                   size="lg"
+                  disabled={loading}
                   className="w-16 h-16 rounded-xl border-white/20 bg-white/5 hover:bg-white/10"
                 >
                   <ChevronLeft className="w-6 h-6 text-white" />
                 </Button>
               )}
-              
+
               {((currentStep === 1 && formData.referralSource) ||
                 (currentStep === 2 && formData.leagues.length > 0) ||
                 (currentStep === 3 && formData.birthday.month && formData.birthday.day && formData.birthday.year) ||
@@ -185,10 +268,11 @@ const DynamicOnboarding = () => {
                 (currentStep === 7 && formData.quizAnswer)) && (
                 <Button
                   onClick={handleNext}
+                  disabled={loading}
                   size="lg"
                   className="flex-1 h-16 rounded-xl bg-[#AEE3F5] hover:bg-[#AEE3F5]/90 text-black font-semibold text-lg animate-scale-in shadow-[0_0_20px_rgba(174,227,245,0.5)] hover:shadow-[0_0_30px_rgba(174,227,245,0.7)] transition-all"
                 >
-                  Continue
+                  {loading ? 'Saving...' : 'Continue'}
                 </Button>
               )}
             </div>

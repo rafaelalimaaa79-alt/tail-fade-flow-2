@@ -1,17 +1,18 @@
 
 import React, { useMemo } from "react";
 import { BetterPlay } from "@/types/betTypes";
-import { showFadeNotification } from "@/utils/betting-notifications";
 import { getOppositeBet } from "@/utils/bet-conversion";
 import { Button } from "@/components/ui/button";
+import { useBetFadeToggle } from "@/hooks/useBetFadeToggle";
 
 interface PlayCardProps {
   play: BetterPlay;
   renderWaveText: (text: string, lineIndex: number) => React.ReactNode;
   onActionClick?: () => void;
+  betId?: string;
 }
 
-const PlayCard: React.FC<PlayCardProps> = ({ play, renderWaveText, onActionClick }) => {
+const PlayCard: React.FC<PlayCardProps> = ({ play, renderWaveText, onActionClick, betId }) => {
   // Function to get the actual opposing team from real games data
   const getActualMatchup = (bet: string) => {
     // Real matchups from your exact games data - maintaining correct order
@@ -77,9 +78,11 @@ const PlayCard: React.FC<PlayCardProps> = ({ play, renderWaveText, onActionClick
     return { oppositeBet, gameMatchup: matchup };
   }, [play.bet]);
 
-  // Handle the bet action with notification only
-  const handleBetClick = () => {
-    showFadeNotification(play.bettorName, oppositeBet);
+  // Fade toggle and live count
+  const { count: usersFading, isFaded, toggleFade, loading } = useBetFadeToggle(betId);
+
+  const handleBetClick = async () => {
+    await toggleFade();
   };
 
   // Use the percentage from the play data instead of random generation
@@ -137,7 +140,7 @@ const PlayCard: React.FC<PlayCardProps> = ({ play, renderWaveText, onActionClick
             Fade Confidence: <span className="text-[#AEE3F5] font-bold">{fadeConfidence}%</span>
           </p>
           <p className="text-lg font-semibold text-gray-300">
-            Users Fading: <span className="text-[#AEE3F5] font-bold">0</span>
+            Users Fading: <span className="text-[#AEE3F5] font-bold">{usersFading}</span>
           </p>
         </div>
         
@@ -147,11 +150,14 @@ const PlayCard: React.FC<PlayCardProps> = ({ play, renderWaveText, onActionClick
         {/* Bet button with opposite bet */}
         <div className="w-full pt-1">
           <Button 
-            className="w-full py-4 rounded-xl transition-all duration-300 text-lg font-bold bg-[#AEE3F5] hover:bg-[#AEE3F5]/90 text-black"
-            style={{
-              boxShadow: "0 0 20px rgba(174, 227, 245, 0.8), 0 0 40px rgba(174, 227, 245, 0.4)"
-            }}
+            type="button"
+            className={`w-full py-4 rounded-xl transition-all duration-300 text-lg font-bold border ${
+              isFaded 
+                ? "bg-black text-[#AEE3F5] border-[#AEE3F5]/60 hover:bg-black/95 shadow-[0_0_12px_rgba(174,227,245,0.25)]"
+                : "bg-[#AEE3F5] text-black border-transparent hover:bg-[#AEE3F5]/90 shadow-[0_0_16px_rgba(174,227,245,0.45)]"
+            }`}
             onClick={handleBetClick}
+            disabled={loading}
           >
             Bet {oppositeBet}
           </Button>

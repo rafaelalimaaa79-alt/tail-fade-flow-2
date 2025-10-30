@@ -106,12 +106,17 @@ export const handleSyncResponse = (
     case 'error':
     default:
       callbacks.onError?.(
-        data.message || data.error || 'Sync failed. Please try again.',
+        SYNC_ERROR_MESSAGE,
         data.status
       );
       break;
   }
 };
+
+/**
+ * Generic error message for sync failures
+ */
+export const SYNC_ERROR_MESSAGE = 'Re-syncing failed. Try again in 1 minute.';
 
 /**
  * Format sync success message
@@ -120,21 +125,21 @@ export const formatSyncSuccessMessage = (data: SyncResponse): string => {
   if (data.inserted === 0) {
     return 'No new bets found';
   }
-  
+
   const parts: string[] = [];
-  
+
   if (data.pending && data.pending > 0) {
     parts.push(`${data.pending} pending`);
   }
-  
+
   if (data.historical && data.historical > 0) {
     parts.push(`${data.historical} completed`);
   }
-  
+
   if (parts.length === 0) {
     return `Synced ${data.inserted} bets`;
   }
-  
+
   return `Synced ${data.inserted} bets (${parts.join(', ')})`;
 };
 

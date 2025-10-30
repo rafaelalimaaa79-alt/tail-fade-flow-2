@@ -2,10 +2,10 @@
 import React from "react";
 import { Separator } from "@/components/ui/separator";
 import ActionButton from "@/components/ActionButton";
-import { showFadeNotification } from "@/utils/betting-notifications";
 import PublicGameVisibilityWrapper from "./PublicGameVisibilityWrapper";
 import { cn } from "@/lib/utils";
 import { getOppositeBet } from "@/utils/bet-conversion";
+import { useBetFadeToggle } from "@/hooks/useBetFadeToggle";
 
 interface PublicGame {
   id: string;
@@ -24,9 +24,10 @@ interface PublicGameItemProps {
   game: PublicGame;
   rank: number;
   isInitialized?: boolean;
+  betId?: string;
 }
 
-const PublicGameItem = ({ game, rank, isInitialized = false }: PublicGameItemProps) => {
+const PublicGameItem = ({ game, rank, isInitialized = false, betId }: PublicGameItemProps) => {
   const getTimeInEST = () => {
     if (game.isLive) {
       return (
@@ -56,10 +57,10 @@ const PublicGameItem = ({ game, rank, isInitialized = false }: PublicGameItemPro
   )));
 
   const oppositeBet = getOppositeBet(`${game.team} ${game.spread}`, game.opponent);
+  const { count: usersFading, isFaded, toggleFade, loading } = useBetFadeToggle(betId);
 
-  const handleFade = () => {
-    const betDescription = oppositeBet;
-    showFadeNotification("Public Fade", betDescription);
+  const handleFade = async () => {
+    await toggleFade();
   };
 
   return (
@@ -131,7 +132,7 @@ const PublicGameItem = ({ game, rank, isInitialized = false }: PublicGameItemPro
                 Fade Confidence: <span className="text-[#AEE3F5] font-bold">{fadeZonePercentage}%</span>
               </p>
               <p className="text-base font-semibold text-gray-300">
-                Users Fading: <span className="text-[#AEE3F5] font-bold">0</span>
+                Users Fading: <span className="text-[#AEE3F5] font-bold">{usersFading}</span>
               </p>
             </div>
             
@@ -140,9 +141,15 @@ const PublicGameItem = ({ game, rank, isInitialized = false }: PublicGameItemPro
               <ActionButton 
                 variant="fade" 
                 onClick={handleFade}
-                className="h-10 text-base"
+                className={cn(
+                  "h-10 text-base border",
+                  isFaded 
+                    ? "bg-black text-[#AEE3F5] border-[#AEE3F5]/60 hover:bg-black/95 shadow-[0_0_12px_rgba(174,227,245,0.25)]"
+                    : "border-transparent"
+                )}
                 glowEffect={isMostVisible}
                 isMostVisible={isMostVisible}
+                disabled={loading}
               >
                 Bet {oppositeBet}
               </ActionButton>

@@ -30,6 +30,7 @@ const ActionButton = forwardRef<HTMLButtonElement, ActionButtonProps>(({
   return (
     <Button
       ref={ref}
+      type="button"
       onClick={() => {
         triggerHaptic('impactMedium');
         onClick?.();

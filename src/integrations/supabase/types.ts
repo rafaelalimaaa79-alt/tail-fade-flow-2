@@ -40,6 +40,7 @@ export type Database = {
           away_team: string | null
           home_team: string | null
           position: string | null
+          users_fading_count: number | null
         }
         Insert: {
           bet_id?: string | null
@@ -60,6 +61,7 @@ export type Database = {
           units_won_lost?: number | null
           updated_at?: string
           user_id: string
+          users_fading_count?: number | null
         }
         Update: {
           bet_id?: string | null
@@ -80,6 +82,7 @@ export type Database = {
           units_won_lost?: number | null
           updated_at?: string
           user_id?: string
+          users_fading_count?: number | null
         }
         Relationships: [
           {
@@ -87,6 +90,42 @@ export type Database = {
             columns: ["sportsbook_id"]
             isOneToOne: false
             referencedRelation: "sportsbooks"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      bets_fades: {
+        Row: {
+          id: string
+          bet_id: string
+          user_id: string
+          created_at: string
+        }
+        Insert: {
+          id?: string
+          bet_id: string
+          user_id: string
+          created_at?: string
+        }
+        Update: {
+          id?: string
+          bet_id?: string
+          user_id?: string
+          created_at?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "bets_fades_bet_id_fkey"
+            columns: ["bet_id"]
+            isOneToOne: false
+            referencedRelation: "bets"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "bets_fades_user_id_fkey"
+            columns: ["user_id"]
+            isOneToOne: false
+            referencedRelation: "auth.users"
             referencedColumns: ["id"]
           },
         ]
@@ -241,6 +280,14 @@ export type Database = {
           updated_at: string
           username: string | null
           win_rate: number | null
+          onboarding_referral_source: string | null
+          onboarding_leagues: string | null
+          onboarding_birthday: string | null
+          onboarding_name: string | null
+          onboarding_experience: string | null
+          onboarding_bankroll: string | null
+          onboarding_quiz_answer: string | null
+          onboarding_sportsbooks: string | null
         }
         Insert: {
           avatar_url?: string | null
@@ -254,6 +301,14 @@ export type Database = {
           updated_at?: string
           username?: string | null
           win_rate?: number | null
+          onboarding_referral_source?: string | null
+          onboarding_leagues?: string | null
+          onboarding_birthday?: string | null
+          onboarding_name?: string | null
+          onboarding_experience?: string | null
+          onboarding_bankroll?: string | null
+          onboarding_quiz_answer?: string | null
+          onboarding_sportsbooks?: string | null
         }
         Update: {
           avatar_url?: string | null
@@ -267,6 +322,14 @@ export type Database = {
           updated_at?: string
           username?: string | null
           win_rate?: number | null
+          onboarding_referral_source?: string | null
+          onboarding_leagues?: string | null
+          onboarding_birthday?: string | null
+          onboarding_name?: string | null
+          onboarding_experience?: string | null
+          onboarding_bankroll?: string | null
+          onboarding_quiz_answer?: string | null
+          onboarding_sportsbooks?: string | null
         }
         Relationships: []
       }
