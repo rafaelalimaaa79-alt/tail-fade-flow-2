@@ -16,7 +16,7 @@ const OnboardingStep3: React.FC<OnboardingStep3Props> = ({ value, onSelect }) =>
 
       <Input
         type="text"
-        placeholder="Enter your display name"
+        placeholder="This will be your display name"
         value={value}
         onChange={(e) => onSelect(e.target.value)}
         className="bg-white/10 border-white/20 text-white placeholder:text-white/40 h-14 rounded-xl text-lg"
