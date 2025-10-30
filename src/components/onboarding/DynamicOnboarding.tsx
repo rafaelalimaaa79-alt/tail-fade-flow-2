@@ -9,7 +9,6 @@ import OnboardingStep4 from './OnboardingStep4';
 import OnboardingStep5 from './OnboardingStep5';
 import OnboardingStep6 from './OnboardingStep6';
 import OnboardingStep7 from './OnboardingStep7';
-import OnboardingStep10 from './OnboardingStep10';
 import OnboardingStep8 from './OnboardingStep8';
 import OnboardingStep9 from './OnboardingStep9';
 
@@ -30,7 +29,7 @@ const DynamicOnboarding = () => {
     referralSources: [] as string[],
   });
 
-  const totalSteps = 8;
+  const totalSteps = 7;
 
   const handleNext = () => {
     if (currentStep < totalSteps) {
@@ -105,17 +104,6 @@ const DynamicOnboarding = () => {
           </div>
         );
       case 7:
-        return (
-          <OnboardingStep10
-            country={formData.country}
-            state={formData.state}
-            onSelect={(country, state) => {
-              updateFormData('country', country);
-              updateFormData('state', state);
-            }}
-          />
-        );
-      case 8:
         return (
           <OnboardingStep8
             value={formData.birthday}
