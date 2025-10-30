@@ -27,7 +27,7 @@ const OnboardingStepPaywall: React.FC<OnboardingStepPaywallProps> = ({ onSelect 
           See Who's Ice Cold Free for 7 Days
         </h1>
         <p className="text-gray-400 text-base">
-          Know who's losing before you bet. Start risk-free.
+          Start risk-free.
         </p>
       </div>
 
