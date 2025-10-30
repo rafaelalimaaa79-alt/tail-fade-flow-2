@@ -53,7 +53,7 @@ const OnboardingStep1: React.FC<OnboardingStep1Props> = ({ value, onSelect }) =>
               <img 
                 src={league.logo} 
                 alt={`${league.name} logo`}
-                className={`max-w-full max-h-full object-contain ${league.id === 'mlb' ? 'scale-75' : ''}`}
+                className={`max-w-full max-h-full object-contain ${league.id === 'mlb' ? 'scale-75' : ''} ${league.id === 'ncaab' ? 'scale-110' : ''}`}
               />
             </div>
             <div className="text-white font-semibold text-sm">{league.name}</div>
