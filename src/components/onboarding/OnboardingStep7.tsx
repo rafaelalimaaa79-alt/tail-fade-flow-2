@@ -68,7 +68,7 @@ const OnboardingStep7: React.FC<OnboardingStep7Props> = ({ onSelect }) => {
         {storyLines.slice(0, currentLine + 1).map((line, index) => (
           <div
             key={index}
-            className={`animate-fade-in text-2xl font-medium leading-relaxed transition-opacity duration-500 ${
+            className={`animate-fade-in text-2xl font-bold leading-relaxed transition-opacity duration-500 ${
               index === currentLine ? 'text-white' : 'text-white/40'
             }`}
             dangerouslySetInnerHTML={{ __html: formatLine(line, index) }}
