@@ -58,7 +58,7 @@ const OnboardingStep2: React.FC<OnboardingStep2Props> = ({ value, onSelect }) =>
             onClick={() => setSelectedLeague(league.id)}
             className={`px-4 py-2 rounded-full transition-all ${
               selectedLeague === league.id
-                ? 'bg-[#0EA5E9] text-white'
+                ? 'bg-[#AEE3F5] text-black'
                 : 'bg-white/10 text-white/60 hover:bg-white/20'
             }`}
           >
@@ -90,7 +90,7 @@ const OnboardingStep2: React.FC<OnboardingStep2Props> = ({ value, onSelect }) =>
             onClick={() => toggleTeam(team.id)}
             className={`p-4 rounded-2xl border-2 transition-all duration-200 flex flex-col items-center gap-2 ${
               value.includes(team.id)
-                ? 'border-[#0EA5E9] bg-[#0EA5E9]/20'
+                ? 'border-[#AEE3F5] bg-[#AEE3F5]/20'
                 : 'border-white/20 bg-white/5 hover:bg-white/10'
             }`}
           >

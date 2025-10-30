@@ -41,7 +41,7 @@ const OnboardingStep9: React.FC<OnboardingStep9Props> = ({ value, onSelect }) =>
             disabled={!value.includes(source.id) && value.length >= 2}
             className={`p-4 rounded-2xl border-2 transition-all duration-200 flex flex-col items-center gap-2 ${
               value.includes(source.id)
-                ? 'border-[#0EA5E9] bg-[#0EA5E9]/20'
+                ? 'border-[#AEE3F5] bg-[#AEE3F5]/20'
                 : 'border-white/20 bg-white/5 hover:bg-white/10'
             } ${!value.includes(source.id) && value.length >= 2 ? 'opacity-40' : ''}`}
           >
@@ -59,7 +59,7 @@ const OnboardingStep9: React.FC<OnboardingStep9Props> = ({ value, onSelect }) =>
         onClick={() => toggleSource('other')}
         className={`w-full p-4 rounded-2xl border-2 transition-all ${
           value.includes('other')
-            ? 'border-[#0EA5E9] bg-[#0EA5E9]/20'
+            ? 'border-[#AEE3F5] bg-[#AEE3F5]/20'
             : 'border-white/20 bg-white/5 hover:bg-white/10'
         }`}
       >

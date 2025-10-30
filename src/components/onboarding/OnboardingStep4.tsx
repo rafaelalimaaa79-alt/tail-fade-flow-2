@@ -26,15 +26,15 @@ const OnboardingStep4: React.FC<OnboardingStep4Props> = ({ value, onSelect }) =>
             onClick={() => onSelect(exp.id)}
             className={`w-full p-5 rounded-2xl border-2 transition-all duration-200 flex items-center gap-4 ${
               value === exp.id
-                ? 'border-[#0EA5E9] bg-[#0EA5E9]/20'
+                ? 'border-[#AEE3F5] bg-[#AEE3F5]/20'
                 : 'border-white/20 bg-black hover:bg-white/5'
             }`}
           >
             <div className={`w-6 h-6 rounded-full border-2 flex items-center justify-center ${
-              value === exp.id ? 'border-[#0EA5E9]' : 'border-white/40'
+              value === exp.id ? 'border-[#AEE3F5]' : 'border-white/40'
             }`}>
               {value === exp.id && (
-                <div className="w-3 h-3 rounded-full bg-[#0EA5E9]" />
+                <div className="w-3 h-3 rounded-full bg-[#AEE3F5]" />
               )}
             </div>
             <span className="text-white text-lg font-medium">{exp.label}</span>

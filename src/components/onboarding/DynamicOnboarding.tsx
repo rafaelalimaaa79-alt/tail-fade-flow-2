@@ -161,7 +161,7 @@ const DynamicOnboarding = () => {
                 <Button
                   onClick={handleNext}
                   size="lg"
-                  className="flex-1 h-16 rounded-xl bg-[#0EA5E9] hover:bg-[#0EA5E9]/90 text-white font-semibold text-lg"
+                  className="flex-1 h-16 rounded-xl bg-[#AEE3F5] hover:bg-[#AEE3F5]/90 text-black font-semibold text-lg"
                 >
                   Continue
                 </Button>

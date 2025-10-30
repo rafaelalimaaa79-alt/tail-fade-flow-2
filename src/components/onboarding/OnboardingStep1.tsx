@@ -47,7 +47,7 @@ const OnboardingStep1: React.FC<OnboardingStep1Props> = ({ value, onSelect }) =>
             onClick={() => toggleLeague(league.id)}
             className={`p-4 rounded-2xl border-2 transition-all duration-200 ${
               value.includes(league.id)
-                ? 'border-[#0EA5E9] bg-[#0EA5E9]/20'
+                ? 'border-[#AEE3F5] bg-[#AEE3F5]/20'
                 : 'border-white/20 bg-white/5 hover:bg-white/10'
             }`}
           >
