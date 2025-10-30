@@ -6,7 +6,7 @@ interface OnboardingStep5Props {
   onSelect: (amount: string) => void;
 }
 
-const quickAmounts = ['0', '50', '100', '150', '200', '250', '300', '400', '500', '750'];
+const quickAmounts = ['50', '100', '200', '300', '500', '1000'];
 
 const OnboardingStep5: React.FC<OnboardingStep5Props> = ({ value, onSelect }) => {
   return (
@@ -27,12 +27,16 @@ const OnboardingStep5: React.FC<OnboardingStep5Props> = ({ value, onSelect }) =>
         <span className="absolute right-4 top-1/2 -translate-y-1/2 text-white/40 text-xl">$</span>
       </div>
 
-      <div className="grid grid-cols-3 gap-2 max-h-[300px]">
+      <div className="grid grid-cols-2 gap-4">
         {quickAmounts.map((amount) => (
           <button
             key={amount}
             onClick={() => onSelect(amount)}
-            className="px-4 py-3 rounded-xl border-2 border-white/20 bg-white/5 hover:bg-white/10 text-white transition-all"
+            className={`px-6 py-8 rounded-2xl border-2 transition-all text-2xl font-bold ${
+              value === amount
+                ? 'border-[#AEE3F5] bg-[#AEE3F5]/20 text-white'
+                : 'border-white/20 bg-white/5 hover:bg-white/10 text-white'
+            }`}
           >
             ${amount}
           </button>
