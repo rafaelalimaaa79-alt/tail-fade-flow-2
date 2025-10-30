@@ -6,7 +6,7 @@ interface OnboardingStep5Props {
   onSelect: (amount: string) => void;
 }
 
-const quickAmounts = ['50', '100', '150', '200', '250', '300', '400', '500', '750'];
+const quickAmounts = ['0', '50', '100', '150', '200', '250', '300', '400', '500', '750'];
 
 const OnboardingStep5: React.FC<OnboardingStep5Props> = ({ value, onSelect }) => {
   return (
