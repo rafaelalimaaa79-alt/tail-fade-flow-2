@@ -91,13 +91,6 @@ const OnboardingStep7: React.FC<OnboardingStep7Props> = ({ onSelect }) => {
             'Continue'
           )}
         </Button>
-
-        <button
-          onClick={handleSkip}
-          className="w-full text-center text-white/60 hover:text-white/80 transition-colors underline"
-        >
-          Skip Onboarding
-        </button>
       </div>
     </div>
   );
