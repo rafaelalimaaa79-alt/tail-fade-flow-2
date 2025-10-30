@@ -56,12 +56,9 @@ const OnboardingStep7: React.FC<OnboardingStep7Props> = ({ onSelect, onBack }) =
   const isComplete = currentLine === storyLines.length - 1;
 
   return (
-    <div className="min-h-[60vh] flex flex-col justify-between relative overflow-hidden">
-      {/* Subtle background gradient that fades into black */}
-      <div className="absolute inset-0 bg-gradient-to-b from-blue-900/5 via-transparent to-transparent pointer-events-none" />
-      
+    <div className="fixed inset-0 flex flex-col justify-between p-4 pt-16 pb-8 overflow-hidden">
       {/* Story lines */}
-      <div className="space-y-6 flex-1 flex flex-col justify-center relative z-10 px-2">
+      <div className="space-y-6 flex-1 flex flex-col justify-center px-2">
         {storyLines.slice(0, currentLine + 1).map((line, index) => (
           <div
             key={index}
@@ -74,7 +71,7 @@ const OnboardingStep7: React.FC<OnboardingStep7Props> = ({ onSelect, onBack }) =
       </div>
 
       {/* Continue button */}
-      <div className="space-y-4 mt-8 relative z-10">
+      <div className="space-y-4">
         <div className="flex gap-3">
           {onBack && currentLine === 0 && (
             <Button
