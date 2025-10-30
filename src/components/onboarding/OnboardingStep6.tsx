@@ -43,25 +43,27 @@ const OnboardingStep6: React.FC<OnboardingStep6Props> = ({ value, onSelect }) =>
   };
 
   return (
-    <div className="text-left">
-      <h1 className="text-3xl font-bold text-white mb-2">
-        What percent of bets do you think the best bettors in the world hit at?
-      </h1>
-      <p className="text-white/70 text-lg mb-8">Take your best guess.</p>
+    <div className="min-h-[60vh] flex flex-col justify-between">
+      <div className="text-left">
+        <h1 className="text-3xl font-bold text-white mb-2">
+          What percent of bets do you think the best bettors in the world hit at?
+        </h1>
+        <p className="text-white/70 text-lg mb-8">Take your best guess.</p>
 
-      <div className="space-y-3">
-        {options.map((option) => (
-          <button
-            key={option.id}
-            onClick={() => handleAnswerClick(option.id)}
-            disabled={hasAnswered}
-            className={`w-full p-5 rounded-2xl border-2 transition-all duration-200 ${getButtonStyle(option.id)} ${
-              hasAnswered ? 'cursor-default' : 'cursor-pointer'
-            }`}
-          >
-            <span className="text-white text-lg font-medium">{option.label}</span>
-          </button>
-        ))}
+        <div className="space-y-3">
+          {options.map((option) => (
+            <button
+              key={option.id}
+              onClick={() => handleAnswerClick(option.id)}
+              disabled={hasAnswered}
+              className={`w-full p-5 rounded-2xl border-2 transition-all duration-200 ${getButtonStyle(option.id)} ${
+                hasAnswered ? 'cursor-default' : 'cursor-pointer'
+              }`}
+            >
+              <span className="text-white text-lg font-medium">{option.label}</span>
+            </button>
+          ))}
+        </div>
       </div>
     </div>
   );
