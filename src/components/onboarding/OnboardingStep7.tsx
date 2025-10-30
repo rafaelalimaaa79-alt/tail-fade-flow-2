@@ -57,20 +57,6 @@ const OnboardingStep7: React.FC<OnboardingStep7Props> = ({ onSelect, onBack }) =
 
   return (
     <div className="min-h-[60vh] flex flex-col justify-between relative overflow-hidden">
-      {/* Back button */}
-      {onBack && currentLine === 0 && (
-        <div className="absolute top-0 left-0 z-20">
-          <Button
-            onClick={onBack}
-            variant="outline"
-            size="lg"
-            className="w-16 h-16 rounded-xl border-white/20 bg-white/5 hover:bg-white/10"
-          >
-            <ChevronLeft className="w-6 h-6 text-white" />
-          </Button>
-        </div>
-      )}
-      
       {/* Subtle background gradient that fades into black */}
       <div className="absolute inset-0 bg-gradient-to-b from-blue-900/5 via-transparent to-transparent pointer-events-none" />
       
@@ -89,19 +75,32 @@ const OnboardingStep7: React.FC<OnboardingStep7Props> = ({ onSelect, onBack }) =
 
       {/* Continue button */}
       <div className="space-y-4 mt-8 relative z-10">
-        <Button
-          onClick={handleContinue}
-          size="lg"
-          className="w-full h-16 rounded-xl bg-[#0EA5E9] hover:bg-[#0EA5E9]/90 text-white font-semibold text-lg"
-        >
-          {isComplete ? (
-            <span className="flex items-center justify-center gap-2">
-              Let&apos;s Go <ArrowRight className="w-5 h-5" />
-            </span>
-          ) : (
-            'Continue'
+        <div className="flex gap-3">
+          {onBack && currentLine === 0 && (
+            <Button
+              onClick={onBack}
+              variant="outline"
+              size="lg"
+              className="w-16 h-16 rounded-xl border-white/20 bg-white/5 hover:bg-white/10"
+            >
+              <ChevronLeft className="w-6 h-6 text-white" />
+            </Button>
           )}
-        </Button>
+          
+          <Button
+            onClick={handleContinue}
+            size="lg"
+            className="flex-1 h-16 rounded-xl bg-[#0EA5E9] hover:bg-[#0EA5E9]/90 text-white font-semibold text-lg"
+          >
+            {isComplete ? (
+              <span className="flex items-center justify-center gap-2">
+                Let&apos;s Go <ArrowRight className="w-5 h-5" />
+              </span>
+            ) : (
+              'Continue'
+            )}
+          </Button>
+        </div>
       </div>
     </div>
   );
