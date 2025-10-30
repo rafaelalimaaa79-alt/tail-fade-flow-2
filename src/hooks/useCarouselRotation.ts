@@ -24,6 +24,10 @@ export const useCarouselRotation = ({
     }
     
     // Set up a new interval
+    if (rotationInterval <= 0) {
+      rotationRef.current = null;
+      return;
+    }
     rotationRef.current = setInterval(() => {
       if (!rotationPausedRef.current) {
         setCurrentIndex(prevIndex => (prevIndex + 1) % itemsCount);

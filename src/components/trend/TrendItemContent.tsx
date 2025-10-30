@@ -5,9 +5,7 @@ import TrendGameHeader from "./TrendGameHeader";
 import TrendBettorInfo from "./TrendBettorInfo";
 import TrendStatLine from "./TrendStatLine";
 import TrendFadeButton from "./TrendFadeButton";
-import { useRealtimeBetFades } from "@/hooks/useRealtimeBetFades";
-import { supabase } from "@/integrations/supabase/client";
-import { toast } from "sonner";
+import { useBetFadeToggle } from "@/hooks/useBetFadeToggle";
 
 type TrendItemContentProps = {
   matchup: {
@@ -36,16 +34,10 @@ const TrendItemContent = ({
   isMostVisible,
   betId
 }: TrendItemContentProps) => {
-  const { count: usersFading, increment } = useRealtimeBetFades(betId);
+  const { count: usersFading, isFaded, toggleFade } = useBetFadeToggle(betId);
 
   const handleBetClick = async () => {
-    const { data: { session } } = await supabase.auth.getSession();
-    if (!session) {
-      toast("Please sign in to place this fade.");
-      return;
-    }
-    onBetClick();
-    await increment();
+    await toggleFade();
   };
   return (
     <div 
@@ -71,6 +63,7 @@ const TrendItemContent = ({
         onBetClick={handleBetClick}
         isMostVisible={isMostVisible}
         usersFading={usersFading}
+        isFaded={isFaded}
       />
     </div>
   );

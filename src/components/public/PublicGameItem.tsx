@@ -2,13 +2,10 @@
 import React from "react";
 import { Separator } from "@/components/ui/separator";
 import ActionButton from "@/components/ActionButton";
-import { showFadeNotification } from "@/utils/betting-notifications";
 import PublicGameVisibilityWrapper from "./PublicGameVisibilityWrapper";
 import { cn } from "@/lib/utils";
 import { getOppositeBet } from "@/utils/bet-conversion";
-import { useRealtimeBetFades } from "@/hooks/useRealtimeBetFades";
-import { supabase } from "@/integrations/supabase/client";
-import { toast } from "sonner";
+import { useBetFadeToggle } from "@/hooks/useBetFadeToggle";
 
 interface PublicGame {
   id: string;
@@ -60,17 +57,10 @@ const PublicGameItem = ({ game, rank, isInitialized = false, betId }: PublicGame
   )));
 
   const oppositeBet = getOppositeBet(`${game.team} ${game.spread}`, game.opponent);
-  const { count: usersFading, increment } = useRealtimeBetFades(betId);
+  const { count: usersFading, isFaded, toggleFade, loading } = useBetFadeToggle(betId);
 
   const handleFade = async () => {
-    const { data: { session } } = await supabase.auth.getSession();
-    if (!session) {
-      toast("Please sign in to place this fade.");
-      return;
-    }
-    const betDescription = oppositeBet;
-    showFadeNotification("Public Fade", betDescription);
-    await increment();
+    await toggleFade();
   };
 
   return (
@@ -151,9 +141,15 @@ const PublicGameItem = ({ game, rank, isInitialized = false, betId }: PublicGame
               <ActionButton 
                 variant="fade" 
                 onClick={handleFade}
-                className="h-10 text-base"
+                className={cn(
+                  "h-10 text-base border",
+                  isFaded 
+                    ? "bg-black text-[#AEE3F5] border-[#AEE3F5]/60 hover:bg-black/95 shadow-[0_0_12px_rgba(174,227,245,0.25)]"
+                    : "border-transparent"
+                )}
                 glowEffect={isMostVisible}
                 isMostVisible={isMostVisible}
+                disabled={loading}
               >
                 Bet {oppositeBet}
               </ActionButton>

@@ -35,7 +35,7 @@ const Dashboard = () => {
     handleCarouselChange: handleTopCarouselChange
   } = useCarouselRotation({
     itemsCount: allUsersPendingBets.length || 1,
-    rotationInterval: 5000, // Updated to 5 seconds (5000ms)
+    rotationInterval: 0, // disable auto-rotation
     pauseDuration: 5000 // Keep pause duration at 5 seconds (5000ms)
   });
   
@@ -44,7 +44,7 @@ const Dashboard = () => {
     handleCarouselChange: handleBottomCarouselChange 
   } = useCarouselRotation({
     itemsCount: 2, // Bottom carousel has 2 items
-    rotationInterval: 5000, // Updated to 5 seconds (5000ms)
+    rotationInterval: 0, // disable auto-rotation
     pauseDuration: 5000 // Keep pause duration at 5 seconds (5000ms)
   });
   

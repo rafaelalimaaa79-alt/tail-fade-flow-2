@@ -9,9 +9,10 @@ type TrendFadeButtonProps = {
   onBetClick: () => void;
   isMostVisible: boolean;
   usersFading?: number;
+  isFaded?: boolean;
 };
 
-const TrendFadeButton = ({ oppositeBet, fadeConfidence, onBetClick, isMostVisible, usersFading = 0 }: TrendFadeButtonProps) => {
+const TrendFadeButton = ({ oppositeBet, fadeConfidence, onBetClick, isMostVisible, usersFading = 0, isFaded = false }: TrendFadeButtonProps) => {
   return (
     <>
       {/* Fade confidence and Users Fading */}
@@ -30,12 +31,15 @@ const TrendFadeButton = ({ oppositeBet, fadeConfidence, onBetClick, isMostVisibl
       {/* Bet button with opposite bet */}
       <div className="w-full pt-1">
         <Button 
+          type="button"
           onClick={onBetClick}
           className={cn(
-            "w-full py-4 rounded-xl transition-all duration-300 text-lg font-bold",
-            isMostVisible 
-              ? "bg-[#AEE3F5] hover:bg-[#AEE3F5]/90 text-black"
-              : "bg-gray-600 hover:bg-gray-500 text-gray-300"
+            "w-full py-4 rounded-xl transition-all duration-300 text-lg font-bold border",
+            isFaded
+              ? "bg-black text-[#AEE3F5] border-[#AEE3F5]/60 hover:bg-black/95 shadow-[0_0_12px_rgba(174,227,245,0.25)]"
+              : isMostVisible 
+                ? "bg-[#AEE3F5] hover:bg-[#AEE3F5]/90 text-black border-transparent shadow-[0_0_16px_rgba(174,227,245,0.45)]"
+                : "bg-gray-600 hover:bg-gray-500 text-gray-300 border-transparent"
           )}
           style={isMostVisible ? {
             boxShadow: "0 0 20px rgba(174, 227, 245, 0.8), 0 0 40px rgba(174, 227, 245, 0.4)"
