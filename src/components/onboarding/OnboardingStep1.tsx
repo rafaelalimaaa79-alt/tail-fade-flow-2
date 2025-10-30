@@ -37,14 +37,14 @@ const OnboardingStep1: React.FC<OnboardingStep1Props> = ({ value, onSelect }) =>
           <button
             key={league.id}
             onClick={() => toggleLeague(league.id)}
-            className={`p-6 rounded-2xl border-2 transition-all duration-200 ${
+            className={`p-4 rounded-2xl border-2 transition-all duration-200 ${
               value.includes(league.id)
                 ? 'border-[#0EA5E9] bg-[#0EA5E9]/20'
                 : 'border-white/20 bg-white/5 hover:bg-white/10'
             }`}
           >
-            <div className="text-4xl mb-2">{league.icon}</div>
-            <div className="text-white font-semibold text-lg">{league.name}</div>
+            <div className="text-3xl mb-1">{league.icon}</div>
+            <div className="text-white font-semibold text-base">{league.name}</div>
           </button>
         ))}
       </div>
