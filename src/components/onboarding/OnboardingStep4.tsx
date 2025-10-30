@@ -6,8 +6,9 @@ interface OnboardingStep4Props {
 }
 
 const experiences = [
-  { id: 'beginner', label: 'Beginner', description: 'Just getting started' },
-  { id: 'experienced', label: 'Experienced', description: 'I know what I\'m doing' },
+  { id: 'beginner', label: 'Beginner' },
+  { id: 'intermediate', label: 'Intermediate' },
+  { id: 'advanced', label: 'Advanced' },
 ];
 
 const OnboardingStep4: React.FC<OnboardingStep4Props> = ({ value, onSelect }) => {
@@ -18,28 +19,25 @@ const OnboardingStep4: React.FC<OnboardingStep4Props> = ({ value, onSelect }) =>
       </h1>
       <p className="text-white/70 text-lg mb-8">Select one.</p>
 
-      <div className="space-y-4">
+      <div className="space-y-3">
         {experiences.map((exp) => (
           <button
             key={exp.id}
             onClick={() => onSelect(exp.id)}
-            className={`w-full p-8 rounded-2xl border-2 transition-all duration-200 flex flex-col items-center gap-3 ${
+            className={`w-full p-5 rounded-2xl border-2 transition-all duration-200 flex items-center gap-4 ${
               value === exp.id
                 ? 'border-[#AEE3F5] bg-[#AEE3F5]/20'
-                : 'border-white/20 bg-white/5 hover:bg-white/10'
+                : 'border-white/20 bg-black hover:bg-white/5'
             }`}
           >
-            <div className={`w-8 h-8 rounded-full border-2 flex items-center justify-center ${
+            <div className={`w-6 h-6 rounded-full border-2 flex items-center justify-center ${
               value === exp.id ? 'border-[#AEE3F5]' : 'border-white/40'
             }`}>
               {value === exp.id && (
-                <div className="w-4 h-4 rounded-full bg-[#AEE3F5]" />
+                <div className="w-3 h-3 rounded-full bg-[#AEE3F5]" />
               )}
             </div>
-            <div className="text-center">
-              <div className="text-white text-2xl font-bold mb-1">{exp.label}</div>
-              <div className="text-white/60 text-base">{exp.description}</div>
-            </div>
+            <span className="text-white text-lg font-medium">{exp.label}</span>
           </button>
         ))}
       </div>
