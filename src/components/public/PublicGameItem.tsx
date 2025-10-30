@@ -6,6 +6,9 @@ import { showFadeNotification } from "@/utils/betting-notifications";
 import PublicGameVisibilityWrapper from "./PublicGameVisibilityWrapper";
 import { cn } from "@/lib/utils";
 import { getOppositeBet } from "@/utils/bet-conversion";
+import { useRealtimeBetFades } from "@/hooks/useRealtimeBetFades";
+import { supabase } from "@/integrations/supabase/client";
+import { toast } from "sonner";
 
 interface PublicGame {
   id: string;
@@ -24,9 +27,10 @@ interface PublicGameItemProps {
   game: PublicGame;
   rank: number;
   isInitialized?: boolean;
+  betId?: string;
 }
 
-const PublicGameItem = ({ game, rank, isInitialized = false }: PublicGameItemProps) => {
+const PublicGameItem = ({ game, rank, isInitialized = false, betId }: PublicGameItemProps) => {
   const getTimeInEST = () => {
     if (game.isLive) {
       return (
@@ -56,10 +60,17 @@ const PublicGameItem = ({ game, rank, isInitialized = false }: PublicGameItemPro
   )));
 
   const oppositeBet = getOppositeBet(`${game.team} ${game.spread}`, game.opponent);
+  const { count: usersFading, increment } = useRealtimeBetFades(betId);
 
-  const handleFade = () => {
+  const handleFade = async () => {
+    const { data: { session } } = await supabase.auth.getSession();
+    if (!session) {
+      toast("Please sign in to place this fade.");
+      return;
+    }
     const betDescription = oppositeBet;
     showFadeNotification("Public Fade", betDescription);
+    await increment();
   };
 
   return (
@@ -131,7 +142,7 @@ const PublicGameItem = ({ game, rank, isInitialized = false }: PublicGameItemPro
                 Fade Confidence: <span className="text-[#AEE3F5] font-bold">{fadeZonePercentage}%</span>
               </p>
               <p className="text-base font-semibold text-gray-300">
-                Users Fading: <span className="text-[#AEE3F5] font-bold">0</span>
+                Users Fading: <span className="text-[#AEE3F5] font-bold">{usersFading}</span>
               </p>
             </div>
             

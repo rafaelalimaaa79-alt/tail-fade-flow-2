@@ -3,6 +3,9 @@ import { Button } from "@/components/ui/button";
 import { PendingBetWithStatline } from "@/hooks/usePendingBets";
 import { AllUsersPendingBet } from "@/hooks/useAllUsersPendingBets";
 import { showFadeNotification } from "@/utils/betting-notifications";
+import { useRealtimeBetFades } from "@/hooks/useRealtimeBetFades";
+import { supabase } from "@/integrations/supabase/client";
+import { toast } from "sonner";
 
 interface FadeWatchCardProps {
   bet: PendingBetWithStatline | AllUsersPendingBet;
@@ -13,8 +16,16 @@ const FadeWatchCard: React.FC<FadeWatchCardProps> = ({ bet, renderWaveText }) =>
   // Get the bettor name - handle both PendingBetWithStatline and AllUsersPendingBet
   const bettorName = 'name' in bet ? bet.name : bet.username;
 
-  const handleBetClick = () => {
+  const { count: usersFading, increment } = useRealtimeBetFades(bet.id);
+
+  const handleBetClick = async () => {
+    const { data: { session } } = await supabase.auth.getSession();
+    if (!session) {
+      toast("Please sign in to place this fade.");
+      return;
+    }
     showFadeNotification(bettorName, bet.oppositeBet);
+    await increment();
   };
 
   return (
@@ -61,7 +72,7 @@ const FadeWatchCard: React.FC<FadeWatchCardProps> = ({ bet, renderWaveText }) =>
             Fade Confidence: <span className="text-[#AEE3F5] font-bold">{bet.fadeConfidence.toFixed(2)}%</span>
           </p>
           <p className="text-lg font-semibold text-gray-300">
-            Users Fading: <span className="text-[#AEE3F5] font-bold">0</span>
+            Users Fading: <span className="text-[#AEE3F5] font-bold">{usersFading}</span>
           </p>
         </div>
         

@@ -4,14 +4,18 @@ import { BetterPlay } from "@/types/betTypes";
 import { showFadeNotification } from "@/utils/betting-notifications";
 import { getOppositeBet } from "@/utils/bet-conversion";
 import { Button } from "@/components/ui/button";
+import { useRealtimeBetFades } from "@/hooks/useRealtimeBetFades";
+import { supabase } from "@/integrations/supabase/client";
+import { toast } from "sonner";
 
 interface PlayCardProps {
   play: BetterPlay;
   renderWaveText: (text: string, lineIndex: number) => React.ReactNode;
   onActionClick?: () => void;
+  betId?: string;
 }
 
-const PlayCard: React.FC<PlayCardProps> = ({ play, renderWaveText, onActionClick }) => {
+const PlayCard: React.FC<PlayCardProps> = ({ play, renderWaveText, onActionClick, betId }) => {
   // Function to get the actual opposing team from real games data
   const getActualMatchup = (bet: string) => {
     // Real matchups from your exact games data - maintaining correct order
@@ -78,8 +82,16 @@ const PlayCard: React.FC<PlayCardProps> = ({ play, renderWaveText, onActionClick
   }, [play.bet]);
 
   // Handle the bet action with notification only
-  const handleBetClick = () => {
+  const { count: usersFading, increment } = useRealtimeBetFades(betId);
+
+  const handleBetClick = async () => {
+    const { data: { session } } = await supabase.auth.getSession();
+    if (!session) {
+      toast("Please sign in to place this fade.");
+      return;
+    }
     showFadeNotification(play.bettorName, oppositeBet);
+    await increment();
   };
 
   // Use the percentage from the play data instead of random generation
@@ -137,7 +149,7 @@ const PlayCard: React.FC<PlayCardProps> = ({ play, renderWaveText, onActionClick
             Fade Confidence: <span className="text-[#AEE3F5] font-bold">{fadeConfidence}%</span>
           </p>
           <p className="text-lg font-semibold text-gray-300">
-            Users Fading: <span className="text-[#AEE3F5] font-bold">0</span>
+            Users Fading: <span className="text-[#AEE3F5] font-bold">{usersFading}</span>
           </p>
         </div>
         

@@ -69,6 +69,7 @@ const TrendItem = ({
             oppositeBet={oppositeBet}
             onBetClick={handleBetClick}
             isMostVisible={isMostVisible}
+            betId={bet.id}
           />
         </Card>
       )}
