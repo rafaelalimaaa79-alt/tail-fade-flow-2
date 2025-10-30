@@ -100,6 +100,7 @@ const DynamicOnboarding = () => {
                 updateFormData('sportsbooks', sportsbooks);
                 handleNext();
               }}
+              onBack={handlePrevious}
             />
           </div>
         );

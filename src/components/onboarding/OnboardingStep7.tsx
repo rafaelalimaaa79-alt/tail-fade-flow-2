@@ -1,11 +1,12 @@
 import React, { useState } from 'react';
 import { Button } from '@/components/ui/button';
-import { ArrowRight } from 'lucide-react';
+import { ArrowRight, ChevronLeft } from 'lucide-react';
 import { useNavigate } from 'react-router-dom';
 
 interface OnboardingStep7Props {
   value: string[];
   onSelect: (data: string[]) => void;
+  onBack?: () => void;
 }
 
 const storyLines = [
@@ -16,14 +17,10 @@ const storyLines = [
   "Welcome to NoShot — the app built on fading everyone's boy from college."
 ];
 
-const OnboardingStep7: React.FC<OnboardingStep7Props> = ({ onSelect }) => {
+const OnboardingStep7: React.FC<OnboardingStep7Props> = ({ onSelect, onBack }) => {
   const navigate = useNavigate();
   const [currentLine, setCurrentLine] = useState(0);
   const [shake, setShake] = useState(false);
-
-  const handleSkip = () => {
-    navigate('/');
-  };
 
   const handleContinue = () => {
     if (currentLine < storyLines.length - 1) {
@@ -60,6 +57,20 @@ const OnboardingStep7: React.FC<OnboardingStep7Props> = ({ onSelect }) => {
 
   return (
     <div className="min-h-[60vh] flex flex-col justify-between relative overflow-hidden">
+      {/* Back button */}
+      {onBack && currentLine === 0 && (
+        <div className="absolute top-0 left-0 z-20">
+          <Button
+            onClick={onBack}
+            variant="outline"
+            size="lg"
+            className="w-16 h-16 rounded-xl border-white/20 bg-white/5 hover:bg-white/10"
+          >
+            <ChevronLeft className="w-6 h-6 text-white" />
+          </Button>
+        </div>
+      )}
+      
       {/* Subtle background gradient that fades into black */}
       <div className="absolute inset-0 bg-gradient-to-b from-blue-900/5 via-transparent to-transparent pointer-events-none" />
       
