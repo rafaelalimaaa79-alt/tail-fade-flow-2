@@ -28,7 +28,7 @@ const DynamicOnboarding = () => {
     referralSources: [] as string[],
   });
 
-  const totalSteps = 9;
+  const totalSteps = 8;
 
   const handleNext = () => {
     if (currentStep < totalSteps) {
@@ -64,41 +64,33 @@ const DynamicOnboarding = () => {
         );
       case 2:
         return (
-          <OnboardingStep2
-            value={formData.teams}
-            selectedLeagues={formData.leagues}
-            onSelect={(teams) => updateFormData('teams', teams)}
-          />
-        );
-      case 3:
-        return (
           <OnboardingStep3
             value={formData.name}
             onSelect={(name) => updateFormData('name', name)}
           />
         );
-      case 4:
+      case 3:
         return (
           <OnboardingStep4
             value={formData.experience}
             onSelect={(experience) => updateFormData('experience', experience)}
           />
         );
-      case 5:
+      case 4:
         return (
           <OnboardingStep5
             value={formData.bankroll}
             onSelect={(bankroll) => updateFormData('bankroll', bankroll)}
           />
         );
-      case 6:
+      case 5:
         return (
           <OnboardingStep6
             value={formData.sportsbooks}
             onSelect={(sportsbooks) => updateFormData('sportsbooks', sportsbooks)}
           />
         );
-      case 7:
+      case 6:
         return (
           <OnboardingStep7
             country={formData.country}
@@ -109,14 +101,14 @@ const DynamicOnboarding = () => {
             }}
           />
         );
-      case 8:
+      case 7:
         return (
           <OnboardingStep8
             value={formData.birthday}
             onSelect={(birthday) => updateFormData('birthday', birthday)}
           />
         );
-      case 9:
+      case 8:
         return (
           <OnboardingStep9
             value={formData.referralSources}
