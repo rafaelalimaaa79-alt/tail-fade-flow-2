@@ -9,6 +9,7 @@ import OnboardingStep4 from './OnboardingStep4';
 import OnboardingStep5 from './OnboardingStep5';
 import OnboardingStep6 from './OnboardingStep6';
 import OnboardingStep7 from './OnboardingStep7';
+import OnboardingStep10 from './OnboardingStep10';
 import OnboardingStep8 from './OnboardingStep8';
 import OnboardingStep9 from './OnboardingStep9';
 
@@ -21,6 +22,7 @@ const DynamicOnboarding = () => {
     name: '',
     experience: '',
     bankroll: '',
+    quizAnswer: '',
     sportsbooks: [] as string[],
     country: '',
     state: '',
@@ -86,13 +88,20 @@ const DynamicOnboarding = () => {
       case 5:
         return (
           <OnboardingStep6
-            value={formData.sportsbooks}
-            onSelect={(sportsbooks) => updateFormData('sportsbooks', sportsbooks)}
+            value={formData.quizAnswer}
+            onSelect={(answer) => updateFormData('quizAnswer', answer)}
           />
         );
       case 6:
         return (
           <OnboardingStep7
+            value={formData.sportsbooks}
+            onSelect={(sportsbooks) => updateFormData('sportsbooks', sportsbooks)}
+          />
+        );
+      case 7:
+        return (
+          <OnboardingStep10
             country={formData.country}
             state={formData.state}
             onSelect={(country, state) => {
@@ -101,18 +110,11 @@ const DynamicOnboarding = () => {
             }}
           />
         );
-      case 7:
+      case 8:
         return (
           <OnboardingStep8
             value={formData.birthday}
             onSelect={(birthday) => updateFormData('birthday', birthday)}
-          />
-        );
-      case 8:
-        return (
-          <OnboardingStep9
-            value={formData.referralSources}
-            onSelect={(sources) => updateFormData('referralSources', sources)}
           />
         );
       default:
@@ -160,13 +162,15 @@ const DynamicOnboarding = () => {
               </Button>
             )}
             
-            <Button
-              onClick={handleNext}
-              size="lg"
-              className="flex-1 h-16 rounded-xl bg-[#0EA5E9] hover:bg-[#0EA5E9]/90 text-white font-semibold text-lg"
-            >
-              Continue
-            </Button>
+            {(currentStep !== 5 || formData.quizAnswer) && (
+              <Button
+                onClick={handleNext}
+                size="lg"
+                className="flex-1 h-16 rounded-xl bg-[#0EA5E9] hover:bg-[#0EA5E9]/90 text-white font-semibold text-lg"
+              >
+                Continue
+              </Button>
+            )}
           </div>
 
           <button

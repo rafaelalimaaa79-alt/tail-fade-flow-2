@@ -9,9 +9,10 @@ interface OnboardingStep3Props {
 const OnboardingStep3: React.FC<OnboardingStep3Props> = ({ value, onSelect }) => {
   return (
     <div className="text-left">
-      <h1 className="text-3xl font-bold text-white mb-8">
-        What's your nickname?
+      <h1 className="text-3xl font-bold text-white mb-2">
+        Got a nickname?
       </h1>
+      <p className="text-white/70 text-lg mb-6">What should we call you?</p>
 
       <Input
         type="text"
