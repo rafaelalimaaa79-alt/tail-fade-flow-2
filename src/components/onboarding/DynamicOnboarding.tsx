@@ -12,6 +12,7 @@ import OnboardingStep6 from './OnboardingStep6';
 import OnboardingStep7 from './OnboardingStep7';
 import OnboardingStep8 from './OnboardingStep8';
 import OnboardingStep9 from './OnboardingStep9';
+import OnboardingStepPaywall from './OnboardingStepPaywall';
 
 const DynamicOnboarding = () => {
   const navigate = useNavigate();
@@ -31,7 +32,7 @@ const DynamicOnboarding = () => {
     referralSources: [] as string[],
   });
 
-  const totalSteps = 8;
+  const totalSteps = 9;
 
   const handleNext = () => {
     if (currentStep < totalSteps) {
@@ -120,6 +121,15 @@ const DynamicOnboarding = () => {
             />
           </div>
         );
+      case 9:
+        return (
+          <OnboardingStepPaywall
+            onSelect={() => {
+              // Handle paywall completion and navigate to dashboard
+              navigate('/');
+            }}
+          />
+        );
       default:
         return null;
     }
@@ -152,7 +162,7 @@ const DynamicOnboarding = () => {
         </div>
 
         {/* Bottom navigation */}
-        {currentStep !== 8 && (
+        {currentStep !== 8 && currentStep !== 9 && (
           <div className="space-y-4">
             <div className="flex gap-3">
               {currentStep > 1 && (
