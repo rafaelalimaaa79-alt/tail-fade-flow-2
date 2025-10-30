@@ -2,6 +2,7 @@ import React, { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { Button } from '@/components/ui/button';
 import { ChevronLeft } from 'lucide-react';
+import OnboardingStepReferral from './OnboardingStepReferral';
 import OnboardingStep1 from './OnboardingStep1';
 import OnboardingStep2 from './OnboardingStep2';
 import OnboardingStep3 from './OnboardingStep3';
@@ -16,6 +17,7 @@ const DynamicOnboarding = () => {
   const navigate = useNavigate();
   const [currentStep, setCurrentStep] = useState(1);
   const [formData, setFormData] = useState({
+    referralSource: '',
     leagues: [] as string[],
     teams: [] as string[],
     name: '',
@@ -29,7 +31,7 @@ const DynamicOnboarding = () => {
     referralSources: [] as string[],
   });
 
-  const totalSteps = 7;
+  const totalSteps = 8;
 
   const handleNext = () => {
     if (currentStep < totalSteps) {
@@ -58,47 +60,54 @@ const DynamicOnboarding = () => {
     switch (currentStep) {
       case 1:
         return (
+          <OnboardingStepReferral
+            value={formData.referralSource}
+            onSelect={(source) => updateFormData('referralSource', source)}
+          />
+        );
+      case 2:
+        return (
           <OnboardingStep1
             value={formData.leagues}
             onSelect={(leagues) => updateFormData('leagues', leagues)}
           />
         );
-      case 2:
+      case 3:
         return (
           <OnboardingStep8
             value={formData.birthday}
             onSelect={(birthday) => updateFormData('birthday', birthday)}
           />
         );
-      case 3:
+      case 4:
         return (
           <OnboardingStep3
             value={formData.name}
             onSelect={(name) => updateFormData('name', name)}
           />
         );
-      case 4:
+      case 5:
         return (
           <OnboardingStep4
             value={formData.experience}
             onSelect={(experience) => updateFormData('experience', experience)}
           />
         );
-      case 5:
+      case 6:
         return (
           <OnboardingStep5
             value={formData.bankroll}
             onSelect={(bankroll) => updateFormData('bankroll', bankroll)}
           />
         );
-      case 6:
+      case 7:
         return (
           <OnboardingStep6
             value={formData.quizAnswer}
             onSelect={(answer) => updateFormData('quizAnswer', answer)}
           />
         );
-      case 7:
+      case 8:
         return (
           <div className="relative">
             <OnboardingStep7
@@ -143,7 +152,7 @@ const DynamicOnboarding = () => {
         </div>
 
         {/* Bottom navigation */}
-        {currentStep !== 7 && (
+        {currentStep !== 8 && (
           <div className="space-y-4">
             <div className="flex gap-3">
               {currentStep > 1 && (
@@ -157,12 +166,13 @@ const DynamicOnboarding = () => {
                 </Button>
               )}
               
-              {((currentStep === 1 && formData.leagues.length > 0) ||
-                (currentStep === 2 && formData.birthday.month && formData.birthday.day && formData.birthday.year) ||
-                (currentStep === 3 && formData.name) ||
-                (currentStep === 4 && formData.experience) ||
-                (currentStep === 5 && formData.bankroll) ||
-                (currentStep === 6 && formData.quizAnswer)) && (
+              {((currentStep === 1 && formData.referralSource) ||
+                (currentStep === 2 && formData.leagues.length > 0) ||
+                (currentStep === 3 && formData.birthday.month && formData.birthday.day && formData.birthday.year) ||
+                (currentStep === 4 && formData.name) ||
+                (currentStep === 5 && formData.experience) ||
+                (currentStep === 6 && formData.bankroll) ||
+                (currentStep === 7 && formData.quizAnswer)) && (
                 <Button
                   onClick={handleNext}
                   size="lg"
