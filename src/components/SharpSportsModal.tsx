@@ -248,7 +248,7 @@ export const SharpSportsModal = ({
         hideCloseButton={forcedMode}
       >
         <DialogHeader className="p-4 pb-2 border-b border-white/10">
-          <DialogTitle className="text-white">{title}</DialogTitle>
+          {!is2FA && <DialogTitle className="text-white">{title}</DialogTitle>}
           {!is2FA && message && (
             <p className="text-sm text-muted-foreground mt-1">{message}</p>
           )}
@@ -296,32 +296,17 @@ export const SharpSportsModal = ({
                     ✓ Verified! Fetching bets...
                   </p>
                 ) : countdown > 25 ? (
-                  <div>
-                    <p className="text-sm font-medium text-[#AEE3F5]">
-                      ✓ Waiting for verification code entry
-                    </p>
-                    <p className="text-xs text-white/60 mt-1">
-                      {countdown}s remaining
-                    </p>
-                  </div>
+                  <p className="text-sm font-medium text-[#AEE3F5]">
+                    2FA Verification Required
+                  </p>
                 ) : countdown > 10 ? (
-                  <div>
-                    <p className="text-sm font-medium text-[#AEE3F5]">
-                      ⏳ Verifying code...
-                    </p>
-                    <p className="text-xs text-white/60 mt-1">
-                      {countdown}s remaining
-                    </p>
-                  </div>
+                  <p className="text-sm font-medium text-[#AEE3F5]">
+                    ⏳ Verifying code...
+                  </p>
                 ) : countdown > 0 ? (
-                  <div>
-                    <p className="text-sm font-medium text-yellow-400 animate-pulse">
-                      ⏳ Fetching your bets...
-                    </p>
-                    <p className="text-xs text-white/60 mt-1">
-                      {countdown}s remaining
-                    </p>
-                  </div>
+                  <p className="text-sm font-medium text-yellow-400 animate-pulse">
+                    ⏳ Fetching your bets...
+                  </p>
                 ) : (
                   <div>
                     <p className="text-sm font-medium text-white/80">
@@ -364,12 +349,8 @@ export const SharpSportsModal = ({
 
         <div className="p-4 border-t border-white/10">
           {is2FA ? (
-            // 2FA: Show instruction
-            !isLoading && !isVerified && (
-              <p className="text-xs text-white/60 text-center">
-                Please complete the verification above. This window will close automatically.
-              </p>
-            )
+            // 2FA: No message needed
+            null
           ) : (
             // Relinking: Show success message or manual close button
             isVerified ? (
