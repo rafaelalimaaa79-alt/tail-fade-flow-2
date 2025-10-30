@@ -157,11 +157,16 @@ const DynamicOnboarding = () => {
                 </Button>
               )}
               
-              {!(currentStep === 5 && !formData.bankroll) && !(currentStep === 6 && !formData.quizAnswer) && (
+              {((currentStep === 1 && formData.leagues.length > 0) ||
+                (currentStep === 2 && formData.birthday.month && formData.birthday.day && formData.birthday.year) ||
+                (currentStep === 3 && formData.name) ||
+                (currentStep === 4 && formData.experience) ||
+                (currentStep === 5 && formData.bankroll) ||
+                (currentStep === 6 && formData.quizAnswer)) && (
                 <Button
                   onClick={handleNext}
                   size="lg"
-                  className="flex-1 h-16 rounded-xl bg-[#AEE3F5] hover:bg-[#AEE3F5]/90 text-black font-semibold text-lg"
+                  className="flex-1 h-16 rounded-xl bg-[#AEE3F5] hover:bg-[#AEE3F5]/90 text-black font-semibold text-lg animate-scale-in shadow-[0_0_20px_rgba(174,227,245,0.5)] hover:shadow-[0_0_30px_rgba(174,227,245,0.7)] transition-all"
                 >
                   Continue
                 </Button>
