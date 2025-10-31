@@ -1,14 +1,12 @@
 import { useState, useCallback, useEffect } from 'react';
 import { useAuth } from '@/contexts/AuthContext';
 import { supabase } from '@/integrations/supabase/client';
-import { toast } from 'sonner';
 import {
   handleSyncResponse,
   SyncResponse,
-  formatSyncSuccessMessage,
-  SYNC_ERROR_MESSAGE
+  formatSyncSuccessMessage
 } from '@/utils/syncResponseHandler';
-import { safeSetItem, safeGetItem, safeRemoveItem } from '@/utils/localStorage';
+import { safeSetItem, safeGetItem } from '@/utils/localStorage';
 
 interface SharpSportsModalState {
   url: string;
@@ -37,7 +35,7 @@ export const useSyncBets = () => {
     const userId = overrideUserId || user?.id;
 
     if (!userId) {
-      toast.error('Please sign in to sync bets');
+      console.error('Please sign in to sync bets');
       return;
     }
 
@@ -81,14 +79,12 @@ export const useSyncBets = () => {
       if (error) {
         const errorMessage = data?.error || data?.message || data?.detail || error.message;
         console.error('Sync error:', error, 'Response data:', data);
-        toast.error(SYNC_ERROR_MESSAGE);
         setIsSyncing(false); // Reset loading state on error
         return;
       }
 
       if (data.statusCode !== 200) {
         console.error('Sync failed with status code:', data.statusCode, 'Response data:', data);
-        toast.error(SYNC_ERROR_MESSAGE);
         setIsSyncing(false);
         if (data.statusCode != 401) {
           return;
@@ -100,7 +96,7 @@ export const useSyncBets = () => {
       handleSyncResponse(data as SyncResponse, {
         onSuccess: (response) => {
           const message = formatSyncSuccessMessage(response);
-          toast.success(message);
+          console.log('Sync success:', message);
 
           // Update last sync time
           const now = new Date();
@@ -143,8 +139,7 @@ export const useSyncBets = () => {
         },
 
         onRateLimited: (retryAfter, message) => {
-          console.log('Rate limited, retry after:', retryAfter);
-          toast.error(message);
+          console.log('Rate limited, retry after:', retryAfter, 'Message:', message);
           setIsSyncing(false); // Set false on rate limit
 
           // Auto-retry after cooldown
@@ -156,14 +151,12 @@ export const useSyncBets = () => {
 
         onError: (message, status) => {
           console.error('Sync error:', status, message);
-          toast.error(message);
           setIsSyncing(false); // Set false on error
         }
       });
 
     } catch (error) {
       console.error('Unexpected sync error:', error);
-      toast.error(SYNC_ERROR_MESSAGE);
       setIsSyncing(false); // Set false on exception
     }
   }, [user, isSyncing]);
@@ -186,13 +179,12 @@ export const useSyncBets = () => {
 
       if (!success) {
         console.error('Failed to save OTP verification - will require 2FA on next sync');
-        toast.warning('2FA verified, but could not save session. You may need to verify again.');
       } else {
         console.log('OTP verified at:', now);
       }
 
       // Show loading state
-      toast.info('2FA verified! Fetching your bets...');
+      console.log('2FA verified! Fetching your bets...');
 
       // IMPORTANT: Wait 3 seconds for SharpSports to process 2FA
       // This ensures the data is fresh and ready to fetch
@@ -215,7 +207,6 @@ export const useSyncBets = () => {
         // When edge function returns non-2xx status, the actual error details are in 'data', not 'error.message'
         const errorMessage = data?.error || data?.message || data?.detail || error.message;
         console.error('Post-2FA sync error:', error, 'Response data:', data);
-        toast.error(SYNC_ERROR_MESSAGE);
         setIsSyncing(false);
         return;
       }
@@ -225,7 +216,7 @@ export const useSyncBets = () => {
       handleSyncResponse(data as SyncResponse, {
         onSuccess: (response) => {
           const message = formatSyncSuccessMessage(response);
-          toast.success(message);
+          console.log('Post-2FA sync success:', message);
 
           // Update last sync time
           const now = new Date();
@@ -244,38 +235,35 @@ export const useSyncBets = () => {
         onOtpRequired: () => {
           // This shouldn't happen since forceRefresh=false
           console.error('Unexpected OTP required after 2FA completion');
-          toast.error('Unexpected error. Please try syncing again.');
           setIsSyncing(false);
         },
 
         onRelinkRequired: () => {
           // This shouldn't happen since forceRefresh=false
           console.error('Unexpected relink required after 2FA completion');
-          toast.error('Unexpected error. Please try syncing again.');
           setIsSyncing(false);
         },
 
         onRateLimited: (retryAfter, message) => {
-          toast.error(message);
+          console.log('Rate limited after 2FA:', message);
           setIsSyncing(false);
         },
 
         onError: (message) => {
-          toast.error(message);
+          console.error('Error after 2FA:', message);
           setIsSyncing(false);
         }
       });
 
       } catch (error) {
         console.error('Unexpected post-2FA sync error:', error);
-        toast.error(SYNC_ERROR_MESSAGE);
         setIsSyncing(false);
       }
 
     } else if (modalType === 'relink') {
       // RELINKING COMPLETION: Trigger refresh to fetch fresh data from re-linked account
       console.log('Account re-linked successfully, triggering refresh...');
-      toast.info('Account re-linked! Fetching your bets...');
+      console.log('Account re-linked! Fetching your bets...');
 
       // Wait a moment for SharpSports to process the linking
       await new Promise(resolve => setTimeout(resolve, 2000));
@@ -292,7 +280,6 @@ export const useSyncBets = () => {
 
         if (error) {
           console.error('Post-relink sync error:', error);
-          toast.error(SYNC_ERROR_MESSAGE);
           setIsSyncing(false);
           return;
         }
@@ -300,38 +287,35 @@ export const useSyncBets = () => {
         // Handle response using existing handler
         handleSyncResponse(data, {
           onSuccess: (data) => {
-            toast.success(formatSyncSuccessMessage(data));
+            console.log('Post-relink sync success:', formatSyncSuccessMessage(data));
             setIsSyncing(false);
           },
 
           onOtpRequired: () => {
             // This shouldn't happen after relinking
             console.error('Unexpected OTP required after relinking');
-            toast.error('Unexpected error. Please try syncing again.');
             setIsSyncing(false);
           },
 
           onRelinkRequired: () => {
             // This shouldn't happen after relinking
             console.error('Unexpected relink required after relinking');
-            toast.error('Unexpected error. Please try syncing again.');
             setIsSyncing(false);
           },
 
           onRateLimited: (retryAfter, message) => {
-            toast.error(message);
+            console.log('Rate limited after relink:', message);
             setIsSyncing(false);
           },
 
           onError: (message) => {
-            toast.error(message);
+            console.error('Error after relink:', message);
             setIsSyncing(false);
           }
         });
 
       } catch (error) {
         console.error('Unexpected post-relink sync error:', error);
-        toast.error(SYNC_ERROR_MESSAGE);
         setIsSyncing(false);
       }
     }
@@ -344,7 +328,7 @@ export const useSyncBets = () => {
     console.log('SharpSports modal closed without completion');
     setSharpSportsModal(null);
     setIsSyncing(false); // Release the sync lock
-    toast.info('Sync cancelled. You can retry later from the sync button.');
+    console.log('Sync cancelled. You can retry later from the sync button.');
   }, []);
 
   /**
