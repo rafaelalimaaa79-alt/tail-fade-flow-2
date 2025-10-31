@@ -48,6 +48,7 @@ export interface BetRecord {
   timestamp: string | null;
   created_at: string;
   updated_at: string;
+  users_fading_count?: number | null;
 }
 
 export interface BetsQueryOptions {

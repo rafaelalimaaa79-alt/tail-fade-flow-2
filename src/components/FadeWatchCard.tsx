@@ -1,5 +1,6 @@
 import React from "react";
 import { Button } from "@/components/ui/button";
+import { Loader2 } from "lucide-react";
 import { PendingBetWithStatline } from "@/hooks/usePendingBets";
 import { AllUsersPendingBet } from "@/hooks/useAllUsersPendingBets";
 import { useBetFadeToggle } from "@/hooks/useBetFadeToggle";
@@ -62,8 +63,15 @@ const FadeWatchCard: React.FC<FadeWatchCardProps> = ({ bet, renderWaveText }) =>
           <p className="text-lg font-semibold text-gray-300">
             Fade Confidence: <span className="text-[#AEE3F5] font-bold">{bet.fadeConfidence.toFixed(2)}%</span>
           </p>
-          <p className="text-lg font-semibold text-gray-300">
-            Users Fading: <span className="text-[#AEE3F5] font-bold">{usersFading}</span>
+          <p className="text-lg font-semibold text-gray-300 inline-flex items-center gap-1">
+            <span>Users Fading:&nbsp;</span>
+            <span className="text-[#AEE3F5] font-bold">
+              {loading ? (
+                <Loader2 className="h-4 w-4 animate-spin" />
+              ) : (
+                usersFading
+              )}
+            </span>
           </p>
         </div>
         
@@ -72,16 +80,19 @@ const FadeWatchCard: React.FC<FadeWatchCardProps> = ({ bet, renderWaveText }) =>
         
         {/* Bet button */}
         <div className="w-full pt-1">
-          <Button 
+          <Button
             type="button"
-            className={`w-full py-4 rounded-xl text-lg font-bold transition-all duration-200 border ${
-              isFaded 
+            className={`w-full py-4 rounded-xl text-lg font-bold transition-all duration-200 border flex items-center justify-center gap-2 ${
+              loading && "opacity-75 cursor-not-allowed"
+            } ${
+              isFaded
                 ? "bg-black text-[#AEE3F5] border-[#AEE3F5]/60 hover:bg-black/95 shadow-[0_0_12px_rgba(174,227,245,0.25)]"
                 : "bg-[#AEE3F5] text-black border-transparent hover:bg-[#AEE3F5]/90 shadow-[0_0_16px_rgba(174,227,245,0.45)]"
             }`}
             onClick={handleBetClick}
             disabled={loading}
           >
+            {loading && <Loader2 className="h-5 w-5 animate-spin" />}
             Bet {bet.oppositeBet}
           </Button>
         </div>

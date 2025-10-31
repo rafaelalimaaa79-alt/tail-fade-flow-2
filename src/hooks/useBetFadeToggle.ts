@@ -37,7 +37,7 @@ export function useBetFadeToggle(betId?: string): HookState {
 
       const { data: fadeRow, error: fadeErr } = await supabase
         .from("bets_fades")
-        .select("id")
+        .select("id, deleted_at")
         .eq("bet_id", betId)
         .eq("user_id", userId)
         .maybeSingle();
@@ -45,7 +45,9 @@ export function useBetFadeToggle(betId?: string): HookState {
         if (fadeErr) {
           console.error("Failed to fetch user fade", fadeErr);
         }
-        setIsFaded(Boolean(fadeRow));
+        // Only consider it faded if the record exists and is not soft deleted
+        const fadeData = fadeRow as any;
+        setIsFaded(Boolean(fadeRow && fadeData?.deleted_at === null));
       }
     };
 
@@ -74,10 +76,10 @@ export function useBetFadeToggle(betId?: string): HookState {
           "postgres_changes",
           { event: "*", schema: "public", table: "bets_fades", filter: `bet_id=eq.${betId}` },
           (payload: any) => {
-            if (payload.eventType === "INSERT" && payload.new?.user_id === uid) {
-              setIsFaded(true);
-            } else if (payload.eventType === "DELETE" && payload.old?.user_id === uid) {
-              setIsFaded(false);
+            if (payload.new?.user_id === uid) {
+              // Check if fade is active (deleted_at is null)
+              const isActive = payload.new?.deleted_at === null;
+              setIsFaded(isActive);
             }
           }
         )
@@ -103,19 +105,40 @@ export function useBetFadeToggle(betId?: string): HookState {
       }
 
       if (isFaded) {
-        const { error } = await supabase
+        // Soft delete: set deleted_at instead of hard delete
+        const { error } = await (supabase
           .from("bets_fades")
-          .delete()
+          .update({ deleted_at: new Date().toISOString() } as any)
           .eq("bet_id", betId)
-          .eq("user_id", userId);
+          .eq("user_id", userId)
+          .is("deleted_at", null) as any); // Only update if not already soft deleted
         if (error) throw error;
-        // Realtime will update state; optimistically:
         setIsFaded(false);
       } else {
-        const { error } = await supabase
+        // Try to re-activate a soft-deleted fade first
+        const { data: existingFade, error: checkError } = await supabase
           .from("bets_fades")
-          .insert({ bet_id: betId, user_id: userId });
-        if (error && error.code !== "23505") throw error; // ignore unique violation
+          .select("id")
+          .eq("bet_id", betId)
+          .eq("user_id", userId)
+          .maybeSingle();
+
+        if (checkError) throw checkError;
+
+        if (existingFade) {
+          // Re-activate soft-deleted fade (clear deleted_at)
+          const { error: updateError } = await (supabase
+            .from("bets_fades")
+            .update({ deleted_at: null } as any)
+            .eq("id", existingFade.id) as any);
+          if (updateError) throw updateError;
+        } else {
+          // First time fading - insert new record
+          const { error: insertError } = await supabase
+            .from("bets_fades")
+            .insert({ bet_id: betId, user_id: userId });
+          if (insertError) throw insertError;
+        }
         setIsFaded(true);
       }
     } catch (e) {
