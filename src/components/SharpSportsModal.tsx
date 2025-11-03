@@ -33,7 +33,6 @@ export const SharpSportsModal = ({
   const [showManualClose, setShowManualClose] = useState(false);
   const [countdown, setCountdown] = useState(40);
   const [isVerified, setIsVerified] = useState(false);
-  const [showViewBetsButton, setShowViewBetsButton] = useState(false);
   const iframeRef = useRef<HTMLIFrameElement>(null);
   const loadCountRef = useRef(0);
   const completedRef = useRef(false);
@@ -48,7 +47,6 @@ export const SharpSportsModal = ({
       setShowManualClose(false);
       setCountdown(40); // Reset countdown
       setIsVerified(false); // Reset verification state
-      setShowViewBetsButton(false); // Reset view bets button
       loadCountRef.current = 0; // Reset load counter for new URL
       completedRef.current = false;
 
@@ -163,15 +161,10 @@ export const SharpSportsModal = ({
       postSharpSportsMessage('modal_completed', { source, type });
     }
 
-    // For 2FA: Show "View Bets Now" button instead of auto-closing
-    if (is2FA) {
-      setShowViewBetsButton(true);
-    } else {
-      // For relinking: Delay closing slightly to show success state
-      setTimeout(() => {
-        handleClose(true);
-      }, 1000);
-    }
+    // Delay closing slightly to show success state
+    setTimeout(() => {
+      handleClose(true);
+    }, 1000);
   };
 
   const handleClose = (completed: boolean = false) => {
@@ -357,25 +350,8 @@ export const SharpSportsModal = ({
 
         <div className="p-4 border-t border-white/10 flex-shrink-0">
           {is2FA ? (
-            // 2FA: Show "View Bets Now" button after verification
-            showViewBetsButton ? (
-              <div className="flex flex-col gap-3 items-center">
-                <div className="text-center">
-                  <p className="text-lg font-bold text-green-500 mb-1">
-                    ✓ You're In!
-                  </p>
-                  <p className="text-sm text-muted-foreground">
-                    Your account is connected and synced
-                  </p>
-                </div>
-                <button
-                  onClick={() => handleClose(true)}
-                  className="w-full bg-[#AEE3F5] hover:bg-[#AEE3F5]/90 text-black font-bold py-3 px-4 rounded-lg transition-colors"
-                >
-                  You're in — View Bets Now
-                </button>
-              </div>
-            ) : null
+            // 2FA: No message needed
+            null
           ) : (
             // Relinking: Show success message or manual close button
             isVerified ? (

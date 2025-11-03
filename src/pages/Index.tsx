@@ -19,6 +19,8 @@ import { SharpSportsModal } from "@/components/SharpSportsModal";
 import { useAllUsersPendingBets } from "@/hooks/useAllUsersPendingBets";
 import { useForceRefreshTimer } from "@/hooks/useForceRefreshTimer";
 import ForceRefreshModal from "@/components/ForceRefreshModal";
+import { useViewBetsNowModal } from "@/hooks/useViewBetsNowModal";
+import ViewBetsNowModal from "@/components/ViewBetsNowModal";
 
 const Dashboard = () => {
   const isMobile = useIsMobile();
@@ -28,6 +30,7 @@ const Dashboard = () => {
   const { isOpen, smackTalkData, closeSmackTalk } = useInlineSmackTalk();
   const { syncBets, sharpSportsModal, handleModalComplete, handleModalClose } = useSyncBets();
   const { showModal: showForceRefreshModal, onRefresh: handleForceRefresh } = useForceRefreshTimer();
+  const { showModal: showViewBetsNowModal, closeModal: closeViewBetsNowModal } = useViewBetsNowModal();
 
   // Fetch all users' pending bets for Fade Watch (sorted by confidence score)
   const { bets: allUsersPendingBets, loading: betsLoading } = useAllUsersPendingBets();
@@ -153,6 +156,13 @@ const Dashboard = () => {
       <ForceRefreshModal
         isOpen={showForceRefreshModal}
         onRefresh={handleForceRefreshClick}
+      />
+
+      {/* View Bets Now Modal - appears after 2FA completes */}
+      <ViewBetsNowModal
+        isOpen={showViewBetsNowModal}
+        onRefresh={syncBets}
+        onClose={closeViewBetsNowModal}
       />
     </div>
   );
