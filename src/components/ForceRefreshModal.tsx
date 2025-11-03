@@ -9,7 +9,7 @@ interface ForceRefreshModalProps {
 }
 
 /**
- * Non-dismissable modal that appears 90 seconds after landing on the dashboard
+ * Non-dismissable modal that appears 75 seconds after landing on the dashboard
  * Forces user to refresh their bets to ensure fresh data
  */
 export const ForceRefreshModal: React.FC<ForceRefreshModalProps> = ({

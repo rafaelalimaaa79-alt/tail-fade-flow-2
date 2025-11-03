@@ -7,8 +7,8 @@ interface UseForceRefreshTimerReturn {
 }
 
 /**
- * Hook to manage the 90-second force refresh timer on the dashboard
- * Shows a non-dismissable modal after 90 seconds to ensure bets are synced
+ * Hook to manage the 75-second force refresh timer on the dashboard
+ * Shows a non-dismissable modal after 75 seconds to ensure bets are synced
  */
 export function useForceRefreshTimer(): UseForceRefreshTimerReturn {
   const [showModal, setShowModal] = useState(false);
@@ -18,12 +18,12 @@ export function useForceRefreshTimer(): UseForceRefreshTimerReturn {
     // Only show timer once per session
     if (hasShownTimer) return;
 
-    // Set timer for 90 seconds
+    // Set timer for 75 seconds
     const timer = setTimeout(() => {
-      console.log('90-second force refresh timer triggered');
+      console.log('75-second force refresh timer triggered');
       setShowModal(true);
       setHasShownTimer(true);
-    }, 90000); // 90 seconds
+    }, 75000); // 75 seconds
 
     return () => clearTimeout(timer);
   }, [hasShownTimer]);
