@@ -1,5 +1,5 @@
 
-import React from "react";
+import React, { useState } from "react";
 import { Button } from "@/components/ui/button";
 import { cn } from "@/lib/utils";
 import { Loader2 } from "lucide-react";
@@ -15,6 +15,14 @@ type TrendFadeButtonProps = {
 };
 
 const TrendFadeButton = ({ oppositeBet, fadeConfidence, onBetClick, isMostVisible, usersFading = 0, isFaded = false, isLoading = false }: TrendFadeButtonProps) => {
+  const [isAnimating, setIsAnimating] = useState(false);
+
+  const handleClick = () => {
+    setIsAnimating(true);
+    onBetClick();
+    setTimeout(() => setIsAnimating(false), 300);
+  };
+
   return (
     <>
       {/* Fade confidence and Users Fading */}
@@ -41,7 +49,7 @@ const TrendFadeButton = ({ oppositeBet, fadeConfidence, onBetClick, isMostVisibl
       <div className="w-full pt-1">
         <Button
           type="button"
-          onClick={onBetClick}
+          onClick={handleClick}
           disabled={isLoading}
           className={cn(
             "w-full py-4 rounded-xl transition-all duration-300 text-lg font-bold border flex items-center justify-center gap-2",
@@ -50,14 +58,15 @@ const TrendFadeButton = ({ oppositeBet, fadeConfidence, onBetClick, isMostVisibl
               ? "bg-black text-[#AEE3F5] border-[#AEE3F5]/60 hover:bg-black/95 shadow-[0_0_12px_rgba(174,227,245,0.25)]"
               : isMostVisible
                 ? "bg-[#AEE3F5] hover:bg-[#AEE3F5]/90 text-black border-transparent shadow-[0_0_16px_rgba(174,227,245,0.45)]"
-                : "bg-gray-600 hover:bg-gray-500 text-gray-300 border-transparent"
+                : "bg-gray-600 hover:bg-gray-500 text-gray-300 border-transparent",
+            isAnimating && "animate-bounce-pop"
           )}
           style={isMostVisible && !isLoading ? {
             boxShadow: "0 0 20px rgba(174, 227, 245, 0.8), 0 0 40px rgba(174, 227, 245, 0.4)"
           } : undefined}
         >
           {isLoading && <Loader2 className="h-5 w-5 animate-spin" />}
-          Bet {oppositeBet}
+          NoShot Pick: {oppositeBet}
         </Button>
       </div>
     </>

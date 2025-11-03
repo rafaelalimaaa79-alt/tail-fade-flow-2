@@ -1,4 +1,4 @@
-import React, { createContext, useState, useEffect, useContext, useCallback } from "react";
+import React, { createContext, useState, useEffect, useContext, useCallback, useRef } from "react";
 import { supabase } from "@/integrations/supabase/client";
 import { Session, User } from "@supabase/supabase-js";
 import { useNavigate } from "react-router-dom";
@@ -29,6 +29,8 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
   });
   const [onboardingCompleted, setOnboardingCompleted] = useState(false);
   const navigate = useNavigate();
+  const isInitialLoadRef = useRef(true);
+  const currentSessionRef = useRef<string | null>(null);
 
   useEffect(() => {
     // Store biometric preference when it changes
@@ -66,9 +68,6 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
   }, [navigate]);
 
   useEffect(() => {
-    // Track if this is the initial session check to avoid triggering sync on tab visibility changes
-    let isInitialLoad = true;
-
     // Set up auth state listener first
     const {
       data: { subscription },
@@ -86,16 +85,24 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
       }
 
       // Check onboarding status and redirect if needed when user logs in
-      if (event === "SIGNED_IN" && session?.user && !isInitialLoad) {
-        console.log("AuthContext: User logged in, checking onboarding status");
-        checkOnboardingStatus(session.user.id);
+      // Only do this on actual sign-in, not on token refresh or tab visibility changes
+      if (event === "SIGNED_IN" && session?.user && isInitialLoadRef.current === false) {
+        // Only trigger if this is a NEW session (different from current)
+        const newSessionId = session.user.id;
+        if (currentSessionRef.current !== newSessionId) {
+          console.log("AuthContext: New user session detected, checking onboarding status");
+          currentSessionRef.current = newSessionId;
+          checkOnboardingStatus(newSessionId);
 
-        // Notify iOS app of successful authentication
-        console.log("success-signIn-postAuthSuccessMessage", session?.user);
-        postAuthSuccessMessage({
-          user: session.user,
-          type: "signIn",
-        });
+          // Notify iOS app of successful authentication
+          console.log("success-signIn-postAuthSuccessMessage", session?.user);
+          postAuthSuccessMessage({
+            user: session.user,
+            type: "signIn",
+          });
+        } else {
+          console.log("AuthContext: Session refresh detected, skipping onboarding check");
+        }
       }
 
       if (event === "SIGNED_OUT") {
@@ -105,6 +112,7 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
         safeRemoveItem('otpVerifiedAt');
         safeRemoveItem('lastSyncTime');
         safeRemoveItem('pendingLoginSync'); // Clear pending sync flag
+        currentSessionRef.current = null;
         console.log("Cleared OTP verification and sync state on logout");
 
         // Always redirect to signin on sign out
@@ -120,8 +128,11 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
       setUser(session?.user ?? null);
       setLoading(false);
 
-      // Mark initial load as complete
-      isInitialLoad = false;
+      // Store current session ID and mark initial load as complete
+      if (session?.user?.id) {
+        currentSessionRef.current = session.user.id;
+      }
+      isInitialLoadRef.current = false;
 
       // Don't notify iOS for existing sessions, only for new sign-ins
     });

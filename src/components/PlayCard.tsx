@@ -1,5 +1,5 @@
 
-import React, { useMemo } from "react";
+import React, { useMemo, useState } from "react";
 import { BetterPlay } from "@/types/betTypes";
 import { getOppositeBet } from "@/utils/bet-conversion";
 import { Button } from "@/components/ui/button";
@@ -81,9 +81,12 @@ const PlayCard: React.FC<PlayCardProps> = ({ play, renderWaveText, onActionClick
 
   // Fade toggle and live count
   const { count: usersFading, isFaded, toggleFade, loading } = useBetFadeToggle(betId);
+  const [isAnimating, setIsAnimating] = useState(false);
 
   const handleBetClick = async () => {
+    setIsAnimating(true);
     await toggleFade();
+    setTimeout(() => setIsAnimating(false), 300);
   };
 
   // Use the percentage from the play data instead of random generation
@@ -165,12 +168,12 @@ const PlayCard: React.FC<PlayCardProps> = ({ play, renderWaveText, onActionClick
               isFaded
                 ? "bg-black text-[#AEE3F5] border-[#AEE3F5]/60 hover:bg-black/95 shadow-[0_0_12px_rgba(174,227,245,0.25)]"
                 : "bg-[#AEE3F5] text-black border-transparent hover:bg-[#AEE3F5]/90 shadow-[0_0_16px_rgba(174,227,245,0.45)]"
-            }`}
+            } ${isAnimating && "animate-bounce-pop"}`}
             onClick={handleBetClick}
             disabled={loading}
           >
             {loading && <Loader2 className="h-5 w-5 animate-spin" />}
-            Bet {oppositeBet}
+            NoShot Pick: {oppositeBet}
           </Button>
         </div>
       </div>

@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useState } from "react";
 import { Button } from "@/components/ui/button";
 import { Loader2 } from "lucide-react";
 import { PendingBetWithStatline } from "@/hooks/usePendingBets";
@@ -15,9 +15,12 @@ const FadeWatchCard: React.FC<FadeWatchCardProps> = ({ bet, renderWaveText }) =>
   const bettorName = 'name' in bet ? bet.name : bet.username;
 
   const { count: usersFading, isFaded, toggleFade, loading } = useBetFadeToggle(bet.id);
+  const [isAnimating, setIsAnimating] = useState(false);
 
   const handleBetClick = async () => {
+    setIsAnimating(true);
     await toggleFade();
+    setTimeout(() => setIsAnimating(false), 300);
   };
 
   return (
@@ -88,12 +91,12 @@ const FadeWatchCard: React.FC<FadeWatchCardProps> = ({ bet, renderWaveText }) =>
               isFaded
                 ? "bg-black text-[#AEE3F5] border-[#AEE3F5]/60 hover:bg-black/95 shadow-[0_0_12px_rgba(174,227,245,0.25)]"
                 : "bg-[#AEE3F5] text-black border-transparent hover:bg-[#AEE3F5]/90 shadow-[0_0_16px_rgba(174,227,245,0.45)]"
-            }`}
+            } ${isAnimating && "animate-bounce-pop"}`}
             onClick={handleBetClick}
             disabled={loading}
           >
             {loading && <Loader2 className="h-5 w-5 animate-spin" />}
-            Bet {bet.oppositeBet}
+            NoShot Pick: {bet.oppositeBet}
           </Button>
         </div>
       </div>
