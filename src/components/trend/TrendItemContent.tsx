@@ -34,10 +34,10 @@ const TrendItemContent = ({
   isMostVisible,
   betId
 }: TrendItemContentProps) => {
-  const { count: usersFading, isFaded, toggleFade, loading } = useBetFadeToggle(betId);
+  const { count: usersFading, recordFade, loading, canFadeMore } = useBetFadeToggle(betId);
 
   const handleBetClick = async () => {
-    await toggleFade();
+    await recordFade();
   };
   return (
     <div 
@@ -63,8 +63,8 @@ const TrendItemContent = ({
         onBetClick={handleBetClick}
         isMostVisible={isMostVisible}
         usersFading={usersFading}
-        isFaded={isFaded}
         isLoading={loading}
+        canFadeMore={canFadeMore}
       />
     </div>
   );

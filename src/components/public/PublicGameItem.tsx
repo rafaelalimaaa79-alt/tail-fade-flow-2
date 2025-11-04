@@ -57,10 +57,10 @@ const PublicGameItem = ({ game, rank, isInitialized = false, betId }: PublicGame
   )));
 
   const oppositeBet = getOppositeBet(`${game.team} ${game.spread}`, game.opponent);
-  const { count: usersFading, isFaded, toggleFade, loading } = useBetFadeToggle(betId);
+  const { count: usersFading, recordFade, loading, canFadeMore } = useBetFadeToggle(betId);
 
   const handleFade = async () => {
-    await toggleFade();
+    await recordFade();
   };
 
   return (
@@ -138,20 +138,18 @@ const PublicGameItem = ({ game, rank, isInitialized = false, betId }: PublicGame
             
             {/* Fade Button */}
             <div className="px-4 py-3 border-t border-white/10">
-              <ActionButton 
-                variant="fade" 
+              <ActionButton
+                variant="fade"
                 onClick={handleFade}
                 className={cn(
-                  "h-10 text-base border",
-                  isFaded 
-                    ? "bg-black text-[#AEE3F5] border-[#AEE3F5]/60 hover:bg-black/95 shadow-[0_0_12px_rgba(174,227,245,0.25)]"
-                    : "border-transparent"
+                  "h-10 text-base border border-transparent",
+                  (loading || !canFadeMore) && "opacity-75 cursor-not-allowed"
                 )}
                 glowEffect={isMostVisible}
                 isMostVisible={isMostVisible}
-                disabled={loading}
+                disabled={loading || !canFadeMore}
               >
-                Bet {oppositeBet}
+                {!canFadeMore ? "Max Fades Reached" : `Bet ${oppositeBet}`}
               </ActionButton>
             </div>
             

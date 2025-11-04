@@ -10,11 +10,11 @@ type TrendFadeButtonProps = {
   onBetClick: () => void;
   isMostVisible: boolean;
   usersFading?: number;
-  isFaded?: boolean;
   isLoading?: boolean;
+  canFadeMore?: boolean;
 };
 
-const TrendFadeButton = ({ oppositeBet, fadeConfidence, onBetClick, isMostVisible, usersFading = 0, isFaded = false, isLoading = false }: TrendFadeButtonProps) => {
+const TrendFadeButton = ({ oppositeBet, fadeConfidence, onBetClick, isMostVisible, usersFading = 0, isLoading = false, canFadeMore = true }: TrendFadeButtonProps) => {
   const [isAnimating, setIsAnimating] = useState(false);
 
   const handleClick = () => {
@@ -50,23 +50,21 @@ const TrendFadeButton = ({ oppositeBet, fadeConfidence, onBetClick, isMostVisibl
         <Button
           type="button"
           onClick={handleClick}
-          disabled={isLoading}
+          disabled={isLoading || !canFadeMore}
           className={cn(
             "w-full py-4 rounded-xl transition-all duration-300 text-lg font-bold border flex items-center justify-center gap-2",
-            isLoading && "opacity-75 cursor-not-allowed",
-            isFaded
-              ? "bg-black text-[#AEE3F5] border-[#AEE3F5]/60 hover:bg-black/95 shadow-[0_0_12px_rgba(174,227,245,0.25)]"
-              : isMostVisible
-                ? "bg-[#AEE3F5] hover:bg-[#AEE3F5]/90 text-black border-transparent shadow-[0_0_16px_rgba(174,227,245,0.45)]"
-                : "bg-gray-600 hover:bg-gray-500 text-gray-300 border-transparent",
+            (isLoading || !canFadeMore) && "opacity-75 cursor-not-allowed",
+            isMostVisible
+              ? "bg-[#AEE3F5] hover:bg-[#AEE3F5]/90 text-black border-transparent shadow-[0_0_16px_rgba(174,227,245,0.45)]"
+              : "bg-gray-600 hover:bg-gray-500 text-gray-300 border-transparent",
             isAnimating && "animate-bounce-pop"
           )}
-          style={isMostVisible && !isLoading ? {
+          style={isMostVisible && !isLoading && canFadeMore ? {
             boxShadow: "0 0 20px rgba(174, 227, 245, 0.8), 0 0 40px rgba(174, 227, 245, 0.4)"
           } : undefined}
         >
           {isLoading && <Loader2 className="h-5 w-5 animate-spin" />}
-          NoShot Pick: {oppositeBet}
+          {!canFadeMore ? "Max Fades Reached" : `NoShot Pick: ${oppositeBet}`}
         </Button>
       </div>
     </>

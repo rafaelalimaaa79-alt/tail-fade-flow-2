@@ -14,12 +14,12 @@ const FadeWatchCard: React.FC<FadeWatchCardProps> = ({ bet, renderWaveText }) =>
   // Get the bettor name - handle both PendingBetWithStatline and AllUsersPendingBet
   const bettorName = 'name' in bet ? bet.name : bet.username;
 
-  const { count: usersFading, isFaded, toggleFade, loading } = useBetFadeToggle(bet.id);
+  const { count: usersFading, recordFade, loading, canFadeMore } = useBetFadeToggle(bet.id);
   const [isAnimating, setIsAnimating] = useState(false);
 
   const handleBetClick = async () => {
     setIsAnimating(true);
-    await toggleFade();
+    await recordFade();
     setTimeout(() => setIsAnimating(false), 300);
   };
 
@@ -85,18 +85,14 @@ const FadeWatchCard: React.FC<FadeWatchCardProps> = ({ bet, renderWaveText }) =>
         <div className="w-full pt-1">
           <Button
             type="button"
-            className={`w-full py-4 rounded-xl text-lg font-bold transition-all duration-200 border flex items-center justify-center gap-2 ${
-              loading && "opacity-75 cursor-not-allowed"
-            } ${
-              isFaded
-                ? "bg-black text-[#AEE3F5] border-[#AEE3F5]/60 hover:bg-black/95 shadow-[0_0_12px_rgba(174,227,245,0.25)]"
-                : "bg-[#AEE3F5] text-black border-transparent hover:bg-[#AEE3F5]/90 shadow-[0_0_16px_rgba(174,227,245,0.45)]"
+            className={`w-full py-4 rounded-xl text-lg font-bold transition-all duration-200 border flex items-center justify-center gap-2 bg-[#AEE3F5] text-black border-transparent hover:bg-[#AEE3F5]/90 shadow-[0_0_16px_rgba(174,227,245,0.45)] ${
+              (loading || !canFadeMore) && "opacity-75 cursor-not-allowed"
             } ${isAnimating && "animate-bounce-pop"}`}
             onClick={handleBetClick}
-            disabled={loading}
+            disabled={loading || !canFadeMore}
           >
             {loading && <Loader2 className="h-5 w-5 animate-spin" />}
-            NoShot Pick: {bet.oppositeBet}
+            {!canFadeMore ? "Max Fades Reached" : `NoShot Pick: ${bet.oppositeBet}`}
           </Button>
         </div>
       </div>

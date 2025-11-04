@@ -4,32 +4,35 @@ import { toast } from "sonner";
 
 type HookState = {
   count: number;
-  isFaded: boolean;
   loading: boolean;
-  toggleFade: () => Promise<void>;
+  recordFade: () => Promise<void>;
+  userFadeCount: number;
+  canFadeMore: boolean;
 };
 
 export function useBetFadeToggle(betId?: string): HookState {
   const [count, setCount] = useState(0);
-  const [isFaded, setIsFaded] = useState(false);
   const [loading, setLoading] = useState(false);
-  const enabled = useMemo(() => Boolean(betId), [betId]);
+  const [userFadeCount, setUserFadeCount] = useState(0);
+  const canFadeMore = useMemo(() => userFadeCount < 3, [userFadeCount]);
 
   useEffect(() => {
     let cancelled = false;
     if (!betId) return;
 
     const load = async () => {
-      const [{ data: sessionData }, { data: betRow, error: betErr }] = await Promise.all([
+      const [{ data: sessionData }, { data: fadesData, error: fadesErr }] = await Promise.all([
         supabase.auth.getSession(),
-        supabase.from("bets").select("users_fading_count").eq("id", betId).single(),
+        supabase.from("bets_fades").select("fade_count").eq("bet_id", betId),
       ]);
 
       if (!cancelled) {
-        if (betErr) {
-          console.error("Failed to fetch users_fading_count", betErr);
+        if (fadesErr) {
+          console.error("Failed to fetch fades", fadesErr);
         }
-        setCount(betRow?.users_fading_count ?? 0);
+        // Calculate total fades by summing all fade_count values
+        const totalFades = (fadesData as any[])?.reduce((sum, fade) => sum + (fade.fade_count ?? 0), 0) ?? 0;
+        setCount(totalFades);
       }
 
       const userId = sessionData.session?.user.id;
@@ -37,7 +40,7 @@ export function useBetFadeToggle(betId?: string): HookState {
 
       const { data: fadeRow, error: fadeErr } = await supabase
         .from("bets_fades")
-        .select("id, deleted_at")
+        .select("id, fade_count")
         .eq("bet_id", betId)
         .eq("user_id", userId)
         .maybeSingle();
@@ -45,23 +48,27 @@ export function useBetFadeToggle(betId?: string): HookState {
         if (fadeErr) {
           console.error("Failed to fetch user fade", fadeErr);
         }
-        // Only consider it faded if the record exists and is not soft deleted
         const fadeData = fadeRow as any;
-        setIsFaded(Boolean(fadeRow && fadeData?.deleted_at === null));
+        setUserFadeCount(fadeData?.fade_count ?? 0);
       }
     };
 
     load();
 
-    // Realtime subscriptions
+    // Realtime subscriptions - listen for changes in bets_fades to update total fades count
     const betsChannel = supabase
-      .channel(`bet-count-${betId}`)
+      .channel(`bet-fades-count-${betId}`)
       .on(
         "postgres_changes",
-        { event: "*", schema: "public", table: "bets", filter: `id=eq.${betId}` },
-        (payload: any) => {
-          const newCount = payload?.new?.users_fading_count;
-          if (typeof newCount === "number") setCount(newCount);
+        { event: "*", schema: "public", table: "bets_fades", filter: `bet_id=eq.${betId}` },
+        async () => {
+          // Recalculate total fades when any fade record changes
+          const { data: fadesData } = await supabase
+            .from("bets_fades")
+            .select("fade_count")
+            .eq("bet_id", betId);
+          const totalFades = (fadesData as any[])?.reduce((sum, fade) => sum + (fade.fade_count ?? 0), 0) ?? 0;
+          setCount(totalFades);
         }
       )
       .subscribe();
@@ -77,9 +84,8 @@ export function useBetFadeToggle(betId?: string): HookState {
           { event: "*", schema: "public", table: "bets_fades", filter: `bet_id=eq.${betId}` },
           (payload: any) => {
             if (payload.new?.user_id === uid) {
-              // Check if fade is active (deleted_at is null)
-              const isActive = payload.new?.deleted_at === null;
-              setIsFaded(isActive);
+              // Track fade count
+              setUserFadeCount(payload.new?.fade_count ?? 0);
             }
           }
         )
@@ -93,8 +99,15 @@ export function useBetFadeToggle(betId?: string): HookState {
     };
   }, [betId]);
 
-  const toggleFade = useCallback(async () => {
+  const recordFade = useCallback(async () => {
     if (!betId || loading) return;
+
+    // Check if user has already faded 3 times
+    if (userFadeCount >= 3) {
+      toast("You've reached the maximum of 3 fades for this bet.");
+      return;
+    }
+
     setLoading(true);
     try {
       const { data: { session } } = await supabase.auth.getSession();
@@ -104,51 +117,41 @@ export function useBetFadeToggle(betId?: string): HookState {
         return;
       }
 
-      if (isFaded) {
-        // Soft delete: set deleted_at instead of hard delete
-        const { error } = await (supabase
+      // Check if user already has a fade record for this bet
+      const { data: existingFade, error: checkError } = await supabase
+        .from("bets_fades")
+        .select("id, fade_count")
+        .eq("bet_id", betId)
+        .eq("user_id", userId)
+        .maybeSingle();
+
+      if (checkError) throw checkError;
+
+      if (existingFade) {
+        // Increment fade_count
+        const newFadeCount = (existingFade.fade_count ?? 0) + 1;
+        const { error: updateError } = await (supabase
           .from("bets_fades")
-          .update({ deleted_at: new Date().toISOString() } as any)
-          .eq("bet_id", betId)
-          .eq("user_id", userId)
-          .is("deleted_at", null) as any); // Only update if not already soft deleted
-        if (error) throw error;
-        setIsFaded(false);
+          .update({ fade_count: newFadeCount } as any)
+          .eq("id", existingFade.id) as any);
+        if (updateError) throw updateError;
+        setUserFadeCount(newFadeCount);
       } else {
-        // Try to re-activate a soft-deleted fade first
-        const { data: existingFade, error: checkError } = await supabase
+        // First time fading - insert new record with fade_count = 1
+        const { error: insertError } = await supabase
           .from("bets_fades")
-          .select("id")
-          .eq("bet_id", betId)
-          .eq("user_id", userId)
-          .maybeSingle();
-
-        if (checkError) throw checkError;
-
-        if (existingFade) {
-          // Re-activate soft-deleted fade (clear deleted_at)
-          const { error: updateError } = await (supabase
-            .from("bets_fades")
-            .update({ deleted_at: null } as any)
-            .eq("id", existingFade.id) as any);
-          if (updateError) throw updateError;
-        } else {
-          // First time fading - insert new record
-          const { error: insertError } = await supabase
-            .from("bets_fades")
-            .insert({ bet_id: betId, user_id: userId });
-          if (insertError) throw insertError;
-        }
-        setIsFaded(true);
+          .insert({ bet_id: betId, user_id: userId, fade_count: 1 });
+        if (insertError) throw insertError;
+        setUserFadeCount(1);
       }
     } catch (e) {
-      console.error("toggleFade failed", e);
+      console.error("recordFade failed", e);
     } finally {
       setLoading(false);
     }
-  }, [betId, isFaded, loading]);
+  }, [betId, loading, userFadeCount]);
 
-  return { count, isFaded, loading, toggleFade };
+  return { count, loading, recordFade, userFadeCount, canFadeMore };
 }
 
 

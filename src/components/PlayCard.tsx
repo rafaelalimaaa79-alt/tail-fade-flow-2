@@ -80,12 +80,12 @@ const PlayCard: React.FC<PlayCardProps> = ({ play, renderWaveText, onActionClick
   }, [play.bet]);
 
   // Fade toggle and live count
-  const { count: usersFading, isFaded, toggleFade, loading } = useBetFadeToggle(betId);
+  const { count: usersFading, recordFade, loading, canFadeMore, userFadeCount } = useBetFadeToggle(betId);
   const [isAnimating, setIsAnimating] = useState(false);
 
   const handleBetClick = async () => {
     setIsAnimating(true);
-    await toggleFade();
+    await recordFade();
     setTimeout(() => setIsAnimating(false), 300);
   };
 
@@ -162,18 +162,14 @@ const PlayCard: React.FC<PlayCardProps> = ({ play, renderWaveText, onActionClick
         <div className="w-full pt-1">
           <Button
             type="button"
-            className={`w-full py-4 rounded-xl transition-all duration-300 text-lg font-bold border flex items-center justify-center gap-2 ${
-              loading && "opacity-75 cursor-not-allowed"
-            } ${
-              isFaded
-                ? "bg-black text-[#AEE3F5] border-[#AEE3F5]/60 hover:bg-black/95 shadow-[0_0_12px_rgba(174,227,245,0.25)]"
-                : "bg-[#AEE3F5] text-black border-transparent hover:bg-[#AEE3F5]/90 shadow-[0_0_16px_rgba(174,227,245,0.45)]"
+            className={`w-full py-4 rounded-xl transition-all duration-300 text-lg font-bold border flex items-center justify-center gap-2 bg-[#AEE3F5] text-black border-transparent hover:bg-[#AEE3F5]/90 shadow-[0_0_16px_rgba(174,227,245,0.45)] ${
+              (loading || !canFadeMore) && "opacity-75 cursor-not-allowed"
             } ${isAnimating && "animate-bounce-pop"}`}
             onClick={handleBetClick}
-            disabled={loading}
+            disabled={loading || !canFadeMore}
           >
             {loading && <Loader2 className="h-5 w-5 animate-spin" />}
-            NoShot Pick: {oppositeBet}
+            {!canFadeMore ? "Max Fades Reached" : `NoShot Pick: ${oppositeBet}`}
           </Button>
         </div>
       </div>

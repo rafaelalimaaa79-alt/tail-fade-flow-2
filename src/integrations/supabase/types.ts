@@ -160,18 +160,24 @@ export type Database = {
           bet_id: string
           user_id: string
           created_at: string
+          deleted_at: string | null
+          fade_count: number
         }
         Insert: {
           id?: string
           bet_id: string
           user_id: string
           created_at?: string
+          deleted_at?: string | null
+          fade_count?: number
         }
         Update: {
           id?: string
           bet_id?: string
           user_id?: string
           created_at?: string
+          deleted_at?: string | null
+          fade_count?: number
         }
         Relationships: [
           {
