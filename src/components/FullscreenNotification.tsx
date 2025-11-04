@@ -76,7 +76,7 @@ const FullscreenNotification = ({
   const bgGradient = variant === "tail"
     ? "bg-gradient-to-br from-onetime-green/95 to-onetime-green/80"
     : variant === "email-verification"
-    ? "bg-gradient-to-br from-yellow-500/95 to-orange-500/80"
+    ? "bg-gradient-to-br from-cyan-300/95 to-blue-200/80"
     : "bg-gradient-to-br from-[#AEE3F5]/95 to-[#AEE3F5]/80";
 
   // Check if this is a welcome message or email verification
@@ -103,10 +103,10 @@ const FullscreenNotification = ({
           isVisible ? "duration-500 scale-100 translate-y-0" : "duration-300 scale-95 translate-y-8"
         } ${bgGradient} text-black overflow-hidden ${
           isVisible ? "shadow-glow" : ""
-        }`}
+        } ${variant === "email-verification" ? "border border-cyan-200/50" : ""}`}
         style={{
-          boxShadow: isVisible ? 
-            `0 0 30px ${variant === "tail" ? "rgba(16, 185, 129, 0.7)" : "rgba(174, 227, 245, 0.7)"}` : 
+          boxShadow: isVisible ?
+            `0 0 30px ${variant === "tail" ? "rgba(16, 185, 129, 0.7)" : variant === "email-verification" ? "rgba(34, 211, 238, 0.7)" : "rgba(174, 227, 245, 0.7)"}` :
             "none"
         }}
         onClick={(e) => e.stopPropagation()}
@@ -179,7 +179,7 @@ const FullscreenNotification = ({
                     textAppeared ? "translate-y-0 opacity-100" : "translate-y-full opacity-0"
                   }`}
                 >
-                  <div className="animate-spin rounded-full h-5 w-5 border-b-2 border-black"></div>
+                  <div className="animate-spin rounded-full h-5 w-5 border-b-2 border-blue-600"></div>
                   <span className="text-sm font-medium">Checking verification status...</span>
                 </div>
               </div>
