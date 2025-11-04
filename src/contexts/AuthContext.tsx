@@ -57,10 +57,10 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
       console.log("AuthContext: Onboarding status:", { isCompleted });
       setOnboardingCompleted(isCompleted);
 
-      // If onboarding not completed, redirect to connect-sportsbooks
+      // If onboarding not completed, redirect to onboarding
       if (!isCompleted) {
-        console.log("AuthContext: Onboarding not completed, redirecting to connect-sportsbooks");
-        navigate('/connect-sportsbooks');
+        console.log("AuthContext: Onboarding not completed, redirecting to onboarding");
+        navigate('/onboarding');
       }
     } catch (error) {
       console.error('AuthContext: Error checking onboarding status:', error);

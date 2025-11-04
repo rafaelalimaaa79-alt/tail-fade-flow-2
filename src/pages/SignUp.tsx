@@ -25,7 +25,7 @@ const SignUp = () => {
         const { data: { user } } = await supabase.auth.getUser();
 
         if (user?.email_confirmed_at) {
-          console.log("Email verified! Proceeding to connect sportsbooks");
+          console.log("Email verified! Proceeding to onboarding");
           setShowEmailVerification(false);
 
           // Notify iOS app of successful signup
@@ -34,7 +34,7 @@ const SignUp = () => {
             type: "signUp",
           });
 
-          navigate("/connect-sportsbooks");
+          navigate("/onboarding");
         }
       } catch (error) {
         console.error("Error checking email verification:", error);
@@ -64,7 +64,7 @@ const SignUp = () => {
         });
       }
 
-      navigate("/connect-sportsbooks");
+      navigate("/onboarding");
     };
 
     window.addEventListener('emailVerified', handleEmailVerified);
@@ -146,7 +146,7 @@ const SignUp = () => {
         email,
         password,
         options: {
-          emailRedirectTo: `${window.location.origin}/connect-sportsbooks`,
+          emailRedirectTo: `${window.location.origin}/onboarding`,
           data: {
             phone: phone,
           },
@@ -179,7 +179,7 @@ const SignUp = () => {
           });
         }
 
-        navigate("/connect-sportsbooks");
+        navigate("/onboarding");
       }
 
       // } else {
@@ -219,7 +219,7 @@ const SignUp = () => {
       const { error } = await supabase.auth.signInWithOAuth({
         provider: "google",
         options: {
-          redirectTo: `${window.location.origin}/connect-sportsbooks`,
+          redirectTo: `${window.location.origin}/onboarding`,
         },
       });
 

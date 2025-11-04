@@ -79,7 +79,11 @@ interface SportsbookAccount {
   accountIdTemp?: string;
 }
 
-const ConnectSportsbooks = () => {
+interface ConnectSportsbooksProps {
+  onContinue?: () => void;
+}
+
+const ConnectSportsbooks = ({ onContinue }: ConnectSportsbooksProps) => {
   const navigate = useNavigate();
   // All sportsbooks start as DISCONNECTED - no localStorage loading on this onboarding page
   const [accounts, setAccounts] = useState<Record<string, SportsbookAccount>>({});
@@ -423,7 +427,14 @@ const ConnectSportsbooks = () => {
   const handleContinue = () => {
     localStorage.setItem('biometricEnabled', faceIdEnabled.toString());
     localStorage.setItem('faceIdChoiceMade', 'true');
-    navigate('/onboarding');
+
+    // If onContinue callback is provided (used in onboarding), call it
+    if (onContinue) {
+      onContinue();
+    } else {
+      // Otherwise navigate to /onboarding (standalone usage)
+      navigate('/onboarding');
+    }
   };
 
   const anyLinked = Object.values(accounts).some(account => account.status === 'LINKED');

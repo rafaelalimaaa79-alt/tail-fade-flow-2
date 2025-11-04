@@ -202,7 +202,7 @@ const DynamicOnboarding = () => {
       case 9:
         return (
           <div className="relative">
-            <ConnectSportsbooks />
+            <ConnectSportsbooks onContinue={handleNext} />
           </div>
         );
       case 10:
