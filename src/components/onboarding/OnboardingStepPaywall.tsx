@@ -3,6 +3,8 @@ import { Check, ArrowRight, Loader2 } from "lucide-react";
 import { triggerHaptic } from "@/utils/haptic-feedback";
 import { toast } from "sonner";
 import { supabase } from "@/integrations/supabase/client";
+import { useAuth } from "@/contexts/AuthContext";
+import { useNavigate } from "react-router-dom";
 import { SUBSCRIPTION_PLANS, getPriceIdForPlan } from "@/constants/stripe";
 import StripeCheckoutModal from "./StripeCheckoutModal";
 
@@ -11,6 +13,8 @@ interface OnboardingStepPaywallProps {
 }
 
 const OnboardingStepPaywall: React.FC<OnboardingStepPaywallProps> = ({ onSelect }) => {
+  const { user } = useAuth();
+  const navigate = useNavigate();
   const [selectedPlan, setSelectedPlan] = useState<'monthly_sportsbook' | 'monthly_no_sportsbook' | 'annual'>('monthly_sportsbook');
   const [isLoading, setIsLoading] = useState(false);
   const [showCheckout, setShowCheckout] = useState(false);
@@ -27,10 +31,13 @@ const OnboardingStepPaywall: React.FC<OnboardingStepPaywallProps> = ({ onSelect 
     setIsLoading(true);
 
     try {
-      // Get current user
-      const { data: { user } } = await supabase.auth.getUser();
-      if (!user) {
+      // Use user from AuthContext instead of calling getUser() directly
+      // This avoids the /auth/v1/user API call that was failing
+      if (!user || !user.email) {
         toast.error('Please sign in to continue');
+        // Clear invalid session and redirect to sign in
+        await supabase.auth.signOut();
+        navigate('/signin');
         setIsLoading(false);
         return;
       }
@@ -50,7 +57,16 @@ const OnboardingStepPaywall: React.FC<OnboardingStepPaywallProps> = ({ onSelect 
 
       if (error || !data?.clientSecret) {
         console.error('Error creating checkout session:', error);
-        toast.error('Failed to create checkout session');
+        
+        // Handle specific auth errors
+        if (error?.message?.includes('user_not_found') || error?.message?.includes('User not found')) {
+          toast.error('Your session has expired. Please sign in again.');
+          await supabase.auth.signOut();
+          navigate('/signin');
+        } else {
+          toast.error(error?.message || 'Failed to create checkout session');
+        }
+        
         setIsLoading(false);
         return;
       }
@@ -60,9 +76,18 @@ const OnboardingStepPaywall: React.FC<OnboardingStepPaywallProps> = ({ onSelect 
       setSessionId(data.sessionId);
       setShowCheckout(true);
       setIsLoading(false);
-    } catch (error) {
+    } catch (error: any) {
       console.error('Error creating checkout session:', error);
-      toast.error('Failed to process payment');
+      
+      // Handle auth errors
+      if (error?.message?.includes('user_not_found') || error?.code === 'user_not_found') {
+        toast.error('Your session has expired. Please sign in again.');
+        await supabase.auth.signOut();
+        navigate('/signin');
+      } else {
+        toast.error('Failed to process payment');
+      }
+      
       setIsLoading(false);
     }
   };

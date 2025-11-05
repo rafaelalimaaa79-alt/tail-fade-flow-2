@@ -17,9 +17,9 @@ export const STRIPE_PRODUCT_ID = import.meta.env.PROD ? 'prod_TMve7zGhAYx3z6' : 
 //   ANNUAL: 'price_1SQClLBGvvwl5janMlzEfr9d'                 // $69.99/year - with sportsbook linking
 // } as const;
 export const STRIPE_PRICES = {
-  MONTHLY_SPORTSBOOK: 'price_1SQBmnBGvvwl5jan3VpoAg0u',    // $14.99/month - with sportsbook linking
-  MONTHLY_NO_SPORTSBOOK: 'price_1SQBmnBGvvwl5janCIQByy2s', // $24.99/month - without sportsbook linking
-  ANNUAL: 'price_1SQBmnBGvvwl5janaOLlyUAb'                 // $69.99/year - with sportsbook linking
+  MONTHLY_SPORTSBOOK: 'price_1SQClKBGvvwl5janPSKqBDtF',    // $14.99/month - with sportsbook linking
+  MONTHLY_NO_SPORTSBOOK: 'price_1SQClLBGvvwl5janTvMKOcak', // $24.99/month - without sportsbook linking
+  ANNUAL: 'price_1SQClLBGvvwl5janMlzEfr9d'                 // $69.99/year - with sportsbook linking
 } as const;
 
 // Stripe Publishable Key (from environment variable)
