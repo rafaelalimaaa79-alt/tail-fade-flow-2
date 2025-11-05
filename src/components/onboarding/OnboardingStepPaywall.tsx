@@ -99,6 +99,7 @@ const OnboardingStepPaywall: React.FC<OnboardingStepPaywallProps> = ({ onSelect 
     setSessionId(null);
 
     // Call onSelect to save subscription plan and continue onboarding
+    console.log('Checkout success - calling onSelect with plan:', selectedPlan);
     onSelect(selectedPlan);
   };
 

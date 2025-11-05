@@ -212,13 +212,49 @@ const DynamicOnboarding = () => {
       case 8:
         return (
           <OnboardingStepPaywall
-            onSelect={(plan) => {
+            onSelect={async (plan) => {
+              console.log('OnboardingStepPaywall onSelect called with plan:', plan);
+              // Update formData first
               updateFormData('subscriptionPlan', plan);
+              // Save subscription plan to database
+              if (user?.id) {
+                try {
+                  await saveSubscriptionPlan(user.id, plan);
+                  console.log('Subscription plan saved to database:', plan);
+                } catch (error) {
+                  console.error('Error saving subscription plan:', error);
+                  toast.error('Failed to save subscription plan');
+                  return;
+                }
+              }
+              // For no_sportsbook users, skip steps 9 and 10 and complete onboarding
+              if (plan === 'monthly_no_sportsbook') {
+                console.log('Monthly no sportsbook plan detected - completing onboarding and skipping ConnectSportsbooks');
+                if (user?.id) {
+                  await completeOnboarding(user.id);
+                  console.log('Onboarding marked as complete');
+                }
+                toast.success('Onboarding completed!');
+                navigate('/dashboard');
+                return;
+              }
+              // For other plans, continue to next step
+              console.log('Other plan detected - continuing to next step');
               handleNext();
             }}
           />
         );
       case 9:
+        // Check if user has monthly_no_sportsbook plan - if so, skip this step
+        if (formData.subscriptionPlan === 'monthly_no_sportsbook') {
+          console.log('Step 9: Detected monthly_no_sportsbook plan - redirecting to dashboard');
+          // Complete onboarding if not already done
+          if (user?.id) {
+            completeOnboarding(user.id).catch(console.error);
+          }
+          navigate('/dashboard');
+          return null;
+        }
         return (
           <div className="relative">
             <ConnectSportsbooks onContinue={handleNext} />

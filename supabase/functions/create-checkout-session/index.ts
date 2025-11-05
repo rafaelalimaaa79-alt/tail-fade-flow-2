@@ -77,6 +77,7 @@ serve(async (req: Request) => {
         "customer_email": email,
         "metadata[userId]": userId,
         "metadata[plan]": plan,
+        "metadata[priceId]": priceId, // Add priceId to metadata for webhook
         // UI mode for embedded checkout (no redirects)
         "ui_mode": "embedded",
         "redirect_on_completion": "never", // Keep checkout in-app, no redirects

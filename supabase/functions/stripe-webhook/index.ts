@@ -131,30 +131,45 @@ async function handleCheckoutSessionCompleted(session: any, supabase: any) {
 
     console.log(`✅ Checkout completed for user ${userId}, plan: ${plan}`);
 
-    // Retrieve the subscription from Stripe
+    // Retrieve the subscription from Stripe (only fetch once)
+    let subscription: any = null;
+    let priceId = session.metadata?.priceId || null;
+    
     if (session.subscription) {
-      const subscriptionResponse = await fetch(
-        `https://api.stripe.com/v1/subscriptions/${session.subscription}`,
-        {
-          headers: {
-            "Authorization": `Bearer ${STRIPE_SECRET_KEY}`,
-          },
-        }
-      );
+      try {
+        const subscriptionResponse = await fetch(
+          `https://api.stripe.com/v1/subscriptions/${session.subscription}`,
+          {
+            headers: {
+              "Authorization": `Bearer ${STRIPE_SECRET_KEY}`,
+            },
+          }
+        );
 
-      if (subscriptionResponse.ok) {
-        const subscription = await subscriptionResponse.json();
-        await updateUserSubscription(userId, subscription, plan, supabase);
+        if (subscriptionResponse.ok) {
+          subscription = await subscriptionResponse.json();
+          // Get price_id from subscription items (most reliable source)
+          if (subscription?.items?.data?.[0]?.price?.id) {
+            priceId = subscription.items.data[0].price.id;
+          }
+          // Update subscription with full details via helper function
+          if (subscription) {
+            await updateUserSubscription(userId, subscription, plan, supabase);
+          }
+        }
+      } catch (e) {
+        console.error("Error fetching subscription:", e);
       }
     }
 
-    // Update subscription status to active
+    // Also update subscription_plan and subscription_price_id directly to ensure they're set
+    // (updateUserSubscription might not always set the plan if it's null)
     const { error } = await supabase
       .from("user_profiles")
       .update({
         subscription_status: "active",
-        subscription_plan: plan,
-        subscription_price_id: session.metadata?.priceId || null,
+        subscription_plan: plan || null, // Ensure plan from metadata is saved
+        subscription_price_id: priceId || undefined, // Only update if we have a value
         updated_at: new Date().toISOString(),
       })
       .eq("id", userId);
@@ -162,7 +177,7 @@ async function handleCheckoutSessionCompleted(session: any, supabase: any) {
     if (error) {
       console.error("Error updating user profile:", error);
     } else {
-      console.log(`✅ Updated user ${userId} subscription status to active`);
+      console.log(`✅ Updated user ${userId} subscription status to active, plan: ${plan || 'null'}, priceId: ${priceId || 'null'}`);
     }
   } catch (error) {
     console.error("Error handling checkout session completed:", error);

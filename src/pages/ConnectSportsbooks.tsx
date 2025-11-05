@@ -127,8 +127,6 @@ const ConnectSportsbooks = ({ onContinue }: ConnectSportsbooksProps) => {
           const diffInMs = Math.abs(now.getTime() - new Date(user?.email_confirmed_at).getTime());
           if (diffInMs < 300000) {
             console.log("User email is verified! Showing success message");
-            toast.success("Email verified successfully!");
-
             // Notify iOS app of successful signup
             postAuthSuccessMessage({
               user: user,
