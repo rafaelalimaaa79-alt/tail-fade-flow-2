@@ -13,6 +13,7 @@ import {
   saveBankroll,
   saveQuizAnswer,
   saveSportsbooks,
+  saveSubscriptionPlan,
   completeOnboarding
 } from '@/services/onboardingService';
 import OnboardingStepReferral from './OnboardingStepReferral';
@@ -46,6 +47,7 @@ const DynamicOnboarding = () => {
     state: '',
     birthday: { month: '', day: '', year: '' },
     referralSources: [] as string[],
+    subscriptionPlan: '' as 'monthly_sportsbook' | 'monthly_no_sportsbook' | 'annual' | '',
   });
 
   const totalSteps = 10;
@@ -90,6 +92,11 @@ const DynamicOnboarding = () => {
             await saveQuizAnswer(user.id, formData.quizAnswer);
           }
           break;
+        case 8:
+          if (formData.subscriptionPlan) {
+            await saveSubscriptionPlan(user.id, formData.subscriptionPlan);
+          }
+          break;
         case 10:
           if (formData.sportsbooks.length > 0) {
             await saveSportsbooks(user.id, formData.sportsbooks);
@@ -107,6 +114,17 @@ const DynamicOnboarding = () => {
     try {
       // Save current step's answer before moving to next
       await saveCurrentStepAnswer();
+
+      // For no_sportsbook users, skip steps 9 and 10 (ConnectSportsbooks and Sportsbook Selection)
+      if (currentStep === 8 && formData.subscriptionPlan === 'monthly_no_sportsbook') {
+        // Complete onboarding directly
+        if (user?.id) {
+          await completeOnboarding(user.id);
+        }
+        toast.success('Onboarding completed!');
+        navigate('/dashboard');
+        return;
+      }
 
       if (currentStep < totalSteps) {
         setCurrentStep(currentStep + 1);
@@ -194,7 +212,8 @@ const DynamicOnboarding = () => {
       case 8:
         return (
           <OnboardingStepPaywall
-            onSelect={() => {
+            onSelect={(plan) => {
+              updateFormData('subscriptionPlan', plan);
               handleNext();
             }}
           />
@@ -228,7 +247,10 @@ const DynamicOnboarding = () => {
       {/* Progress bar */}
       <div className="pt-4 px-4">
         <div className="flex gap-1">
-          {Array.from({ length: totalSteps }).map((_, index) => (
+          {/* Calculate the correct number of steps to display */}
+          {Array.from({
+            length: formData.subscriptionPlan === 'monthly_no_sportsbook' ? 9 : totalSteps
+          }).map((_, index) => (
             <div
               key={index}
               className={`h-1 flex-1 rounded-full transition-all duration-300 ${

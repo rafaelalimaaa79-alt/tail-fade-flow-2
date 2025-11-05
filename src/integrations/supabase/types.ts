@@ -354,6 +354,14 @@ export type Database = {
           onboarding_bankroll: string | null
           onboarding_quiz_answer: string | null
           onboarding_sportsbooks: string | null
+          subscription_plan: string | null
+          subscription_status: string | null
+          subscription_price_id: string | null
+          has_sportsbook_linked: boolean | null
+          stripe_customer_id: string | null
+          stripe_subscription_id: string | null
+          subscription_current_period_start: string | null
+          subscription_current_period_end: string | null
         }
         Insert: {
           avatar_url?: string | null
@@ -375,6 +383,14 @@ export type Database = {
           onboarding_bankroll?: string | null
           onboarding_quiz_answer?: string | null
           onboarding_sportsbooks?: string | null
+          subscription_plan?: string | null
+          subscription_status?: string | null
+          subscription_price_id?: string | null
+          has_sportsbook_linked?: boolean | null
+          stripe_customer_id?: string | null
+          stripe_subscription_id?: string | null
+          subscription_current_period_start?: string | null
+          subscription_current_period_end?: string | null
         }
         Update: {
           avatar_url?: string | null
@@ -396,6 +412,14 @@ export type Database = {
           onboarding_bankroll?: string | null
           onboarding_quiz_answer?: string | null
           onboarding_sportsbooks?: string | null
+          subscription_plan?: string | null
+          subscription_status?: string | null
+          subscription_price_id?: string | null
+          has_sportsbook_linked?: boolean | null
+          stripe_customer_id?: string | null
+          stripe_subscription_id?: string | null
+          subscription_current_period_start?: string | null
+          subscription_current_period_end?: string | null
         }
         Relationships: []
       }

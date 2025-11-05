@@ -47,32 +47,58 @@ export const useSyncBets = () => {
     console.log('Starting bet sync for user:', userId);
     setIsSyncing(true);
 
-    // Check if OTP was verified within the last hour
-    const otpVerifiedAt = safeGetItem('otpVerifiedAt');
-    const oneHour = 60 * 60 * 1000; // 1 hour in milliseconds
-    let forceRefresh = true; // Default to true (requires 2FA)
-
-    if (otpVerifiedAt) {
-      const verifiedTime = new Date(otpVerifiedAt).getTime();
-      const now = Date.now();
-      const timeSinceVerification = Math.abs(now - verifiedTime); // Use abs to handle clock skew
-
-      if (timeSinceVerification < oneHour) {
-        forceRefresh = false; // Within 1 hour, skip refresh
-        console.log(`OTP verified ${Math.round(timeSinceVerification / 1000 / 60)} minutes ago - skipping refresh`);
-      } else {
-        console.log(`OTP verification expired (${Math.round(timeSinceVerification / 1000 / 60)} minutes ago) - refresh required`);
-      }
-    } else {
-      console.log('No OTP verification found - refresh required');
-    }
-
     try {
+      // Fetch user's subscription plan
+      const { data: userProfile, error: profileError } = await supabase
+        .from('user_profiles')
+        .select('subscription_plan')
+        .eq('id', userId)
+        .single();
+
+      if (profileError) {
+        console.error('Error fetching user profile:', profileError);
+        setIsSyncing(false);
+        return;
+      }
+
+      const subscriptionPlan = userProfile?.subscription_plan;
+      const isNoSportsbookUser = subscriptionPlan === 'monthly_no_sportsbook';
+
+      // For no_sportsbook users, always use forceRefresh=false and skipModals=true
+      let forceRefresh = true;
+      let skipModals = false;
+
+      if (isNoSportsbookUser) {
+        forceRefresh = false;
+        skipModals = true;
+        console.log('No sportsbook user detected - using forceRefresh=false and skipModals=true');
+      } else {
+        // For sportsbook users, check if OTP was verified within the last hour
+        const otpVerifiedAt = safeGetItem('otpVerifiedAt');
+        const oneHour = 60 * 60 * 1000; // 1 hour in milliseconds
+
+        if (otpVerifiedAt) {
+          const verifiedTime = new Date(otpVerifiedAt).getTime();
+          const now = Date.now();
+          const timeSinceVerification = Math.abs(now - verifiedTime); // Use abs to handle clock skew
+
+          if (timeSinceVerification < oneHour) {
+            forceRefresh = false; // Within 1 hour, skip refresh
+            console.log(`OTP verified ${Math.round(timeSinceVerification / 1000 / 60)} minutes ago - skipping refresh`);
+          } else {
+            console.log(`OTP verification expired (${Math.round(timeSinceVerification / 1000 / 60)} minutes ago) - refresh required`);
+          }
+        } else {
+          console.log('No OTP verification found - refresh required');
+        }
+      }
+
       const { data, error } = await supabase.functions.invoke('sync-bets', {
         body: {
           internalId: userId,
           userId: userId,
-          forceRefresh
+          forceRefresh,
+          skipModals
         }
       });
 
@@ -198,7 +224,8 @@ export const useSyncBets = () => {
           body: {
             internalId: user?.id,
             userId: user?.id,
-            forceRefresh: false // Skip refresh, just fetch data
+            forceRefresh: false, // Skip refresh, just fetch data
+            skipModals: false // Show modals if needed (sportsbook users only)
           }
         });
 
@@ -274,7 +301,8 @@ export const useSyncBets = () => {
           body: {
             internalId: user?.id,
             userId: user?.id,
-            forceRefresh: true // MUST be true to trigger SharpSports to scrape the re-linked account
+            forceRefresh: true, // MUST be true to trigger SharpSports to scrape the re-linked account
+            skipModals: false // Show modals if needed (sportsbook users only)
           }
         });
 

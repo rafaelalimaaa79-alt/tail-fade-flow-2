@@ -85,8 +85,8 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
       }
 
       // Check onboarding status and redirect if needed when user logs in
-      // Only do this on actual sign-in, not on token refresh or tab visibility changes
-      if (event === "SIGNED_IN" && session?.user && isInitialLoadRef.current === false) {
+      // This includes both regular sign-ins AND email verification redirects
+      if (event === "SIGNED_IN" && session?.user) {
         // Only trigger if this is a NEW session (different from current)
         const newSessionId = session.user.id;
         if (currentSessionRef.current !== newSessionId) {
