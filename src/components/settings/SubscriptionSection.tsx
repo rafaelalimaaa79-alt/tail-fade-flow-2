@@ -86,14 +86,6 @@ const SubscriptionSection = () => {
     }
   };
 
-  const formatDate = (dateString: string | null) => {
-    if (!dateString) return "N/A";
-    return new Date(dateString).toLocaleDateString("en-US", {
-      year: "numeric",
-      month: "long",
-      day: "numeric",
-    });
-  };
 
   const getStatusDisplay = (status: string | null) => {
     const statusMap: Record<string, { text: string; color: string }> = {
@@ -155,16 +147,6 @@ const SubscriptionSection = () => {
           )}
         </div>
 
-        {hasActiveSubscription && (
-          <div className="space-y-2 text-sm">
-            <div className="flex justify-between">
-              <span className="text-gray-400">Current Period:</span>
-              <span className="text-white">
-                {formatDate(subscription?.subscription_current_period_start)} - {formatDate(subscription?.subscription_current_period_end)}
-              </span>
-            </div>
-          </div>
-        )}
 
         <Separator className="bg-gray-700" />
 
