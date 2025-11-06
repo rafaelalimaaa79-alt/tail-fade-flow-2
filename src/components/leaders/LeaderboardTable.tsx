@@ -1,7 +1,6 @@
 import React, { useState } from "react";
 import { Table, TableHeader, TableRow, TableHead, TableBody, TableCell } from "@/components/ui/table";
 import { Award, Crown, Star, Zap } from "lucide-react";
-import { Dialog, DialogContent, DialogHeader, DialogTitle } from "@/components/ui/dialog";
 import { supabase } from "@/integrations/supabase/client";
 
 interface LeaderboardUser {
@@ -29,13 +28,25 @@ const LeaderboardTable: React.FC<LeaderboardTableProps> = ({
   loading = false,
 }) => {
   const displayBettors = bettors.slice(0, 50);
-  const [selectedUser, setSelectedUser] = useState<LeaderboardUser | null>(null);
-  const [lastFiveBets, setLastFiveBets] = useState<Array<{ result: string; id: string }>>([]);
-  const [loadingBets, setLoadingBets] = useState(false);
+  const [expandedUserId, setExpandedUserId] = useState<string | null>(null);
+  const [lastFiveBets, setLastFiveBets] = useState<Record<string, Array<{ result: string; id: string }>>>({});
+  const [loadingBets, setLoadingBets] = useState<string | null>(null);
 
   const handleUserClick = async (bettor: LeaderboardUser) => {
-    setSelectedUser(bettor);
-    setLoadingBets(true);
+    // If clicking the same user, collapse it
+    if (expandedUserId === bettor.id) {
+      setExpandedUserId(null);
+      return;
+    }
+
+    setExpandedUserId(bettor.id);
+    
+    // If we already have the data, don't fetch again
+    if (lastFiveBets[bettor.id]) {
+      return;
+    }
+
+    setLoadingBets(bettor.id);
     
     try {
       const { data, error } = await supabase
@@ -47,12 +58,12 @@ const LeaderboardTable: React.FC<LeaderboardTableProps> = ({
         .limit(5);
 
       if (error) throw error;
-      setLastFiveBets(data || []);
+      setLastFiveBets(prev => ({ ...prev, [bettor.id]: data || [] }));
     } catch (error) {
       console.error('Error fetching bets:', error);
-      setLastFiveBets([]);
+      setLastFiveBets(prev => ({ ...prev, [bettor.id]: [] }));
     } finally {
-      setLoadingBets(false);
+      setLoadingBets(null);
     }
   };
 
@@ -117,68 +128,69 @@ const LeaderboardTable: React.FC<LeaderboardTableProps> = ({
         </TableHeader>
         <TableBody>
           {displayBettors.map((bettor, index) => (
-            <TableRow
-              key={bettor.id}
-              className={`cursor-pointer hover:bg-muted/30 transition-all ${getRowSize(index)}`}
-              onClick={() => handleUserClick(bettor)}
-            >
-              <TableCell className="font-medium w-20 px-3">
-                {getRankIcon(index)}
-                <span className="font-bold">
-                  {index + 1}
-                </span>
-              </TableCell>
-              <TableCell className="px-3 text-center">
-                <span className="font-bold">
-                  @{bettor.username || `User${bettor.id.substring(0, 4)}`}
-                  {bettor.isCurrentUser && (
-                    <span className="ml-2 text-xs text-[#AEE3F5]">(You)</span>
-                  )}
-                </span>
-              </TableCell>
-              <TableCell className="w-24 text-right px-3">
-                <span className="font-semibold text-[#FF5C5C]">
-                  {bettor.winRate.toFixed(1)}%
-                </span>
-              </TableCell>
-            </TableRow>
+            <React.Fragment key={bettor.id}>
+              <TableRow
+                className={`cursor-pointer hover:bg-muted/30 transition-all ${getRowSize(index)}`}
+                onClick={() => handleUserClick(bettor)}
+              >
+                <TableCell className="font-medium w-20 px-3">
+                  {getRankIcon(index)}
+                  <span className="font-bold">
+                    {index + 1}
+                  </span>
+                </TableCell>
+                <TableCell className="px-3 text-center">
+                  <span className="font-bold">
+                    @{bettor.username || `User${bettor.id.substring(0, 4)}`}
+                    {bettor.isCurrentUser && (
+                      <span className="ml-2 text-xs text-[#AEE3F5]">(You)</span>
+                    )}
+                  </span>
+                </TableCell>
+                <TableCell className="w-24 text-right px-3">
+                  <span className="font-semibold text-[#FF5C5C]">
+                    {bettor.winRate.toFixed(1)}%
+                  </span>
+                </TableCell>
+              </TableRow>
+              
+              {expandedUserId === bettor.id && (
+                <TableRow>
+                  <TableCell colSpan={3} className="p-0">
+                    <div className="bg-muted/20 border-t border-white/10 animate-fade-in">
+                      <div className="py-4 px-6">
+                        <p className="text-center text-sm text-gray-400 mb-3 font-semibold">Last 5</p>
+                        <div className="flex justify-center gap-3">
+                          {loadingBets === bettor.id ? (
+                            <p className="text-gray-400 text-sm">Loading...</p>
+                          ) : (lastFiveBets[bettor.id] || []).length === 0 ? (
+                            <p className="text-gray-400 text-sm">No recent bets</p>
+                          ) : (
+                            (lastFiveBets[bettor.id] || []).map((bet) => (
+                              <div
+                                key={bet.id}
+                                className={`w-14 h-14 rounded-full flex items-center justify-center font-bold text-lg ${
+                                  bet.result === 'Win' 
+                                    ? 'bg-white/20 text-white border-2 border-white' 
+                                    : bet.result === 'Loss'
+                                    ? 'bg-[#AEE3F5]/20 text-[#AEE3F5] border-2 border-[#AEE3F5]'
+                                    : 'bg-gray-500/20 text-gray-500 border-2 border-gray-500'
+                                }`}
+                              >
+                                {bet.result === 'Win' ? 'W' : bet.result === 'Loss' ? 'L' : 'P'}
+                              </div>
+                            ))
+                          )}
+                        </div>
+                      </div>
+                    </div>
+                  </TableCell>
+                </TableRow>
+              )}
+            </React.Fragment>
           ))}
         </TableBody>
       </Table>
-
-      <Dialog open={!!selectedUser} onOpenChange={() => setSelectedUser(null)}>
-        <DialogContent className="bg-card border border-white/10 max-w-sm">
-          <DialogHeader>
-            <DialogTitle className="text-center text-xl font-bold">
-              @{selectedUser?.username || `User${selectedUser?.id.substring(0, 4)}`}
-            </DialogTitle>
-            <p className="text-center text-sm text-gray-400 mt-1">Last 5 Bets</p>
-          </DialogHeader>
-          
-          <div className="flex justify-center gap-3 py-6">
-            {loadingBets ? (
-              <p className="text-gray-400">Loading...</p>
-            ) : lastFiveBets.length === 0 ? (
-              <p className="text-gray-400 text-sm">No recent bets</p>
-            ) : (
-              lastFiveBets.map((bet) => (
-                <div
-                  key={bet.id}
-                  className={`w-14 h-14 rounded-full flex items-center justify-center font-bold text-lg ${
-                    bet.result === 'Win' 
-                      ? 'bg-white/20 text-white border-2 border-white' 
-                      : bet.result === 'Loss'
-                      ? 'bg-[#AEE3F5]/20 text-[#AEE3F5] border-2 border-[#AEE3F5]'
-                      : 'bg-gray-500/20 text-gray-500 border-2 border-gray-500'
-                  }`}
-                >
-                  {bet.result === 'Win' ? 'W' : bet.result === 'Loss' ? 'L' : 'P'}
-                </div>
-              ))
-            )}
-          </div>
-        </DialogContent>
-      </Dialog>
     </div>
   );
 };
