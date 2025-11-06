@@ -148,7 +148,7 @@ const PublicGameItem = ({ game, rank, isInitialized = false, betId }: PublicGame
                 Public
               </div>
               <div className={cn(
-                "text-red-400 text-4xl font-bold",
+                "text-red-400 text-5xl font-bold",
                 isMostVisible && "animate-pulse-slow"
               )}>
                 {game.publicPercentage}%
