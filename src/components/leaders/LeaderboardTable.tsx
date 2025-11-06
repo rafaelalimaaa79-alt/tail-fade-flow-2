@@ -166,9 +166,9 @@ const LeaderboardTable: React.FC<LeaderboardTableProps> = ({
                   key={bet.id}
                   className={`w-14 h-14 rounded-full flex items-center justify-center font-bold text-lg ${
                     bet.result === 'Win' 
-                      ? 'bg-green-500/20 text-green-500 border-2 border-green-500' 
+                      ? 'bg-white/20 text-white border-2 border-white' 
                       : bet.result === 'Loss'
-                      ? 'bg-red-500/20 text-red-500 border-2 border-red-500'
+                      ? 'bg-[#AEE3F5]/20 text-[#AEE3F5] border-2 border-[#AEE3F5]'
                       : 'bg-gray-500/20 text-gray-500 border-2 border-gray-500'
                   }`}
                 >
