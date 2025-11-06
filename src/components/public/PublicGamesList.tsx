@@ -1,21 +1,17 @@
 import React, { useState, useEffect } from "react";
 import PublicGameItem from "./PublicGameItem";
 import { supabase } from "@/integrations/supabase/client";
+import { getOpponentTeam } from "@/utils/game-parser";
 
 interface PublicGame {
   id: string;
   team: string;
   opponent: string;
   publicPercentage: number;
-  totalBets: number;
-  gameTime: string;
-  isLive: boolean;
   spread: string;
   sport: string;
   event: string;
-  marketType: 'spread' | 'moneyline' | 'total';
-  line: string;
-  betType: string;
+  gameTime: string;
 }
 
 const PublicGamesList = () => {
@@ -29,11 +25,11 @@ const PublicGamesList = () => {
       setLoading(true);
       setError(null);
 
-      const { data, error: fetchError } = await supabase.functions.invoke('get-public-betting-data', {
-        body: {
-          limit: 50
-        }
-      });
+      const { data, error: fetchError } = await supabase
+        .from('public_bets')
+        .select('*')
+        .eq('status', 'active')
+        .order('public_percentage', { ascending: false });
 
       if (fetchError) {
         console.error('Error fetching public betting data:', fetchError);
@@ -41,28 +37,27 @@ const PublicGamesList = () => {
         return;
       }
 
-      if (data?.games && Array.isArray(data.games)) {
+      if (data && Array.isArray(data)) {
         // Transform the data to match PublicGame interface
-        const transformedGames: PublicGame[] = data.games.map((game: any) => ({
-          id: game.id,
-          team: game.team,
-          opponent: game.opponent,
-          publicPercentage: game.publicPercentage || 0,
-          totalBets: game.totalBets || 0,
-          gameTime: game.event_start_time,
-          isLive: game.isLive || false,
-          spread: game.line || "",
-          sport: game.sport || "",
-          event: game.event || "",
-          marketType: game.marketType || 'spread',
-          line: game.line || "",
-          betType: game.betType || game.marketType || 'spread'
-        }));
+        const transformedGames: PublicGame[] = data.map((row: any) => {
+          const opponent = getOpponentTeam(row.game_name, row.team_public_is_on) || 'Opponent';
+          
+          return {
+            id: row.id,
+            team: row.team_public_is_on,
+            opponent: opponent,
+            publicPercentage: row.public_percentage || 0,
+            spread: row.spread || "",
+            sport: row.sport || "",
+            event: row.game_name,
+            gameTime: row.game_date || ""
+          };
+        });
 
-        // Sort by highest percentage (already sorted from API, but ensure it)
+        // Sort by highest percentage (already sorted from query, but ensure it)
         setGames(transformedGames.sort((a, b) => b.publicPercentage - a.publicPercentage));
       } else {
-        console.warn('Unexpected data format from API:', data);
+        console.warn('Unexpected data format:', data);
         setError('Invalid data format');
       }
     } catch (err) {
@@ -82,18 +77,10 @@ const PublicGamesList = () => {
       setIsInitialized(true);
     }, 100);
 
-    // Refresh data every 15 minutes (900000ms)
-    const interval = setInterval(() => {
-      if (isInitialized) {
-        fetchPublicBettingData();
-      }
-    }, 900000); // 15 minutes
-
     return () => {
       clearTimeout(initTimer);
-      clearInterval(interval);
     };
-  }, [isInitialized, fetchPublicBettingData]);
+  }, [fetchPublicBettingData]);
 
   if (loading && games.length === 0) {
     return (
@@ -153,8 +140,7 @@ const PublicGamesList = () => {
           </div>
           <p className="text-sm text-white/70">
             <span className="text-red-400 font-bold">90%+</span> = Extreme Public • 
-            <span className="text-orange-400 font-bold"> 80%+</span> = Heavy Public • 
-            Updates every 15 minutes
+            <span className="text-orange-400 font-bold"> 80%+</span> = Heavy Public
           </p>
         </div>
       </div>

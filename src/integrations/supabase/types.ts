@@ -447,6 +447,45 @@ export type Database = {
         }
         Relationships: []
       }
+      public_bets: {
+        Row: {
+          id: string
+          game_name: string
+          team_public_is_on: string
+          public_percentage: number
+          spread: string | null
+          sport: string
+          game_date: string | null
+          status: string
+          created_at: string
+          updated_at: string
+        }
+        Insert: {
+          id?: string
+          game_name: string
+          team_public_is_on: string
+          public_percentage: number
+          spread?: string | null
+          sport: string
+          game_date?: string | null
+          status?: string
+          created_at?: string
+          updated_at?: string
+        }
+        Update: {
+          id?: string
+          game_name?: string
+          team_public_is_on?: string
+          public_percentage?: number
+          spread?: string | null
+          sport?: string
+          game_date?: string | null
+          status?: string
+          created_at?: string
+          updated_at?: string
+        }
+        Relationships: []
+      }
     }
     Views: {
       [_ in never]: never
