@@ -447,6 +447,87 @@ export type Database = {
         }
         Relationships: []
       }
+      public_bets: {
+        Row: {
+          id: string
+          game_name: string
+          team_public_is_on: string
+          public_percentage: number
+          spread: string | null
+          sport: string
+          game_date: string | null
+          status: string
+          created_at: string
+          updated_at: string
+        }
+        Insert: {
+          id?: string
+          game_name: string
+          team_public_is_on: string
+          public_percentage: number
+          spread?: string | null
+          sport: string
+          game_date?: string | null
+          status?: string
+          created_at?: string
+          updated_at?: string
+        }
+        Update: {
+          id?: string
+          game_name?: string
+          team_public_is_on?: string
+          public_percentage?: number
+          spread?: string | null
+          sport?: string
+          game_date?: string | null
+          status?: string
+          created_at?: string
+          updated_at?: string
+        }
+        Relationships: []
+      }
+      public_bets_fades: {
+        Row: {
+          id: string
+          public_bet_id: string
+          user_id: string
+          fade_count: number
+          created_at: string
+          updated_at: string
+        }
+        Insert: {
+          id?: string
+          public_bet_id: string
+          user_id: string
+          fade_count?: number
+          created_at?: string
+          updated_at?: string
+        }
+        Update: {
+          id?: string
+          public_bet_id?: string
+          user_id?: string
+          fade_count?: number
+          created_at?: string
+          updated_at?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "public_bets_fades_public_bet_id_fkey"
+            columns: ["public_bet_id"]
+            isOneToOne: false
+            referencedRelation: "public_bets"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "public_bets_fades_user_id_fkey"
+            columns: ["user_id"]
+            isOneToOne: false
+            referencedRelation: "users"
+            referencedColumns: ["id"]
+          }
+        ]
+      }
     }
     Views: {
       [_ in never]: never

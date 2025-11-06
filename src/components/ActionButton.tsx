@@ -12,6 +12,7 @@ type ActionButtonProps = {
   style?: React.CSSProperties;
   glowEffect?: boolean;
   isMostVisible?: boolean; // New prop to control grayed out state
+  disabled?: boolean;
 };
 
 const ActionButton = forwardRef<HTMLButtonElement, ActionButtonProps>(({
@@ -22,8 +23,9 @@ const ActionButton = forwardRef<HTMLButtonElement, ActionButtonProps>(({
   style,
   glowEffect = false,
   isMostVisible = true, // Default to true for backward compatibility
+  disabled = false,
 }, ref) => {
-  const glowStyle = glowEffect ? {
+  const glowStyle = glowEffect && !disabled ? {
     boxShadow: "0 0 20px rgba(174, 227, 245, 0.8), 0 0 40px rgba(174, 227, 245, 0.4)"
   } : {};
 
@@ -32,14 +34,17 @@ const ActionButton = forwardRef<HTMLButtonElement, ActionButtonProps>(({
       ref={ref}
       type="button"
       onClick={() => {
+        if (disabled) return;
         triggerHaptic('impactMedium');
         onClick?.();
       }}
+      disabled={disabled}
       className={cn(
         "h-12 w-full rounded-xl font-bold border border-white/10 text-lg",
-        variant === "fade" && isMostVisible && "bg-[#AEE3F5]/90 hover:bg-[#AEE3F5] shadow-[0_0_15px_rgba(174,227,245,0.4)] text-black",
-        variant === "fade" && !isMostVisible && "bg-gray-600 hover:bg-gray-500 text-gray-300 shadow-none",
+        variant === "fade" && isMostVisible && !disabled && "bg-[#AEE3F5]/90 hover:bg-[#AEE3F5] shadow-[0_0_15px_rgba(174,227,245,0.4)] text-black",
+        variant === "fade" && (!isMostVisible || disabled) && "bg-gray-600 hover:bg-gray-500 text-gray-300 shadow-none",
         variant === "default" && "bg-primary/90 hover:bg-primary shadow-[0_0_15px_rgba(108,92,231,0.4)]",
+        disabled && "opacity-75 cursor-not-allowed",
         className
       )}
       style={{ ...style, ...glowStyle }}
