@@ -80,7 +80,7 @@ const LeaderboardTable: React.FC<LeaderboardTableProps> = ({
             <TableHead className="w-20 py-3 px-3 text-left text-xs font-semibold text-gray-400">
               Rank
             </TableHead>
-            <TableHead className="py-3 px-3 text-left text-xs font-semibold text-gray-400">
+            <TableHead className="py-3 px-3 text-center text-xs font-semibold text-gray-400">
               Bettor
             </TableHead>
             <TableHead className="w-24 py-3 px-3 text-right text-xs font-semibold text-gray-400">
@@ -100,7 +100,7 @@ const LeaderboardTable: React.FC<LeaderboardTableProps> = ({
                   {index + 1}
                 </span>
               </TableCell>
-              <TableCell className="px-3">
+              <TableCell className="px-3 text-center">
                 <span className="font-bold">
                   @{bettor.username || `User${bettor.id.substring(0, 4)}`}
                   {bettor.isCurrentUser && (
