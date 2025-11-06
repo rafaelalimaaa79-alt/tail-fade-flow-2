@@ -115,10 +115,8 @@ const PublicGameItem = ({ game, rank, isInitialized = false, betId }: PublicGame
             <div className="flex justify-center items-center px-4 py-3 bg-black/20 border-b border-white/10">
               <div className="text-center">
                 <h3 className="text-2xl font-bold text-white relative inline-block">
-                  {game.event?.split(' ').map(word => 
-                    ['@', 'vs'].includes(word) ? ` ${word} ` : word.split(' ').pop()
-                  ).join('') || `${game.team} vs ${game.opponent}`}
-                  <div className="absolute bottom-0 left-0 w-auto h-1 bg-[#AEE3F5] opacity-90"></div>
+                  {game.event || `${game.team} vs ${game.opponent}`}
+                  <div className="absolute bottom-0 left-0 w-full h-1 bg-[#AEE3F5] opacity-90"></div>
                 </h3>
                 <div className="text-[#AEE3F5] text-xs font-semibold mt-2 uppercase tracking-wide">
                   {getMarketTypeLabel()}
