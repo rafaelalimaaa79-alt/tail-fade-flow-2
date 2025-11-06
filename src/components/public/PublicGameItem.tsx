@@ -72,33 +72,42 @@ const PublicGameItem = ({ game, rank, isInitialized = false, betId }: PublicGame
   const getBetDisplayText = () => {
     if (game.marketType === 'total') {
       // For totals, team is "Over" or "Under"
-      return `${game.team} ${game.line || ''}`;
+      return `${game.team} ${game.line || game.spread || ''}`;
+    } else if (game.marketType === 'spread') {
+      // For spread, show team with line including +/- sign
+      const lineValue = game.line || game.spread || '';
+      return lineValue ? `${game.team} ${lineValue}` : game.team;
     } else {
-      // For spread/moneyline, show team with line if available
-      return game.line ? `${game.team} ${game.line}` : game.team;
+      // For moneyline, show team with line if available
+      const lineValue = game.line || game.spread || '';
+      return lineValue ? `${game.team} ${lineValue}` : game.team;
     }
   };
 
   // Get opposite bet for fade button - team name with opposite line
   const getOppositeBetText = () => {
     if (game.marketType === 'total') {
-      // For totals, flip Over/Under (no line)
-      return game.team === 'Over' ? 'Under' : 'Over';
+      // For totals, flip Over/Under with line
+      const opposite = game.team === 'Over' ? 'Under' : 'Over';
+      const lineValue = game.line || game.spread || '';
+      return lineValue ? `${opposite} ${lineValue}` : opposite;
     } else if (game.marketType === 'spread') {
       // For spread, show opposite team with flipped line
-      if (game.line) {
+      const lineValue = game.line || game.spread || '';
+      if (lineValue) {
         // Flip the sign of the line
-        const flippedLine = game.line.startsWith('+') 
-          ? game.line.replace('+', '-') 
-          : game.line.startsWith('-')
-          ? game.line.replace('-', '+')
-          : `-${game.line}`;
+        const flippedLine = lineValue.startsWith('+') 
+          ? lineValue.replace('+', '-') 
+          : lineValue.startsWith('-')
+          ? lineValue.replace('-', '+')
+          : `-${lineValue}`;
         return `${game.opponent} ${flippedLine}`;
       }
       return game.opponent;
     } else {
-      // For moneyline, show just the opposite team
-      return game.opponent;
+      // For moneyline, show just the opposite team with line
+      const lineValue = game.line || game.spread || '';
+      return lineValue ? `${game.opponent} ${lineValue}` : game.opponent;
     }
   };
 
