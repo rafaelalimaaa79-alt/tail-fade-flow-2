@@ -157,7 +157,7 @@ const LeaderboardTable: React.FC<LeaderboardTableProps> = ({
               {expandedUserId === bettor.id && (
                 <TableRow>
                   <TableCell colSpan={3} className="p-0">
-                    <div className="bg-muted/20 border-t border-white/10 animate-fade-in">
+                    <div className="bg-muted/20 border-t border-white/10 overflow-hidden">
                       <div className="py-3 px-4">
                         <p className="text-center text-xs text-gray-400 mb-2 font-semibold">Last 5</p>
                         <div className="flex justify-center gap-2">
@@ -169,7 +169,7 @@ const LeaderboardTable: React.FC<LeaderboardTableProps> = ({
                             (lastFiveBets[bettor.id] || []).map((bet) => (
                               <div
                                 key={bet.id}
-                                className={`w-10 h-10 rounded-full flex items-center justify-center font-bold text-sm ${
+                                className={`w-10 h-10 rounded-full flex items-center justify-center font-bold text-sm flex-shrink-0 ${
                                   bet.result === 'Win' 
                                     ? 'bg-black text-[#AEE3F5] border-2 border-[#AEE3F5]' 
                                     : bet.result === 'Loss'
