@@ -113,19 +113,19 @@ const PublicGameItem = ({ game, rank, isInitialized = false, betId }: PublicGame
           >
             {/* Header with Game - Trend Style */}
             <div className="flex justify-center items-center px-4 py-3 bg-black/20 border-b border-white/10">
-              <div className="text-center pb-1">
+              <div className="text-center">
                 <h3 className="text-2xl font-bold text-white relative inline-block">
                   {game.event || `${game.team} vs ${game.opponent}`}
                   <div className="absolute bottom-0 left-0 w-full h-1 bg-[#AEE3F5] opacity-90"></div>
                 </h3>
-                <div className="text-[#AEE3F5] text-xs font-semibold mt-1 uppercase tracking-wide">
+                <div className="text-[#AEE3F5] text-xs font-semibold mt-2 uppercase tracking-wide">
                   {getMarketTypeLabel()}
                 </div>
               </div>
             </div>
             
             {/* Public Side - Single Block */}
-            <div className="flex flex-col items-center justify-center px-4 py-6 space-y-3">
+            <div className="flex flex-col items-center justify-center px-4 py-5 space-y-2">
               <div className="text-red-400 text-lg font-black uppercase tracking-wide">
                 Public
               </div>
@@ -141,7 +141,7 @@ const PublicGameItem = ({ game, rank, isInitialized = false, betId }: PublicGame
             </div>
             
             {/* Fade Button */}
-            <div className="px-4 py-3 border-t border-white/10">
+            <div className="px-4 py-4 border-t border-white/10">
               <ActionButton
                 variant="fade"
                 onClick={loading || !canFadeMore ? undefined : handleFade}
