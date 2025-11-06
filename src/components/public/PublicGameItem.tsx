@@ -76,7 +76,7 @@ const PublicGameItem = ({ game, rank, isInitialized = false }: PublicGameItemPro
             <div className="flex justify-center items-center px-4 py-3 bg-black/20 border-b border-white/10">
               <div className="text-center pb-1">
                 <h3 className="text-2xl font-bold text-white relative inline-block">
-                  {game.event || `${game.team} vs ${game.opponent}`}
+                  #{rank} {game.event || `${game.team} vs ${game.opponent}`}
                   <div className="absolute bottom-0 left-0 w-full h-1 bg-[#AEE3F5] opacity-90"></div>
                 </h3>
               </div>
@@ -94,11 +94,15 @@ const PublicGameItem = ({ game, rank, isInitialized = false }: PublicGameItemPro
                 {game.publicPercentage}%
               </div>
               <div className="text-white/80 text-sm text-center font-medium leading-relaxed">
-                of the public are on the <span className="text-white font-semibold">{getBetDisplayText()}</span>
+                of the public are on <span className="text-white font-semibold">{getBetDisplayText()}</span>
+              </div>
+              {/* Divider line */}
+              <div className="flex justify-center py-1 w-full">
+                <div className="w-1/2 h-0.5 bg-gradient-to-r from-transparent via-[#AEE3F5]/40 to-transparent"></div>
               </div>
               {/* Users Fading Count */}
               <div className="text-white/70 text-sm text-center font-medium">
-                Users Fading: <span className="text-[#AEE3F5] font-bold">
+                Fading Count: <span className="text-[#AEE3F5] font-bold">
                   {loading ? (
                     <Loader2 className="h-4 w-4 animate-spin inline-block" />
                   ) : (

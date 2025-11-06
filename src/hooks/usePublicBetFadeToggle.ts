@@ -136,6 +136,14 @@ export function usePublicBetFadeToggle(publicBetId?: string): HookState {
           .eq("id", existingFade.id) as any);
         if (updateError) throw updateError;
         setUserFadeCount(newFadeCount);
+        
+        // Manually refresh the total count after update
+        const { data: fadesData } = await supabase
+          .from("public_bets_fades")
+          .select("fade_count")
+          .eq("public_bet_id", publicBetId);
+        const totalFades = (fadesData as any[])?.reduce((sum, fade) => sum + (fade.fade_count ?? 0), 0) ?? 0;
+        setCount(totalFades);
       } else {
         // First time fading - insert new record with fade_count = 1
         const { error: insertError } = await supabase
@@ -143,6 +151,14 @@ export function usePublicBetFadeToggle(publicBetId?: string): HookState {
           .insert({ public_bet_id: publicBetId, user_id: userId, fade_count: 1 });
         if (insertError) throw insertError;
         setUserFadeCount(1);
+        
+        // Manually refresh the total count after insert
+        const { data: fadesData } = await supabase
+          .from("public_bets_fades")
+          .select("fade_count")
+          .eq("public_bet_id", publicBetId);
+        const totalFades = (fadesData as any[])?.reduce((sum, fade) => sum + (fade.fade_count ?? 0), 0) ?? 0;
+        setCount(totalFades);
       }
     } catch (e) {
       console.error("recordFade failed", e);
