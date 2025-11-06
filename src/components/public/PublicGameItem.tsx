@@ -79,15 +79,14 @@ const PublicGameItem = ({ game, rank, isInitialized = false, betId }: PublicGame
     }
   };
 
-  // Get opposite bet for fade button
+  // Get opposite bet for fade button - just the team/side name
   const getOppositeBetText = () => {
     if (game.marketType === 'total') {
-      // For totals, flip Over/Under
-      const opposite = game.team === 'Over' ? 'Under' : 'Over';
-      return `${opposite} ${game.line || ''}`;
+      // For totals, flip Over/Under (no line)
+      return game.team === 'Over' ? 'Under' : 'Over';
     } else {
-      // For spread/moneyline, show opposite team
-      return getOppositeBet(getBetDisplayText(), game.opponent);
+      // For spread/moneyline, show just the opposite team name
+      return game.opponent;
     }
   };
 
