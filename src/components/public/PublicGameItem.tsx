@@ -118,9 +118,6 @@ const PublicGameItem = ({ game, rank, isInitialized = false, betId }: PublicGame
                   {game.event || `${game.team} vs ${game.opponent}`}
                   <div className="absolute bottom-0 left-0 w-full h-1 bg-[#AEE3F5] opacity-90"></div>
                 </h3>
-                <div className="text-[#AEE3F5] text-xs font-semibold mt-2 uppercase tracking-wide">
-                  {getMarketTypeLabel()}
-                </div>
               </div>
             </div>
             

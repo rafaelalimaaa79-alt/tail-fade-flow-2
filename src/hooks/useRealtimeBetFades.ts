@@ -12,12 +12,14 @@ export function useRealtimeBetFades(betId?: string) {
     let isMounted = true;
     setLoading(true);
 
-    supabase
-      .from("bets")
-      .select("users_fading_count")
-      .eq("id", betId)
-      .single()
-      .then(({ data, error }) => {
+    const fetchCount = async () => {
+      try {
+        const { data, error } = await supabase
+          .from("bets")
+          .select("users_fading_count")
+          .eq("id", betId)
+          .single();
+        
         if (!isMounted) return;
         if (error) {
           console.error("Failed to load users_fading_count:", error);
@@ -25,10 +27,12 @@ export function useRealtimeBetFades(betId?: string) {
         } else {
           setCount(data?.users_fading_count ?? 0);
         }
-      })
-      .finally(() => {
+      } finally {
         if (isMounted) setLoading(false);
-      });
+      }
+    };
+
+    fetchCount();
 
     const channel = supabase
       .channel(`bet-fades-${betId}`)
@@ -58,7 +62,7 @@ export function useRealtimeBetFades(betId?: string) {
       return;
     }
 
-    const { data, error } = await supabase.rpc("increment_users_fading_count", { bet_id: betId });
+    const { data, error } = await (supabase.rpc as any)("increment_users_fading_count", { bet_id: betId });
     if (error) {
       console.error("increment_users_fading_count failed:", error);
       return;
