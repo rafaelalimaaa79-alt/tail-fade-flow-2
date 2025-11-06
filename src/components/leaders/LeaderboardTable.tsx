@@ -31,11 +31,28 @@ const LeaderboardTable: React.FC<LeaderboardTableProps> = ({
 
   // Function to get rank icon based on position
   const getRankIcon = (index: number) => {
-    if (index === 0) return <Crown className="inline-block mr-2 text-yellow-500" size={14} />;
-    if (index === 1) return <Star className="inline-block mr-2 text-gray-400" size={12} />;
-    if (index === 2) return <Zap className="inline-block mr-2 text-orange-500" size={12} />;
-    if (index < 5) return <Award className="inline-block mr-2 text-yellow-600" size={10} />;
+    if (index === 0) return <Crown className="inline-block mr-2 text-yellow-500" size={18} />;
+    if (index === 1) return <Star className="inline-block mr-2 text-gray-400" size={16} />;
+    if (index === 2) return <Zap className="inline-block mr-2 text-orange-500" size={14} />;
+    if (index < 5) return <Award className="inline-block mr-2 text-yellow-600" size={12} />;
     return null;
+  };
+
+  // Function to get progressive sizing based on rank
+  const getRowSize = (index: number) => {
+    const sizes = [
+      "py-6 text-xl", // Rank 1 - biggest
+      "py-5 text-lg", // Rank 2
+      "py-4 text-base", // Rank 3
+      "py-3 text-base", // Rank 4-5
+      "py-3 text-base",
+      "py-2 text-sm", // Rank 6-10
+      "py-2 text-sm",
+      "py-2 text-sm",
+      "py-2 text-sm",
+      "py-2 text-sm"
+    ];
+    return sizes[index] || "py-2 text-sm";
   };
 
   if (loading) {
@@ -60,16 +77,13 @@ const LeaderboardTable: React.FC<LeaderboardTableProps> = ({
       <Table>
         <TableHeader>
           <TableRow className="border-b border-white/10">
-            <TableHead className="w-16 py-3 px-3 text-left text-xs font-semibold text-gray-400">
+            <TableHead className="w-20 py-3 px-3 text-left text-xs font-semibold text-gray-400">
               Rank
             </TableHead>
             <TableHead className="py-3 px-3 text-left text-xs font-semibold text-gray-400">
               Bettor
             </TableHead>
-            <TableHead className="w-20 py-3 px-3 text-right text-xs font-semibold text-gray-400">
-              Bets
-            </TableHead>
-            <TableHead className="w-20 py-3 px-3 text-right text-xs font-semibold text-gray-400">
+            <TableHead className="w-24 py-3 px-3 text-right text-xs font-semibold text-gray-400">
               Win %
             </TableHead>
           </TableRow>
@@ -78,29 +92,24 @@ const LeaderboardTable: React.FC<LeaderboardTableProps> = ({
           {displayBettors.map((bettor, index) => (
             <TableRow
               key={bettor.id}
-              className="cursor-pointer hover:bg-muted/30"
+              className={`cursor-pointer hover:bg-muted/30 transition-all ${getRowSize(index)}`}
             >
-              <TableCell className="font-medium w-16 py-3 px-3">
+              <TableCell className="font-medium w-20 px-3">
                 {getRankIcon(index)}
-                <span className="text-sm font-bold">
+                <span className="font-bold">
                   {index + 1}
                 </span>
               </TableCell>
-              <TableCell className="py-3 px-3">
-                <span className="text-base font-bold">
+              <TableCell className="px-3">
+                <span className="font-bold">
                   @{bettor.username || `User${bettor.id.substring(0, 4)}`}
                   {bettor.isCurrentUser && (
                     <span className="ml-2 text-xs text-[#AEE3F5]">(You)</span>
                   )}
                 </span>
               </TableCell>
-              <TableCell className="w-20 text-right py-3 px-3">
-                <span className="text-sm font-semibold text-gray-300">
-                  {bettor.totalBets}
-                </span>
-              </TableCell>
-              <TableCell className="w-20 text-right py-3 px-3">
-                <span className="text-sm font-semibold text-[#FF5C5C]">
+              <TableCell className="w-24 text-right px-3">
+                <span className="font-semibold text-[#FF5C5C]">
                   {bettor.winRate.toFixed(1)}%
                 </span>
               </TableCell>
