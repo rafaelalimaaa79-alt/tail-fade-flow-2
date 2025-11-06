@@ -1,7 +1,8 @@
-
-import React from "react";
+import React, { useState } from "react";
 import { Table, TableHeader, TableRow, TableHead, TableBody, TableCell } from "@/components/ui/table";
 import { Award, Crown, Star, Zap } from "lucide-react";
+import { Dialog, DialogContent, DialogHeader, DialogTitle } from "@/components/ui/dialog";
+import { supabase } from "@/integrations/supabase/client";
 
 interface LeaderboardUser {
   id: string;
@@ -28,6 +29,32 @@ const LeaderboardTable: React.FC<LeaderboardTableProps> = ({
   loading = false,
 }) => {
   const displayBettors = bettors.slice(0, 50);
+  const [selectedUser, setSelectedUser] = useState<LeaderboardUser | null>(null);
+  const [lastFiveBets, setLastFiveBets] = useState<Array<{ result: string; id: string }>>([]);
+  const [loadingBets, setLoadingBets] = useState(false);
+
+  const handleUserClick = async (bettor: LeaderboardUser) => {
+    setSelectedUser(bettor);
+    setLoadingBets(true);
+    
+    try {
+      const { data, error } = await supabase
+        .from('bets')
+        .select('id, result')
+        .eq('user_id', bettor.id)
+        .in('result', ['Win', 'Loss', 'Push'])
+        .order('timestamp', { ascending: false })
+        .limit(5);
+
+      if (error) throw error;
+      setLastFiveBets(data || []);
+    } catch (error) {
+      console.error('Error fetching bets:', error);
+      setLastFiveBets([]);
+    } finally {
+      setLoadingBets(false);
+    }
+  };
 
   // Function to get rank icon based on position
   const getRankIcon = (index: number) => {
@@ -93,6 +120,7 @@ const LeaderboardTable: React.FC<LeaderboardTableProps> = ({
             <TableRow
               key={bettor.id}
               className={`cursor-pointer hover:bg-muted/30 transition-all ${getRowSize(index)}`}
+              onClick={() => handleUserClick(bettor)}
             >
               <TableCell className="font-medium w-20 px-3">
                 {getRankIcon(index)}
@@ -117,6 +145,40 @@ const LeaderboardTable: React.FC<LeaderboardTableProps> = ({
           ))}
         </TableBody>
       </Table>
+
+      <Dialog open={!!selectedUser} onOpenChange={() => setSelectedUser(null)}>
+        <DialogContent className="bg-card border border-white/10 max-w-sm">
+          <DialogHeader>
+            <DialogTitle className="text-center text-xl font-bold">
+              @{selectedUser?.username || `User${selectedUser?.id.substring(0, 4)}`}
+            </DialogTitle>
+            <p className="text-center text-sm text-gray-400 mt-1">Last 5 Bets</p>
+          </DialogHeader>
+          
+          <div className="flex justify-center gap-3 py-6">
+            {loadingBets ? (
+              <p className="text-gray-400">Loading...</p>
+            ) : lastFiveBets.length === 0 ? (
+              <p className="text-gray-400 text-sm">No recent bets</p>
+            ) : (
+              lastFiveBets.map((bet) => (
+                <div
+                  key={bet.id}
+                  className={`w-14 h-14 rounded-full flex items-center justify-center font-bold text-lg ${
+                    bet.result === 'Win' 
+                      ? 'bg-green-500/20 text-green-500 border-2 border-green-500' 
+                      : bet.result === 'Loss'
+                      ? 'bg-red-500/20 text-red-500 border-2 border-red-500'
+                      : 'bg-gray-500/20 text-gray-500 border-2 border-gray-500'
+                  }`}
+                >
+                  {bet.result === 'Win' ? 'W' : bet.result === 'Loss' ? 'L' : 'P'}
+                </div>
+              ))
+            )}
+          </div>
+        </DialogContent>
+      </Dialog>
     </div>
   );
 };
