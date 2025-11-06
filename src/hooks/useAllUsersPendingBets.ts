@@ -88,15 +88,15 @@ export function useAllUsersPendingBets() {
 
   useEffect(() => {
     fetchBets();
-    
+
     // Listen for sync events
     const handleBetsSynced = () => {
       console.log('Bets synced event received in useAllUsersPendingBets, refetching...');
       fetchBets();
     };
-    
+
     window.addEventListener('bets-synced', handleBetsSynced);
-    
+
     // Set up realtime subscription for live bet updates from ALL users
     const channel = supabase
       .channel("all-pending-bets-changes")
@@ -109,7 +109,28 @@ export function useAllUsersPendingBets() {
         },
         (payload) => {
           console.log("Bet change detected in useAllUsersPendingBets:", payload);
-          fetchBets();
+
+          // Only update the specific bet that changed, don't refetch all
+          if (payload.new) {
+            const changedBet = payload.new as BetRecord;
+            setBets(prevBets => {
+              // Find and update the specific bet
+              const updatedBets = prevBets.map(bet => {
+                if (bet.bet.id === changedBet.id) {
+                  // Update only the users_fading_count field
+                  return {
+                    ...bet,
+                    bet: {
+                      ...bet.bet,
+                      users_fading_count: changedBet.users_fading_count
+                    }
+                  };
+                }
+                return bet;
+              });
+              return updatedBets;
+            });
+          }
         },
       )
       .subscribe();

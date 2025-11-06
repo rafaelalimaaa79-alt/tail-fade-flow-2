@@ -17,6 +17,10 @@ import FloatingSyncButton from "@/components/common/FloatingSyncButton";
 import { useSyncBets } from "@/hooks/useSyncBets";
 import { SharpSportsModal } from "@/components/SharpSportsModal";
 import { useAllUsersPendingBets } from "@/hooks/useAllUsersPendingBets";
+import { useForceRefreshTimer } from "@/hooks/useForceRefreshTimer";
+import ForceRefreshModal from "@/components/ForceRefreshModal";
+import { useViewBetsNowModal } from "@/hooks/useViewBetsNowModal";
+import ViewBetsNowModal from "@/components/ViewBetsNowModal";
 
 const Dashboard = () => {
   const isMobile = useIsMobile();
@@ -25,6 +29,8 @@ const Dashboard = () => {
   const { resetViewedState } = usePortfolioStore();
   const { isOpen, smackTalkData, closeSmackTalk } = useInlineSmackTalk();
   const { syncBets, sharpSportsModal, handleModalComplete, handleModalClose } = useSyncBets();
+  const { showModal: showForceRefreshModal, onRefresh: handleForceRefresh } = useForceRefreshTimer();
+  const { showModal: showViewBetsNowModal, closeModal: closeViewBetsNowModal } = useViewBetsNowModal();
 
   // Fetch all users' pending bets for Fade Watch (sorted by confidence score)
   const { bets: allUsersPendingBets, loading: betsLoading } = useAllUsersPendingBets();
@@ -80,7 +86,12 @@ const Dashboard = () => {
   const handleLogoClick = () => {
     navigate("/dashboard");
   };
-  
+
+  const handleForceRefreshClick = async () => {
+    await syncBets();
+    handleForceRefresh();
+  };
+
   return (
     <div className="flex min-h-screen flex-col bg-background">
       <div className={`max-w-md mx-auto w-full px-2 ${isMobile ? "pb-24" : ""}`}>
@@ -140,6 +151,19 @@ const Dashboard = () => {
           onClose={handleModalClose}
         />
       )}
+
+      {/* Force Refresh Modal - appears 90 seconds after landing */}
+      <ForceRefreshModal
+        isOpen={showForceRefreshModal}
+        onRefresh={handleForceRefreshClick}
+      />
+
+      {/* View Bets Now Modal - appears after 2FA completes */}
+      <ViewBetsNowModal
+        isOpen={showViewBetsNowModal}
+        onRefresh={syncBets}
+        onClose={closeViewBetsNowModal}
+      />
     </div>
   );
 };

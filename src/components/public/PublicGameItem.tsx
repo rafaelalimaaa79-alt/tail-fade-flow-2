@@ -1,6 +1,5 @@
 
 import React from "react";
-import { Separator } from "@/components/ui/separator";
 import ActionButton from "@/components/ActionButton";
 import PublicGameVisibilityWrapper from "./PublicGameVisibilityWrapper";
 import { cn } from "@/lib/utils";
@@ -17,7 +16,10 @@ interface PublicGame {
   isLive: boolean;
   spread: string;
   sport: string;
-  fadeZonePercentage?: number;
+  event: string;
+  marketType: 'spread' | 'moneyline' | 'total';
+  line: string;
+  betType: string;
 }
 
 interface PublicGameItemProps {
@@ -52,15 +54,48 @@ const PublicGameItem = ({ game, rank, isInitialized = false, betId }: PublicGame
     );
   };
 
-  const fadeZonePercentage = game.fadeZonePercentage || Math.round(Math.max(70, Math.min(95, 
-    100 - game.publicPercentage + (Math.random() - 0.5) * 4
-  )));
+  // Get market type label
+  const getMarketTypeLabel = () => {
+    switch (game.marketType) {
+      case 'spread':
+        return 'Spread';
+      case 'moneyline':
+        return 'Moneyline';
+      case 'total':
+        return 'Total';
+      default:
+        return 'Spread';
+    }
+  };
 
-  const oppositeBet = getOppositeBet(`${game.team} ${game.spread}`, game.opponent);
-  const { count: usersFading, isFaded, toggleFade, loading } = useBetFadeToggle(betId);
+  // Format the bet display text
+  const getBetDisplayText = () => {
+    if (game.marketType === 'total') {
+      // For totals, team is "Over" or "Under"
+      return `${game.team} ${game.line || ''}`;
+    } else {
+      // For spread/moneyline, show team with line if available
+      return game.line ? `${game.team} ${game.line}` : game.team;
+    }
+  };
+
+  // Get opposite bet for fade button
+  const getOppositeBetText = () => {
+    if (game.marketType === 'total') {
+      // For totals, flip Over/Under
+      const opposite = game.team === 'Over' ? 'Under' : 'Over';
+      return `${opposite} ${game.line || ''}`;
+    } else {
+      // For spread/moneyline, show opposite team
+      return getOppositeBet(getBetDisplayText(), game.opponent);
+    }
+  };
+
+  const oppositeBet = getOppositeBetText();
+  const { count: usersFading, recordFade, loading, canFadeMore } = useBetFadeToggle(betId);
 
   const handleFade = async () => {
-    await toggleFade();
+    await recordFade();
   };
 
   return (
@@ -80,78 +115,44 @@ const PublicGameItem = ({ game, rank, isInitialized = false, betId }: PublicGame
             <div className="flex justify-center items-center px-4 py-3 bg-black/20 border-b border-white/10">
               <div className="text-center pb-1">
                 <h3 className="text-2xl font-bold text-white relative inline-block">
-                  {game.team} vs {game.opponent}
+                  {game.event || `${game.team} vs ${game.opponent}`}
                   <div className="absolute bottom-0 left-0 w-full h-1 bg-[#AEE3F5] opacity-90"></div>
                 </h3>
-              </div>
-            </div>
-            
-            {/* Split Content with Separator */}
-            <div className="flex items-stretch">
-              {/* NoShot Side */}
-              <div className="flex-1 flex flex-col items-center justify-center px-4 py-2 space-y-2">
-                <div className="text-[#AEE3F5] text-lg font-black uppercase tracking-wide">
-                  NoShot
-                </div>
-                <div className={cn(
-                  "text-[#AEE3F5] text-3xl font-bold",
-                  isMostVisible && "animate-pulse-slow"
-                )}>
-                  {fadeZonePercentage}%
-                </div>
-                <div className="text-white/80 text-sm text-center font-medium leading-relaxed">
-                  of NoShot bettors are on <span className="text-white font-semibold">{game.team} {game.spread}</span>
-                </div>
-              </div>
-              
-              {/* Vertical Separator */}
-              <div className="flex items-center">
-                <Separator orientation="vertical" className="h-20 bg-white/30" />
-              </div>
-              
-              {/* Public Side */}
-              <div className="flex-1 flex flex-col items-center justify-center px-4 py-2 space-y-2">
-                <div className="text-red-400 text-lg font-black uppercase tracking-wide">
-                  Public
-                </div>
-                <div className={cn(
-                  "text-red-400 text-3xl font-bold",
-                  isMostVisible && "animate-pulse-slow"
-                )}>
-                  {game.publicPercentage}%
-                </div>
-                <div className="text-white/80 text-sm text-center font-medium leading-relaxed">
-                  of Public bettors are on <span className="text-white font-semibold">{game.team} {game.spread}</span>
+                <div className="text-[#AEE3F5] text-xs font-semibold mt-1 uppercase tracking-wide">
+                  {getMarketTypeLabel()}
                 </div>
               </div>
             </div>
             
-            {/* Fade Stats */}
-            <div className="flex items-center justify-between px-4 py-2 border-t border-white/10">
-              <p className="text-base font-semibold text-gray-300">
-                Fade Confidence: <span className="text-[#AEE3F5] font-bold">{fadeZonePercentage}%</span>
-              </p>
-              <p className="text-base font-semibold text-gray-300">
-                Users Fading: <span className="text-[#AEE3F5] font-bold">{usersFading}</span>
-              </p>
+            {/* Public Side - Single Block */}
+            <div className="flex flex-col items-center justify-center px-4 py-6 space-y-3">
+              <div className="text-red-400 text-lg font-black uppercase tracking-wide">
+                Public
+              </div>
+              <div className={cn(
+                "text-red-400 text-4xl font-bold",
+                isMostVisible && "animate-pulse-slow"
+              )}>
+                {game.publicPercentage}%
+              </div>
+              <div className="text-white/80 text-sm text-center font-medium leading-relaxed">
+                of Public bettors are on <span className="text-white font-semibold">{getBetDisplayText()}</span>
+              </div>
             </div>
             
             {/* Fade Button */}
             <div className="px-4 py-3 border-t border-white/10">
-              <ActionButton 
-                variant="fade" 
-                onClick={handleFade}
+              <ActionButton
+                variant="fade"
+                onClick={loading || !canFadeMore ? undefined : handleFade}
                 className={cn(
-                  "h-10 text-base border",
-                  isFaded 
-                    ? "bg-black text-[#AEE3F5] border-[#AEE3F5]/60 hover:bg-black/95 shadow-[0_0_12px_rgba(174,227,245,0.25)]"
-                    : "border-transparent"
+                  "h-10 text-base border border-transparent",
+                  (loading || !canFadeMore) && "opacity-75 cursor-not-allowed"
                 )}
-                glowEffect={isMostVisible}
-                isMostVisible={isMostVisible}
-                disabled={loading}
+                glowEffect={isMostVisible && !loading && canFadeMore}
+                isMostVisible={isMostVisible && !loading && canFadeMore}
               >
-                Bet {oppositeBet}
+                {loading ? "Loading..." : !canFadeMore ? "Max Fades Reached" : `Bet ${oppositeBet}`}
               </ActionButton>
             </div>
             

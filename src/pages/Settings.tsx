@@ -39,7 +39,7 @@ const Settings = () => {
           <Button
             variant="ghost"
             size="icon"
-            onClick={() => navigate("/profile")}
+            onClick={() => navigate("/dashboard")}
             className="text-[#AEE3F5] hover:bg-[#AEE3F5]/10 mr-4"
           >
             <ArrowLeft className="h-6 w-6" />

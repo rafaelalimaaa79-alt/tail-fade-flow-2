@@ -1,5 +1,6 @@
 import React, { useState, useEffect } from "react";
 import PublicGameItem from "./PublicGameItem";
+import { supabase } from "@/integrations/supabase/client";
 
 interface PublicGame {
   id: string;
@@ -11,144 +12,124 @@ interface PublicGame {
   isLive: boolean;
   spread: string;
   sport: string;
-  fadeZonePercentage?: number; // Add this to stabilize the percentage
+  event: string;
+  marketType: 'spread' | 'moneyline' | 'total';
+  line: string;
+  betType: string;
 }
 
-// Mock data - in production this would come from your API
-const mockPublicGames: PublicGame[] = [
-  {
-    id: "1",
-    team: "LSU",
-    opponent: "Clemson",
-    publicPercentage: 87,
-    totalBets: 1247,
-    gameTime: "2024-06-03T20:00:00Z",
-    isLive: false,
-    spread: "-2.5",
-    sport: "NCAAFB",
-    fadeZonePercentage: 78
-  },
-  {
-    id: "2",
-    team: "Chiefs",
-    opponent: "Chargers",
-    publicPercentage: 82,
-    totalBets: 2156,
-    gameTime: "2024-06-03T18:30:00Z",
-    isLive: true,
-    spread: "-2.5",
-    sport: "NFL",
-    fadeZonePercentage: 85
-  },
-  {
-    id: "3",
-    team: "Alabama",
-    opponent: "Florida State",
-    publicPercentage: 79,
-    totalBets: 934,
-    gameTime: "2024-06-03T21:30:00Z",
-    isLive: false,
-    spread: "-8.5",
-    sport: "NCAAFB",
-    fadeZonePercentage: 74
-  },
-  {
-    id: "4",
-    team: "Eagles",
-    opponent: "Cowboys",
-    publicPercentage: 76,
-    totalBets: 567,
-    gameTime: "2024-06-03T19:00:00Z",
-    isLive: false,
-    spread: "-7",
-    sport: "NFL",
-    fadeZonePercentage: 81
-  },
-  {
-    id: "5",
-    team: "Ohio State",
-    opponent: "Texas",
-    publicPercentage: 74,
-    totalBets: 423,
-    gameTime: "2024-06-03T20:30:00Z",
-    isLive: false,
-    spread: "-3.5",
-    sport: "NCAAFB",
-    fadeZonePercentage: 88
-  },
-  {
-    id: "6",
-    team: "Steelers",
-    opponent: "Jets",
-    publicPercentage: 71,
-    totalBets: 1834,
-    gameTime: "2024-06-03T22:00:00Z",
-    isLive: false,
-    spread: "-3",
-    sport: "NFL",
-    fadeZonePercentage: 72
-  },
-  {
-    id: "7",
-    team: "Notre Dame",
-    opponent: "Miami",
-    publicPercentage: 83,
-    totalBets: 789,
-    gameTime: "2024-06-03T17:00:00Z",
-    isLive: true,
-    spread: "-2.5",
-    sport: "NCAAFB",
-    fadeZonePercentage: 76
-  },
-  {
-    id: "8",
-    team: "Bengals",
-    opponent: "Browns",
-    publicPercentage: 85,
-    totalBets: 1456,
-    gameTime: "2024-06-03T16:00:00Z",
-    isLive: false,
-    spread: "-5.5",
-    sport: "NFL",
-    fadeZonePercentage: 79
-  }
-];
-
 const PublicGamesList = () => {
-  const [games, setGames] = useState<PublicGame[]>(() => {
-    // Initialize with sorted data immediately to prevent flash
-    return [...mockPublicGames].sort((a, b) => b.publicPercentage - a.publicPercentage);
-  });
-
+  const [games, setGames] = useState<PublicGame[]>([]);
   const [isInitialized, setIsInitialized] = useState(false);
+  const [loading, setLoading] = useState(true);
+  const [error, setError] = useState<string | null>(null);
+
+  const fetchPublicBettingData = React.useCallback(async () => {
+    try {
+      setLoading(true);
+      setError(null);
+
+      const { data, error: fetchError } = await supabase.functions.invoke('get-public-betting-data', {
+        body: {
+          limit: 50
+        }
+      });
+
+      if (fetchError) {
+        console.error('Error fetching public betting data:', fetchError);
+        setError('Failed to load betting data');
+        return;
+      }
+
+      if (data?.games && Array.isArray(data.games)) {
+        // Transform the data to match PublicGame interface
+        const transformedGames: PublicGame[] = data.games.map((game: any) => ({
+          id: game.id,
+          team: game.team,
+          opponent: game.opponent,
+          publicPercentage: game.publicPercentage || 0,
+          totalBets: game.totalBets || 0,
+          gameTime: game.event_start_time,
+          isLive: game.isLive || false,
+          spread: game.line || "",
+          sport: game.sport || "",
+          event: game.event || "",
+          marketType: game.marketType || 'spread',
+          line: game.line || "",
+          betType: game.betType || game.marketType || 'spread'
+        }));
+
+        // Sort by highest percentage (already sorted from API, but ensure it)
+        setGames(transformedGames.sort((a, b) => b.publicPercentage - a.publicPercentage));
+      } else {
+        console.warn('Unexpected data format from API:', data);
+        setError('Invalid data format');
+      }
+    } catch (err) {
+      console.error('Error in fetchPublicBettingData:', err);
+      setError('Failed to load betting data');
+    } finally {
+      setLoading(false);
+    }
+  }, []);
 
   useEffect(() => {
+    // Initial fetch
+    fetchPublicBettingData();
+
     // Add a small delay to let the page settle before enabling effects
     const initTimer = setTimeout(() => {
       setIsInitialized(true);
     }, 100);
 
-    // Simulate real-time updates every 30 seconds, but only after initialization
+    // Refresh data every 15 minutes (900000ms)
     const interval = setInterval(() => {
       if (isInitialized) {
-        setGames(prevGames => {
-          const updatedGames = prevGames.map(game => ({
-            ...game,
-            publicPercentage: Math.round(Math.max(70, Math.min(95, game.publicPercentage + (Math.random() - 0.5) * 2))), // Reduced volatility
-            totalBets: game.totalBets + Math.floor(Math.random() * 10), // Reduced increment
-            // Keep fadeZonePercentage stable during updates
-            fadeZonePercentage: game.fadeZonePercentage || Math.round(Math.max(70, Math.min(95, 100 - game.publicPercentage + (Math.random() - 0.5) * 4)))
-          }));
-          return updatedGames.sort((a, b) => b.publicPercentage - a.publicPercentage);
-        });
+        fetchPublicBettingData();
       }
-    }, 30000);
+    }, 900000); // 15 minutes
 
     return () => {
       clearTimeout(initTimer);
       clearInterval(interval);
     };
-  }, [isInitialized]);
+  }, [isInitialized, fetchPublicBettingData]);
+
+  if (loading && games.length === 0) {
+    return (
+      <div className="space-y-3">
+        <div className="text-center py-8">
+          <div className="text-[#AEE3F5] text-lg">Loading betting data...</div>
+        </div>
+      </div>
+    );
+  }
+
+  if (error && games.length === 0) {
+    return (
+      <div className="space-y-3">
+        <div className="text-center py-8">
+          <div className="text-red-400 text-lg mb-2">{error}</div>
+          <button
+            onClick={fetchPublicBettingData}
+            className="px-4 py-2 bg-[#AEE3F5] text-black rounded-lg font-semibold hover:bg-[#AEE3F5]/80"
+          >
+            Retry
+          </button>
+        </div>
+      </div>
+    );
+  }
+
+  if (games.length === 0) {
+    return (
+      <div className="space-y-3">
+        <div className="text-center py-8">
+          <div className="text-white/70 text-lg">No upcoming games with betting data</div>
+        </div>
+      </div>
+    );
+  }
 
   return (
     <div className="space-y-3">
@@ -173,7 +154,7 @@ const PublicGamesList = () => {
           <p className="text-sm text-white/70">
             <span className="text-red-400 font-bold">90%+</span> = Extreme Public • 
             <span className="text-orange-400 font-bold"> 80%+</span> = Heavy Public • 
-            Updates every 30s
+            Updates every 15 minutes
           </p>
         </div>
       </div>

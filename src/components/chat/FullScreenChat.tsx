@@ -20,6 +20,7 @@ const FullScreenChat = ({ isOpen, onClose }: FullScreenChatProps) => {
   const [scrollPosition, setScrollPosition] = useState(0);
   const [suggestedUsers, setSuggestedUsers] = useState<string[]>([]);
   const [showUserSuggestions, setShowUserSuggestions] = useState(false);
+  const [showReactionPicker, setShowReactionPicker] = useState<string | null>(null);
 
   const scrollAreaRef = useRef<HTMLDivElement>(null);
   const inputRef = useRef<HTMLTextAreaElement>(null);
@@ -29,7 +30,7 @@ const FullScreenChat = ({ isOpen, onClose }: FullScreenChatProps) => {
   const { user, loading: authLoading } = useAuth();
 
   // Use the realtime messages hook
-  const { messages, isLoading, sendMessage } = useMessagesRealtime();
+  const { messages, isLoading, sendMessage, addReaction, removeReaction } = useMessagesRealtime();
 
   const emojis = ["👍", "❤️", "😂", "😢", "😡", "🔥", "💯", "🎯", "⚡", "💪"];
 
@@ -125,6 +126,32 @@ const FullScreenChat = ({ isOpen, onClose }: FullScreenChatProps) => {
     setNewMessage(`${beforeAt}@${username} `);
     setShowUserSuggestions(false);
     inputRef.current?.focus();
+  };
+
+  const handleReactionClick = async (messageId: string, emoji: string, userReacted: boolean) => {
+    if (!user) {
+      toast({
+        title: "Authentication required",
+        description: "Please sign in to react to messages",
+        variant: "destructive",
+      });
+      return;
+    }
+
+    try {
+      if (userReacted) {
+        await removeReaction(messageId, emoji, user.id);
+      } else {
+        await addReaction(messageId, emoji, user.id);
+      }
+    } catch (error) {
+      console.error('Error toggling reaction:', error);
+      toast({
+        title: "Error",
+        description: "Failed to update reaction",
+        variant: "destructive",
+      });
+    }
   };
 
   const formatTimeAgo = (timestamp: string) => {
@@ -227,17 +254,65 @@ const FullScreenChat = ({ isOpen, onClose }: FullScreenChatProps) => {
                       </span>
                     </div>
                   )}
-                  <div
-                    className={cn(
-                      "text-[#AEE3F5] text-sm leading-relaxed max-w-xs px-3 py-2 rounded-lg",
-                      isCurrentUser
-                        ? "bg-[#AEE3F5]/20 text-right"
-                        : "bg-[#AEE3F5]/10"
+                  <div className="flex flex-col gap-1 w-full">
+                    <div
+                      onClick={() => setShowReactionPicker(showReactionPicker === message.id ? null : message.id)}
+                      className={cn(
+                        "text-[#AEE3F5] text-sm leading-relaxed px-3 py-2 rounded-lg cursor-pointer transition-opacity hover:opacity-80",
+                        isCurrentUser
+                          ? "bg-[#AEE3F5]/20 text-right ml-auto"
+                          : "bg-[#AEE3F5]/10 mr-auto",
+                        "max-w-[85%] break-words"
+                      )}
+                      dangerouslySetInnerHTML={{
+                        __html: formatMessageContent(message.content)
+                      }}
+                    />
+                    {/* Reaction Picker Dropdown - Shows on Click */}
+                    {showReactionPicker === message.id && (
+                      <div className={cn(
+                        "flex flex-wrap gap-2 p-2 bg-black border border-[#AEE3F5]/30 rounded-lg w-full",
+                        isCurrentUser ? "justify-end" : "justify-start"
+                      )}>
+                        {emojis.map((emoji) => (
+                          <button
+                            key={emoji}
+                            onClick={() => {
+                              handleReactionClick(message.id, emoji, message.reactions?.[emoji]?.userReacted || false);
+                              setShowReactionPicker(null);
+                            }}
+                            className="text-2xl active:scale-90 transition-transform"
+                            title={`React with ${emoji}`}
+                          >
+                            {emoji}
+                          </button>
+                        ))}
+                      </div>
                     )}
-                    dangerouslySetInnerHTML={{
-                      __html: formatMessageContent(message.content)
-                    }}
-                  />
+                    {/* Reactions - Constrained Width */}
+                    {message.reactions && Object.keys(message.reactions).length > 0 && (
+                      <div className={cn(
+                        "flex flex-wrap gap-1 w-full",
+                        isCurrentUser ? "justify-end" : "justify-start"
+                      )}>
+                        {Object.values(message.reactions).map((reaction) => (
+                          <button
+                            key={reaction.emoji}
+                            onClick={() => handleReactionClick(message.id, reaction.emoji, reaction.userReacted)}
+                            className={cn(
+                              "flex items-center gap-1 px-2 py-1 rounded-full text-xs transition-colors flex-shrink-0",
+                              reaction.userReacted
+                                ? "bg-[#AEE3F5]/30 border border-[#AEE3F5]/50"
+                                : "bg-[#AEE3F5]/10 border border-[#AEE3F5]/20 active:bg-[#AEE3F5]/20"
+                            )}
+                          >
+                            <span>{reaction.emoji}</span>
+                            <span className="text-[#AEE3F5]/80">{reaction.count}</span>
+                          </button>
+                        ))}
+                      </div>
+                    )}
+                  </div>
                 </div>
               );
             })}

@@ -28,6 +28,7 @@ const PendingBets: React.FC<PendingBetsProps> = ({ pendingBets, profile, classNa
   const [showAll, setShowAll] = useState(false);
   const [globalConfidenceScore, setGlobalConfidenceScore] = useState<number>(0);
   const [betsWithStatlines, setBetsWithStatlines] = useState<BetWithStatline[]>([]);
+  const [animatingBetId, setAnimatingBetId] = useState<string | null>(null);
   const [loading, setLoading] = useState(true);
 
   // Fetch global confidence score (for overall fade confidence)
@@ -82,7 +83,9 @@ const PendingBets: React.FC<PendingBetsProps> = ({ pendingBets, profile, classNa
   }, [pendingBets, profile.userId, globalConfidenceScore]);
 
   const handleFade = (bet: BettorBet) => {
+    setAnimatingBetId(bet.id || null);
     showFadeNotification("Bettor", bet.betType);
+    setTimeout(() => setAnimatingBetId(null), 300);
   };
 
   // Determine which bets to show
@@ -147,11 +150,11 @@ const PendingBets: React.FC<PendingBetsProps> = ({ pendingBets, profile, classNa
                   
                   {/* Fade button */}
                   <div className="w-full pt-1">
-                    <Button 
-                      className="w-full bg-[#AEE3F5] hover:bg-[#AEE3F5]/90 text-black font-bold py-3 rounded-xl"
+                    <Button
+                      className={`w-full bg-[#AEE3F5] hover:bg-[#AEE3F5]/90 text-black font-bold py-3 rounded-xl ${animatingBetId === bet.id && "animate-bounce-pop"}`}
                       onClick={() => handleFade(bet)}
                     >
-                      Fade {bet.betLine}
+                      NoShot Pick: {bet.betLine}
                     </Button>
                   </div>
                 </div>

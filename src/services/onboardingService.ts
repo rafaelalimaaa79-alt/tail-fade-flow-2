@@ -80,12 +80,16 @@ export async function saveBirthday(userId: string, birthday: { month: string; da
 }
 
 /**
- * Save Step 4: Name
+ * Save Step 4: Name (also saves as username)
  */
 export async function saveName(userId: string, name: string) {
   const { error } = await supabase
     .from('user_profiles')
-    .update({ onboarding_name: name, updated_at: new Date().toISOString() })
+    .update({ 
+      onboarding_name: name,
+      username: name, // Save as username as well since step says "This will be your display name"
+      updated_at: new Date().toISOString() 
+    })
     .eq('id', userId);
 
   if (error) {
@@ -150,6 +154,25 @@ export async function saveSportsbooks(userId: string, sportsbooks: string[]) {
 
   if (error) {
     console.error('Error saving sportsbooks:', error);
+    throw error;
+  }
+}
+
+/**
+ * Save Subscription Plan
+ */
+export async function saveSubscriptionPlan(userId: string, plan: 'monthly_sportsbook' | 'monthly_no_sportsbook' | 'annual') {
+  const { error } = await supabase
+    .from('user_profiles')
+    .update({
+      subscription_plan: plan,
+      has_sportsbook_linked: plan !== 'monthly_no_sportsbook',
+      updated_at: new Date().toISOString()
+    })
+    .eq('id', userId);
+
+  if (error) {
+    console.error('Error saving subscription plan:', error);
     throw error;
   }
 }

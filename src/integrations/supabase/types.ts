@@ -14,6 +14,66 @@ export type Database = {
   }
   public: {
     Tables: {
+      messages: {
+        Row: {
+          content: string
+          created_at: string
+          id: string
+          user_id: string
+        }
+        Insert: {
+          content: string
+          created_at?: string
+          id?: string
+          user_id: string
+        }
+        Update: {
+          content?: string
+          created_at?: string
+          id?: string
+          user_id?: string
+        }
+        Relationships: []
+      }
+      message_reactions: {
+        Row: {
+          id: string
+          message_id: string
+          user_id: string
+          emoji: string
+          created_at: string
+        }
+        Insert: {
+          id?: string
+          message_id: string
+          user_id: string
+          emoji: string
+          created_at?: string
+        }
+        Update: {
+          id?: string
+          message_id?: string
+          user_id?: string
+          emoji?: string
+          created_at?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "message_reactions_message_id_fkey"
+            columns: ["message_id"]
+            isOneToOne: false
+            referencedRelation: "messages"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "message_reactions_user_id_fkey"
+            columns: ["user_id"]
+            isOneToOne: false
+            referencedRelation: "auth.users"
+            referencedColumns: ["id"]
+          }
+        ]
+      }
       bets: {
         Row: {
           bet_id: string | null
@@ -100,18 +160,24 @@ export type Database = {
           bet_id: string
           user_id: string
           created_at: string
+          deleted_at: string | null
+          fade_count: number
         }
         Insert: {
           id?: string
           bet_id: string
           user_id: string
           created_at?: string
+          deleted_at?: string | null
+          fade_count?: number
         }
         Update: {
           id?: string
           bet_id?: string
           user_id?: string
           created_at?: string
+          deleted_at?: string | null
+          fade_count?: number
         }
         Relationships: [
           {
@@ -288,6 +354,14 @@ export type Database = {
           onboarding_bankroll: string | null
           onboarding_quiz_answer: string | null
           onboarding_sportsbooks: string | null
+          subscription_plan: string | null
+          subscription_status: string | null
+          subscription_price_id: string | null
+          has_sportsbook_linked: boolean | null
+          stripe_customer_id: string | null
+          stripe_subscription_id: string | null
+          subscription_current_period_start: string | null
+          subscription_current_period_end: string | null
         }
         Insert: {
           avatar_url?: string | null
@@ -309,6 +383,14 @@ export type Database = {
           onboarding_bankroll?: string | null
           onboarding_quiz_answer?: string | null
           onboarding_sportsbooks?: string | null
+          subscription_plan?: string | null
+          subscription_status?: string | null
+          subscription_price_id?: string | null
+          has_sportsbook_linked?: boolean | null
+          stripe_customer_id?: string | null
+          stripe_subscription_id?: string | null
+          subscription_current_period_start?: string | null
+          subscription_current_period_end?: string | null
         }
         Update: {
           avatar_url?: string | null
@@ -330,6 +412,14 @@ export type Database = {
           onboarding_bankroll?: string | null
           onboarding_quiz_answer?: string | null
           onboarding_sportsbooks?: string | null
+          subscription_plan?: string | null
+          subscription_status?: string | null
+          subscription_price_id?: string | null
+          has_sportsbook_linked?: boolean | null
+          stripe_customer_id?: string | null
+          stripe_subscription_id?: string | null
+          subscription_current_period_start?: string | null
+          subscription_current_period_end?: string | null
         }
         Relationships: []
       }

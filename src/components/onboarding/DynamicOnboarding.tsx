@@ -13,6 +13,7 @@ import {
   saveBankroll,
   saveQuizAnswer,
   saveSportsbooks,
+  saveSubscriptionPlan,
   completeOnboarding
 } from '@/services/onboardingService';
 import OnboardingStepReferral from './OnboardingStepReferral';
@@ -26,6 +27,7 @@ import OnboardingStep7 from './OnboardingStep7';
 import OnboardingStep8 from './OnboardingStep8';
 import OnboardingStep9 from './OnboardingStep9';
 import OnboardingStepPaywall from './OnboardingStepPaywall';
+import ConnectSportsbooks from '@/pages/ConnectSportsbooks';
 
 const DynamicOnboarding = () => {
   const navigate = useNavigate();
@@ -45,9 +47,10 @@ const DynamicOnboarding = () => {
     state: '',
     birthday: { month: '', day: '', year: '' },
     referralSources: [] as string[],
+    subscriptionPlan: '' as 'monthly_sportsbook' | 'monthly_no_sportsbook' | 'annual' | '',
   });
 
-  const totalSteps = 9;
+  const totalSteps = 10;
 
   const saveCurrentStepAnswer = async () => {
     if (!user?.id) return;
@@ -90,6 +93,11 @@ const DynamicOnboarding = () => {
           }
           break;
         case 8:
+          if (formData.subscriptionPlan) {
+            await saveSubscriptionPlan(user.id, formData.subscriptionPlan);
+          }
+          break;
+        case 10:
           if (formData.sportsbooks.length > 0) {
             await saveSportsbooks(user.id, formData.sportsbooks);
           }
@@ -106,6 +114,17 @@ const DynamicOnboarding = () => {
     try {
       // Save current step's answer before moving to next
       await saveCurrentStepAnswer();
+
+      // For no_sportsbook users, skip steps 9 and 10 (ConnectSportsbooks and Sportsbook Selection)
+      if (currentStep === 8 && formData.subscriptionPlan === 'monthly_no_sportsbook') {
+        // Complete onboarding directly
+        if (user?.id) {
+          await completeOnboarding(user.id);
+        }
+        toast.success('Onboarding completed!');
+        navigate('/dashboard');
+        return;
+      }
 
       if (currentStep < totalSteps) {
         setCurrentStep(currentStep + 1);
@@ -192,6 +211,57 @@ const DynamicOnboarding = () => {
         );
       case 8:
         return (
+          <OnboardingStepPaywall
+            onSelect={async (plan) => {
+              console.log('OnboardingStepPaywall onSelect called with plan:', plan);
+              // Update formData first
+              updateFormData('subscriptionPlan', plan);
+              // Save subscription plan to database
+              if (user?.id) {
+                try {
+                  await saveSubscriptionPlan(user.id, plan);
+                  console.log('Subscription plan saved to database:', plan);
+                } catch (error) {
+                  console.error('Error saving subscription plan:', error);
+                  toast.error('Failed to save subscription plan');
+                  return;
+                }
+              }
+              // For no_sportsbook users, skip steps 9 and 10 and complete onboarding
+              if (plan === 'monthly_no_sportsbook') {
+                console.log('Monthly no sportsbook plan detected - completing onboarding and skipping ConnectSportsbooks');
+                if (user?.id) {
+                  await completeOnboarding(user.id);
+                  console.log('Onboarding marked as complete');
+                }
+                toast.success('Onboarding completed!');
+                navigate('/dashboard');
+                return;
+              }
+              // For other plans, continue to next step
+              console.log('Other plan detected - continuing to next step');
+              handleNext();
+            }}
+          />
+        );
+      case 9:
+        // Check if user has monthly_no_sportsbook plan - if so, skip this step
+        if (formData.subscriptionPlan === 'monthly_no_sportsbook') {
+          console.log('Step 9: Detected monthly_no_sportsbook plan - redirecting to dashboard');
+          // Complete onboarding if not already done
+          if (user?.id) {
+            completeOnboarding(user.id).catch(console.error);
+          }
+          navigate('/dashboard');
+          return null;
+        }
+        return (
+          <div className="relative">
+            <ConnectSportsbooks onContinue={handleNext} />
+          </div>
+        );
+      case 10:
+        return (
           <div className="relative">
             <OnboardingStep7
               value={formData.sportsbooks}
@@ -203,15 +273,6 @@ const DynamicOnboarding = () => {
             />
           </div>
         );
-      case 9:
-        return (
-          <OnboardingStepPaywall
-            onSelect={() => {
-              // Handle paywall completion and navigate to dashboard
-              navigate('/');
-            }}
-          />
-        );
       default:
         return null;
     }
@@ -222,7 +283,10 @@ const DynamicOnboarding = () => {
       {/* Progress bar */}
       <div className="pt-4 px-4">
         <div className="flex gap-1">
-          {Array.from({ length: totalSteps }).map((_, index) => (
+          {/* Calculate the correct number of steps to display */}
+          {Array.from({
+            length: formData.subscriptionPlan === 'monthly_no_sportsbook' ? 9 : totalSteps
+          }).map((_, index) => (
             <div
               key={index}
               className={`h-1 flex-1 rounded-full transition-all duration-300 ${
@@ -244,7 +308,7 @@ const DynamicOnboarding = () => {
         </div>
 
         {/* Bottom navigation */}
-        {currentStep !== 8 && currentStep !== 9 && (
+        {currentStep !== 8 && currentStep !== 9 && currentStep !== 10 && (
           <div className="space-y-4">
             <div className="flex gap-3">
               {currentStep > 1 && (
