@@ -144,7 +144,7 @@ const PlayCard: React.FC<PlayCardProps> = ({ play, renderWaveText, onActionClick
             Fade Confidence: <span className="text-[#AEE3F5] font-bold">{fadeConfidence}%</span>
           </p>
           <p className="text-lg font-semibold text-gray-300 inline-flex items-center gap-1">
-            <span>Fading Count:&nbsp;</span>
+            <span>Fade Count:&nbsp;</span>
             <span className="text-[#AEE3F5] font-bold">
               {loading ? (
                 <Loader2 className="h-4 w-4 animate-spin" />

@@ -31,7 +31,7 @@ const TrendFadeButton = ({ oppositeBet, fadeConfidence, onBetClick, isMostVisibl
           Fade Confidence: <span className="text-[#AEE3F5] font-bold">{fadeConfidence.toFixed(2)}%</span>
         </p>
         <p className="text-lg font-semibold text-gray-300 inline-flex items-center gap-1">
-          <p>Fading Count:&nbsp;</p>
+          <p>Fade Count:&nbsp;</p>
           <span className="text-[#AEE3F5] font-bold">
             {isLoading ? (
               <Loader2 className="h-4 w-4 animate-spin" />

@@ -67,7 +67,7 @@ const FadeWatchCard: React.FC<FadeWatchCardProps> = ({ bet, renderWaveText }) =>
             Fade Confidence: <span className="text-[#AEE3F5] font-bold">{bet.fadeConfidence.toFixed(2)}%</span>
           </p>
           <p className="text-lg font-semibold text-gray-300 inline-flex items-center gap-1">
-            <span>Fading Count:&nbsp;</span>
+            <span>Fade Count:&nbsp;</span>
             <span className="text-[#AEE3F5] font-bold">
               {loading ? (
                 <Loader2 className="h-4 w-4 animate-spin" />
