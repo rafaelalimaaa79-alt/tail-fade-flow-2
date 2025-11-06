@@ -158,23 +158,23 @@ const LeaderboardTable: React.FC<LeaderboardTableProps> = ({
                 <TableRow>
                   <TableCell colSpan={3} className="p-0">
                     <div className="bg-muted/20 border-t border-white/10 animate-fade-in">
-                      <div className="py-4 px-6">
-                        <p className="text-center text-sm text-gray-400 mb-3 font-semibold">Last 5</p>
-                        <div className="flex justify-center gap-3">
+                      <div className="py-3 px-4">
+                        <p className="text-center text-xs text-gray-400 mb-2 font-semibold">Last 5</p>
+                        <div className="flex justify-center gap-2">
                           {loadingBets === bettor.id ? (
-                            <p className="text-gray-400 text-sm">Loading...</p>
+                            <p className="text-gray-400 text-xs">Loading...</p>
                           ) : (lastFiveBets[bettor.id] || []).length === 0 ? (
-                            <p className="text-gray-400 text-sm">No recent bets</p>
+                            <p className="text-gray-400 text-xs">No recent bets</p>
                           ) : (
                             (lastFiveBets[bettor.id] || []).map((bet) => (
                               <div
                                 key={bet.id}
-                                className={`w-14 h-14 rounded-full flex items-center justify-center font-bold text-lg ${
+                                className={`w-10 h-10 rounded-full flex items-center justify-center font-bold text-sm ${
                                   bet.result === 'Win' 
-                                    ? 'bg-white/20 text-white border-2 border-white' 
+                                    ? 'bg-black text-[#AEE3F5] border-2 border-[#AEE3F5]' 
                                     : bet.result === 'Loss'
-                                    ? 'bg-[#AEE3F5]/20 text-[#AEE3F5] border-2 border-[#AEE3F5]'
-                                    : 'bg-gray-500/20 text-gray-500 border-2 border-gray-500'
+                                    ? 'bg-[#AEE3F5] text-black border-2 border-[#AEE3F5]'
+                                    : 'bg-gray-500 text-white border-2 border-gray-500'
                                 }`}
                               >
                                 {bet.result === 'Win' ? 'W' : bet.result === 'Loss' ? 'L' : 'P'}
