@@ -132,7 +132,7 @@ const PendingBets: React.FC<PendingBetsProps> = ({ pendingBets, profile, classNa
                   {/* Sport-specific statline */}
                   <div className="text-center py-1">
                     <p className="text-base font-medium text-gray-400 italic">
-                      {bet.sportStatline}
+                      {bet.sportStatline?.replace(/\bthe\s+(?=[A-Z][a-zA-Z]+)/g, '') || bet.sportStatline}
                     </p>
                   </div>
                   

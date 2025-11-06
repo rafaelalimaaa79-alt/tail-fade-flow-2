@@ -129,7 +129,7 @@ const PlayCard: React.FC<PlayCardProps> = ({ play, renderWaveText, onActionClick
         {/* Record statline */}
         <div className="text-center py-1">
           <p className="text-lg font-medium text-gray-400 italic">
-            He is {play.record}
+            He is {play.record?.replace(/\bthe\s+(?=[A-Z][a-zA-Z]+)/g, '') || play.record}
           </p>
         </div>
         
@@ -144,7 +144,7 @@ const PlayCard: React.FC<PlayCardProps> = ({ play, renderWaveText, onActionClick
             Fade Confidence: <span className="text-[#AEE3F5] font-bold">{fadeConfidence}%</span>
           </p>
           <p className="text-lg font-semibold text-gray-300 inline-flex items-center gap-1">
-            <span>Users Fading:&nbsp;</span>
+            <span>Fading Count:&nbsp;</span>
             <span className="text-[#AEE3F5] font-bold">
               {loading ? (
                 <Loader2 className="h-4 w-4 animate-spin" />
@@ -163,13 +163,13 @@ const PlayCard: React.FC<PlayCardProps> = ({ play, renderWaveText, onActionClick
           <Button
             type="button"
             className={`w-full py-4 rounded-xl transition-all duration-300 text-lg font-bold border flex items-center justify-center gap-2 bg-[#AEE3F5] text-black border-transparent hover:bg-[#AEE3F5]/90 shadow-[0_0_16px_rgba(174,227,245,0.45)] ${
-              (loading || !canFadeMore) && "opacity-75 cursor-not-allowed"
+              loading && "opacity-75 cursor-not-allowed"
             } ${isAnimating && "animate-bounce-pop"}`}
             onClick={handleBetClick}
-            disabled={loading || !canFadeMore}
+            disabled={loading}
           >
             {loading && <Loader2 className="h-5 w-5 animate-spin" />}
-            {!canFadeMore ? "Max Fades Reached" : `NoShot Pick: ${oppositeBet}`}
+            {`NoShot Pick: ${oppositeBet}`}
           </Button>
         </div>
       </div>

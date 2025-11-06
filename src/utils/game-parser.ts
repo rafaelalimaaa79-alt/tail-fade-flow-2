@@ -54,22 +54,47 @@ export function parseGameName(gameName: string): { awayTeam: string; homeTeam: s
  * @returns Opponent team name, or null if cannot be determined
  */
 export function getOpponentTeam(gameName: string, teamPublicIsOn: string): string | null {
+  if (!gameName || !teamPublicIsOn) return null;
+
   const teams = parseGameName(gameName);
   if (!teams) return null;
 
-  // Find the opponent
-  if (teams.awayTeam.toLowerCase() === teamPublicIsOn.toLowerCase()) {
+  const teamPublicLower = teamPublicIsOn.toLowerCase().trim();
+  const awayTeamLower = teams.awayTeam.toLowerCase().trim();
+  const homeTeamLower = teams.homeTeam.toLowerCase().trim();
+
+  // Exact match first
+  if (awayTeamLower === teamPublicLower) {
     return teams.homeTeam;
-  } else if (teams.homeTeam.toLowerCase() === teamPublicIsOn.toLowerCase()) {
+  } else if (homeTeamLower === teamPublicLower) {
     return teams.awayTeam;
   }
 
-  // If exact match fails, try partial matching
-  if (teams.awayTeam.toLowerCase().includes(teamPublicIsOn.toLowerCase()) ||
-      teamPublicIsOn.toLowerCase().includes(teams.awayTeam.toLowerCase())) {
+  // Try partial matching - check if team name is contained in game team name
+  if (awayTeamLower.includes(teamPublicLower) || teamPublicLower.includes(awayTeamLower)) {
     return teams.homeTeam;
-  } else if (teams.homeTeam.toLowerCase().includes(teamPublicIsOn.toLowerCase()) ||
-             teamPublicIsOn.toLowerCase().includes(teams.homeTeam.toLowerCase())) {
+  } else if (homeTeamLower.includes(teamPublicLower) || teamPublicLower.includes(homeTeamLower)) {
+    return teams.awayTeam;
+  }
+
+  // Try word-by-word matching (for cases like "Las Vegas Raiders" vs "Raiders")
+  const teamPublicWords = teamPublicLower.split(/\s+/);
+  const awayTeamWords = awayTeamLower.split(/\s+/);
+  const homeTeamWords = homeTeamLower.split(/\s+/);
+
+  // Check if any significant word from teamPublicIsOn matches awayTeam
+  const awayTeamMatch = teamPublicWords.some(word => 
+    word.length > 2 && awayTeamWords.some(awayWord => awayWord.includes(word) || word.includes(awayWord))
+  );
+  
+  // Check if any significant word from teamPublicIsOn matches homeTeam
+  const homeTeamMatch = teamPublicWords.some(word => 
+    word.length > 2 && homeTeamWords.some(homeWord => homeWord.includes(word) || word.includes(homeWord))
+  );
+
+  if (awayTeamMatch && !homeTeamMatch) {
+    return teams.homeTeam;
+  } else if (homeTeamMatch && !awayTeamMatch) {
     return teams.awayTeam;
   }
 

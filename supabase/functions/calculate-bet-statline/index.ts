@@ -206,12 +206,14 @@ async function calculateBetStatline(supabase: any, userId: string, betSlipId: st
 
         if (teamBets.length >= 3) {
           const stats = calculateStats(teamBets);
+          // Remove "the" from team name if present
+          const teamName = targetTeam.replace(/^the\s+/i, '').trim();
           statlineCategories.push({
             type: 'team',
             ...stats,
-            label: `betting on ${targetTeam}`
+            label: `betting on ${teamName}`
           });
-          console.log(`📊 Team category: ${stats.wins}-${stats.losses} (${stats.winRate.toFixed(1)}%) on ${targetTeam}`);
+          console.log(`📊 Team category: ${stats.wins}-${stats.losses} (${stats.winRate.toFixed(1)}%) on ${teamName}`);
         }
       }
     }

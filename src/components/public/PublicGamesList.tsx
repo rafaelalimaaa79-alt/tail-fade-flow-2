@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from "react";
 import PublicGameItem from "./PublicGameItem";
 import { supabase } from "@/integrations/supabase/client";
-import { getOpponentTeam } from "@/utils/game-parser";
+import { getOpponentTeam, parseGameName } from "@/utils/game-parser";
 
 interface PublicGame {
   id: string;
@@ -40,12 +40,63 @@ const PublicGamesList = () => {
       if (data && Array.isArray(data)) {
         // Transform the data to match PublicGame interface
         const transformedGames: PublicGame[] = data.map((row: any) => {
-          const opponent = getOpponentTeam(row.game_name, row.team_public_is_on) || 'Opponent';
+          let opponent = getOpponentTeam(row.game_name, row.team_public_is_on);
+          
+          // If getOpponentTeam fails, try to extract opponent from game_name directly
+          if (!opponent) {
+            const teams = parseGameName(row.game_name);
+            if (teams) {
+              // If we can parse teams, use the one that doesn't match team_public_is_on
+              const teamPublicLower = (row.team_public_is_on || '').toLowerCase().trim();
+              if (teams.awayTeam.toLowerCase().trim() !== teamPublicLower &&
+                  teams.homeTeam.toLowerCase().trim() !== teamPublicLower) {
+                // Neither matches exactly, try to find which one is NOT the public team
+                if (teams.awayTeam.toLowerCase().includes(teamPublicLower) ||
+                    teamPublicLower.includes(teams.awayTeam.toLowerCase())) {
+                  opponent = teams.homeTeam;
+                } else if (teams.homeTeam.toLowerCase().includes(teamPublicLower) ||
+                           teamPublicLower.includes(teams.homeTeam.toLowerCase())) {
+                  opponent = teams.awayTeam;
+                } else {
+                  // Default to home team if we can't determine
+                  opponent = teams.homeTeam;
+                }
+              } else {
+                // One of them matches, use the other
+                opponent = teams.awayTeam.toLowerCase().trim() === teamPublicLower 
+                  ? teams.homeTeam 
+                  : teams.awayTeam;
+              }
+            }
+          }
+          
+          // Final fallback - try to extract from game_name string directly
+          if (!opponent) {
+            const gameName = row.game_name || '';
+            const teamPublic = row.team_public_is_on || '';
+            
+            // Try to find the other team by removing the public team from game name
+            if (gameName.includes('@')) {
+              const parts = gameName.split('@').map(s => s.trim());
+              if (parts.length === 2) {
+                opponent = parts[0].toLowerCase().includes(teamPublic.toLowerCase()) 
+                  ? parts[1] 
+                  : parts[0];
+              }
+            } else if (gameName.toLowerCase().includes(' vs ')) {
+              const parts = gameName.split(/ vs /i).map(s => s.trim());
+              if (parts.length === 2) {
+                opponent = parts[0].toLowerCase().includes(teamPublic.toLowerCase()) 
+                  ? parts[1] 
+                  : parts[0];
+              }
+            }
+          }
           
           return {
             id: row.id,
             team: row.team_public_is_on,
-            opponent: opponent,
+            opponent: opponent || 'Opponent',
             publicPercentage: row.public_percentage || 0,
             spread: row.spread || "",
             sport: row.sport || "",
