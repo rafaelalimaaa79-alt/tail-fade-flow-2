@@ -16,22 +16,37 @@ interface WeeklyLeaderboardUser {
   isCurrentUser: boolean;
 }
 
+// Get the start of the current week (Monday 00:00:00)
+function getWeekStart(): Date {
+  const now = new Date();
+  const day = now.getDay(); // 0 = Sunday, 1 = Monday, ..., 6 = Saturday
+  // Calculate days to subtract to get to Monday
+  // If Sunday (0), subtract 6 days; otherwise subtract (day - 1) days
+  const daysToMonday = day === 0 ? 6 : day - 1;
+  const monday = new Date(now);
+  monday.setDate(now.getDate() - daysToMonday);
+  monday.setHours(0, 0, 0, 0); // Set to start of Monday
+  return monday;
+}
+
 // Calculate weekly stats for a user
 async function calculateWeeklyStats(
   supabase: any,
   userId: string
 ): Promise<{ totalBets: number; winRate: number; roi: number; unitsGained: number } | null> {
   try {
-    // Get bets from last 7 days
-    const sevenDaysAgo = new Date();
-    sevenDaysAgo.setDate(sevenDaysAgo.getDate() - 7);
+    // Get bets from current week (Monday to Sunday)
+    const weekStart = getWeekStart();
+    const weekEnd = new Date(weekStart);
+    weekEnd.setDate(weekEnd.getDate() + 7); // End of Sunday
 
     const { data: bets, error } = await supabase
       .from("bets")
       .select("result, units_won_lost, units_risked")
       .eq("user_id", userId)
       .in("result", ["Win", "Loss", "Push"])
-      .gte("created_at", sevenDaysAgo.toISOString());
+      .gte("created_at", weekStart.toISOString())
+      .lt("created_at", weekEnd.toISOString());
 
     if (error) {
       console.error(`Error fetching weekly bets for user ${userId}:`, error);
@@ -113,8 +128,8 @@ async function getWeeklyLeaderboard(
     for (const profile of profiles) {
       const weeklyStats = await calculateWeeklyStats(supabase, profile.id);
 
-      // Only include users with 10+ bets in the last 7 days
-      if (weeklyStats && weeklyStats.totalBets >= 10) {
+      // Only include users with 5+ bets in the current week
+      if (weeklyStats && weeklyStats.totalBets >= 5) {
         leaderboardData.push({
           id: profile.id,
           username: profile.username,
@@ -127,11 +142,11 @@ async function getWeeklyLeaderboard(
       }
     }
 
-    // Sort by win rate descending (best first)
-    leaderboardData.sort((a, b) => b.winRate - a.winRate);
+    // Sort by win rate ascending (worst first, lowest win rate at #1)
+    leaderboardData.sort((a, b) => a.winRate - b.winRate);
 
     console.log(
-      `📊 [WEEKLY_LEADERBOARD] Found ${leaderboardData.length} users with 10+ bets this week`
+      `📊 [WEEKLY_LEADERBOARD] Found ${leaderboardData.length} users with 5+ bets this week (Monday-Sunday)`
     );
 
     return leaderboardData;

@@ -29,14 +29,14 @@ const Leaders = () => {
   const [coldestBettors, setColdestBettors] = useState<LeaderboardUser[]>([]);
   const [loading, setLoading] = useState(true);
 
-  // Fetch leaderboard data with polling every 5 minutes
+  // Fetch leaderboard data with frequent polling for real-time updates
   useEffect(() => {
     const fetchLeaderboard = async () => {
       try {
         const currentUserId = await getCurrentUserId();
         const data = await getWeeklyLeaderboardData(currentUserId || undefined);
 
-        // Data is already sorted by worst win rate (ascending)
+        // Data is sorted by worst win rate (ascending) - lowest win rate at #1
         // Take top 10 worst performers
         setColdestBettors(data.slice(0, 10));
       } catch (error) {
@@ -49,10 +49,10 @@ const Leaders = () => {
     // Initial fetch
     fetchLeaderboard();
 
-    // Set up polling every 5 minutes (300,000 ms)
+    // Set up polling every 1 minute (60,000 ms) for frequent updates
     const pollInterval = setInterval(() => {
       fetchLeaderboard();
-    }, 300000);
+    }, 60000);
 
     // Cleanup interval on unmount
     return () => clearInterval(pollInterval);
