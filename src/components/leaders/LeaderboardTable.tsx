@@ -49,12 +49,25 @@ const LeaderboardTable: React.FC<LeaderboardTableProps> = ({
     setLoadingBets(bettor.id);
     
     try {
+      // Get the start of the current week (Monday 00:00:00)
+      const now = new Date();
+      const day = now.getDay(); // 0 = Sunday, 1 = Monday, ..., 6 = Saturday
+      const daysToMonday = day === 0 ? 6 : day - 1;
+      const weekStart = new Date(now);
+      weekStart.setDate(now.getDate() - daysToMonday);
+      weekStart.setHours(0, 0, 0, 0);
+      
+      const weekEnd = new Date(weekStart);
+      weekEnd.setDate(weekEnd.getDate() + 7); // End of Sunday
+
       const { data, error } = await supabase
         .from('bets')
         .select('id, result')
         .eq('user_id', bettor.id)
         .in('result', ['Win', 'Loss', 'Push'])
-        .order('timestamp', { ascending: false })
+        .gte('created_at', weekStart.toISOString())
+        .lt('created_at', weekEnd.toISOString())
+        .order('created_at', { ascending: false })
         .limit(5);
 
       if (error) throw error;
@@ -159,7 +172,7 @@ const LeaderboardTable: React.FC<LeaderboardTableProps> = ({
                   <TableCell colSpan={3} className="p-0">
                     <div className="bg-muted/20 border-t border-white/10 overflow-hidden">
                       <div className="py-3 px-4">
-                        <p className="text-center text-xs text-gray-400 mb-2 font-semibold">Last 5</p>
+                        <p className="text-center text-xs text-gray-400 mb-2 font-semibold">Last 5 This Week</p>
                         <div className="flex justify-center gap-2">
                           {loadingBets === bettor.id ? (
                             <p className="text-gray-400 text-xs">Loading...</p>
